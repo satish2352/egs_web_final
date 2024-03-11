@@ -21,18 +21,20 @@ Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('auth/add-role', [RoleController::class, 'add']);
-    Route::post('auth/add-labour', [LabourController::class, 'add']);
-    Route::get('auth/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
-    Route::get('auth/district/{stateId}', [DistrictTalukaVillageController::class, 'getDistrict']);
-    Route::get('auth/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
-    Route::get('auth/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
-    Route::get('auth/list-gender', [MasterController::class, 'getAllGender']);
-    Route::get('auth/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+    Route::post('/add-role', [RoleController::class, 'add']);
+    Route::post('/add-labour', [LabourController::class, 'add']);
+    Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
+    Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
+    Route::get('/district/{stateId}', [DistrictTalukaVillageController::class, 'getDistrict']);
+    Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
+    Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
+    Route::get('/list-gender', [MasterController::class, 'getAllGender']);
+    Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+    Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
+    Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
 
     Route::post('/logout', 'App\Http\Controllers\Api\Auth\AuthController@logout')->middleware('auth:sanctum');
 
-    // Add more routes here that require authentication via Sanctum middleware
 });
 
 

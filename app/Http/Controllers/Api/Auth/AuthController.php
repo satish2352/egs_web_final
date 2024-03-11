@@ -37,8 +37,13 @@ public function login(Request $request)
 
 public function logout(Request $request)
 {
-    $request->user()->currentAccessToken()->delete();
-
+    $user = $request->user();
+    // Delete the current access token
+    $user->currentAccessToken()->delete();
+    // Empty the remember_token field
+    $user->update([$request->remember_token => 'null']);
+    // echo $user;
+    // die();
     return response()->json(['message' => 'Logged out successfully']);
 }
 
@@ -46,9 +51,19 @@ public function logout(Request $request)
 public function register(Request $request)
 {
     $validator = Validator::make($request->all(), [
-        'f_name'=>'required',
-        'u_email'=>'required',
-        'u_password'=>'required',
+        'f_name' => 'required|string|max:255',
+        'm_name' => 'nullable|string|max:255',
+        'l_name' => 'nullable|string|max:255',
+        'u_email' => 'required|email|unique:users',
+        'u_password' => 'required|string|min:6',
+        'number' => 'required|string|regex:/^[0-9]{10}$/',
+        'designation' => 'nullable|string|max:255',
+        'address' => 'nullable|string|max:255',
+        'state' => 'nullable|string|max:255',
+        'city' => 'nullable|string|max:255',
+        'pincode' => 'nullable|string|max:10', 
+        'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        
     ]);
 
     if ($validator->fails()) {
