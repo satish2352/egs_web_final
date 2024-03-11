@@ -76,6 +76,16 @@
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-skills') }}">Skills</a></li>
                               {{-- @endif --}}
+                              {{-- @if (in_array('list-registrationstatus', $data_for_url)) --}}
+                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-registrationstatus*') 
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-registrationstatus') }}">Registration Status</a></li>
+                              {{-- @endif --}}
+                              {{-- @if (in_array('list-documenttype', $data_for_url)) --}}
+                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-documenttype*') 
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-documenttype') }}">Document Type</a></li>
+                              {{-- @endif --}}
                               {{-- @if (in_array('list-incident-type', $data_for_url)) --}}
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-incident-type*') 
                                     ? 'nav-link active' : 'nav-link' }}"

@@ -123,6 +123,24 @@ Route::post('/show-skills', ['as' => 'show-skills', 'uses' => 'App\Http\Controll
 Route::post('/delete-skills', ['as' => 'delete-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@destroy']);
 Route::post('/update-one-skills', ['as' => 'update-one-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@updateOne']);
 
+Route::get('/list-registrationstatus', ['as' => 'list-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@index']);
+Route::get('/add-registrationstatus', ['as' => 'add-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@add']);
+Route::post('/add-registrationstatus', ['as' => 'add-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@store']);
+Route::get('/edit-registrationstatus/{edit_id}', ['as' => 'edit-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@edit']);
+Route::post('/update-registrationstatus', ['as' => 'update-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@update']);
+Route::post('/show-registrationstatus', ['as' => 'show-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@show']);
+Route::post('/delete-registrationstatus', ['as' => 'delete-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@destroy']);
+Route::post('/update-one-registrationstatus', ['as' => 'update-one-registrationstatus', 'uses' => 'App\Http\Controllers\Admin\Master\registrationstatusController@updateOne']);
+
+Route::get('/list-documenttype', ['as' => 'list-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@index']);
+Route::get('/add-documenttype', ['as' => 'add-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@add']);
+Route::post('/add-documenttype', ['as' => 'add-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@store']);
+Route::get('/edit-documenttype/{edit_id}', ['as' => 'edit-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@edit']);
+Route::post('/update-documenttype', ['as' => 'update-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@update']);
+Route::post('/show-documenttype', ['as' => 'show-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@show']);
+Route::post('/delete-documenttype', ['as' => 'delete-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@destroy']);
+Route::post('/update-one-documenttype', ['as' => 'update-one-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\documenttypeController@updateOne']);
+
 
 // Route::get('/db-backup', ['as' => 'db-backup', 'uses' => 'App\Http\Controllers\DBBackup\DBBackupController@downloadBackup']);
 
