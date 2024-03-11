@@ -105,6 +105,24 @@ Route::post('/show-maritalstatus', ['as' => 'show-maritalstatus', 'uses' => 'App
 Route::post('/delete-maritalstatus', ['as' => 'delete-maritalstatus', 'uses' => 'App\Http\Controllers\Admin\Master\maritalstatusController@destroy']);
 Route::post('/update-one-maritalstatus', ['as' => 'update-one-maritalstatus', 'uses' => 'App\Http\Controllers\Admin\Master\maritalstatusController@updateOne']);
 
+Route::get('/list-relation', ['as' => 'list-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@index']);
+Route::get('/add-relation', ['as' => 'add-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@add']);
+Route::post('/add-relation', ['as' => 'add-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@store']);
+Route::get('/edit-relation/{edit_id}', ['as' => 'edit-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@edit']);
+Route::post('/update-relation', ['as' => 'update-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@update']);
+Route::post('/show-relation', ['as' => 'show-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@show']);
+Route::post('/delete-relation', ['as' => 'delete-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@destroy']);
+Route::post('/update-one-relation', ['as' => 'update-one-relation', 'uses' => 'App\Http\Controllers\Admin\Master\relationController@updateOne']);
+
+Route::get('/list-skills', ['as' => 'list-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@index']);
+Route::get('/add-skills', ['as' => 'add-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@add']);
+Route::post('/add-skills', ['as' => 'add-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@store']);
+Route::get('/edit-skills/{edit_id}', ['as' => 'edit-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@edit']);
+Route::post('/update-skills', ['as' => 'update-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@update']);
+Route::post('/show-skills', ['as' => 'show-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@show']);
+Route::post('/delete-skills', ['as' => 'delete-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@destroy']);
+Route::post('/update-one-skills', ['as' => 'update-one-skills', 'uses' => 'App\Http\Controllers\Admin\Master\skillsController@updateOne']);
+
 
 // Route::get('/db-backup', ['as' => 'db-backup', 'uses' => 'App\Http\Controllers\DBBackup\DBBackupController@downloadBackup']);
 
