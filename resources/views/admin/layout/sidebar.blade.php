@@ -66,6 +66,16 @@
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-maritalstatus') }}">Marital Status</a></li>
                               {{-- @endif --}}
+                              {{-- @if (in_array('list-relation', $data_for_url)) --}}
+                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-relation*') 
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-relation') }}">Relation</a></li>
+                              {{-- @endif --}}
+                              {{-- @if (in_array('list-skills', $data_for_url)) --}}
+                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-skills*') 
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-skills') }}">Skills</a></li>
+                              {{-- @endif --}}
                               {{-- @if (in_array('list-incident-type', $data_for_url)) --}}
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-incident-type*') 
                                     ? 'nav-link active' : 'nav-link' }}"
