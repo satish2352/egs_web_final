@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Master\RoleController;
 use App\Http\Controllers\Api\Master\DistrictTalukaVillageController;
 use App\Http\Controllers\Api\Labour\LabourController;
-use App\Http\Controllers\Api\Master\GenderController;
+use App\Http\Controllers\Api\Master\MasterController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,8 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth/district/{stateId}', [DistrictTalukaVillageController::class, 'getDistrict']);
     Route::get('auth/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
     Route::get('auth/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
-    Route::get('auth/list-gender', [GenderController::class, 'getAllGender']);
-    
+    Route::get('auth/list-gender', [MasterController::class, 'getAllGender']);
+    Route::get('auth/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+
     Route::post('/logout', 'App\Http\Controllers\Api\Auth\AuthController@logout')->middleware('auth:sanctum');
 
     // Add more routes here that require authentication via Sanctum middleware
