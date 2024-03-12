@@ -90,9 +90,9 @@
         <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row default-layout-navbar">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
                 <a class="navbar-brand brand-logo" href="#"><img
-                        src="{{ asset('website_files/images/home/DMS.png') }}" alt="logo" /></a>
+                        src="{{ asset('/assets/images/mlogo.png') }}" alt="logo" /></a>
                 <a class="navbar-brand brand-logo-mini" href="#"><img
-                        src="{{ asset('website_files/images/home/DM.png') }}" alt="logo" /></a>
+                        src="{{ asset('/assets/images/mlogo.png') }}" alt="logo" /></a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch pr-0">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
