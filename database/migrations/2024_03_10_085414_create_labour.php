@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('labour', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
-            $table->string('gender');
+            $table->string('gender_id');
             $table->string('date_of_birth');
             $table->string('district_id');
             $table->string('taluka_id');

@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\Passport;
+
+
 // namespace App\Http\Controllers\Api\Auth;
 // use Illuminate\Support\Facades\Hash; // Importing Hash facade
 // use Illuminate\Support\Facades\Auth;
@@ -28,6 +31,9 @@ public function login(Request $request)
     }
 
     $token = $user->createToken('AuthToken')->plainTextToken;
+    // echo $token;
+    // die();
+    // $token = $user->createToken('AuthToken')->accessToken;
     // Update the access token in the database
     $user->remember_token = $token;
     $user->save();

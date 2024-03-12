@@ -8,18 +8,6 @@ use App\Models\TblArea;
 
 class DistrictTalukaVillageController extends Controller
 {
-
-    // public function getState(Request $request)
-    // {
-    //     $stateId = $request->input('stateId');
-    //     $state =  TblArea::where('location_type', 1)
-    //                         // ->where('parent_id', $stateId)
-    //                         ->select('location_id','name')
-    //                         ->get()
-    //                         ->toArray();
-    //     return response()->json(['state' => $state]);
-
-    // }
     public function getState($countryId)
 {
     try {
@@ -35,19 +23,13 @@ class DistrictTalukaVillageController extends Controller
             'data' => $states
         ]);
     } catch (\Exception $e) {
-        // Handle the exception, you can log it or return an error response
         return response()->json(['error' => 'An error occurred while fetching states.'], 500);
     }
 }
-public function getDistrict(Request $request, $stateId)
+public function getDistrict(Request $request)
 {
     try {
-        // Validate input
-        $request->validate([
-            // You can add validation rules if needed
-        ]);
-
-        // Fetch cities
+        $stateId = 2; 
         $district = TblArea::where('location_type', 2) // Assuming 2 represents cities
                         ->where('parent_id', $stateId)
                         ->pluck('name', 'location_id') // Pluck name and location_id
@@ -59,15 +41,12 @@ public function getDistrict(Request $request, $stateId)
             'data' => $district
         ]);
     } catch (\Exception $e) {
-        // Handle the exception, you can log it or return an error response
         return response()->json(['error' => 'An error occurred while fetching cities.'], 500);
     }
 }
 public function getTaluka(Request $request, $districtId)
 {
     try {
-        // You can add validation rules if needed
-
         // Fetch talukas
         $talukas = TblArea::where('location_type', 3) // Assuming 3 represents talukas
                         ->where('parent_id', $districtId)
@@ -81,7 +60,6 @@ public function getTaluka(Request $request, $districtId)
             'data' => $talukas
         ]);
     } catch (\Exception $e) {
-        // Handle the exception, log it for debugging
         Log::error('An error occurred while fetching talukas: ' . $e->getMessage());
         
         return response()->json(['error' => 'An error occurred while fetching talukas.'], 500);
@@ -90,8 +68,6 @@ public function getTaluka(Request $request, $districtId)
 public function getVillage(Request $request, $talukaId)
 {
     try {
-        // You can add validation rules if needed
-
         // Fetch talukas
         $village = TblArea::where('location_type', 4) // Assuming 3 represents talukas
                         ->where('parent_id', $talukaId)
@@ -105,7 +81,6 @@ public function getVillage(Request $request, $talukaId)
             'data' => $village
         ]);
     } catch (\Exception $e) {
-        // Handle the exception, log it for debugging
         Log::error('An error occurred while fetching talukas: ' . $e->getMessage());
         
         return response()->json(['error' => 'An error occurred while fetching talukas.'], 500);
