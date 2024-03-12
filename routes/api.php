@@ -19,8 +19,23 @@ use App\Http\Controllers\Api\Labour\LabourFamilyDetailsController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('auth/register', [AuthController::class, 'register']);
-Route::post('auth/login', [AuthController::class, 'login']);
+Route::group([
+
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+
+    Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+    // Route::post('login', 'AuthController@login');
+    // Route::post('logout', 'AuthController@logout');
+    // Route::post('refresh', 'AuthController@refresh');
+    // Route::post('me', 'AuthController@me');
+
+});
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add-role', [RoleController::class, 'add']);
