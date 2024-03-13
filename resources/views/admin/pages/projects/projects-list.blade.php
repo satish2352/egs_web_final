@@ -6,7 +6,7 @@
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
-                    Users Master List <a href="{{ route('add-users') }}" class="btn btn-sm btn-primary ml-3">+ Add</a>
+                    Projects Master List <a href="{{ route('add-projects') }}" class="btn btn-sm btn-primary ml-3">+ Add</a>
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -27,20 +27,24 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sr. No.</th>
-                                                    <th>Name</th>
-                                                    <th>Role</th>
+                                                    <th>Project Name</th>
+                                                    <th>State</th>
+                                                    <th>District</th>
+                                                    <th>Taluka</th>
+                                                    <th>Village</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($register_user as $item)
+                                                @foreach ($projects as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}
-                                                            ({{ $item->u_email }})
-                                                        </td>
-                                                        <td>{{ $item->role_name }}</td>
+                                                        <td>{{ $item->project_name }}</td>
+                                                        <td>{{ $item->state_name }}</td>
+                                                        <td>{{ $item->district_name }}</td>
+                                                        <td>{{ $item->taluka_name }}</td>
+                                                        <td>{{ $item->village_name }}</td>
 
 
                                                         <td>
@@ -64,10 +68,11 @@
                                                         @endif</td> --}}
                                                         <td class="d-flex">
                                                         @if (in_array('per_update', $data_permission))
-                                                            <a href="{{ route('edit-users', base64_encode($item->id)) }}"
+                                                            <a href="{{ route('edit-projects', base64_encode($item->id)) }}"
                                                                 class="edit-btn btn btn-sm btn-outline-primary m-1"><i
                                                                     class="fas fa-pencil-alt"></i></a>
-                                                        @endif            
+                                                        @endif
+
                                                             <a data-id="{{ $item->id }}"
                                                                 class="show-btn btn btn-sm btn-outline-primary m-1"><i
                                                                     class="fas fa-eye"></i></a>
@@ -97,7 +102,7 @@
             @csrf
             <input type="hidden" name="delete_id" id="delete_id" value="">
         </form>
-        <form method="POST" action="{{ url('/show-users') }}" id="showform">
+        <form method="POST" action="{{ url('/show-projects') }}" id="showform">
             @csrf
             <input type="hidden" name="show_id" id="show_id" value="">
         </form>
@@ -105,7 +110,7 @@
             @csrf
             <input type="hidden" name="edit_id" id="edit_id" value="">
         </form> --}}
-        <form method="POST" action="{{ url('/update-active-user') }}" id="activeform">
+        <form method="POST" action="{{ url('/update-active-projects') }}" id="activeform">
             @csrf
             <input type="hidden" name="active_id" id="active_id" value="">
         </form>

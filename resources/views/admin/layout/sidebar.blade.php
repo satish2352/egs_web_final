@@ -110,6 +110,14 @@
               </a>
 
           </li>
+          <li class="{{request()->is('list-projects*')
+                ? 'nav-item active' : 'nav-item' }}">
+                <?php $currenturl = Request::url(); ?>
+                <a class="nav-link" href="{{ route('list-projects') }}">
+                    <i class="fas fa-user menu-icon"></i>
+                    <span class="menu-title">Project Management</span>
+                </a>
+            </li>
 
       {{-- @endif --}}
           </ul>

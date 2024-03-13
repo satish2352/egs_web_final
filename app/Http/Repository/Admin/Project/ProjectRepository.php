@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Repository\Admin\LoginRegister;
+namespace App\Http\Repository\Admin\Project;
 
 use Illuminate\Database\QueryException;
 use DB;
@@ -9,39 +9,63 @@ use App\Models\{
 	User,
 	Permissions,
 	RolesPermissions,
-	Roles
+	Roles,
+	Project
 };
 use Illuminate\Support\Facades\Mail;
 
-class RegisterRepository
+class ProjectRepository
 {
 
-	public function getUsersList() {
-        $data_users = User::join('roles', function($join) {
-							$join->on('users.role_id', '=', 'roles.id');
-						})
-						// ->where('users.is_active','=',true)
-						->select('roles.role_name',
-								'users.u_email',
-								'users.f_name',
-								'users.m_name',
-								'users.l_name',
-								'users.number',
-								'users.imei_no',
-								'users.aadhar_no',
-								'users.address',
-								'users.state',
-								'users.district',
-								'users.taluka',
-								'users.village',
-								'users.pincode',
-								'users.id',
-								'users.is_active'
-							)->get();
+	public function getProjectsList() {
+        // $data_users = Projects::join('tbl_area', function($join) {
+		// 					$join->on('projects.role_id', '=', 'roles.id');
+		// 				})
+		// 				// ->where('users.is_active','=',true)
+		// 				->select('roles.role_name',
+		// 						'users.u_email',
+		// 						'users.f_name',
+		// 						'users.m_name',
+		// 						'users.l_name',
+		// 						'users.number',
+		// 						'users.imei_no',
+		// 						'users.aadhar_no',
+		// 						'users.address',
+		// 						'users.state',
+		// 						'users.district',
+		// 						'users.taluka',
+		// 						'users.village',
+		// 						'users.pincode',
+		// 						'users.id',
+		// 						'users.is_active'
+		// 					)->get();
 							// ->toArray();
 
+		$data_users = Project::leftJoin('tbl_area as state_project', 'projects.state', '=', 'state_project.location_id')
+		->leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
+		->leftJoin('tbl_area as taluka_project', 'projects.taluka', '=', 'taluka_project.location_id')
+		->leftJoin('tbl_area as village_project', 'projects.village', '=', 'village_project.location_id')
+        //   ->where('gender.is_active', true)
+          ->select(
+              'projects.id',
+              'projects.project_name',
+              'projects.description',
+            //   'labour.gender_name',
+              'state_project.name as state_name',
+              'district_project.name as district_name',
+              'taluka_project.name as taluka_name',
+              'village_project.name as village_name',
+              'projects.start_date',
+              'projects.end_date',
+              'projects.latitude',
+              'projects.longitude',
+            //   'labour.profile_image',
+          )->get();
+			// dd($data_users);
 		return $data_users;
 	}
+
+	
 
 
 	public function permissionsData()
@@ -79,43 +103,47 @@ class RegisterRepository
 	// 	return $last_insert_id;
 	// }
 
-	public function register($request)
+	public function addProject($request)
 	{
+		try {
 		$data =array();
 		// $ipAddress = getIPAddress($request);
-		$user_data = new User();
-		$user_data->u_email = $request['u_email'];
-		// $user_data->u_uname = $request['u_uname'];
-		$user_data->u_password = bcrypt($request['u_password']);
-		$user_data->role_id = $request['role_id'];
-		$user_data->f_name = $request['f_name'];
-		$user_data->m_name = $request['m_name'];
-		$user_data->l_name = $request['l_name'];
-		$user_data->number = $request['number'];
-		$user_data->imei_no = $request['imei_no'];
-		$user_data->aadhar_no = $request['aadhar_no'];
-		$user_data->address = $request['address'];
-		$user_data->state = $request['state'];
-		$user_data->district = $request['district'];
-		$user_data->taluka	 = $request['taluka'];
-		$user_data->village = $request['village'];
-		$user_data->pincode = $request['pincode'];
-		$user_data->ip_address = 'null';
-		$user_data->is_active = isset($request['is_active']) ? true : false;
-		$user_data->save();
+		$project_data = new Projects();
+		// $project_data->u_email = $request['u_email'];
+		// $project_data->u_uname = $request['u_uname'];
+		// $project_data->u_password = bcrypt($request['u_password']);
+		$project_data->project_name = $request['project_name'];
+		$project_data->state = $request['state'];
+		$project_data->district = $request['district'];
+		$project_data->taluka	 = $request['taluka'];
+		$project_data->village = $request['village'];
 
-		$last_insert_id = $user_data->id;
+		$project_data->latitude = $request['latitude'];
+		$project_data->longitude = $request['longitude'];
+		$project_data->start_date = $request['start_date'];
+		$project_data->end_date = $request['end_date'];
+		$project_data->description = $request['description'];
+		$project_data->is_active = isset($request['is_active']) ? true : false;
+		$project_data->save();
+
+		$last_insert_id = $project_data->id;
 		// $this->insertRolesPermissions($request, $last_insert_id);
 
-		$imageProfile = $last_insert_id .'_' . rand(100000, 999999) . '_english.' . $request->user_profile->extension();
+		// $imageProfile = $last_insert_id .'_' . rand(100000, 999999) . '_english.' . $request->user_profile->extension();
         
-        $user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
-        $user_detail->user_profile = $imageProfile; // Save the image filename to the database
-        $user_detail->save();
+        // $user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
+        // $user_detail->user_profile = $imageProfile; // Save the image filename to the database
+        // $user_detail->save();
         // echo  $user_detail;
 		// die();
-        $data['imageProfile'] =$imageProfile;
-        return $data;
+        // $data['imageProfile'] =$imageProfile;
+        return $project_data;
+	} catch (\Exception $e) {
+		return [
+			'msg' => $e,
+			'status' => 'error'
+		];
+	}
 
 	}
 
@@ -236,82 +264,40 @@ class RegisterRepository
 			->select('id')->get();
 	}
 
-	public function editUsers($reuest)
+	public function editProjects($reuest)
 	{
 
-		$data_users = [];
+		$data_projects = [];
 
-		$data_users['roles'] = Roles::where('is_active', true)
-			->select('id', 'role_name')
-			->get()
-			->toArray();
-		$data_users['permissions'] = Permissions::where('is_active', true)
+		// $data_users['roles'] = Roles::where('is_active', true)
+		// 	->select('id', 'role_name')
+		// 	->get()
+		// 	->toArray();
+		$data_projects['permissions'] = Permissions::where('is_active', true)
 			->select('id', 'route_name', 'permission_name', 'url')
 			->get()
 			->toArray();
 
-		$data_users_data = User::join('roles', function ($join) {
-			$join->on('users.role_id', '=', 'roles.id');
-		})
-			// ->join('roles_permissions', function($join) {
-			// 	$join->on('users.id', '=', 'roles_permissions.user_id');
-			// })
-			->where('users.id', '=', base64_decode($reuest->edit_id))
+		$data_projects_data = Projects::where('projects.id', '=', base64_decode($reuest->edit_id))
 			// ->where('roles_permissions.is_active','=',true)
 			// ->where('users.is_active','=',true)
 			->select(
-				'roles.id as role_id',
-				// 'users.u_uname',
-				'users.u_password',
-				'users.u_email',
-				'users.f_name',
-				'users.m_name',
-				'users.l_name',
-				'users.number',
-				'users.imei_no',
-				'users.aadhar_no',
-				'users.address',
-				'users.state',
-				'users.district',
-				'users.taluka',
-				'users.village',
-				'users.pincode',
-				'users.id',
-				'users.is_active',
+				// 'roles.id as role_id',
+				'projects.project_name',
+				'projects.description',
+				'projects.state',
+				'projects.district',
+				'projects.village',
+				'projects.start_date',
+				'projects.end_date',
+				'projects.latitude',
+				'projects.longitude',
+				'projects.id',
+				'projects.is_active',
 			)->get()
 			->toArray();
-
-	$data_users_data = User::join('roles', function($join) {
-						$join->on('users.role_id', '=', 'roles.id');
-					})
-					// ->join('roles_permissions', function($join) {
-					// 	$join->on('users.id', '=', 'roles_permissions.user_id');
-					// })
-					->where('users.id','=',base64_decode($reuest->edit_id))
-					// ->where('roles_permissions.is_active','=',true)
-					// ->where('users.is_active','=',true)
-					->select('roles.id as role_id',
-							// 'users.u_uname',
-							'users.u_password',
-							'users.u_email',
-							'users.f_name',
-							'users.m_name',
-							'users.l_name',
-							'users.number',
-							'users.imei_no',
-							'users.aadhar_no',
-							'users.address',
-							'users.state',
-							'users.district',
-							'users.taluka',
-							'users.village',
-							'users.pincode',
-							'users.id',
-							'users.is_active',
-						)->get()
-						->toArray();
 						
-		$data_users['data_users'] = $data_users_data[0];
+		$data_projects['data_projects'] = $data_projects_data[0];
 		// $data_users['permissions_user'] = User::join('roles_permissions', function($join) {
 		// 					$join->on('users.id', '=', 'roles_permissions.user_id');
 		// 				})
@@ -329,7 +315,7 @@ class RegisterRepository
 		// 					)->get()
 		// 					->toArray();
 
-		return $data_users;
+		return $data_projects;
 	}
 
 	// public function delete($request)
@@ -362,19 +348,26 @@ class RegisterRepository
 	public function getById($id)
 	{
 		try {
-			$user = User::leftJoin('roles', 'roles.id', '=', 'users.role_id')
-				->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
-				->leftJoin('tbl_area as district_user', 'users.district', '=', 'district_user.location_id')
-				->leftJoin('tbl_area as taluka_user', 'users.taluka', '=', 'taluka_user.location_id')
-				->leftJoin('tbl_area as village_user', 'users.village', '=', 'village_user.location_id')
-				->where('users.id', $id)
-				->select('users.f_name','users.m_name','users.l_name','users.u_email','users.number','users.imei_no','users.aadhar_no',
-				'users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state',
-				'district_user.name as district','taluka_user.name as taluka','village_user.name as village')
+			$data_users = Project::leftJoin('tbl_area as state_project', 'projects.state', '=', 'state_project.location_id')
+		->leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
+		->leftJoin('tbl_area as taluka_project', 'projects.taluka', '=', 'taluka_project.location_id')
+		->leftJoin('tbl_area as village_project', 'projects.village', '=', 'village_project.location_id')
+				->where('projects.id', $id)
+				->select('projects.id',
+				'projects.project_name',
+				'projects.description',
+				'state_project.name as state_name',
+				'district_project.name as district_name',
+				'taluka_project.name as taluka_name',
+				'village_project.name as village_name',
+				'projects.start_date',
+				'projects.end_date',
+				'projects.latitude',
+				'projects.longitude',)
 				->first();
 	
-			if ($user) {
-				return $user;
+			if ($data_users) {
+				return $data_users;
 			} else {
 				return null;
 			}
@@ -388,27 +381,27 @@ class RegisterRepository
 
 	public function updateOne($request){
         try {
-            $user = User::find($request); // Assuming $request directly contains the ID
+            $project = Project::find($request); // Assuming $request directly contains the ID
 
             // Assuming 'is_active' is a field in the userr model
-            if ($user) {
-                $is_active = $user->is_active === 1 ? 0 : 1;
-                $user->is_active = $is_active;
-                $user->save();
+            if ($project) {
+                $is_active = $project->is_active === 1 ? 0 : 1;
+                $project->is_active = $is_active;
+                $project->save();
 
                 return [
-                    'msg' => 'User updated successfully.',
+                    'msg' => 'Project updated successfully.',
                     'status' => 'success'
                 ];
             }
 
             return [
-                'msg' => 'User not found.',
+                'msg' => 'Project not found.',
                 'status' => 'error'
             ];
         } catch (\Exception $e) {
             return [
-                'msg' => 'Failed to update User.',
+                'msg' => 'Failed to update Project.',
                 'status' => 'error'
             ];
         }
