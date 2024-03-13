@@ -45,8 +45,8 @@
                                     <div class="col-md-12 col-sm-12 text-center">
                                         <input class="form-control" name="user_id" id="user_id" placeholder=""
                                             type="hidden" value="{{ $register_user['user_id'] }}">
-                                        <input class="form-control" name="u_password_new" id="u_password_new" placeholder=""
-                                            type="hidden" value="{{ $register_user['u_password_new'] }}">
+                                        <input class="form-control" name="password_new" id="password_new" placeholder=""
+                                            type="hidden" value="{{ $register_user['password_new'] }}">
                                         <input class="form-control" name="password_change" id="password_change"
                                             placeholder="" type="hidden" value="{{ $register_user['password_change'] }}">
 

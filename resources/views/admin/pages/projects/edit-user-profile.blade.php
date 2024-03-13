@@ -81,12 +81,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="u_email">Email ID</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="u_email" id="u_email"
+                                            <label for="email">Email ID</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="email" id="email"
                                                 placeholder="" readonly
-                                                value="@if (old('u_email')) {{ old('u_email') }}@else{{ $user_data->u_email }} @endif">
-                                            @if ($errors->has('u_email'))
-                                                <span class="red-text"><?php echo $errors->first('u_email', ':message'); ?></span>
+                                                value="@if (old('email')) {{ old('email') }}@else{{ $user_data->email }} @endif">
+                                            @if ($errors->has('email'))
+                                                <span class="red-text"><?php echo $errors->first('email', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
@@ -95,13 +95,13 @@
 
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="u_password">Password</label>
-                                            <input type="password" class="password form-control mb-2" name="u_password"
-                                                id="u_password" placeholder=""
-                                                value="@if (old('u_password')) {{ old('u_password') }} @endif">
+                                            <label for="password">Password</label>
+                                            <input type="password" class="password form-control mb-2" name="password"
+                                                id="password" placeholder=""
+                                                value="@if (old('password')) {{ old('password') }} @endif">
 
-                                            @if ($errors->has('u_password'))
-                                                <span class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
+                                            @if ($errors->has('password'))
+                                                <span class="red-text"><?php echo $errors->first('password', ':message'); ?></span>
                                             @endif
                                             <span id="togglePassword" class="togglePpassword password-toggle"
                                                 onclick="togglePasswordVisibility()">
@@ -129,12 +129,12 @@
                                     </div>
                                     {{-- <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="u_password">Password</label>&nbsp<span class="red-text">*</span>
-                                            <input type="password" class="form-control" name="u_password" id="u_password"
+                                            <label for="password">Password</label>&nbsp<span class="red-text">*</span>
+                                            <input type="password" class="form-control" name="password" id="password"
                                                 placeholder=""
-                                                value="@if (old('u_password')) {{ old('u_password') }}@endif">
-                                            @if ($errors->has('u_password'))
-                                                <span class="red-text"><?php //echo $errors->first('u_password', ':message');
+                                                value="@if (old('password')) {{ old('password') }}@endif">
+                                            @if ($errors->has('password'))
+                                                <span class="red-text"><?php //echo $errors->first('password', ':message');
                                                 ?></span>
                                             @endif
                                         </div>

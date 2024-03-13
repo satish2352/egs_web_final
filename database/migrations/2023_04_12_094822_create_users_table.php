@@ -15,9 +15,9 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('u_email')->unique();
+            $table->string('email')->unique();
             // $table->string('u_uname');
-            $table->string('u_password');
+            $table->string('password');
             $table->unsignedBigInteger('role_id');
             $table->string('f_name');
             $table->string('m_name');
@@ -32,9 +32,9 @@ class CreateUsersTable extends Migration
             $table->string('village');
             $table->string('pincode');
             $table->string('ip_address');
-            $table->string('user_profile')->default('null');
-            $table->string('user_agent')->default('null');
-            $table->rememberToken();
+            // $table->string('user_agent')->default('null');
+            // $table->rememberToken();
+            $table->text('remember_token', 255)->nullable();
             $table->boolean('is_active')->default(true);
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();

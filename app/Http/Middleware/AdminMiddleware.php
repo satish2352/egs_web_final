@@ -18,7 +18,7 @@ class AdminMiddleware
             return redirect(route("login"));
         } else {
                 $update_values = User::where([
-                        'u_email' => session()->get('u_email')
+                        'email' => session()->get('email')
                         ])->first();
                 if($update_values->ip_address == $request->ip() && $update_values->user_agent == $request->userAgent()) {
 

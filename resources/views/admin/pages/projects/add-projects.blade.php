@@ -383,7 +383,7 @@
                 //     return this.optional(element) || /^[0-9]{10}$/.test(value);
                 // }, "Please enter a valid 10-digit number.");
 
-                // $.validator.addMethod("u_email", function(value, element) {
+                // $.validator.addMethod("email", function(value, element) {
                 //     // Regular expression for email validation
                 //     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                 //     return this.optional(element) || emailRegex.test(value);
@@ -395,7 +395,7 @@
                         role_id: {
                             required: true,
                         },
-                        u_password: {
+                        password: {
                             required: true,
                         },
                         password_confirmation: {
@@ -435,14 +435,14 @@
 
                     },
                     messages: {
-                        u_email: {
+                        email: {
                             required: "Please Enter the Eamil",
                             // remote: "This Email already exists."
                         },
                         role_id: {
                             required: "Please Select Role Name",
                         },
-                        u_password: {
+                        password: {
                             required: "Please Enter the Password",
                         },
                         password_confirmation: {

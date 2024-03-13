@@ -38,7 +38,7 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}
-                                                            ({{ $item->u_email }})
+                                                            ({{ $item->email }})
                                                         </td>
                                                         <td>{{ $item->role_name }}</td>
 

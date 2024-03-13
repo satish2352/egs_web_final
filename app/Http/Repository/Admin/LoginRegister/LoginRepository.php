@@ -25,7 +25,7 @@ class LoginRepository
         // get school description
         $data = [];
         $data['user_details'] = User::where( [
-                                        'u_email' => $request['email'],
+                                        'email' => $request['email'],
                                         'is_active' =>true
                                         ])
                                         ->select('*')

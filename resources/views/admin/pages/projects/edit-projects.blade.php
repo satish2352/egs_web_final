@@ -294,7 +294,7 @@
                 $("#frm_register1").validate({
                     rules: {
 
-                        u_password: {
+                        password: {
                             //required: true,
                             minlength: 6,
                             mypassword: true
@@ -302,11 +302,11 @@
                         },
                         password_confirmation: {
                             //required: true,
-                            equalTo: "#u_password"
+                            equalTo: "#password"
                         },
                     },
                     messages: {
-                        u_password: {
+                        password: {
                             required: "Please enter your new password",
                             minlength: "Password should be minimum 8 characters"
                         },
@@ -361,13 +361,13 @@
         var form = $("#regForm");
         var validator = form.validate({
             rules: {
-                // u_email: {
+                // email: {
                 //     required: true,
                 // },
                 role_id: {
                     required: true,
                 },
-                // u_password: {
+                // password: {
                 //     required: true,
                 // },
                 // password_confirmation: {
@@ -405,13 +405,13 @@
                 },
             },
             messages: {
-                // u_email: {
+                // email: {
                 //     required: "Please Enter the Eamil",
                 // },
                 role_id: {
                     required: "Please Select Role Name",
                 },
-                // u_password: {
+                // password: {
                 //     required: "Please Enter the Password",
                 // },
                 // password_confirmation: {
@@ -471,9 +471,9 @@
     $(document).ready(function() {
         // Function to check if all input fields are filled with valid data
         function checkFormValidity() {
-            // const u_email = $('#u_email').val();
+            // const email = $('#email').val();
             const role_id = $('#role_id').val();
-            // const u_password = $('#u_password').val();
+            // const password = $('#password').val();
             // const password_confirmation = $('#password_confirmation').val();
             const f_name = $('#f_name').val();
             const m_name = $('#m_name').val();
@@ -501,13 +501,13 @@
         // Initialize the form validation
         $("#regForm").validate({
             rules: {
-                // u_email: {
+                // email: {
                 //     required: true,
                 // },
                 role_id: {
                     required: true,
                 },
-                // u_password: {
+                // password: {
                 //     required: true,
                 // },
                 // password_confirmation: {
@@ -546,13 +546,13 @@
 
             },
             messages: {
-                // u_email: {
+                // email: {
                 //     required: "Please Enter the Eamil",
                 // },
                 role_id: {
                     required: "Please Select Role Name",
                 },
-                // u_password: {
+                // password: {
                 //     required: "Please Enter the Password",
                 // },
                 // password_confirmation: {

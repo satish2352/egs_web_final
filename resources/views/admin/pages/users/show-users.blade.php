@@ -47,7 +47,7 @@
                                             <label>Email :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->u_email) }}</label>
+                                            <label>{{ strip_tags($user_detail->email) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">

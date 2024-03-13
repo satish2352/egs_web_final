@@ -455,7 +455,7 @@
 <script>
     $(document).ready(function() {
         $('.password_confirmation').on('input', function() {
-            var password = $('.u_password').val();
+            var password = $('.password').val();
             var confirmPassword = $(this).val();
             var errorSpan = $('.password-error');
 
@@ -470,7 +470,7 @@
 <script>
     $(document).ready(function() {
         $('#password_confirmation').on('input', function() {
-            var password = $('#u_password').val();
+            var password = $('#password').val();
             var confirmPassword = $(this).val();
             var errorSpan = $('#password-error');
 

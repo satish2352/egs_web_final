@@ -23,7 +23,7 @@ class ProjectRepository
 		// 				})
 		// 				// ->where('users.is_active','=',true)
 		// 				->select('roles.role_name',
-		// 						'users.u_email',
+		// 						'users.email',
 		// 						'users.f_name',
 		// 						'users.m_name',
 		// 						'users.l_name',
@@ -81,9 +81,9 @@ class ProjectRepository
 	// {
 	// 	$ipAddress = getIPAddress($request);
 	// 	$user_data = new User();
-	// 	$user_data->u_email = $request['u_email'];
+	// 	$user_data->email = $request['email'];
 	// 	// $user_data->u_uname = $request['u_uname'];
-	// 	$user_data->u_password = bcrypt($request['u_password']);
+	// 	$user_data->password = bcrypt($request['password']);
 	// 	$user_data->role_id = $request['role_id'];
 	// 	$user_data->f_name = $request['f_name'];
 	// 	$user_data->m_name = $request['m_name'];
@@ -109,9 +109,9 @@ class ProjectRepository
 		$data =array();
 		// $ipAddress = getIPAddress($request);
 		$project_data = new Projects();
-		// $project_data->u_email = $request['u_email'];
+		// $project_data->email = $request['email'];
 		// $project_data->u_uname = $request['u_uname'];
-		// $project_data->u_password = bcrypt($request['u_password']);
+		// $project_data->password = bcrypt($request['password']);
 		$project_data->project_name = $request['project_name'];
 		$project_data->state = $request['state'];
 		$project_data->district = $request['district'];
@@ -259,7 +259,7 @@ class ProjectRepository
 
 	public function checkDupCredentials($request)
 	{
-		return User::where('u_email', '=', $request['u_email'])
+		return User::where('email', '=', $request['email'])
 			// ->orWhere('u_uname','=',$request['u_uname'])
 			->select('id')->get();
 	}
@@ -411,7 +411,7 @@ class ProjectRepository
 	{
 		$user_detail = User::where('is_active', true)
 			->where('id', session()->get('user_id'))
-			->select('id', 'f_name', 'm_name', 'l_name', 'u_email', 'u_password', 'number', 'designation','user_profile')
+			->select('id', 'f_name', 'm_name', 'l_name', 'email', 'password', 'number', 'designation','user_profile')
 			->first();
 		return $user_detail;
 	}
@@ -441,7 +441,7 @@ class ProjectRepository
 			// 	$update_data['user_profile'] = $newImagePathOrFilename;
 			// }
 
-			if (($request->number != $request->old_number) && !isset($request->u_password)) {
+			if (($request->number != $request->old_number) && !isset($request->password)) {
 				$this->sendOTPEMAIL($otp, $request);
 				info("only mobile change");
 				$return_data['password_change'] = 'no';
@@ -449,20 +449,20 @@ class ProjectRepository
 				$return_data['mobile_change'] = 'yes';
 				$return_data['user_id'] = $request->edit_user_id;
 				$return_data['new_mobile_number'] = $request->number;
-				$return_data['u_password_new'] = '';
+				$return_data['password_new'] = '';
 				$return_data['msg'] = "OTP sent on registered on email";
 				$return_data['msg_alert'] = "green";
 
 			}
 
-			if ((isset($request->u_password) && $request->u_password !== '') && ($request->number == $request->old_number)) {
+			if ((isset($request->password) && $request->password !== '') && ($request->number == $request->old_number)) {
 				info("only password change");
-				// $update_data['u_password'] = bcrypt($request->u_password);
+				// $update_data['password'] = bcrypt($request->password);
 				$return_data['password_change'] = 'yes';
 				$return_data['mobile_change'] = 'no';
 				$update_data['otp'] = $otp;
 				$return_data['user_id'] = $request->edit_user_id;
-				$return_data['u_password_new'] = bcrypt($request->u_password);
+				$return_data['password_new'] = bcrypt($request->password);
 				$return_data['new_mobile_number'] = '';
 				$return_data['msg'] = "OTP sent on registered on email";
 				$return_data['msg_alert'] = "green";
@@ -470,10 +470,10 @@ class ProjectRepository
 				$this->sendOTPEMAIL($otp, $request);
 			}
 
-			if ((isset($request->u_password) && $request->u_password !== '') && ($request->number != $request->old_number)) {
+			if ((isset($request->password) && $request->password !== '') && ($request->number != $request->old_number)) {
 				info("only password and mobile number changed");
 				$update_data['otp'] = $otp;
-				$return_data['u_password_new'] = bcrypt($request->u_password);
+				$return_data['password_new'] = bcrypt($request->password);
 				$return_data['password_change'] = 'yes';
 				$return_data['mobile_change'] = 'yes';
 				$return_data['user_id'] = $request->edit_user_id;
@@ -507,7 +507,7 @@ class ProjectRepository
 			$email_data = [
 				'otp' => $otp,
 			];
-			$toEmail = $request->u_email;
+			$toEmail = $request->email;
 			$senderSubject = 'Disaster Management OTP ' . date('d-m-Y H:i:s');
 			$fromEmail = env('MAIL_USERNAME');
 			Mail::send('admin.email.emailotp', ['email_data' => $email_data], function ($message) use ($toEmail, $fromEmail, $senderSubject) {
@@ -521,9 +521,9 @@ class ProjectRepository
 	}
 	
 	// public function checkEmailExists(Request $request) {
-    //     $userEmail = $request->input('u_email');
+    //     $userEmail = $request->input('email');
       
-    //     $user = User::where('u_email', $userEmail)->first();
+    //     $user = User::where('email', $userEmail)->first();
       
     //     if ($user) {
     //       return response()->json([

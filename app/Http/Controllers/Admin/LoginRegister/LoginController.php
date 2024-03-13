@@ -28,13 +28,13 @@ class LoginController extends Controller
     public function submitLogin(Request $request) {
 
         $get_user = User::where([
-            'u_email' => $request['email'],
+            'email' => $request['email'],
             ])->first();
             if(!empty($get_user)){
            
                 if($get_user->ip_address!=$request->ip() || $get_user->user_agent!=$request->userAgent()){
                     $update = User::where([
-                        'u_email' => $request['email'],
+                        'email' => $request['email'],
                         ])
                         ->update([
                             'ip_address'=>'null',
@@ -66,7 +66,7 @@ class LoginController extends Controller
             } else {
 
                 $update_values = User::where([
-                    'u_email' => $request['email']
+                    'email' => $request['email']
                     ])->get()->toArray();
 
                 if(!($update_values[0]['ip_address'] == $request->ip() && $update_values[0]['user_agent'] == $request->userAgent()) &&
@@ -94,7 +94,7 @@ class LoginController extends Controller
     {
 
         $update = User::where([
-            'u_email' => session()->get('u_email'),
+            'email' => session()->get('email'),
             'is_active' =>true
             ])
             ->update([
@@ -111,7 +111,7 @@ class LoginController extends Controller
  
         $request->session()->forget('user_id');
         $request->session()->forget('role_id');
-        $request->session()->forget('u_email');
+        $request->session()->forget('email');
         $request->session()->forget('permissions');
 
         $request->session()->flush();

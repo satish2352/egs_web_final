@@ -56,7 +56,7 @@ class RelationController extends Controller
             else
             {
                 $add_relation_data = $this->service->addAll($request);
-                dd($add_relation_data);
+                // dd($add_relation_data);
                 if($add_relation_data)
                 {
 

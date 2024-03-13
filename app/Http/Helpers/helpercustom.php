@@ -361,7 +361,7 @@ function file_exists_view($path) {
 // {
 //     $user_detail = User::where('is_active', true)
 //         ->where('id', session()->get('user_id'))
-//         ->select('id', 'f_name', 'm_name', 'l_name', 'u_email', 'u_password', 'number', 'designation','user_profile')
+//         ->select('id', 'f_name', 'm_name', 'l_name', 'email', 'password', 'number', 'designation','user_profile')
 //         ->first();
 //     // echo $user_detail;
 //     // die();

@@ -23,7 +23,7 @@ class RelationRepository{
             $relation_data = new RelationModel();
             $relation_data->relation_title = $request['relation_title'];
             $relation_data->save();       
-                dd($relation_data);
+                // dd($relation_data);
             return $relation_data;
 
         } catch (\Exception $e) {

@@ -50,11 +50,11 @@
                                     --}}
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="u_email">Email ID</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control" name="u_email" id="u_email"
-                                                placeholder="" value="{{ old('u_email') }}">
-                                            @if ($errors->has('u_email'))
-                                                <span class="red-text"><?php echo $errors->first('u_email', ':message'); ?></span>
+                                            <label for="email">Email ID</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control" name="email" id="email"
+                                                placeholder="" value="{{ old('email') }}">
+                                            @if ($errors->has('email'))
+                                                <span class="red-text"><?php echo $errors->first('email', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
@@ -81,15 +81,15 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="u_password">Password</label>&nbsp<span class="red-text">*</span>
-                                            <input type="password" class="password form-control" name="u_password"
-                                                id="u_password" placeholder="" value="{{ old('u_password') }}">
+                                            <label for="password">Password</label>&nbsp<span class="red-text">*</span>
+                                            <input type="password" class="password form-control" name="password"
+                                                id="password" placeholder="" value="{{ old('password') }}">
                                             <span id="togglePassword" class="togglePpassword password-toggle"
                                                 onclick="togglePasswordVisibility()">
                                                 <i class="fa fa-eye-slash"></i>
                                             </span>
-                                            @if ($errors->has('u_password'))
-                                                <span class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
+                                            @if ($errors->has('password'))
+                                                <span class="red-text"><?php echo $errors->first('password', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
@@ -494,9 +494,9 @@
             $(document).ready(function() {
                 // Function to check if all input fields are filled with valid data
                 function checkFormValidity() {
-                    const u_email = $('#u_email').val();
+                    const email = $('#email').val();
                     const role_id = $('#role_id').val();
-                    const u_password = $('#u_password').val();
+                    const password = $('#password').val();
                     const password_confirmation = $('#password_confirmation').val();
                     const f_name = $('#f_name').val();
                     const m_name = $('#m_name').val();
@@ -513,7 +513,7 @@
                     const pincode = $('#pincode').val();
 
                     // Enable the submit button if all fields are valid
-                    if (u_email && role_id && u_password && password_confirmation && f_name && m_name && l_name &&
+                    if (email && role_id && password && password_confirmation && f_name && m_name && l_name &&
                         number && imei_no && aadhar_no && address && state && district && taluka && village && user_profile && pincode) {
                         $('#submitButton').prop('disabled', false);
                     } else {
@@ -529,7 +529,7 @@
                     return this.optional(element) || /^[0-9]{10}$/.test(value);
                 }, "Please enter a valid 10-digit number.");
 
-                $.validator.addMethod("u_email", function(value, element) {
+                $.validator.addMethod("email", function(value, element) {
                     // Regular expression for email validation
                     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
                     return this.optional(element) || emailRegex.test(value);
@@ -538,23 +538,23 @@
                 // Initialize the form validation
                 $("#regForm").validate({
                     rules: {
-                        u_email: {
+                        email: {
                             required: true,
                         //     remote: {
                         //     url: '/web/check-email-exists',
                         //     type: 'post',
                         //     data: {
-                        //         u_email: function() {
-                        //             return $('#u_email').val();
+                        //         email: function() {
+                        //             return $('#email').val();
                         //         }
                         //     }
                         // },
-                            u_email:true,
+                            email:true,
                         },
                         role_id: {
                             required: true,
                         },
-                        u_password: {
+                        password: {
                             required: true,
                         },
                         password_confirmation: {
@@ -603,14 +603,14 @@
 
                     },
                     messages: {
-                        u_email: {
+                        email: {
                             required: "Please Enter the Eamil",
                             // remote: "This Email already exists."
                         },
                         role_id: {
                             required: "Please Select Role Name",
                         },
-                        u_password: {
+                        password: {
                             required: "Please Enter the Password",
                         },
                         password_confirmation: {
