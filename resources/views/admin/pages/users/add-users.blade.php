@@ -163,13 +163,23 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="designation">Designation</label>&nbsp<span
+                                            <label for="imei_no">IMEI No</label>&nbsp<span
                                                 class="red-text">*</span>
-                                            <input type="text" class="form-control" name="designation"
-                                                id="designation" placeholder="" value="{{ old('designation') }}"
-                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
+                                            <input type="text" class="form-control" name="imei_no"
+                                                id="imei_no" placeholder="" value="{{ old('imei_no') }}">
                                             @if ($errors->has('number'))
-                                                <span class="red-text"><?php echo $errors->first('designation', ':message'); ?></span>
+                                                <span class="red-text"><?php echo $errors->first('imei_no', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="aadhar_no">Aadhar No.</label>&nbsp<span
+                                                class="red-text">*</span>
+                                            <input type="text" class="form-control" name="aadhar_no"
+                                                id="aadhar_no" placeholder="" value="{{ old('aadhar_no') }}">
+                                            @if ($errors->has('number'))
+                                                <span class="red-text"><?php echo $errors->first('aadhar_no', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
@@ -203,12 +213,34 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="city">City</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control" name="city" id="city">
-                                                <option value="">Select City</option>
+                                            <label for="district">District</label>&nbsp<span class="red-text">*</span>
+                                            <select class="form-control" name="district" id="district">
+                                                <option value="">Select District</option>
                                             </select>
-                                            @if ($errors->has('city'))
-                                                <span class="red-text"><?php echo $errors->first('city', ':message'); ?></span>
+                                            @if ($errors->has('district'))
+                                                <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="taluka">Taluka</label>&nbsp<span class="red-text">*</span>
+                                            <select class="form-control" name="taluka" id="taluka">
+                                                <option value="">Select Taluka</option>
+                                            </select>
+                                            @if ($errors->has('taluka'))
+                                                <span class="red-text"><?php echo $errors->first('taluka', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="village">Village</label>&nbsp<span class="red-text">*</span>
+                                            <select class="form-control" name="village" id="village">
+                                                <option value="">Select Village</option>
+                                            </select>
+                                            @if ($errors->has('village'))
+                                                <span class="red-text"><?php echo $errors->first('village', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
@@ -305,6 +337,110 @@
                     e.preventDefault();
                     var stateId = $('#state').val();
                     // console.log(stateId);
+                    $('#district').html('<option value="">Select District</option>');
+
+                    if (stateId !== '') {
+                        $.ajax({
+                            url: '{{ route('district') }}',
+                            type: 'GET',
+                            data: {
+                                stateId: stateId
+                            },
+                            // headers: {
+                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            // },
+                            success: function(response) {
+                                console.log(response);
+                                if (response.district.length > 0) {
+                                    $.each(response.district, function(index, district) {
+                                        $('#district').append('<option value="' + district
+                                            .location_id +
+                                            '">' + district.name + '</option>');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+
+                $('#district').change(function(e) {
+                    e.preventDefault();
+                    var districtId = $('#district').val();
+                    console.log(districtId);
+                    $('#taluka').html('<option value="">Select Taluka</option>');
+
+                    if (districtId !== '') {
+                        $.ajax({
+                            url: '{{ route('taluka') }}',
+                            type: 'GET',
+                            data: {
+                                districtId: districtId
+                            },
+                            // headers: {
+                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            // },
+                            success: function(response) {
+                                // console.log(response);
+                                if (response.taluka.length > 0) {
+                                    $.each(response.taluka, function(index, taluka) {
+                                        $('#taluka').append('<option value="' + taluka
+                                            .location_id +
+                                            '">' + taluka.name + '</option>');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+
+                $('#taluka').change(function(e) {
+                    e.preventDefault();
+                    var talukaId = $('#taluka').val();
+                    console.log(talukaId);
+                    $('#village').html('<option value="">Select Village</option>');
+
+                    if (talukaId !== '') {
+                        $.ajax({
+                            url: '{{ route('village') }}',
+                            type: 'GET',
+                            data: {
+                                talukaId: talukaId
+                            },
+                            // headers: {
+                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            // },
+                            success: function(response) {
+                                // console.log(response);
+                                if (response.village.length > 0) {
+                                    $.each(response.village, function(index, village) {
+                                        $('#village').append('<option value="' + village
+                                            .location_id +
+                                            '">' + village.name + '</option>');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+        <!-- <script>
+            $(document).ready(function() {
+
+                $('#state').change(function(e) {
+                    e.preventDefault();
+                    var stateId = $('#state').val();
+                    // console.log(stateId);
                     $('#city').html('<option value="">Select City</option>');
 
                     if (stateId !== '') {
@@ -331,7 +467,7 @@
                     }
                 });
             });
-        </script>
+        </script> -->
         <script>
             function myFunction(role_id) {
                 // alert(role_id);
@@ -366,16 +502,19 @@
                     const m_name = $('#m_name').val();
                     const l_name = $('#l_name').val();
                     const number = $('#number').val();
-                    const designation = $('#designation').val();
+                    const imei_no = $('#imei_no').val();
+                    const aadhar_no = $('#aadhar_no').val();
                     const address = $('#address').val();
                     const state = $('#state').val();
-                    const city = $('#city').val();
+                    const district = $('#district').val();
+                    const taluka = $('#taluka').val();
+                    const village = $('#village').val();
                     const user_profile = $('#user_profile').val();
                     const pincode = $('#pincode').val();
 
                     // Enable the submit button if all fields are valid
                     if (u_email && role_id && u_password && password_confirmation && f_name && m_name && l_name &&
-                        number && designation && address && state && city && user_profile && pincode) {
+                        number && imei_no && aadhar_no && address && state && district && taluka && village && user_profile && pincode) {
                         $('#submitButton').prop('disabled', false);
                     } else {
                         $('#submitButton').prop('disabled', true);
@@ -434,7 +573,10 @@
                             required: true,
                             number:true,
                         },
-                        designation: {
+                        imei_no: {
+                            required: true,
+                        },
+                        aadhar_no: {
                             required: true,
                         },
                         address: {
@@ -443,7 +585,13 @@
                         state: {
                             required: true,
                         },
-                        city: {
+                        district: {
+                            required: true,
+                        },
+                        taluka: {
+                            required: true,
+                        },
+                        village: {
                             required: true,
                         },
                         user_profile: {
@@ -480,8 +628,11 @@
                         number: {
                             required: "Please Enter the Number",
                         },
-                        designation: {
-                            required: "Please Enter the Designation",
+                        imei_no: {
+                            required: "Please Enter the IMEI No",
+                        },
+                        aadhar_no: {
+                            required: "Please Enter the Aadhar No",
                         },
                         address: {
                             required: "Please Enter the Address",
@@ -490,8 +641,14 @@
                         state: {
                             required: "Please Select State",
                         },
-                        city: {
-                            required: "Please Select State",
+                        district: {
+                            required: "Please Select District",
+                        },
+                        taluka: {
+                            required: "Please Select Taluka",
+                        },
+                        village: {
+                            required: "Please Select Village",
                         },
                         user_profile: {
                             required: "Upload Media File",
