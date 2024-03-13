@@ -1,7 +1,7 @@
 @extends('admin.layout.master')
 
 @section('content')
-    <?php// $data_permission = getPermissionForCRUDPresentOrNot('list-gender', session('permissions'));
+    <?php $data_permission = getPermissionForCRUDPresentOrNot('list-gender', session('permissions'));
     ?>
     <div class="main-panel">
         <div class="content-wrapper mt-7">
