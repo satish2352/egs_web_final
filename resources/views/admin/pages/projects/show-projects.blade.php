@@ -10,12 +10,12 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-start align-items-center">
                             <h3 class="page-title">
-                                User Details
+                                Projects Details
                             </h3>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-end align-items-center">
                             <div>
-                                <a href="{{ route('list-users') }}" class="btn btn-sm btn-primary ml-3">Back</a>
+                                <a href="{{ route('list-projects') }}" class="btn btn-sm btn-primary ml-3">Back</a>
                             </div>
                         </div>
 
@@ -27,53 +27,10 @@
                                     @include('admin.layout.alert')
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Name :</label>
+                                            <label>Project Name :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ $user_detail->f_name }} {{ $user_detail->m_name }}
-                                                {{ $user_detail->l_name }}</label>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Role :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->role_name) }}</label>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Email :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->u_email) }}</label>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Mobile Number :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->number) }}</label>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row ">
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>IMEI Number :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->imei_no) }}</label>
-                                        </div>
-                                    </div>
-                                    <div class="row ">
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Address :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->address) }}</label>
+                                            <label>{{ $project_detail->project_name }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -81,7 +38,7 @@
                                             <label>State :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->state) }}</label>
+                                            <label>{{ strip_tags($project_detail->state_name) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -89,7 +46,7 @@
                                             <label>District :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->district) }}</label>
+                                            <label>{{ strip_tags($project_detail->district_name) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -97,35 +54,61 @@
                                             <label>Taluka :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->taluka) }}</label>
+                                            <label>{{ strip_tags($project_detail->taluka_name) }}</label>
                                         </div>
                                     </div>
+
+
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Village :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->village) }}</label>
+                                            <label>{{ strip_tags($project_detail->village_name) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Pincode :</label>
+                                            <label>Latitude :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->pincode) }}</label>
+                                            <label>{{ strip_tags($project_detail->latitude) }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>Longitude :</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <label>{{ strip_tags($project_detail->longitude) }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>Start Date :</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <label>{{ strip_tags($project_detail->start_date) }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>End Date :</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <label>{{ strip_tags($project_detail->end_date) }}</label>
                                         </div>
                                     </div>
 
-                                    <div class="row ">
+                                    <!-- <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Profile :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <img src="{{ Config::get('DocumentConstant.USER_PROFILE_VIEW') }}{{ $user_detail->user_profile }}"
+                                            <img src="{{ Config::get('DocumentConstant.USER_PROFILE_VIEW') }}{{ $project_detail->user_profile }}"
                                                 style="width:100px; height:100px; border-radius:50%" />
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

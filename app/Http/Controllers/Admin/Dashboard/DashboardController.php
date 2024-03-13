@@ -53,6 +53,7 @@ use App\Models\ {
     // TrainingMaterialsWorkshops,
     // Contact,
     Event,
+    Project
     // Metadata,
     
     // FooterImportantLinks,

@@ -45,6 +45,20 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/states', ['as' => 'states', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@getState']);
     // Route::get('/check-email-exists', ['as' => 'check-email-exists', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@checkEmailExists']);
 
+    Route::get('/district', ['as' => 'district', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@getDistrict']);
+    Route::get('/taluka', ['as' => 'taluka', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@getTaluka']);
+    Route::get('/village', ['as' => 'village', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@getVillage']);
+
+
+    Route::get('/list-projects', ['as' => 'list-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@index']);
+    Route::post('/update-active-projects', ['as' => 'update-active-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@updateOne']);
+    Route::get('/add-projects', ['as' => 'add-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@addProjects']);
+    Route::post('/add-projects', ['as' => 'add-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@store']);
+    Route::get('/edit-projects/{edit_id}', ['as' => 'edit-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@editProjects']);
+    Route::post('/update-users', ['as' => 'update-users', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@update']);
+    Route::post('/show-projects', ['as' => 'show-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@show']);
+
+
     Route::post('/update-active-user', ['as' => 'update-active-user', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@updateOne']);
     // Route::get('/prof', ['as' => 'prof', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\RegisterController@getProf']);
 

@@ -1,7 +1,7 @@
 <?php
-namespace App\Http\Services\Admin\LoginRegister;
+namespace App\Http\Services\Admin\Project;
 
-use App\Http\Repository\Admin\LoginRegister\RegisterRepository;
+use App\Http\Repository\Admin\Project\ProjectRepository;
 
 
 use App\Models\
@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Config;
 use Storage;
 
-class RegisterServices
+class ProjectServices
 {
 
 	protected $repo;
@@ -19,13 +19,27 @@ class RegisterServices
      * TopicService constructor.
      */
     public function __construct() {
-        $this->repo = new RegisterRepository();
+        $this->repo = new ProjectRepository();
     }
 
     public function index() {
-        $data_users = $this->repo->getUsersList();
+        $data_users = $this->repo->getProjectsList();
         // dd($data_users);
         return $data_users;
+    }
+
+    public function addProject($request)
+    {
+        try {
+            $add_role = $this->repo->addProject($request);
+            if ($add_role) {
+                return ['status' => 'success', 'msg' => 'Role Added Successfully.'];
+            } else {
+                return ['status' => 'error', 'msg' => 'Role Not Added.'];
+            }  
+        } catch (Exception $e) {
+            return ['status' => 'error', 'msg' => $e->getMessage()];
+        }      
     }
 
     // public function register($request) {
@@ -42,46 +56,46 @@ class RegisterServices
     //     }
     // }
 
-    public function register($request){
-        try {
+    // public function register($request){
+    //     try {
 
-            $chk_dup = $this->repo->checkDupCredentials($request);
-            if(sizeof($chk_dup)>0)
-            {
-                return ['status'=>'failed','msg'=>'Registration Failed. The name has already been taken.'];
-            }
-            else
-            {
-                $last_id = $this->repo->register($request);
-                $path = Config::get('DocumentConstant.USER_PROFILE_ADD');
+    //         $chk_dup = $this->repo->checkDupCredentials($request);
+    //         if(sizeof($chk_dup)>0)
+    //         {
+    //             return ['status'=>'failed','msg'=>'Registration Failed. The name has already been taken.'];
+    //         }
+    //         else
+    //         {
+    //             $last_id = $this->repo->register($request);
+    //             $path = Config::get('DocumentConstant.USER_PROFILE_ADD');
                 
-                //"\all_web_data\images\home\slides\\"."\\";
-                $imageProfile = $last_id['imageProfile'];
+    //             //"\all_web_data\images\home\slides\\"."\\";
+    //             $imageProfile = $last_id['imageProfile'];
               
-                // $userProfile = $last_id . '_english.' . $request->user_profile->extension();
-                uploadImage($request, 'user_profile', $path, $imageProfile);
-                // dd($imageProfile);
-                // die();
-                if ($last_id) {
-                    return ['status' => 'success', 'msg' => 'User Added Successfully.'];
-                } else {
-                    return ['status' => 'error', 'msg' => 'User get Not Added.'];
-                }  
-            }
+    //             // $userProfile = $last_id . '_english.' . $request->user_profile->extension();
+    //             uploadImage($request, 'user_profile', $path, $imageProfile);
+    //             // dd($imageProfile);
+    //             // die();
+    //             if ($last_id) {
+    //                 return ['status' => 'success', 'msg' => 'User Added Successfully.'];
+    //             } else {
+    //                 return ['status' => 'error', 'msg' => 'User get Not Added.'];
+    //             }  
+    //         }
 
-        } catch (Exception $e) {
-            return ['status' => 'error', 'msg' => $e->getMessage()];
-            }      
-    }
+    //     } catch (Exception $e) {
+    //         return ['status' => 'error', 'msg' => $e->getMessage()];
+    //         }      
+    // }
 
     public function update($request) {
             $user_register_id = $this->repo->update($request);
             return ['status'=>'success','msg'=>'Data Updated Successful.'];
     }    
 
-    public function editUsers($request) {
-        $data_users = $this->repo->editUsers($request);
-        return $data_users;
+    public function editProjects($request) {
+        $data_projects = $this->repo->editProjects($request);
+        return $data_projects;
     }
     
 

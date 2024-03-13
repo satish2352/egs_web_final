@@ -5,12 +5,12 @@
         <div class="content-wrapper mt-6">
             <div class="page-header">
                 <h3 class="page-title">
-                    Users Master
+                    Projects Master
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('list-users') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"> Users Master</li>
+                        <li class="breadcrumb-item"><a href="{{ route('list-projects') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"> Projects Master</li>
                     </ol>
                 </nav>
             </div>
@@ -19,139 +19,21 @@
                     <div class="card">
                         <div class="card-body">
                             <form class="forms-sample" id="regForm" name="frm_register" method="post" role="form"
-                                action="{{ route('update-users') }}" enctype="multipart/form-data">
+                                action="{{ route('update-projects') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                                 <div class="row">
-                                    {{-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="u_email">Email ID</label>&nbsp<span class="red-text">*</span>
-                                        <input type="text" class="form-control" name="u_email" id="u_email"
-                                            placeholder="" value="{{$user_data['data_users']['u_email']}}">
-                                        @if ($errors->has('u_email'))
-                                        <span
-                                            class="red-text"><?php echo $errors->first('u_email', ':message'); ?></span>
-                                        @endif
-                                    </div>
-                                </div> 
-                                          <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="u_uname">User Name</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control" name="u_uname" id="u_uname"
-                                                placeholder="" value="{{ $user_data['data_users']['u_uname'] }}">
-                                            @if ($errors->has('u_uname'))
-                                                <span class="red-text"><?php echo $errors->first('u_uname', ':message'); ?></span>
+                                            <label for="project_name">Project Title</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control" name="project_name" id="project_name"
+                                                placeholder="" value="{{$project_data['data_projects']['project_name']}}">
+                                            @if ($errors->has('project_name'))
+                                            <span
+                                                class="red-text"><?php echo $errors->first('project_name', ':message'); ?></span>
                                             @endif
                                         </div>
-                                    </div> --}}
-                                    {{-- <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="u_password">Password</label>&nbsp<span class="red-text">*</span>
-                                        <input type="text" class="form-control" name="u_password" id="u_password"
-                                            placeholder="" value="{{decrypt($user_data['data_users']['u_password'])}}">
-                                        @if ($errors->has('u_password'))
-                                        <span
-                                            class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
-                                        @endif
-                                    </div>
-                                </div> --}}
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="role_id">Role Type</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control" id="role_id" name="role_id"
-                                                onchange="myFunction(this.value)">
-                                                <option>Select</option>
-                                                @foreach ($user_data['roles'] as $role)
-                                                    <option value="{{ $role['id'] }}"
-                                                        @if ($role['id'] == $user_data['data_users']['role_id']) <?php echo 'selected'; ?> @endif>
-                                                        {{ $role['role_name'] }}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('role_id'))
-                                                <span class="red-text"><?php echo $errors->first('role_id', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="f_name">First Name</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="f_name" id="f_name"
-                                                placeholder="" value="{{ $user_data['data_users']['f_name'] }}"
-                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
-                                            @if ($errors->has('f_name'))
-                                                <span class="red-text"><?php echo $errors->first('f_name', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="m_name">Middle Name</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="m_name" id="m_name"
-                                                placeholder="" value="{{ $user_data['data_users']['m_name'] }}"
-                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
-                                            @if ($errors->has('m_name'))
-                                                <span class="red-text"><?php echo $errors->first('m_name', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="l_name">Last Name</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="l_name" id="l_name"
-                                                placeholder="" value="{{ $user_data['data_users']['l_name'] }}"
-                                                oninput="this.value = this.value.replace(/[^a-zA-Z\s.]/g, '').replace(/(\..*)\./g, '$1');">
-                                            @if ($errors->has('l_name'))
-                                                <span class="red-text"><?php echo $errors->first('l_name', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="number">Number</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="number" id="number"
-                                                placeholder="" value="{{ $user_data['data_users']['number'] }}"
-                                                onkeyup="editvalidateMobileNumber(this.value)"
-                                                pattern="[789]{1}[0-9]{9}" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"  maxlength="10" minlength="10"
-                                                >
-                                            <span id="edit-message" class="red-text"></span>
-                                            @if ($errors->has('number'))
-                                                <span class="red-text"><?php echo $errors->first('number', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="imei_no">IMEI No</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="imei_no" id="imei_no"
-                                                placeholder="" value="{{ $user_data['data_users']['imei_no'] }}">
-                                            @if ($errors->has('imei_no'))
-                                                <span class="red-text"><?php echo $errors->first('imei_no', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="aadhar_no">Aadhar No</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="aadhar_no" id="aadhar_no"
-                                                placeholder="" value="{{ $user_data['data_users']['aadhar_no'] }}">
-                                            @if ($errors->has('aadhar_no'))
-                                                <span class="red-text"><?php echo $errors->first('aadhar_no', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="address">Address</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="address" id="address"
-                                                placeholder="" value="{{ $user_data['data_users']['address'] }}">
-                                            @if ($errors->has('address'))
-                                                <span class="red-text"><?php echo $errors->first('address', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
+                                    </div> 
+                                   
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="state">State</label>&nbsp<span class="red-text">*</span>
@@ -196,20 +78,60 @@
                                             @endif
                                         </div>
                                     </div>
+
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="pincode">Pincode</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="pincode" id="pincode"
-                                                placeholder="" value="{{ $user_data['data_users']['pincode'] }}"
-                                                onkeyup="editvalidatePincode(this.value)">
-                                            <span id="edit-message-pincode" class="red-text"></span>
-                                            @if ($errors->has('pincode'))
-                                                <span class="red-text"><?php echo $errors->first('pincode', ':message'); ?></span>
+                                            <label for="latitude">Latitude</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control" name="latitude" id="latitude"
+                                                placeholder="" value="{{ $project_data['data_projects']['latitude'] }}">
+                                            @if ($errors->has('latitude'))
+                                                <span class="red-text"><?php echo $errors->first('latitude', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="longitude">Longitude</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control" name="longitude" id="longitude"
+                                                placeholder="" value="{{ $project_data['data_projects']['longitude'] }}">
+                                            @if ($errors->has('longitude'))
+                                                <span class="red-text"><?php echo $errors->first('longitude', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div> 
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="start_date">Start date</label>&nbsp<span class="red-text">*</span>
+                                            <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD"
+                                                name="start_date" id="start_date"
+                                                value="{{ $project_data['data_projects']['start_date'] }}">
+                                            @if ($errors->has('start_date'))
+                                                <span class="red-text"><?php echo $errors->first('start_date', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
-
-
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="end_date">End date</label>&nbsp<span class="red-text">*</span>
+                                            <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD"
+                                                name="end_date" id="end_date"
+                                                value="{{ $project_data['data_projects']['end_date'] }}">
+                                            @if ($errors->has('end_date'))
+                                                <span class="red-text"><?php echo $errors->first('end_date', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="description">Description</label>&nbsp<span
+                                                class="red-text">*</span>
+                                            <textarea class="form-control description" name="description" id="description"
+                                                placeholder="Enter the Description" name="description">{{ $project_data['data_projects']['description'] }}</textarea>
+                                            @if ($errors->has('description'))
+                                                <span class="red-text"><?php echo $errors->first('description', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
 
                                     <br>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
@@ -217,7 +139,7 @@
                                             <label class="form-check-label">
                                                 <input type="checkbox" class="form-check-input" name="is_active"
                                                     id="is_active" value="y" data-parsley-multiple="is_active"
-                                                    @if ($user_data['data_users']['is_active']) <?php echo 'checked'; ?> @endif>
+                                                    @if ($project_data['data_projects']['is_active']) <?php echo 'checked'; ?> @endif>
                                                 Is Active
                                                 <i class="input-helper"></i><i class="input-helper"></i></label>
                                         </div>
@@ -230,7 +152,7 @@
 
                                     <div class="col-md-12 col-sm-12 text-center mt-3">
                                         <input type="hidden" class="form-check-input" name="edit_id" id="edit_id"
-                                            value="{{ $user_data['data_users']['id'] }}">
+                                            value="{{ $project_data['data_projects']['id'] }}">
                                             <button type="submit" class="btn btn-sm btn-success" id="submitButton">
                                                 Save &amp; Update
                                             </button>
@@ -248,34 +170,34 @@
         </div>
 
         <script>
-            // function getStateCity(stateId, city_id) {
+            function getStateCity(stateId, city_id) {
 
-            //     $('#city').html('<option value="">Select City</option>');
-            //     if (stateId !== '') {
-            //         $.ajax({
-            //             url: '{{ route('cities') }}',
-            //             type: 'GET',
-            //             data: {
-            //                 stateId: stateId
-            //             },
+                $('#city').html('<option value="">Select City</option>');
+                if (stateId !== '') {
+                    $.ajax({
+                        url: '{{ route('cities') }}',
+                        type: 'GET',
+                        data: {
+                            stateId: stateId
+                        },
 
-            //             success: function(response) {
-            //                 if (response.city.length > 0) {
-            //                     $.each(response.city, function(index, city) {
-            //                         $('#city').append('<option value="' + city
-            //                             .location_id +
-            //                             '" selected>' + city.name + '</option>');
-            //                     });
-            //                     if (city_id != null) {
-            //                         $('#city').val(city_id);
-            //                     } else {
-            //                         $('#city').val("");
-            //                     }
-            //                 }
-            //             }
-            //         });
-            //     }
-            // }
+                        success: function(response) {
+                            if (response.city.length > 0) {
+                                $.each(response.city, function(index, city) {
+                                    $('#city').append('<option value="' + city
+                                        .location_id +
+                                        '" selected>' + city.name + '</option>');
+                                });
+                                if (city_id != null) {
+                                    $('#city').val(city_id);
+                                } else {
+                                    $('#city').val("");
+                                }
+                            }
+                        }
+                    });
+                }
+            }
 
             function getState(stateId) {
                 $('#state').html('<option value="">Select State</option>');
@@ -294,93 +216,6 @@
                                         '" selected>' + state.name + '</option>');
                                 });
                                 $('#state').val(stateId);
-                            }
-                        }
-                    });
-                }
-            }
-
-            function getStateDistrict(stateId, district_id) {
-
-                $('#district').html('<option value="">Select District</option>');
-                if (stateId !== '') {
-                    $.ajax({
-                        url: '{{ route('district') }}',
-                        type: 'GET',
-                        data: {
-                            stateId: stateId
-                        },
-
-                        success: function(response) {
-                            if (response.district.length > 0) {
-                                $.each(response.district, function(index, district) {
-                                    $('#district').append('<option value="' + district
-                                        .location_id +
-                                        '" selected>' + district.name + '</option>');
-                                });
-                                if (district_id != null) {
-                                    $('#district').val(district_id);
-                                } else {
-                                    $('#district').val("");
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            function getDistrictTaluka(districtId, taluka_id) {
-
-                $('#taluka').html('<option value="">Select District</option>');
-                if (districtId !== '') {
-                    $.ajax({
-                        url: '{{ route('taluka') }}',
-                        type: 'GET',
-                        data: {
-                            districtId: districtId
-                        },
-
-                        success: function(response) {
-                            if (response.taluka.length > 0) {
-                                $.each(response.taluka, function(index, taluka) {
-                                    $('#taluka').append('<option value="' + taluka
-                                        .location_id +
-                                        '" selected>' + taluka.name + '</option>');
-                                });
-                                if (taluka_id != null) {
-                                    $('#taluka').val(taluka_id);
-                                } else {
-                                    $('#taluka').val("");
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            function getTalukaVillage(talukaId, village_id) {
-
-                $('#village').html('<option value="">Select Village</option>');
-                if (talukaId !== '') {
-                    $.ajax({
-                        url: '{{ route('village') }}',
-                        type: 'GET',
-                        data: {
-                            talukaId: talukaId
-                        },
-
-                        success: function(response) {
-                            if (response.village.length > 0) {
-                                $.each(response.village, function(index, village) {
-                                    $('#village').append('<option value="' + village
-                                        .location_id +
-                                        '" selected>' + village.name + '</option>');
-                                });
-                                if (village_id != null) {
-                                    $('#village').val(village_id);
-                                } else {
-                                    $('#village').val("");
-                                }
                             }
                         }
                     });
@@ -421,21 +256,11 @@
         <script>
             $(document).ready(function() {
                 myFunction($("#role_id").val());
-                getStateDistrict('{{ $user_data['data_users']['state'] }}', '{{ $user_data['data_users']['district'] }}');
-                getDistrictTaluka('{{ $user_data['data_users']['district'] }}', '{{ $user_data['data_users']['taluka'] }}');
-                getTalukaVillage('{{ $user_data['data_users']['taluka'] }}', '{{ $user_data['data_users']['village'] }}');
+                getStateCity('{{ $user_data['data_users']['state'] }}', '{{ $user_data['data_users']['city'] }}');
                 getState('{{ $user_data['data_users']['state'] }}');
 
                 $("#state").on('change', function() {
-                    getStateDistrict($("#state").val(),'');
-                });
-
-                $("#district").on('change', function() {
-                    getDistrictTaluka($("#district").val(),'');
-                });
-
-                $("#taluka").on('change', function() {
-                    getTalukaVillage($("#taluka").val(),'');
+                    getStateCity($("#state").val(),'');
                 });
             });
 

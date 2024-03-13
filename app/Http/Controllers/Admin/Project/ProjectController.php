@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin\LoginRegister;
+namespace App\Http\Controllers\Admin\Project;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Services\Admin\LoginRegister\RegisterServices;
+use App\Http\Services\Admin\Project\ProjectServices;
 use App\Models\ {
     Roles,
     Permissions,
@@ -15,19 +15,20 @@ use Validator;
 use session;
 use Config;
 
-class RegisterController extends Controller {
+class ProjectController extends Controller {
     /**
      * Topic constructor.
      */
     public function __construct()
     {
-        $this->service = new RegisterServices();
+        $this->service = new ProjectServices();
     }
 
     public function index()
     {
-        $register_user = $this->service->index();
-        return view('admin.pages.users.users-list',compact('register_user'));
+        $projects = $this->service->index();
+        // dd($projects);
+        return view('admin.pages.projects.projects-list',compact('projects'));
     }
 
     // public function getProf()
@@ -38,11 +39,11 @@ class RegisterController extends Controller {
 
 
 
-    public function addUsers(){
-        $roles = Roles::where('is_active', true)
-                        ->select('id','role_name')
-                        ->get()
-                        ->toArray();
+    public function addProjects(){
+        // $roles = Roles::where('is_active', true)
+        //                 ->select('id','role_name')
+        //                 ->get()
+        //                 ->toArray();
         $permissions = Permissions::where('is_active', true)
                             ->select('id','route_name','permission_name','url')
                             ->get()
@@ -51,7 +52,8 @@ class RegisterController extends Controller {
                             ->select('location_id','name')
                             ->get()
                             ->toArray();
-    	return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
+    	// return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
+    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_state'));
     }
 
     public function getCities(Request $request)
@@ -110,10 +112,10 @@ class RegisterController extends Controller {
 
     }
 
-    public function editUsers(Request $request){
+    public function editProjects(Request $request){
         
-        $user_data = $this->service->editUsers($request);
-        return view('admin.pages.users.edit-users',compact('user_data'));
+        $project_data = $this->service->editProjects($request);
+        return view('admin.pages.projects.edit-projects',compact('project_data'));
     }
 
     public function update(Request $request){
@@ -211,7 +213,66 @@ class RegisterController extends Controller {
 
     }
 
-    public function register(Request $request){
+    public function store(Request $request)
+    {
+
+        try {
+
+            $rules = [
+                'project_name' => 'required|unique:projects|regex:/^[a-zA-Z\s]+$/u|max:255',
+                'state' => 'required',
+                'district' => 'required',
+                'taluka' => 'required',
+                'village' => 'required',
+                'latitude' => 'required',
+                'longitude' => 'required',
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'description' => 'required',
+            ];
+            $messages = [
+                'project_name.required' => 'Please  enter title.',
+                // 'role_name.unique' => 'Your role type is already exist.',
+                'project_name.regex' => 'Please  enter text only.',
+                'project_name.max' => 'Please  enter text length upto 255 character only.',
+                'project_name.unique' => 'Title already exist.',
+
+                'state.required' => 'Please  enter state.',
+                'district.required' => 'Please  enter district.',
+                'taluka.required' => 'Please  enter taluka.',
+                'village.required' => 'Please  enter village.',
+                'latitude.required' => 'Please  enter latitude.',
+                'longitude.required' => 'Please  enter longitude.',
+                'start_date.required' => 'Please  enter start_date.',
+                'end_date.required' => 'Please  enter end_date.',
+                'description.required' => 'Please  enter description.',
+
+            ];
+
+            $validation = Validator::make($request->all(), $rules, $messages);
+            if ($validation->fails()) {
+                return redirect('add-projects')
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+                $add_role = $this->service->addProject($request);
+                if ($add_role) {
+                    $msg = $add_role['msg'];
+                    $status = $add_role['status'];
+                    if ($status == 'success') {
+                        return redirect('list-role')->with(compact('msg', 'status'));
+                    } else {
+                        return redirect('add-role')->withInput()->with(compact('msg', 'status'));
+                    }
+                }
+
+            }
+        } catch (Exception $e) {
+            return redirect('add-role')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
+    }
+
+    public function add(Request $request){
 // dd($request);
 // die;
         $rules = [
@@ -314,8 +375,8 @@ class RegisterController extends Controller {
     public function show(Request $request)
     {
         try {
-            $user_detail = $this->service->getById($request->show_id);
-            return view('admin.pages.users.show-users', compact('user_detail'));
+            $project_detail = $this->service->getById($request->show_id);
+            return view('admin.pages.projects.show-projects', compact('project_detail'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -345,7 +406,7 @@ class RegisterController extends Controller {
         try {
             $active_id = $request->active_id;
         $result = $this->service->updateOne($active_id);
-            return redirect('list-users')->with('flash_message', 'Updated!');  
+            return redirect('list-projects')->with('flash_message', 'Updated!');  
         } catch (\Exception $e) {
             return $e;
         }
