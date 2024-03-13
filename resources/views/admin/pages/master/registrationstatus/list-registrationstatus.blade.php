@@ -1,17 +1,17 @@
 @extends('admin.layout.master')
 
 @section('content')
-    <?php// $data_permission = getPermissionForCRUDPresentOrNot('list-gender', session('permissions'));
+    <?php $data_permission = getPermissionForCRUDPresentOrNot('list-gender', session('permissions'));
     ?>
     <div class="main-panel">
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
                     Registration Status
-                    {{-- @if (in_array('per_add', $data_permission)) --}}
+                    @if (in_array('per_add', $data_permission))
                         <a href="{{ route('add-registrationstatus') }}" class="btn btn-sm btn-primary ml-3">+
                             Add</a>
-                    {{-- @endif --}}
+                    @endif
 
                 </h3>
                 <nav aria-label="breadcrumb">
@@ -57,21 +57,21 @@
                                                         </td>
                                                         <td>
                                                             <div class="d-flex">
-                                                                {{-- @if (in_array('per_update', $data_permission)) --}}
+                                                                @if (in_array('per_update', $data_permission))
                                                                     <a
                                                                         href="{{ route('edit-registrationstatus', base64_encode($item->id)) }}"
                                                                         class="btn btn-sm btn-outline-primary m-1"
                                                                         title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                                                {{-- @endif --}}
+                                                                @endif
 
                                                                 <a data-id="{{ $item->id }}"
                                                                     class="show-btn btn btn-sm btn-outline-primary m-1"
                                                                     title="Show"><i class="fas fa-eye"></i></a>
-                                                                {{-- @if (in_array('per_delete', $data_permission)) --}}
+                                                                @if (in_array('per_delete', $data_permission))
                                                                     <a data-id="{{ $item->id }}"
                                                                         class="delete-btn btn btn-sm btn-outline-danger m-1"
                                                                         title="Delete"><i class="fas fa-archive"></i></a>
-                                                                {{-- @endif --}}
+                                                                @endif
                                                             </div>
                                                         </td>
                                                     </tr>
