@@ -24,26 +24,15 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="relation">Relation</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="relation"
-                                                id="relation" value="{{ old('relation') }}"
+                                            <label for="relation_title">Relation</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="relation_title"
+                                                id="relation_title" value="{{ old('relation_title') }}"
                                                 placeholder="Enter the Title">
-                                            @if ($errors->has('relation'))
-                                                <span class="red-text"><?php echo $errors->first('relation', ':message'); ?></span>
+                                            @if ($errors->has('relation_title'))
+                                                <span class="red-text"><?php echo $errors->first('relation_title', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
-                                    <!-- <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="marathi_title">लिंग</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="marathi_title"
-                                                id="marathi_title" value="{{ old('marathi_title') }}"
-                                                placeholder="शीर्षक प्रविष्ट करा">
-                                            @if ($errors->has('marathi_title'))
-                                                <span class="red-text"><?php //echo $errors->first('marathi_title', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div> -->
                                     <div class="col-md-12 col-sm-12 text-center">
                                         <button type="submit" class="btn btn-sm btn-success" id="submitButton" disabled>
                                             Save &amp; Submit
@@ -63,12 +52,12 @@
             $(document).ready(function() {
                 // Function to check if all input fields are filled with valid data
                 function checkFormValidity() {
-                    const relation = $('#relation').val();
+                    const relation_title = $('#relation_title').val();
                     //const marathi_title = $('#marathi_title').val();
 
                     // Enable the submit button if all fields are valid
                     // if (relation && marathi_title) 
-                    if (relation) {
+                    if (relation_title) {
                         $('#submitButton').prop('disabled', false);
                     } else {
                         $('#submitButton').prop('disabled', true);
@@ -81,7 +70,7 @@
                 // Initialize the form validation
                 $("#regForm").validate({
                     rules: {
-                        relation: {
+                        relation_title: {
                             required: true,
                         },
                         // marathi_title: {
@@ -89,7 +78,7 @@
                         // },
                     },
                     messages: {
-                        relation: {
+                        relation_title: {
                             required: "Please Enter the Title",
                         },
                         // marathi_title: {

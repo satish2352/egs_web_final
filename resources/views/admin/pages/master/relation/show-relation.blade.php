@@ -30,7 +30,7 @@
                                             <label>Title :</label>
                                         </div>
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>{{ strip_tags($relation_data->relation) }}</label>
+                                            <label>{{ strip_tags($relation_data->relation_title) }}</label>
                                         </div>
                                     </div>
                                     <!-- <div class="row ">

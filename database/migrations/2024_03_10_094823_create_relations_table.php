@@ -15,7 +15,7 @@ class CreaterelationsTable extends Migration
     {
         Schema::create('relation', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('relation');
+            $table->string('relation_title');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

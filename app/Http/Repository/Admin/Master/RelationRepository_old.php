@@ -6,13 +6,15 @@ use DB;
 use Illuminate\Support\Carbon;
 // use Session;
 use App\Models\ {
-	RelationModel
+	Relation,
+    Permissions,
+    RolesPermissions
 };
 
 class RelationRepository{
 	public function getAll(){
         try {
-            return RelationModel::all();
+            return Relation::all();
         } catch (\Exception $e) {
             return $e;
         }
@@ -20,10 +22,11 @@ class RelationRepository{
 
 	public function addAll($request){
         try {
-            $relation_data = new RelationModel();
-            $relation_data->relation_title = $request['relation_title'];
+            $relation_data = new Relation();
+            $relation_data->Relation = $request['relation_title'];
             $relation_data->save();       
-                dd($relation_data);
+        // dd($relation_data);
+                
             return $relation_data;
 
         } catch (\Exception $e) {
@@ -35,23 +38,23 @@ class RelationRepository{
     }
     public function getById($id){
         try {
-            $relation_data = RelationModel::find($id);
-            if ($relation_data) {
-                return $relation_data;
+            $relation = Relation::find($id);
+            if ($relation) {
+                return $relation;
             } else {
                 return null;
             }
         } catch (\Exception $e) {
             return $e;
             return [
-                'msg' => 'Failed to get by Id Incident Type.',
+                'msg' => 'Failed to get by Id Relation.',
                 'status' => 'error'
             ];
         }
     }
     public function updateAll($request){
         try {
-            $relation_data = RelationModel::find($request->id);
+            $relation_data = Relation::find($request->id);
             
             if (!$relation_data) {
                 return [
@@ -60,9 +63,9 @@ class RelationRepository{
                 ];
             }
         // Store the previous image names
-            $relation_data->relation = $request['relation_title'];
-            // $gender_data->marathi_title = $request['marathi_title'];
-            // $gender_data->url = $request['url'];
+            $relation_data->Relation = $request['relation_title'];
+            // $relation_data->marathi_title = $request['marathi_title'];
+            // $relation_data->url = $request['url'];
             $relation_data->save();        
         
             return [
@@ -80,19 +83,19 @@ class RelationRepository{
 
     public function deleteById($id) {
         try {
-            $relationdata = RelationModel::find($id);
-            if ($relationdata) {
+            $relation = Relation::find($id);
+            if ($relation) {
                 // Delete the images from the storage folder
                 Storage::delete([
-                    'public/images/citizen-action/maritalstatus-suggestion/'.$maritalstatus->english_image,
-                    'public/images/citizen-action/maritalstatus-suggestion/'.$maritalstatus->marathi_image
+                    'public/images/citizen-action/relation-suggestion/'.$relation->english_image,
+                    'public/images/citizen-action/relation-suggestion/'.$relation->marathi_image
                 ]);
 
                 // Delete the record from the database
                 
-                $relationdata->delete();
+                $relation->delete();
                 
-                return $relationdata;
+                return $relation;
             } else {
                 return null;
             }
@@ -102,7 +105,7 @@ class RelationRepository{
     }
     public function updateOne($request){
         try {
-            $slide = RelationModel::find($request); // Assuming $request directly contains the ID
+            $slide = Relation::find($request); // Assuming $request directly contains the ID
 
             // Assuming 'is_active' is a field in the Slider model
             if ($slide) {
@@ -111,13 +114,13 @@ class RelationRepository{
                 $slide->save();
 
                 return [
-                    'msg' => 'Relation updated successfully.',
+                    'msg' => 'Slide updated successfully.',
                     'status' => 'success'
                 ];
             }
 
             return [
-                'msg' => 'Relation not found.',
+                'msg' => 'Slide not found.',
                 'status' => 'error'
             ];
         } catch (\Exception $e) {

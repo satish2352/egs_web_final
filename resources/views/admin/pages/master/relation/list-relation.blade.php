@@ -42,7 +42,7 @@
                                                 @foreach ($relation_data as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ strip_tags($item->relation) }}</td>
+                                                        <td>{{ strip_tags($item->relation_title) }}</td>
                                                         <!-- <td>{{ strip_tags($item->marathi_title) }}</td> -->
                                                         <td>
                                                             <label class="switch">

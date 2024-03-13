@@ -3,7 +3,7 @@ namespace App\Http\Services\Admin\Master;
 
 use App\Http\Repository\Admin\Master\RelationRepository;
 
-use App\Maritalstatus;
+use App\Relation;
 use Carbon\Carbon;
 
 
@@ -27,8 +27,8 @@ class RelationServices{
 
     public function addAll($request) {
         try {
-            $add_relation = $this->repo->addAll($request);
-            if ($add_relation) {
+            $add_Relation = $this->repo->addAll($request);
+            if ($add_Relation) {
                 return ['status' => 'success', 'msg' => 'Relation Added Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => 'Relation Not Added.'];
@@ -46,8 +46,8 @@ class RelationServices{
     }
     public function updateAll($request){
         try {
-            $update_Maritalstatus = $this->repo->updateAll($request);
-            if ($update_Maritalstatus) {
+            $update_Relation = $this->repo->updateAll($request);
+            if ($update_Relation) {
                 return ['status' => 'success', 'msg' => 'Relation Updated Successfully.'];
             } else {
                 return ['status' => 'error', 'msg' => 'Relation Not Updated.'];

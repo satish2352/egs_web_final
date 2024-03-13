@@ -26,9 +26,9 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="relation">Relation</label>&nbsp<span class="red-text">*</span>
-                                            <input class="form-control mb-2" name="relation" id="relation"
+                                            <input class="form-control mb-2" name="relation_title" id="relation"
                                                 placeholder="Enter the Title"
-                                                value="@if (old('relation')) {{ old('relation') }}@else{{ $relation_data->relation }} @endif">
+                                                value="@if (old('relation_title')) {{ old('relation_title') }}@else{{ $relation_data->relation_title }} @endif">
                                             @if ($errors->has('relation'))
                                                 <span class="red-text"><?php echo $errors->first('relation', ':message'); ?></span>
                                             @endif

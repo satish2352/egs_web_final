@@ -39,6 +39,7 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($roles as $item)
+
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->role_name }}</td>
