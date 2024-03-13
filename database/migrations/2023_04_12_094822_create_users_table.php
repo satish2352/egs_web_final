@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('village');
             $table->string('pincode');
             $table->string('ip_address');
-            // $table->string('user_agent')->default('null');
+            $table->string('user_agent')->default('null');
             // $table->rememberToken();
             $table->text('remember_token', 255)->nullable();
             $table->boolean('is_active')->default(true);
