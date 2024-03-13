@@ -6,14 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
-
-
-// namespace App\Http\Controllers\Api\Auth;
-// use Illuminate\Support\Facades\Hash; // Importing Hash facade
-// use Illuminate\Support\Facades\Auth;
-// use App\Http\Controllers\Controller;
-// use Illuminate\Http\Request;
-
+use JWTAuth;
 use Validator;
 use App\Models\ {
 	User
@@ -21,57 +14,62 @@ use App\Models\ {
 class AuthController extends Controller
 {
 
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api', ['except' => ['login']]);
-    // }
-
-
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->only('u_email', 'u_password');
     
-    //     if (!Auth::attempt($credentials)) {
-    //         return response()->json(['error' => 'Unauthorized'], 401);
-    //     }
-    
-    //     $user = Auth::user();
-    //     $token = $user->createToken('AuthToken')->accessToken;
-    
-    //     return response()->json([
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => auth()->factory()->getTTL() * 60
-    //     ]);
-    // }
-    // protected function respondWithToken($token)
-    // {
-    //     return response()->json([
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => auth()->factory()->getTTL() * 60
-    //     ]);
-    // }
 public function login(Request $request)
 {
-    $credentials = $request->only('u_email', 'u_password');
+    // Validate incoming request
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-    $user = User::where('u_email', $credentials['u_email'])->first();
+    // Retrieve email and password from the request
+    $credentials = $request->only('email', 'password');
 
-    if (!$user || !Hash::check($credentials['u_password'], $user->u_password)) {
+    // Attempt to authenticate the user without updating remember_token
+    if (!Auth::attempt($credentials, $request->has('remember'))) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
-    $token = $user->createToken('AuthToken')->plainTextToken;
-    // echo $token;
-    // die();
-    // $token = $user->createToken('AuthToken')->accessToken;
-    // Update the access token in the database
-    $user->remember_token = $token;
-    $user->save();
+    // User is authenticated, generate JWT token
+    $user = Auth::user();
+    $token = JWTAuth::fromUser($user);
 
-    return $this->responseWithToken($token, $user);
+    // Save token in the user's record
+    $user->update(['remember_token' => $token]);
+
+
+    // Return response with token and user details
+    return response()->json([
+        'status' => 'success',
+        'user' => $user,
+        // 'access_token' => $token,
+        'token_type' => 'bearer',
+    ]);
 }
+
+
+// public function login(Request $request)
+// {
+//     $credentials = $request->only('u_email', 'u_password');
+
+//     $user = User::where('u_email', $credentials['u_email'])->first();
+
+    // if (!$user || !Hash::check($credentials['u_password'], $user->u_password)) {
+    //     return response()->json(['error' => 'Unauthorized'], 401);
+    // }
+
+//     // $token = $user->createToken('AuthToken')->plainTextToken;
+//   $token = $user->createToken('AuthToken')->accessToken;
+//     echo $token;
+//     // die();
+ 
+//     // Update the access token in the database
+//     $user->remember_token = $token;
+//     $user->save();
+
+//     return $this->responseWithToken($token, $user);
+// }
 
 public function logout(Request $request)
 {

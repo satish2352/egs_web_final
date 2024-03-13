@@ -30,7 +30,8 @@ class CreateUsersTable extends Migration
             $table->string('pincode');
             $table->string('ip_address');
             // $table->string('user_agent')->default('null');
-            $table->rememberToken();
+            // $table->rememberToken();
+            $table->string('remember_token', 255)->nullable();
             $table->boolean('is_active')->default(true);
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->timestamps();
