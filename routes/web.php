@@ -162,8 +162,10 @@ Route::post('/update-one-documenttype', ['as' => 'update-one-documenttype', 'use
 
 
 // Reports======================
-Route::get('/list-location-report', ['as' => 'list-location-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllLocation']);
-
+Route::get('/list-location-report', ['as' => 'list-location-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllLabourLocation']);
+Route::get('/list-labour-duration-report', ['as' => 'list-labour-duration-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllLabourDuration']);
+Route::get('/list-project-report', ['as' => 'list-project-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllProjects']);
+Route::get('/list-project-and-location-report', ['as' => 'list-project-and-location-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllProjectLocation']);
 // Route::get('/db-backup', ['as' => 'db-backup', 'uses' => 'App\Http\Controllers\DBBackup\DBBackupController@downloadBackup']);
 
 Route::get('/log-out', ['as' => 'log-out', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\LoginController@logout']);
