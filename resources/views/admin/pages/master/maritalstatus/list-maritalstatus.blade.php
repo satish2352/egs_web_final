@@ -7,7 +7,7 @@
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
-                    Marital Status
+                    Marital Status List
                     @if (in_array('per_add', $data_permission))
                         <a href="{{ route('add-maritalstatus') }}" class="btn btn-sm btn-primary ml-3">+
                             Add</a>

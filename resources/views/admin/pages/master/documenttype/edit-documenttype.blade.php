@@ -5,7 +5,7 @@
         <div class="content-wrapper mt-6">
             <div class="page-header">
                 <h3 class="page-title">
-                    Document Type
+                    Edit Document Type
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">

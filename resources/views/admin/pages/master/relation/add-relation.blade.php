@@ -5,7 +5,7 @@
         <div class="content-wrapper mt-6">
             <div class="page-header">
                 <h3 class="page-title">
-                    Relation
+                    Add Relation
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
