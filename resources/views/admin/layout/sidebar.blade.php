@@ -87,9 +87,9 @@
                                           href="{{ route('list-documenttype') }}">Document Type</a></li>
                               {{-- @endif --}}
                               {{-- @if (in_array('list-incident-type', $data_for_url)) --}}
-                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-incident-type*') 
+                                  {{-- <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-incident-type*') 
                                     ? 'nav-link active' : 'nav-link' }}"
-                                          href="{{ route('list-incident-type') }}">Incident Type</a></li>
+                                          href="{{ route('list-incident-type') }}">Incident Type</a></li> --}}
                               {{-- @endif --}}
                           </ul>
                       </div>

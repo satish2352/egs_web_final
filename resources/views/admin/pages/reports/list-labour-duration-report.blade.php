@@ -92,7 +92,7 @@
                             </div> --}}
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="m_name">From Date</label>&nbsp<span class="red-text">*</span>
+                                    <label for="m_name">From Date</label>
                                     <input type="date" class="form-control" name="m_name" id="m_name"
                                         placeholder="" >
                                     @if ($errors->has('m_name'))
@@ -102,7 +102,7 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="m_name">To Date</label>&nbsp<span class="red-text">*</span>
+                                    <label for="m_name">To Date</label>
                                     <input type="date" class="form-control" name="m_name" id="m_name"
                                         placeholder="" >
                                     @if ($errors->has('m_name'))
@@ -112,7 +112,7 @@
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4">
                                 <div class="form-group">
-                                    <label for="m_name">Skill</label>&nbsp<span class="red-text">*</span>
+                                    <label for="m_name">Skill</label>
                                     <select class="form-control" name="skill_id" id="skill_id">
                                         <option value="">Select Skill</option>
                                         <option value="">Select Skill</option>
