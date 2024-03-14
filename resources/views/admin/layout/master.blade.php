@@ -110,6 +110,7 @@
                             {{-- <img class="img-size" 
                             src="{{ Config::get('DocumentConstant.USER_PROFILE_VIEW') }}{{ $profile->user_profile }}"
                             /> --}}
+                            <i class="fas fa-user menu-icon"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
                             aria-labelledby="profileDropdown">

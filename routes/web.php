@@ -156,6 +156,9 @@ Route::post('/delete-documenttype', ['as' => 'delete-documenttype', 'uses' => 'A
 Route::post('/update-one-documenttype', ['as' => 'update-one-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\DocumenttypeController@updateOne']);
 
 
+// Reports======================
+Route::get('/list-location-report', ['as' => 'list-location-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllLocation']);
+
 // Route::get('/db-backup', ['as' => 'db-backup', 'uses' => 'App\Http\Controllers\DBBackup\DBBackupController@downloadBackup']);
 
 Route::get('/log-out', ['as' => 'log-out', 'uses' => 'App\Http\Controllers\Admin\LoginRegister\LoginController@logout']);

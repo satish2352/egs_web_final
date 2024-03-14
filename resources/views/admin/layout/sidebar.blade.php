@@ -114,11 +114,44 @@
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>
                 <a class="nav-link" href="{{ route('list-projects') }}">
-                    <i class="fas fa-user menu-icon"></i>
+                    <i class="fas fa-file-alt fa-lg menu-icon"></i>
                     <span class="menu-title">Project Management</span>
                 </a>
             </li>
-
+            <li class="{{request()->is('list-role*') 
+                ? 'nav-item active' : 'nav-item' }}">
+                  <a class="{{request()->is('list-role*') 
+                                ? 'nav-link active' : 'nav-link' }}" data-toggle="collapse" href="#report" aria-expanded="false"
+                      aria-controls="report">
+                      <i class="fas fa-window-restore menu-icon"></i>
+                      <span class="menu-title">Reports</span>
+                      <i class="menu-arrow"></i>
+                  </a>
+                  <div class="collapse" id="report">
+                      <ul class="nav flex-column sub-menu">
+                          {{-- @if (in_array('list-role', $data_for_url)) --}}
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-location-report*') 
+                                ? 'nav-link active' : 'nav-link' }}"
+                                      href="{{ route('list-location-report') }}">Location Report</a></li>
+                          {{-- @endif --}}
+                          {{-- @if (in_array('list-gender', $data_for_url)) --}}
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-gender*') 
+                                ? 'nav-link active' : 'nav-link' }}"
+                                      href="{{ route('list-gender') }}">Duration Report</a></li>
+                          {{-- @endif --}}
+                          {{-- @if (in_array('list-maritalstatus', $data_for_url)) --}}
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-maritalstatus*') 
+                                ? 'nav-link active' : 'nav-link' }}"
+                                      href="{{ route('list-maritalstatus') }}">Project Report</a></li>
+                          {{-- @endif --}}
+                          {{-- @if (in_array('list-relation', $data_for_url)) --}}
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-relation*') 
+                                ? 'nav-link active' : 'nav-link' }}"
+                                      href="{{ route('list-relation') }}">Project and Location</a></li>
+                          {{-- @endif --}}
+                      </ul>
+                  </div>
+              </li>
       {{-- @endif --}}
           </ul>
       </nav>
