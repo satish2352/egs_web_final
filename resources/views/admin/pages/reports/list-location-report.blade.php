@@ -24,6 +24,49 @@
                 <div class="col-12 grid-margin">
                     <div class="card">
                         <div class="card-body">
+                          <div class="d-flex pt-5 pb-3">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="district" id="district">
+                                        <option value="">Select District</option>
+                                    </select>
+                                    @if ($errors->has('district'))
+                                        <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="taluka" id="taluka">
+                                        <option value="">Select Taluka</option>
+                                    </select>
+                                    @if ($errors->has('taluka'))
+                                        <span class="red-text"><?php echo $errors->first('taluka', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="village" id="village">
+                                        <option value="">Select Village</option>
+                                    </select>
+                                    @if ($errors->has('village'))
+                                        <span class="red-text"><?php echo $errors->first('village', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="village" id="village">
+                                        <option value="">Select Skill</option>
+                                    </select>
+                                    @if ($errors->has('village'))
+                                        <span class="red-text"><?php echo $errors->first('village', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                          </div>
+                            
                             <div class="row">
                                 <div class="col-12">
                                     @include('admin.layout.alert')

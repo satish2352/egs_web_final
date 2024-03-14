@@ -1,7 +1,7 @@
 @extends('admin.layout.master')
 @section('content')
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Anta&display=swap");
+        @import url("https://fonts.google.com/specimen/Titillium+Web");
         .card {
             background-color: #fff;
             border-radius: 10px;
@@ -157,6 +157,12 @@
             border-radius: 10px;
         }
         .media-body{
+            text-align: right !important;
+            font-size: 24px;
+            font-family: "Anta", sans-serif;
+            /* font-family: titillium -webkit-body; */
+        }
+        .media-body h3{
             text-align: right !important;
             font-size: 24px;
             font-family: "Anta", sans-serif;
