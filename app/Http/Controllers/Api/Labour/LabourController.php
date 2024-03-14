@@ -80,16 +80,19 @@ class LabourController extends Controller
 public function add(Request $request)
 {
     $validator = Validator::make($request->all(), [
-        'full_name' => 'required',
-        'gender_id' => 'required',
+        'full_name' => 'required|alpha',
+        'gender_id' => 'required|numeric',
         'date_of_birth' => 'required|date_format:d/m/Y',
-        'district_id' => 'required',
-        'taluka_id' => 'required',
-        'village_id' => 'required',
-        'mobile_number' => 'required',
-        'landline_number' => 'required',
-        'mgnrega_card_id' => 'required',
+        'district_id' => 'required|numeric',
+        'taluka_id' => 'required|numeric',
+        'village_id' => 'required|numeric',
+        'mobile_number' => ['required', 'numeric', 'digits:10', 'unique:labour'],
+        'landline_number' => ['required', 'regex:/^[0-9]{8,}$/'],
+        'mgnrega_card_id' => 'required|numeric',
         'location_id' => 'required',
+        'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
+        'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
+
     ]);
 
     if ($validator->fails()) {
@@ -108,6 +111,8 @@ public function add(Request $request)
         $labour_data->landline_number = $request->landline_number;
         $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
         $labour_data->location_id = $request->location_id;
+        $labour_data->latitude = $request->latitude;
+        $labour_data->longitude = $request->longitude;
         $labour_data->aadhar_image = 'null';
         $labour_data->pancard_image = 'null';
         $labour_data->profile_image = 'null';
@@ -172,7 +177,6 @@ public function getAllLabourList(){
               'labour.id',
               'labour.full_name',
               'labour.date_of_birth',
-            //   'labour.gender_name',
               'gender_labour.gender_name as gender_name',
               'district_labour.name as district_id',
               'taluka_labour.name as taluka_id',
@@ -181,7 +185,9 @@ public function getAllLabourList(){
               'labour.landline_number',
               'labour.mgnrega_card_id',
               'labour.location_id',
-            //   'labour.profile_image',
+              'labour.profile_image',
+              'labour.aadhar_image',
+              'labour.pancard_image',
           )->get();
 
         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
@@ -207,7 +213,10 @@ public function filterLabourList(Request $request){
                 'labour.mobile_number',
                 'labour.landline_number',
                 'labour.mgnrega_card_id',
-                'labour.location_id'
+                'labour.location_id',
+                'labour.profile_image',
+                'labour.aadhar_image',
+                'labour.pancard_image',
             );
 
         // Apply filters if provided

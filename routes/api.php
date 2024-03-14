@@ -19,32 +19,64 @@ use App\Http\Controllers\Api\Labour\LabourFamilyDetailsController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::group([
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
+Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
-
 ], function ($router) {
 
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
+ 
 
-    Route::post('/add-labour', [LabourController::class, 'add']);
-    Route::get('/list-labour', [LabourController::class, 'getAllLabourList']);
-    Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
-    Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
-    Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
-    Route::get('/district', [DistrictTalukaVillageController::class, 'getDistrict']);
-    Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
-    Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
-    Route::get('/list-gender', [MasterController::class, 'getAllGender']);
-    Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
-    Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
-    Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
-    Route::get('/list-project', [ProjectController::class, 'getAllProject']);
-    Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
-    
+    // Protected routes that require authentication token
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/add-labour', [LabourController::class, 'add']);
+        Route::get('/list-labour', [LabourController::class, 'getAllLabourList']);
+        Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
+        Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
+        Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
+        Route::get('/district', [DistrictTalukaVillageController::class, 'getDistrict']);
+        Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
+        Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
+        Route::get('/list-gender', [MasterController::class, 'getAllGender']);
+        Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+        Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
+        Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
+        Route::get('/list-project', [ProjectController::class, 'getAllProject']);
+        Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
+
+        Route::post('logout', [AuthController::class, 'logout']);
+    });
 });
+
+// Route::group([
+
+//     'middleware' => 'api',
+//     'prefix' => 'auth'
+
+// ], function ($router) {
+
+//     Route::post('register', [AuthController::class, 'register']);
+//     Route::post('login', [AuthController::class, 'login']);
+
+//     Route::post('/add-labour', [LabourController::class, 'add']);
+//     Route::get('/list-labour', [LabourController::class, 'getAllLabourList']);
+//     Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
+//     Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
+//     Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
+//     Route::get('/district', [DistrictTalukaVillageController::class, 'getDistrict']);
+//     Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
+//     Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
+//     Route::get('/list-gender', [MasterController::class, 'getAllGender']);
+//     Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+//     Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
+//     Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
+//     Route::get('/list-project', [ProjectController::class, 'getAllProject']);
+//     Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
+    
+//     Route::post('logout', [AuthController::class, 'logout']);
+// });
 
 
 // Route::middleware('auth:sanctum')->group(function () {
