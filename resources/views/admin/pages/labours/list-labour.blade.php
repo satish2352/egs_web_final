@@ -103,7 +103,7 @@
             @csrf
             <input type="hidden" name="delete_id" id="delete_id" value="">
         </form>
-        <form method="POST" action="{{ url('/show-projects') }}" id="showform">
+        <form method="POST" action="{{ url('/show-labours') }}" id="showform">
             @csrf
             <input type="hidden" name="show_id" id="show_id" value="">
         </form>
@@ -111,7 +111,7 @@
             @csrf
             <input type="hidden" name="edit_id" id="edit_id" value="">
         </form> --}}
-        <form method="POST" action="{{ url('/update-active-projects') }}" id="activeform">
+        <form method="POST" action="{{ url('/update-active-labours') }}" id="activeform">
             @csrf
             <input type="hidden" name="active_id" id="active_id" value="">
         </form>

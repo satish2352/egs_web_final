@@ -376,8 +376,8 @@ class LaboursController extends Controller {
     public function show(Request $request)
     {
         try {
-            $project_detail = $this->service->getById($request->show_id);
-            return view('admin.pages.projects.show-projects', compact('project_detail'));
+            $labour_detail = $this->service->getById($request->show_id);
+            return view('admin.pages.labours.show-labour', compact('labour_detail'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -407,7 +407,7 @@ class LaboursController extends Controller {
         try {
             $active_id = $request->active_id;
         $result = $this->service->updateOne($active_id);
-            return redirect('list-projects')->with('flash_message', 'Updated!');  
+            return redirect('list-labours')->with('flash_message', 'Updated!');  
         } catch (\Exception $e) {
             return $e;
         }

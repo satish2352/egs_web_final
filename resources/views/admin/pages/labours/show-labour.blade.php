@@ -10,12 +10,12 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-start align-items-center">
                             <h3 class="page-title">
-                                Projects Details
+                                Labour Details
                             </h3>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-end align-items-center">
                             <div>
-                                <a href="{{ route('list-projects') }}" class="btn btn-sm btn-primary ml-3">Back</a>
+                                <a href="{{ route('list-labours') }}" class="btn btn-sm btn-primary ml-3">Back</a>
                             </div>
                         </div>
 
@@ -27,18 +27,26 @@
                                     @include('admin.layout.alert')
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Project Name :</label>
+                                            <label>labour Name :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ $project_detail->project_name }}</label>
+                                            <label>{{ $labour_detail->full_name }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>State :</label>
+                                            <label>Mobile Number :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->state_name) }}</label>
+                                            <label>{{ strip_tags($labour_detail->mobile_number) }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>Mnrega ID :</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <label>{{ strip_tags($labour_detail->mgnrega_card_id) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -46,7 +54,7 @@
                                             <label>District :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->district_name) }}</label>
+                                            <label>{{ strip_tags($labour_detail->district_id) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -54,7 +62,7 @@
                                             <label>Taluka :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->taluka_name) }}</label>
+                                            <label>{{ strip_tags($labour_detail->taluka_id) }}</label>
                                         </div>
                                     </div>
 
@@ -64,7 +72,7 @@
                                             <label>Village :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->village_name) }}</label>
+                                            <label>{{ strip_tags($labour_detail->village_id) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -72,7 +80,7 @@
                                             <label>Latitude :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->latitude) }}</label>
+                                            <label>{{ strip_tags($labour_detail->latitude) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -80,7 +88,7 @@
                                             <label>Longitude :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->longitude) }}</label>
+                                            <label>{{ strip_tags($labour_detail->longitude) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -88,24 +96,24 @@
                                             <label>Start Date :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->start_date) }}</label>
+                                            <label>{{ strip_tags($labour_detail->start_date) }}</label>
                                         </div>
                                     </div>
-                                    <div class="row ">
+                                    <!-- <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>End Date :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($project_detail->end_date) }}</label>
+                                            <label>{{ strip_tags($labour_detail->end_date) }}</label>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!-- <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Profile :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <img src="{{ Config::get('DocumentConstant.USER_PROFILE_VIEW') }}{{ $project_detail->user_profile }}"
+                                            <img src="{{ Config::get('DocumentConstant.USER_PROFILE_VIEW') }}{{ $labour_detail->user_profile }}"
                                                 style="width:100px; height:100px; border-radius:50%" />
                                         </div>
                                     </div> -->

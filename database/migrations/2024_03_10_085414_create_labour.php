@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('aadhar_image')->default('null');
             $table->string('pancard_image')->default('null');
             $table->string('profile_image')->default('null');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

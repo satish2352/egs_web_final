@@ -35,6 +35,7 @@ class LabourRepository
 			'labour.landline_number',
 			'labour.mgnrega_card_id',
 			'labour.location_id',
+			'labour.is_active',
           )->get();
 		return $data_labours;
 	}
@@ -322,22 +323,25 @@ class LabourRepository
 	public function getById($id)
 	{
 		try {
-			$data_users = Project::leftJoin('tbl_area as state_project', 'projects.state', '=', 'state_project.location_id')
-		->leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
-		->leftJoin('tbl_area as taluka_project', 'projects.taluka', '=', 'taluka_project.location_id')
-		->leftJoin('tbl_area as village_project', 'projects.village', '=', 'village_project.location_id')
-				->where('projects.id', $id)
-				->select('projects.id',
-				'projects.project_name',
-				'projects.description',
-				'state_project.name as state_name',
-				'district_project.name as district_name',
-				'taluka_project.name as taluka_name',
-				'village_project.name as village_name',
-				'projects.start_date',
-				'projects.end_date',
-				'projects.latitude',
-				'projects.longitude',)
+			$data_users = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+			->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+			  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+			  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+				->where('labour.id', $id)
+				->select('labour.id',
+				'labour.full_name',
+				'labour.date_of_birth',
+				'gender_labour.gender_name as gender_name',
+				'district_labour.name as district_id',
+				'taluka_labour.name as taluka_id',
+				'village_labour.name as village_id',
+				'labour.mobile_number',
+				'labour.landline_number',
+				'labour.mgnrega_card_id',
+				'labour.location_id',
+				'labour.latitude',
+				'labour.longitude',
+				'labour.is_active',)
 				->first();
 	
 			if ($data_users) {
@@ -355,7 +359,7 @@ class LabourRepository
 
 	public function updateOne($request){
         try {
-            $project = Project::find($request); // Assuming $request directly contains the ID
+            $project = Labour::find($request); // Assuming $request directly contains the ID
 
             // Assuming 'is_active' is a field in the userr model
             if ($project) {
@@ -364,18 +368,18 @@ class LabourRepository
                 $project->save();
 
                 return [
-                    'msg' => 'Project updated successfully.',
+                    'msg' => 'Labour updated successfully.',
                     'status' => 'success'
                 ];
             }
 
             return [
-                'msg' => 'Project not found.',
+                'msg' => 'Labour not found.',
                 'status' => 'error'
             ];
         } catch (\Exception $e) {
             return [
-                'msg' => 'Failed to update Project.',
+                'msg' => 'Failed to update Labour.',
                 'status' => 'error'
             ];
         }

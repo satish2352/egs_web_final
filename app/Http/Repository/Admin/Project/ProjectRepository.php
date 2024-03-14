@@ -363,7 +363,10 @@ class ProjectRepository
 				'projects.start_date',
 				'projects.end_date',
 				'projects.latitude',
-				'projects.longitude',)
+				'projects.longitude',
+				'projects.aadhar_image',
+				'projects.pancard_image',
+				'projects.profile_image',)
 				->first();
 	
 			if ($data_users) {
