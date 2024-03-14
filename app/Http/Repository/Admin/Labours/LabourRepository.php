@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Repository\Admin\Project;
+namespace App\Http\Repository\Admin\Labours;
 
 use Illuminate\Database\QueryException;
 use DB;
@@ -10,59 +10,33 @@ use App\Models\{
 	Permissions,
 	RolesPermissions,
 	Roles,
-	Project
+	Labour
 };
 use Illuminate\Support\Facades\Mail;
 
-class ProjectRepository
+class LabourRepository
 {
 
-	public function getProjectsList() {
-        // $data_users = Projects::join('tbl_area', function($join) {
-		// 					$join->on('projects.role_id', '=', 'roles.id');
-		// 				})
-		// 				// ->where('users.is_active','=',true)
-		// 				->select('roles.role_name',
-		// 						'users.email',
-		// 						'users.f_name',
-		// 						'users.m_name',
-		// 						'users.l_name',
-		// 						'users.number',
-		// 						'users.imei_no',
-		// 						'users.aadhar_no',
-		// 						'users.address',
-		// 						'users.state',
-		// 						'users.district',
-		// 						'users.taluka',
-		// 						'users.village',
-		// 						'users.pincode',
-		// 						'users.id',
-		// 						'users.is_active'
-		// 					)->get();
-							// ->toArray();
-
-		$data_users = Project::leftJoin('tbl_area as state_project', 'projects.state', '=', 'state_project.location_id')
-		->leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
-		->leftJoin('tbl_area as taluka_project', 'projects.taluka', '=', 'taluka_project.location_id')
-		->leftJoin('tbl_area as village_project', 'projects.village', '=', 'village_project.location_id')
+	public function getLaboursList() {
+     	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
         //   ->where('gender.is_active', true)
           ->select(
-              'projects.id',
-              'projects.project_name',
-              'projects.description',
-            //   'labour.gender_name',
-              'state_project.name as state_name',
-              'district_project.name as district_name',
-              'taluka_project.name as taluka_name',
-              'village_project.name as village_name',
-              'projects.start_date',
-              'projects.end_date',
-              'projects.latitude',
-              'projects.longitude',
-            //   'labour.profile_image',
+			'labour.id',
+			'labour.full_name',
+			'labour.date_of_birth',
+			'gender_labour.gender_name as gender_name',
+			'district_labour.name as district_id',
+			'taluka_labour.name as taluka_id',
+			'village_labour.name as village_id',
+			'labour.mobile_number',
+			'labour.landline_number',
+			'labour.mgnrega_card_id',
+			'labour.location_id',
           )->get();
-			// dd($data_users);
-		return $data_users;
+		return $data_labours;
 	}
 
 	
@@ -108,7 +82,7 @@ class ProjectRepository
 		try {
 		$data =array();
 		// $ipAddress = getIPAddress($request);
-		$project_data = new Project();
+		$project_data = new Projects();
 		// $project_data->email = $request['email'];
 		// $project_data->u_uname = $request['u_uname'];
 		// $project_data->password = bcrypt($request['password']);
@@ -278,7 +252,7 @@ class ProjectRepository
 			->get()
 			->toArray();
 
-		$data_projects_data = Project::where('projects.id', '=', base64_decode($reuest->edit_id))
+		$data_projects_data = Projects::where('projects.id', '=', base64_decode($reuest->edit_id))
 			// ->where('roles_permissions.is_active','=',true)
 			// ->where('users.is_active','=',true)
 			->select(

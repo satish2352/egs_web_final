@@ -118,6 +118,14 @@
                     <span class="menu-title">Project Management</span>
                 </a>
             </li>
+            <li class="{{request()->is('list-labours*')
+                ? 'nav-item active' : 'nav-item' }}">
+                <?php $currenturl = Request::url(); ?>
+                <a class="nav-link" href="{{ route('list-labours') }}">
+                    <i class="fas fa-user menu-icon"></i>
+                    <span class="menu-title">Labour Management</span>
+                </a>
+            </li>
 
       {{-- @endif --}}
           </ul>

@@ -6,60 +6,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Http\Services\DashboardServices;
 use App\Models\ {
-    // Roles,
     Permissions,
     User,
-    // IncidentType,
     RTI,
     VacanciesHeader,
-    // MainMenus,
-    // MainSubMenus,
-    // Marquee,
-    // Slider,
-    // DisasterManagementWebPortal,
-    // DisasterManagementNews,
-    // EmergencyContact,
     DepartmentInformation,
-    // Weather,
     DisasterForcast,
-    // DisasterManagementPortal,
-    // ObjectiveGoals,
-    // StateDisasterManagementAuthority,
-    // DynamicWebPages,
-    // HazardVulnerability,
-    // EarlyWarningSystem,
-    // CapacityTraining,
-    // PublicAwarenessEducation,
-    // StateEmergencyOperationsCenter,
-    // DistrictEmergencyOperationsCenter,
-    // EmergencyContactNumbers,
-    // EvacuationPlans,
-    // ReliefMeasuresResources,
-    // SearchRescueTeams,
-    // ReportIncidentCrowdsourcing,
-    // VolunteerCitizenSupport,
-    // CitizenFeedbackSuggestion,
-    // ReportIncidentModal,
-    // CitizenVolunteerModal,
-    // StateDisasterManagementPlan,
-    // DistrictDisasterManagementPlan,
-    // StateDisasterManagementPolicy,
-    // RelevantLawsRegulation,
-    // Documentspublications,
-    // SuccessStories,
-    // GalleryCategory,
     Gallery,
     Video,
-    // TrainingMaterialsWorkshops,
-    // Contact,
     Event,
-    // Metadata,
-    
-    // FooterImportantLinks,
-    // WebsiteContact
-
-
-
+    Project
 };
 use Validator;
 
@@ -76,8 +32,29 @@ class DashboardController extends Controller {
     {
         $return_data = array();
         $dashboard_data = Permissions::where("is_active",'=',true)->get()->toArray();
+        // dd($dashboard_data);
+        foreach ($dashboard_data as $value) {
 
-        return view('admin.pages.dashboard');
+            if($value['url'] == 'list-users') {
+                $data_dashboard['url'] =  $value['url'];
+                $data_dashboard['permission_name'] =  $value['permission_name'];
+                $users = User::all();
+                $data_dashboard['count'] = $users->count();
+                array_push($return_data, $data_dashboard);
+            }
+
+            if($value['url'] == 'list-projects') {
+                $data_dashboard['url'] =  $value['url'];
+                $data_dashboard['permission_name'] =  $value['permission_name'];
+                $projects = Project::all();
+                $data_dashboard['count'] = $projects->count();
+                array_push($return_data, $data_dashboard);
+            }
+
+           
+        }
+
+        return view('admin.pages.dashboard',compact('return_data'));
     }
 
 

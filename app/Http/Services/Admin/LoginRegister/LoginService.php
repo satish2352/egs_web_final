@@ -28,7 +28,7 @@ class LoginService
                 $request->session()->put('permissions',$response['user_permission']);
                 // $request->session()->put('user_agent',$request->userAgent());
                 // $request->session()->put('ip_of_user',$request->ip());
-                // getRouteDetailsPresentOrNot(session('permissions'));
+                getRouteDetailsPresentOrNot(session('permissions'));
 
                 $update = User::where([
                                 'email' => $request['email'],

@@ -29,14 +29,15 @@ function getLanguageSelected() {
     }
     return $language;
 }
-// function getRouteDetailsPresentOrNot($data_for_session) {
-//     $data =[];
-//     foreach ($data_for_session as $value_new) {
-//         array_push($data,$value_new['url']);
-//     }
-//     Session::put('data_for_url', $data);
-//     return $data;
-// }
+function getRouteDetailsPresentOrNot($data_for_session) {
+    $data =[];
+    foreach ($data_for_session as $value_new) {
+        array_push($data,$value_new['url']);
+    }
+    // dd($data);
+    Session::put('data_for_url', $data);
+    return $data;
+}
 
 function getPermissionForCRUDPresentOrNot($url,$data_for_session) {
     $data =[];
