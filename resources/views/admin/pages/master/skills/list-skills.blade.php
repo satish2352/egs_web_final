@@ -7,7 +7,7 @@
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
-                    Skills
+                    Skills List
                     @if (in_array('per_add', $data_permission))
                         <a href="{{ route('add-skills') }}" class="btn btn-sm btn-primary ml-3">+
                             Add</a>

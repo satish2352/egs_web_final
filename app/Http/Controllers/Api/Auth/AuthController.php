@@ -13,8 +13,6 @@ use App\Models\ {
 };
 class AuthController extends Controller
 {
-
-    
 public function login(Request $request)
 {
     // Validate incoming request
@@ -42,7 +40,7 @@ public function login(Request $request)
     // Return response with token and user details
     return response()->json([
         'status' => 'success',
-        'user' => $user,
+        'data' => $user,
         // 'access_token' => $token,
         'token_type' => 'bearer',
     ]);
@@ -71,18 +69,42 @@ public function login(Request $request)
 //     return $this->responseWithToken($token, $user);
 // }
 
-public function logout(Request $request)
-{
-    $user = $request->user();
-    // Delete the current access token
-    $user->currentAccessToken()->delete();
-    // Empty the remember_token field
-    $user->update([$request->remember_token => 'null']);
-    // echo $user;
-    // die();
-    return response()->json(['message' => 'Logged out successfully']);
-}
+// public function logout(Request $request)
+// {
+//     $user = $request->user();
+//     // Delete the current access token
+//     $user->currentAccessToken()->delete();
+//     // Empty the remember_token field
+//     $user->update([$request->remember_token => 'null']);
+//     // echo $user;
+//     // die();
+//     return response()->json(['message' => 'Logged out successfully']);
+// }
 
+
+public function logout()
+{
+    Auth::guard('api')->logout();
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Successfully logged out',
+    ]);
+}
+// public function logout(Request $request)
+// {
+//     // Check if the user is authenticated
+//     if (!$request->user()) {
+//         return response()->json(['error' => 'Unauthorized'], 401);
+//     }
+
+//     // Delete the current access token
+//     $request->user()->currentAccessToken()->delete();
+
+//     // Clear remember_token (if applicable)
+//     $request->user()->update(['remember_token' => null]);
+
+//     return response()->json(['message' => 'Logged out successfully']);
+// }
 
 public function register(Request $request)
 {

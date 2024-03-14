@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('landline_number')->default('null');
             $table->string('mgnrega_card_id');
             $table->string('location_id');
+            $table->string('latitude');
+            $table->string('longitude');
             $table->string('aadhar_image')->default('null');
             $table->string('pancard_image')->default('null');
             $table->string('profile_image')->default('null');
