@@ -1,34 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Project;
+namespace App\Http\Controllers\Admin\Menu;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Services\Admin\Project\ProjectServices;
+use App\Http\Services\Admin\Labours\LabourServices;
 use App\Models\ {
     Roles,
     Permissions,
     TblArea,
-    User
+    User,
+    Labour
 };
 use Validator;
 use session;
 use Config;
 
-class ProjectController extends Controller {
+class LaboursController extends Controller {
     /**
      * Topic constructor.
      */
     public function __construct()
     {
-        $this->service = new ProjectServices();
+        $this->service = new LabourServices();
     }
 
     public function index()
     {
-        $projects = $this->service->index();
+        $labours = $this->service->index();
         // dd($projects);
-        return view('admin.pages.projects.projects-list',compact('projects'));
+        return view('admin.pages.labours.list-labour',compact('labours'));
     }
 
     // public function getProf()
@@ -125,7 +126,7 @@ class ProjectController extends Controller {
         $rules = [
             // 'email' => 'required',
             // 'u_uname' => 'required',
-            // 'u_password' => 'required',
+            // 'password' => 'required',
             'role_id' => 'required',
             'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
             'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
@@ -145,7 +146,7 @@ class ProjectController extends Controller {
                         // 'email.required' => 'Please enter email.',
                         // 'email.email' => 'Please enter valid email.',
                         // 'u_uname.required' => 'Please enter user uname.',
-                        // 'u_password.required' => 'Please enter password.',
+                        // 'password.required' => 'Please enter password.',
                         'role_id.required' => 'Please select role type.',
                         'f_name.required' => 'Please enter first name.',
                          'f_name.regex' => 'Please  enter text only.',
@@ -260,15 +261,15 @@ class ProjectController extends Controller {
                     $msg = $add_role['msg'];
                     $status = $add_role['status'];
                     if ($status == 'success') {
-                        return redirect('list-projects')->with(compact('msg', 'status'));
+                        return redirect('list-role')->with(compact('msg', 'status'));
                     } else {
-                        return redirect('add-projects')->withInput()->with(compact('msg', 'status'));
+                        return redirect('add-role')->withInput()->with(compact('msg', 'status'));
                     }
                 }
 
             }
         } catch (Exception $e) {
-            return redirect('add-projects')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+            return redirect('add-role')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
 
@@ -277,8 +278,8 @@ class ProjectController extends Controller {
 // die;
         $rules = [
                 //    'email' => 'required|unique:users,email|regex:/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z])+\.)+([a-zA-Z0-9]{2,4})+$/',
-                //     'u_password'=>'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[a-zA-Z\d]).{8,}$/',
-                //     'password_confirmation' => 'required|same:u_password',
+                //     'password'=>'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[a-zA-Z\d]).{8,}$/',
+                //     'password_confirmation' => 'required|same:password',
                 //     'role_id' => 'required',
                 //     'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
                 //     'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
@@ -300,10 +301,10 @@ class ProjectController extends Controller {
                     //     // 'u_uname.required'=>'Please enter firstname.',
                     //     // 'u_uname.regex' => 'Please  enter text only.',
                     //     // 'u_uname.max'   => 'Please  enter firstname length upto 255 character only.',       
-                    //     'u_password.required' => 'Please enter password.',
-                    //     'u_password.regex' => 'Password should be more than 8 numbers with atleast 1 capital letter,1 small letter, 1 number and 1 special character.',
+                    //     'password.required' => 'Please enter password.',
+                    //     'password.regex' => 'Password should be more than 8 numbers with atleast 1 capital letter,1 small letter, 1 number and 1 special character.',
                     //     'password_confirmation.same' => 'The password confirmation does not match.',
-                    //     // 'u_password.min' => 'Please combination of number character of 8 char.',
+                    //     // 'password.min' => 'Please combination of number character of 8 char.',
                     //     'role_id.required' => 'Please select role type.',
                     //     'f_name.required' => 'Please enter first name.',
                     //      'f_name.regex' => 'Please  enter text only.',
@@ -375,8 +376,8 @@ class ProjectController extends Controller {
     public function show(Request $request)
     {
         try {
-            $project_detail = $this->service->getById($request->show_id);
-            return view('admin.pages.projects.show-projects', compact('project_detail'));
+            $labour_detail = $this->service->getById($request->show_id);
+            return view('admin.pages.labours.show-labour', compact('labour_detail'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -406,7 +407,7 @@ class ProjectController extends Controller {
         try {
             $active_id = $request->active_id;
         $result = $this->service->updateOne($active_id);
-            return redirect('list-projects')->with('flash_message', 'Updated!');  
+            return redirect('list-labours')->with('flash_message', 'Updated!');  
         } catch (\Exception $e) {
             return $e;
         }
@@ -423,14 +424,14 @@ class ProjectController extends Controller {
     public function updateProfile(Request $request){
         $rules = [
             // 'email' => 'required',
-            // 'u_password' => 'required',
+            // 'password' => 'required',
             // 'number' => 'regex:/^\d{10}$/',
          ];       
 
         $messages = [   
                         // 'email.required' => 'Please enter email.',
                         // 'email.email' => 'Please enter valid email.',
-                        // 'u_password.required' => 'Please enter password.',
+                        // 'password.required' => 'Please enter password.',
                         // 'number.regex' => 'Please enter 10 digit number.',
                     ];
 
@@ -449,7 +450,7 @@ class ProjectController extends Controller {
                     if((isset($register_user['password_change']) && ($register_user['password_change'] =='yes')) || (isset($register_user['mobile_change']) && $register_user['mobile_change'] =='yes')) {
                         return view('admin.pages.users.otp-verify')->with(compact('register_user'));
                     }
-                    elseif((isset($request->u_password) && $request->u_password !== '') && ($request->number == $request->old_number)) {
+                    elseif((isset($request->password) && $request->password !== '') && ($request->number == $request->old_number)) {
                         
                         return redirect('log-out');
 
@@ -501,7 +502,7 @@ class ProjectController extends Controller {
                 if($otp->otp == $request->otp_number) {
                     
                     if($request->password_change =='yes') {
-                        $update_data['u_password'] = $request->u_password_new;
+                        $update_data['password'] = $request->password_new;
                     }
                     if($request->mobile_change =='yes') {
                         $update_data['number'] = $request->new_mobile_number;
@@ -519,7 +520,7 @@ class ProjectController extends Controller {
                 } else {
                     $register_user = array();
                     $register_user['user_id'] = $request->user_id;
-                    $register_user['u_password_new'] = $request->u_password_new;
+                    $register_user['password_new'] = $request->password_new;
                     $register_user['password_change'] = $request->password_change;
                     $register_user['new_mobile_number'] = $request->new_mobile_number;
                     $register_user['mobile_change'] = $request->mobile_change;
