@@ -29,9 +29,9 @@ class MaritalstatusServices{
         try {
             $add_Maritalstatus = $this->repo->addAll($request);
             if ($add_Maritalstatus) {
-                return ['status' => 'success', 'msg' => 'Incident Type Added Successfully.'];
+                return ['status' => 'success', 'msg' => 'Marital Status Added Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Incident Type Not Added.'];
+                return ['status' => 'error', 'msg' => 'Marital Status Not Added.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -48,9 +48,9 @@ class MaritalstatusServices{
         try {
             $update_Maritalstatus = $this->repo->updateAll($request);
             if ($update_Maritalstatus) {
-                return ['status' => 'success', 'msg' => 'Incident Type Updated Successfully.'];
+                return ['status' => 'success', 'msg' => 'Marital Status Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Incident Type Not Updated.'];
+                return ['status' => 'error', 'msg' => 'Marital Status Not Updated.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

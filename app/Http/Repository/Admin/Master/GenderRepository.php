@@ -44,7 +44,7 @@ class GenderRepository{
         } catch (\Exception $e) {
             return $e;
             return [
-                'msg' => 'Failed to get by Id Incident Type.',
+                'msg' => 'Failed to get by Id Gender.',
                 'status' => 'error'
             ];
         }
@@ -55,7 +55,7 @@ class GenderRepository{
             
             if (!$gender_data) {
                 return [
-                    'msg' => 'Incident Type data not found.',
+                    'msg' => 'Gender data not found.',
                     'status' => 'error'
                 ];
             }
@@ -66,13 +66,13 @@ class GenderRepository{
             $gender_data->save();        
         
             return [
-                'msg' => 'Incident Type data updated successfully.',
+                'msg' => 'Gender data updated successfully.',
                 'status' => 'success'
             ];
         } catch (\Exception $e) {
             return $e;
             return [
-                'msg' => 'Failed to update Incident Type data.',
+                'msg' => 'Failed to update Gender data.',
                 'status' => 'error'
             ];
         }

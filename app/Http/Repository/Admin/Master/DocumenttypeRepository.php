@@ -55,7 +55,7 @@ class DocumenttypeRepository{
             
             if (!$documenttype_data) {
                 return [
-                    'msg' => 'document type data not found.',
+                    'msg' => 'Document type data not found.',
                     'status' => 'error'
                 ];
             }
@@ -66,7 +66,7 @@ class DocumenttypeRepository{
             $documenttype_data->save();        
         
             return [
-                'msg' => 'document type data updated successfully.',
+                'msg' => 'Document type data updated successfully.',
                 'status' => 'success'
             ];
         } catch (\Exception $e) {

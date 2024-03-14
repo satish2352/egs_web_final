@@ -29,9 +29,9 @@ class GenderServices{
         try {
             $add_Gender = $this->repo->addAll($request);
             if ($add_Gender) {
-                return ['status' => 'success', 'msg' => 'Incident Type Added Successfully.'];
+                return ['status' => 'success', 'msg' => 'Gender Added Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Incident Type Not Added.'];
+                return ['status' => 'error', 'msg' => 'Gender Not Added.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -48,9 +48,9 @@ class GenderServices{
         try {
             $update_Gender = $this->repo->updateAll($request);
             if ($update_Gender) {
-                return ['status' => 'success', 'msg' => 'Incident Type Updated Successfully.'];
+                return ['status' => 'success', 'msg' => 'Gender Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Incident Type Not Updated.'];
+                return ['status' => 'error', 'msg' => 'Gender Not Updated.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

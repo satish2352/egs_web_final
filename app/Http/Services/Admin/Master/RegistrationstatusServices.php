@@ -29,9 +29,9 @@ class RegistrationstatusServices{
         try {
             $add_Registrationstatus = $this->repo->addAll($request);
             if ($add_Registrationstatus) {
-                return ['status' => 'success', 'msg' => 'Registrationstatus Added Successfully.'];
+                return ['status' => 'success', 'msg' => 'Registration Status Added Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Registrationstatus Not Added.'];
+                return ['status' => 'error', 'msg' => 'Registration Status Not Added.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -48,9 +48,9 @@ class RegistrationstatusServices{
         try {
             $update_Registrationstatus = $this->repo->updateAll($request);
             if ($update_Registrationstatus) {
-                return ['status' => 'success', 'msg' => 'Registrationstatus Updated Successfully.'];
+                return ['status' => 'success', 'msg' => 'Registration Status Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Registrationstatus Not Updated.'];
+                return ['status' => 'error', 'msg' => 'Registration Status Not Updated.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];

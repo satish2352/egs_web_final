@@ -29,9 +29,9 @@ class DocumenttypeServices{
         try {
             $add_Documenttype = $this->repo->addAll($request);
             if ($add_Documenttype) {
-                return ['status' => 'success', 'msg' => 'Document type Added Successfully.'];
+                return ['status' => 'success', 'msg' => 'Document Type Added Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Document type Not Added.'];
+                return ['status' => 'error', 'msg' => 'Document Type Not Added.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -48,9 +48,9 @@ class DocumenttypeServices{
         try {
             $update_Documenttype = $this->repo->updateAll($request);
             if ($update_Documenttype) {
-                return ['status' => 'success', 'msg' => 'Documenttype Updated Successfully.'];
+                return ['status' => 'success', 'msg' => 'Document Type Updated Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Documenttype Not Updated.'];
+                return ['status' => 'error', 'msg' => 'Document Type Not Updated.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
