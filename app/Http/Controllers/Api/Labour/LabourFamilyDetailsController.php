@@ -45,6 +45,28 @@ class LabourFamilyDetailsController extends Controller
 public function add(Request $request, $labour_id)
 {
     try {
+        $rules = [
+            'full_name' => 'required|array',
+            'full_name.*' => 'required|string',
+            'gender_id' => 'required|array',
+            'gender_id.*' => 'required|integer',
+            'relationship_id' => 'required|array',
+            'relationship_id.*' => 'required|integer',
+            'married_status_id' => 'required|array',
+            'married_status_id.*' => 'required|integer',
+            'date_of_birth' => 'required|array',
+            'date_of_birth.*' => 'required|date',
+        ];
+
+        // Perform validation
+        $validator = Validator::make($request->all(), $rules);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()], 422);
+        }
+
+        
         $familyDetails = [];
 
         foreach ($request->input('full_name') as $index => $fullName) {

@@ -43,6 +43,7 @@ Route::group([
         Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
         Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
         Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
+        Route::get('/list-document', [MasterController::class, 'getAllDocument']);
         Route::get('/list-project', [ProjectController::class, 'getAllProject']);
         Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
 

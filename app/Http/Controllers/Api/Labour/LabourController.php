@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api\Labour;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-use App\Models\Labour;
+use App\Models\ {
+	Labour,
+    User
+};
 use Illuminate\Support\Facades\Config;
 use Storage;
 use Carbon\Carbon;
@@ -82,14 +85,23 @@ public function add(Request $request)
     $validator = Validator::make($request->all(), [
         'full_name' => 'required|alpha',
         'gender_id' => 'required|numeric',
-        'date_of_birth' => 'required|date_format:d/m/Y',
+        'date_of_birth' => [
+            'required',
+            'date_format:d/m/Y',
+            function ($attribute, $value, $fail) {
+                $dob = Carbon::createFromFormat('d/m/Y', $value);
+                if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
+                    $fail('The date of birth must be a date before today.');
+                }
+            },
+        ],
         'district_id' => 'required|numeric',
         'taluka_id' => 'required|numeric',
         'village_id' => 'required|numeric',
+        'skill_id' => 'required|numeric',
         'mobile_number' => ['required', 'numeric', 'digits:10', 'unique:labour'],
         'landline_number' => ['required', 'regex:/^[0-9]{8,}$/'],
-        'mgnrega_card_id' => 'required|numeric',
-        'location_id' => 'required',
+        'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
         'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
         'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
 
@@ -100,7 +112,14 @@ public function add(Request $request)
     }
 
     try {
+         // Check if the user exists
+         $user = User::find($request->user_id);
+         if (!$user) {
+             return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+         }
+
         $labour_data = new Labour();
+        $labour_data->user_id = $request->user_id; // Assign the user ID
         $labour_data->full_name = $request->full_name;
         $labour_data->gender_id = $request->gender_id;
         $labour_data->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
@@ -110,12 +129,13 @@ public function add(Request $request)
         $labour_data->mobile_number = $request->mobile_number;
         $labour_data->landline_number = $request->landline_number;
         $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        $labour_data->location_id = $request->location_id;
+        $labour_data->skill_id = $request->skill_id;
         $labour_data->latitude = $request->latitude;
         $labour_data->longitude = $request->longitude;
         $labour_data->aadhar_image = 'null';
-        $labour_data->pancard_image = 'null';
+        $labour_data->mgnrega_image = 'null';
         $labour_data->profile_image = 'null';
+        $labour_data->voter_image = 'null';
         $labour_data->save();
 
         return response()->json(['status' => 'success', 'message' => 'Labor added successfully', 'data' => $labour_data], 200);
@@ -186,10 +206,10 @@ public function getAllLabourList(){
               'labour.mgnrega_card_id',
               'labour.latitude',
               'labour.longitude',
-              'labour.location_id',
               'labour.profile_image',
               'labour.aadhar_image',
-              'labour.pancard_image',
+              'labour.mgnrega_image',
+              'labour.profile_image',
           )->get();
 
         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
@@ -217,10 +237,10 @@ public function filterLabourList(Request $request){
                 'labour.mgnrega_card_id',
                 'labour.latitude',
                 'labour.longitude',
-                'labour.location_id',
                 'labour.profile_image',
                 'labour.aadhar_image',
-                'labour.pancard_image',
+                'labour.mgnrega_image',
+                'labour.profile_image',
             );
 
         // Apply filters if provided
