@@ -22,7 +22,7 @@
                 <div class="col-12 grid-margin">
                     <div class="card">
                         <div class="card-body">
-                          <div class="d-flex pt-5 pb-3">
+                          <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                                     <select class="form-control" name="district" id="district">
@@ -74,8 +74,19 @@
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    <select class="form-control" name="skill_id" id="skill_id">
+                                    <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
                                         <option value="">Select Skill</option>
+                                        <option value="skill">Skill</option>
+                                        <option value="unskill">Unskill</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skill_id" id="skill_id" disabled>
                                         <option value="">Select Skill</option>
                                         <option value="Carpentry">Carpentry</option>
                                         <option value="Plumbing">Plumbing</option>
@@ -99,19 +110,19 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sr. No.</th>
-                                                    <th>Name</th>
+                                                    <th>Labour Name</th>
                                                     <th>Gender</th>
                                                     <th>Date of Birth</th>
                                                     <th>Mobile Number</th>
-                                                    <th>Landline Number</th>
-                                                    <th>Mgnrega Card Id</th>
+                                                    <!-- <th>Landline Number</th> -->
+                                                    <th>Mgnrega Id</th>
                                                     <th>Latitude</th>
                                                     <th>Longitude</th>
                                                     
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($getOutput as $item)
+                                                <!-- @foreach ($getOutput as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ strip_tags($item->full_name) }}</td>
@@ -123,7 +134,17 @@
                                                       <td>{{ strip_tags($item->latitude) }}</td> 
                                                       <td>{{ strip_tags($item->longitude) }}</td> 
                                                     </tr>
-                                                @endforeach
+                                                @endforeach -->
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Mahesh</td>
+                                                    <td>Male</td>
+                                                    <td>12-08-1994</td>
+                                                    <td>9876432457</td>
+                                                    <td>4</td>
+                                                    <td>00</td>
+                                                    <td>00</td>
+                                                </tr>
 
                                             </tbody>
                                         </table>
@@ -135,5 +156,18 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            $(document).ready(function(){
+                $('#skillorunskill_id').on('change', function() {
+                    var selectedOption = $(this).val();
+                    if(selectedOption === 'unskill') {
+                        $('#skill_id').prop('disabled', true);
+                    } else {
+                        $('#skill_id').prop('disabled', false);
+                    }
+                });
+            });
+        </script>
        
     @endsection

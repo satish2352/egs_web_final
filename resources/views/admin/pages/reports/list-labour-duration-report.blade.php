@@ -22,7 +22,7 @@
                 <div class="col-12 grid-margin">
                     <div class="card">
                         <div class="card-body">
-                          <div class="d-flex pt-5 pb-3">
+                          <div class="row">
 
                             {{-- <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
@@ -90,31 +90,58 @@
                                     @endif
                                 </div>
                             </div> --}}
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    <label for="m_name">From Date</label>
-                                    <input type="date" class="form-control" name="m_name" id="m_name"
-                                        placeholder="" >
-                                    @if ($errors->has('m_name'))
-                                        <span class="red-text"><?php echo $errors->first('m_name', ':message'); ?></span>
+                                    <select class="form-control" name="month_id" id="month_id">
+                                        <option value="">Select Month</option>
+                                        <option value="January">January</option>
+                                        <option value="February">February</option>
+                                        <option value="March">March</option>
+                                        <option value="April">April</option>
+                                        <option value="May">May</option>
+                                        <option value="June">June</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September">September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
+                                        <option value="December">December</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php //echo $errors->first('skill_id', ':message'); ?></span>
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    <label for="m_name">To Date</label>
-                                    <input type="date" class="form-control" name="m_name" id="m_name"
-                                        placeholder="" >
-                                    @if ($errors->has('m_name'))
-                                        <span class="red-text"><?php echo $errors->first('m_name', ':message'); ?></span>
+                                    <select class="form-control" name="year_id" id="year_id">
+                                        <option value="">Select Year</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php //echo $errors->first('skill_id', ':message'); ?></span>
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    <label for="m_name">Skill</label>
-                                    <select class="form-control" name="skill_id" id="skill_id">
+                                    <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
                                         <option value="">Select Skill</option>
+                                        <option value="skill">Skill</option>
+                                        <option value="unskill">Unskill</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <!-- <label for="m_name">Skill</label> -->
+                                    <select class="form-control" name="skill_id" id="skill_id" disabled>
                                         <option value="">Select Skill</option>
                                         <option value="Carpentry">Carpentry</option>
                                         <option value="Plumbing">Plumbing</option>
@@ -174,5 +201,18 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            $(document).ready(function(){
+                $('#skillorunskill_id').on('change', function() {
+                    var selectedOption = $(this).val();
+                    if(selectedOption === 'unskill') {
+                        $('#skill_id').prop('disabled', true);
+                    } else {
+                        $('#skill_id').prop('disabled', false);
+                    }
+                });
+            });
+        </script>
        
     @endsection
