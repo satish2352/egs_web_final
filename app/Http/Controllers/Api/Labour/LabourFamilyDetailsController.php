@@ -54,8 +54,17 @@ public function add(Request $request, $labour_id)
             'relationship_id.*' => 'required|integer',
             'married_status_id' => 'required|array',
             'married_status_id.*' => 'required|integer',
-            'date_of_birth' => 'required|array',
-            'date_of_birth.*' => 'required|date',
+            'date_of_birth.*' => [
+                'required',
+                'date_format:d/m/Y',
+                function ($attribute, $value, $fail) {
+                    $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+                    if ($dob->isAfter(\Carbon\Carbon::now())) {
+                        $fail('The date of birth must be a date before today.');
+                    }
+                },
+            ],
+            
         ];
 
         // Perform validation
