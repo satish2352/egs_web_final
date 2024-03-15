@@ -19,10 +19,10 @@ class ReportsServices
     {
         $this->repo = new ReportsRepository();
     }
-    public function getAllRole()
+    public function getAllLabourLocation()
     {
         try {
-            return $this->repo->getAllRole();
+            return $this->repo->getAllLabourLocation();
         } catch (\Exception $e) {
             return $e;
         }

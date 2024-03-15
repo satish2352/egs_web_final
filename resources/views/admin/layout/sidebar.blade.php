@@ -87,9 +87,9 @@
                                           href="{{ route('list-documenttype') }}">Document Type</a></li>
                               {{-- @endif --}}
                               {{-- @if (in_array('list-incident-type', $data_for_url)) --}}
-                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-incident-type*') 
+                                  {{-- <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-incident-type*') 
                                     ? 'nav-link active' : 'nav-link' }}"
-                                          href="{{ route('list-incident-type') }}">Incident Type</a></li>
+                                          href="{{ route('list-incident-type') }}">Incident Type</a></li> --}}
                               {{-- @endif --}}
                           </ul>
                       </div>
@@ -142,20 +142,20 @@
                                 ? 'nav-link active' : 'nav-link' }}"
                                       href="{{ route('list-location-report') }}">Location Report</a></li>
                           {{-- @endif --}}
-                          {{-- @if (in_array('list-gender', $data_for_url)) --}}
-                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-gender*') 
+                          {{-- @if (in_array('list-labour-duration-report', $data_for_url)) --}}
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-labour-duration-report*') 
                                 ? 'nav-link active' : 'nav-link' }}"
-                                      href="{{ route('list-gender') }}">Duration Report</a></li>
+                                      href="{{ route('list-labour-duration-report') }}">Duration Report</a></li>
                           {{-- @endif --}}
-                          {{-- @if (in_array('list-maritalstatus', $data_for_url)) --}}
-                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-maritalstatus*') 
+                          {{-- @if (in_array('list-project-report', $data_for_url)) --}}
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-project-report*') 
                                 ? 'nav-link active' : 'nav-link' }}"
-                                      href="{{ route('list-maritalstatus') }}">Project Report</a></li>
+                                      href="{{ route('list-project-report') }}">Project Report</a></li>
                           {{-- @endif --}}
-                          {{-- @if (in_array('list-relation', $data_for_url)) --}}
-                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-relation*') 
+                          {{-- @if (in_array('list-project-and-location-report', $data_for_url)) --}}
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-project-and-location-report*') 
                                 ? 'nav-link active' : 'nav-link' }}"
-                                      href="{{ route('list-relation') }}">Project and Location</a></li>
+                                      href="{{ route('list-project-and-location-report') }}">Project and Location</a></li>
                           {{-- @endif --}}
                       </ul>
                   </div>

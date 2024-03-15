@@ -7,14 +7,14 @@
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
-                    Labour Location Report
+                    Labour Project and Location Report
                    
 
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('list-role') }}">Reports</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Labour Location Report</li>
+                        <li class="breadcrumb-item active" aria-current="page">Labour Project and Location Report</li>
                     </ol>
                 </nav>
             </div>
@@ -111,7 +111,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($getOutput as $item)
+                                                {{-- @foreach ($getOutput as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ strip_tags($item->full_name) }}</td>
@@ -123,7 +123,7 @@
                                                       <td>{{ strip_tags($item->latitude) }}</td> 
                                                       <td>{{ strip_tags($item->longitude) }}</td> 
                                                     </tr>
-                                                @endforeach
+                                                @endforeach --}}
 
                                             </tbody>
                                         </table>

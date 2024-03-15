@@ -7,14 +7,14 @@
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
-                    Labour Location Report
+                    Labour Duration Report
                    
 
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('list-role') }}">Reports</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Labour Location Report</li>
+                        <li class="breadcrumb-item active" aria-current="page"> Labour Duration Report</li>
                     </ol>
                 </nav>
             </div>
@@ -23,7 +23,8 @@
                     <div class="card">
                         <div class="card-body">
                           <div class="d-flex pt-5 pb-3">
-                            <div class="col-lg-3 col-md-3 col-sm-3">
+
+                            {{-- <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                                     <select class="form-control" name="district" id="district">
                                         <option value="">Select District</option>
@@ -32,7 +33,7 @@
                                         <option value="3">Mumbai</option>
                                     </select>
                                     @if ($errors->has('district'))
-                                        <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
+                                        <span class="red-text"><?php //echo $errors->first('district', ':message'); ?></span>
                                     @endif
                                 </div>
                             </div>
@@ -48,7 +49,7 @@
                                         <option value="66">Maval</option>
                                     </select>
                                     @if ($errors->has('taluka'))
-                                        <span class="red-text"><?php echo $errors->first('taluka', ':message'); ?></span>
+                                        <span class="red-text"><?php //echo $errors->first('taluka', ':message'); ?></span>
                                     @endif
                                 </div>
                             </div>
@@ -68,12 +69,50 @@
                                         <option value="Antroli">Antroli</option>
                                     </select>
                                     @if ($errors->has('village'))
-                                        <span class="red-text"><?php echo $errors->first('village', ':message'); ?></span>
+                                        <span class="red-text"><?php //echo $errors->first('village', ':message'); ?></span>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
+                                    <select class="form-control" name="skill_id" id="skill_id">
+                                        <option value="">Select Skill</option>
+                                        <option value="">Select Skill</option>
+                                        <option value="Carpentry">Carpentry</option>
+                                        <option value="Plumbing">Plumbing</option>
+                                        <option value="Electrician">Electrician</option>
+                                        <option value="Masonry">Masonry</option>
+                                        <option value="Painting">Painting</option>
+                                        <option value="Welding">Welding</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php //echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div> --}}
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label for="m_name">From Date</label>
+                                    <input type="date" class="form-control" name="m_name" id="m_name"
+                                        placeholder="" >
+                                    @if ($errors->has('m_name'))
+                                        <span class="red-text"><?php echo $errors->first('m_name', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label for="m_name">To Date</label>
+                                    <input type="date" class="form-control" name="m_name" id="m_name"
+                                        placeholder="" >
+                                    @if ($errors->has('m_name'))
+                                        <span class="red-text"><?php echo $errors->first('m_name', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label for="m_name">Skill</label>
                                     <select class="form-control" name="skill_id" id="skill_id">
                                         <option value="">Select Skill</option>
                                         <option value="">Select Skill</option>
@@ -111,7 +150,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($getOutput as $item)
+                                                {{-- @foreach ($getOutput as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ strip_tags($item->full_name) }}</td>
@@ -123,7 +162,7 @@
                                                       <td>{{ strip_tags($item->latitude) }}</td> 
                                                       <td>{{ strip_tags($item->longitude) }}</td> 
                                                     </tr>
-                                                @endforeach
+                                                @endforeach --}}
 
                                             </tbody>
                                         </table>

@@ -7,14 +7,14 @@
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
-                    Labour Location Report
+                    Labour Project Report
                    
 
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('list-role') }}">Reports</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Labour Location Report</li>
+                        <li class="breadcrumb-item active" aria-current="page">Labour Project Report</li>
                     </ol>
                 </nav>
             </div>
@@ -23,56 +23,19 @@
                     <div class="card">
                         <div class="card-body">
                           <div class="d-flex pt-5 pb-3">
-                            <div class="col-lg-3 col-md-3 col-sm-3">
-                                <div class="form-group">
-                                    <select class="form-control" name="district" id="district">
-                                        <option value="">Select District</option>
-                                        <option value="1">Nashik</option>
-                                        <option value="2">Pune</option>
-                                        <option value="3">Mumbai</option>
-                                    </select>
-                                    @if ($errors->has('district'))
-                                        <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3">
-                                <div class="form-group">
-                                    <select class="form-control" name="taluka" id="taluka">
-                                        <option value="">Select Taluka</option>
-                                        <option value="11">Nashik</option>
-                                        <option value="22">Sinnar</option>
-                                        <option value="33">Igatpuri</option>
-                                        <option value="44">Pune</option>
-                                        <option value="55">Haveli</option>
-                                        <option value="66">Maval</option>
-                                    </select>
-                                    @if ($errors->has('taluka'))
-                                        <span class="red-text"><?php echo $errors->first('taluka', ':message'); ?></span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="form-group">
                                     <select class="form-control" name="village" id="village">
-                                        <option value="">Select Village</option>
-                                        <option value="Aadgav">Aadgav</option>
-                                        <option value="Adgaon">Adgaon</option>
-                                        <option value="Ahergaon">Ahergaon</option>
-                                        <option value="Ahilyapur">Ahilyapur</option>
-                                        <option value="Akole">Akole</option>
-                                        <option value="Akrale">Akrale</option>
-                                        <option value="Ambad">Ambad</option>
-                                        <option value="Ane">Ane</option>
-                                        <option value="Anjaneri">Anjaneri</option>
-                                        <option value="Antroli">Antroli</option>
+                                        <option value="">Select Project</option>
+                                        <option value="Aadgav">Test</option>
+                                       
                                     </select>
                                     @if ($errors->has('village'))
                                         <span class="red-text"><?php echo $errors->first('village', ':message'); ?></span>
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="form-group">
                                     <select class="form-control" name="skill_id" id="skill_id">
                                         <option value="">Select Skill</option>
@@ -111,7 +74,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($getOutput as $item)
+                                                {{-- @foreach ($getOutput as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ strip_tags($item->full_name) }}</td>
@@ -123,7 +86,7 @@
                                                       <td>{{ strip_tags($item->latitude) }}</td> 
                                                       <td>{{ strip_tags($item->longitude) }}</td> 
                                                     </tr>
-                                                @endforeach
+                                                @endforeach --}}
 
                                             </tbody>
                                         </table>
