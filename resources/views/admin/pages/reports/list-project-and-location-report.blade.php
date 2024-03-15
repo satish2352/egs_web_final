@@ -22,7 +22,7 @@
                 <div class="col-12 grid-margin">
                     <div class="card">
                         <div class="card-body">
-                          <div class="d-flex pt-5 pb-3">
+                          <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                                     <select class="form-control" name="district" id="district">
@@ -74,7 +74,19 @@
                             </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    <select class="form-control" name="skill_id" id="skill_id">
+                                    <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
+                                        <option value="">Select Skill</option>
+                                        <option value="skill">Skill</option>
+                                        <option value="unskill">Unskill</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skill_id" id="skill_id" disabled>
                                         <option value="">Select Skill</option>
                                         <option value="">Select Skill</option>
                                         <option value="Carpentry">Carpentry</option>
@@ -135,5 +147,19 @@
                 </div>
             </div>
         </div>
+
+
+        <script>
+            $(document).ready(function(){
+                $('#skillorunskill_id').on('change', function() {
+                    var selectedOption = $(this).val();
+                    if(selectedOption === 'unskill') {
+                        $('#skill_id').prop('disabled', true);
+                    } else {
+                        $('#skill_id').prop('disabled', false);
+                    }
+                });
+            });
+        </script>
        
     @endsection
