@@ -23,7 +23,7 @@ class ProjectController extends Controller
                   'projects.description',
                   'state_projects.name as state',
                   'district_projects.name as district',
-                  'taluka_projects.name as taluka_id',
+                  'taluka_projects.name as taluka',
                   'village_projects.name as village',
 				  'projects.start_date',
 				  'projects.end_date',
