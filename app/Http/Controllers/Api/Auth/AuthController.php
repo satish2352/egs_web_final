@@ -139,12 +139,12 @@ public function login(Request $request)
     // Check if the user exists in the database
     $user = User::where('email', $email)->first();
     if (!$user) {
-        return response()->json(['error' => 'User not found'], 404);
+        return response()->json(['status' => 'False','error' => 'User not found'], 404);
     }
 
     // Check if the provided password matches the user's password
     if (!Hash::check($password, $user->password)) {
-        return response()->json(['error' => 'Invalid password'], 401);
+        return response()->json(['status' => 'False','error' => 'Invalid password'], 401);
     }
 
     // Attempt to authenticate the user with email and password
@@ -160,10 +160,12 @@ public function login(Request $request)
 
     // Return response with token and user details
     return response()->json([
-        'status' => 'success',
+        'status' => 'True',
+        'message' => 'Login successfully',
         'data' => $user,
         // 'access_token' => $token,
         'token_type' => 'bearer',
+        // 'expires_in' => auth()->factory()->getTTL() * 60,
     ]);
 }
 // public function logout(Request $request)
