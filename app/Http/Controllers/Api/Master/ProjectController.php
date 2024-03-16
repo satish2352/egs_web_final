@@ -13,14 +13,16 @@ use App\Models\ {
 class ProjectController extends Controller
 {
 
-    public function getAllProject(){
+    public function getAllProject(Request $request){
         try {
             // $project = Project::all();
             $project = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
             ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
             ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
               ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-            //   ->where('gender.is_active', true)
+              ->when($request->get('project_name'), function($query) use ($request) {
+                $query->where('projects.project_name',$request->project_name);
+            })
               ->select(
                   'projects.id',
                   'projects.project_name',
@@ -45,45 +47,45 @@ class ProjectController extends Controller
         }
     }
 
-    public function ProjectLabours(Request $request, $project_id) {
-        try {
-            $query = Labour::leftJoin('tbl_project_labours', 'labour.id', '=', 'tbl_project_labours.labour_id')
-                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                ->where('tbl_project_labours.project_id', $project_id)
-                ->select(
-                    'labour.id',
-                    'labour.user_id',
-                    'labour.full_name',
-                    'labour.date_of_birth',
-                    'gender_labour.gender_name as gender_name',
-                    'district_labour.name as district_id',
-                    'taluka_labour.name as taluka_id',
-                    'village_labour.name as village_id',
-                    'labour.mobile_number',
-                    'labour.landline_number',
-                    'labour.mgnrega_card_id',
-                    'labour.latitude',
-                    'labour.longitude',
-                    'labour.profile_image',
-                    'labour.aadhar_image',
-                    'labour.mgnrega_image'
-                );
+    // public function ProjectLabours(Request $request, $project_id) {
+    //     try {
+    //         $query = Labour::leftJoin('tbl_project_labours', 'labour.id', '=', 'tbl_project_labours.labour_id')
+    //             ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+    //             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+    //             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+    //             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+    //             ->where('tbl_project_labours.project_id', $project_id)
+    //             ->select(
+    //                 'labour.id',
+    //                 'labour.user_id',
+    //                 'labour.full_name',
+    //                 'labour.date_of_birth',
+    //                 'gender_labour.gender_name as gender_name',
+    //                 'district_labour.name as district_id',
+    //                 'taluka_labour.name as taluka_id',
+    //                 'village_labour.name as village_id',
+    //                 'labour.mobile_number',
+    //                 'labour.landline_number',
+    //                 'labour.mgnrega_card_id',
+    //                 'labour.latitude',
+    //                 'labour.longitude',
+    //                 'labour.profile_image',
+    //                 'labour.aadhar_image',
+    //                 'labour.mgnrega_image'
+    //             );
     
-            // Apply filters if provided
-            if ($request->has('mgnrega_card_id')) {
-                $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
-            }
+    //         // Apply filters if provided
+    //         if ($request->has('mgnrega_card_id')) {
+    //             $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
+    //         }
           
-            $data_output = $query->get();
+    //         $data_output = $query->get();
     
-            return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    //     }
+    // }
     
     
 
