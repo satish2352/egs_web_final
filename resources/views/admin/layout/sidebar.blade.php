@@ -39,9 +39,6 @@
                       <span class="menu-title">Dashboard</span>
                   </a>
               </li>    
-              <!-- in_array('list-role', $data_for_url) || in_array('list-maritalstatus', $data_for_url) || in_array('list-relation', $data_for_url)
-                      in_array('list-gender', $data_for_url) || in_array('list-skills', $data_for_url) || in_array('list-registrationstatus', $data_for_url)
-                      || in_array('list-documenttype', $data_for_url) -->
               @endif
               @if (in_array('list-role', $data_for_url) || in_array('list-maritalstatus', $data_for_url) || in_array('list-relation', $data_for_url) ||
                       in_array('list-gender', $data_for_url) || in_array('list-skills', $data_for_url) || in_array('list-registrationstatus', $data_for_url)
@@ -125,6 +122,14 @@
                 <a class="nav-link" href="{{ route('list-labours') }}">
                     <i class="fas fa-user menu-icon"></i>
                     <span class="menu-title">Labour Management</span>
+                </a>
+            </li>
+            <li class="{{request()->is('list-labours*')
+                ? 'nav-item active' : 'nav-item' }}">
+                <?php $currenturl = Request::url(); ?>
+                <a class="nav-link" href="{{ route('list-project-wise-users') }}">
+                    <i class="fas fa-user menu-icon"></i>
+                    <span class="menu-title">Project Users Management</span>
                 </a>
             </li>
             <li class="{{request()->is('list-role*') 
