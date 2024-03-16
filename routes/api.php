@@ -46,10 +46,11 @@ Route::group([
         Route::get('/list-document', [MasterController::class, 'getAllDocument']);
         Route::post('/list-project', [ProjectController::class, 'getAllProject']);
         // Route::post('/particular-labour/{id}', [LabourController::class, 'getParticularLabour']);
+        Route::post('/list-user-labours/{user_id}', [LabourController::class, 'getAllUserLabourList']);
         
 
-        Route::post('/particular-project-labours/{project_id}', [ProjectController::class, 'ProjectLabours']);
-        Route::get('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
+        Route::post('/particular-project-labours/{project_id}', [ProjectController::class, 'ProjectLaboursList']);
+        Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterData']);
         
         Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);

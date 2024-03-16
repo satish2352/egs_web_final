@@ -230,13 +230,15 @@ public function getAllLabourList(Request $request){
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
-
-public function filterLabourList(Request $request){
+public function getAllUserLabourList(Request $request, $user_id){
     try {
-        $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+        $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+            ->when($request->get('user_id'), function($query) use ($request) {
+                $query->where('labour.user_id',$request->user_id);
+            })
             ->select(
                 'labour.id',
                 'labour.full_name',
@@ -254,26 +256,64 @@ public function filterLabourList(Request $request){
                 'labour.aadhar_image',
                 'labour.mgnrega_image',
                 'labour.profile_image',
-            );
+            )->get();
 
-        // Apply filters if provided
-        if ($request->has('district_id')) {
-            $query->where('district_labour.location_id', $request->input('district_id'));
-        }
-        if ($request->has('taluka_id')) {
-            $query->where('taluka_labour.location_id', $request->input('taluka_id'));
-        }
-        if ($request->has('village_id')) {
-            $query->where('village_labour.location_id', $request->input('village_id'));
+        // Loop through labour data and retrieve family details for each labour
+        foreach ($data_output as $labour) {
+            $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
         }
 
-        $data_output = $query->get();
-
-        return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
+        return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
+// public function filterLabourList(Request $request){
+//     try {
+//         $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+//             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+//             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+//             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+//             ->when($request->get('user_id'), function($query) use ($request) {
+//                 $query->where('labour.user_id',$request->user_id);
+//             })
+//             ->select(
+//                 'labour.id',
+//                 'labour.full_name',
+//                 'labour.date_of_birth',
+//                 'gender_labour.gender_name as gender_name',
+//                 'district_labour.name as district_id',
+//                 'taluka_labour.name as taluka_id',
+//                 'village_labour.name as village_id',
+//                 'labour.mobile_number',
+//                 'labour.landline_number',
+//                 'labour.mgnrega_card_id',
+//                 'labour.latitude',
+//                 'labour.longitude',
+//                 'labour.profile_image',
+//                 'labour.aadhar_image',
+//                 'labour.mgnrega_image',
+//                 'labour.profile_image',
+//             );
+
+//         // Apply filters if provided
+//         if ($request->has('district_id')) {
+//             $query->where('district_labour.location_id', $request->input('district_id'));
+//         }
+//         if ($request->has('taluka_id')) {
+//             $query->where('taluka_labour.location_id', $request->input('taluka_id'));
+//         }
+//         if ($request->has('village_id')) {
+//             $query->where('village_labour.location_id', $request->input('village_id'));
+//         }
+
+//         $data_output = $query->get();
+
+//         return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+//     }
+// }
 
 public function filtermgnregaIdLabourList(Request $request){
     try {
@@ -301,9 +341,9 @@ public function filtermgnregaIdLabourList(Request $request){
             );
 
         // Apply filters if provided
-        if ($request->has('mgnrega_card_id')) {
-            $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
-        }
+        // if ($request->has('mgnrega_card_id')) {
+        //     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
+        // }
       
         $data_output = $query->get();
 
