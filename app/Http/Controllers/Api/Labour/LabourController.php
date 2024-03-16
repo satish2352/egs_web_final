@@ -222,9 +222,20 @@ public function getAllLabourList(Request $request){
 
         // Loop through labour data and retrieve family details for each labour
         foreach ($data_output as $labour) {
-            $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
+            $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+            ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                ->select(
+                    'labour_family_details.id',
+                    'gender_labour.gender_name as gender_name',
+                    'relation_labour.relation_title as relation_title',
+                    'maritalstatus_labour.maritalstatus as maritalstatus',
+                    'labour_family_details.full_name',
+                    'labour_family_details.date_of_birth'
+                )
+                ->where('labour_family_details.labour_id', $labour->id)
+                ->get();
         }
-
         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
@@ -263,8 +274,23 @@ public function getAllUserLabourList(Request $request){
             )->get();
 
         // Loop through labour data and retrieve family details for each labour
+        // foreach ($data_output as $labour) {
+        //     $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
+        // }
         foreach ($data_output as $labour) {
-            $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
+            $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+            ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                ->select(
+                    'labour_family_details.id',
+                    'gender_labour.gender_name as gender_name',
+                    'relation_labour.relation_title as relation_title',
+                    'maritalstatus_labour.maritalstatus as maritalstatus',
+                    'labour_family_details.full_name',
+                    'labour_family_details.date_of_birth'
+                )
+                ->where('labour_family_details.labour_id', $labour->id)
+                ->get();
         }
 
         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
