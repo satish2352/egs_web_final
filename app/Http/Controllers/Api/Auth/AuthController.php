@@ -13,6 +13,117 @@ use App\Models\ {
 };
 class AuthController extends Controller
 {
+// public function login(Request $request)
+// {
+//     // Validate incoming request
+//     $request->validate([
+//         'email' => 'required|email',
+//         'password' => 'required',
+//         'user_id' => 'required',
+//     ]);
+
+//     // Retrieve email and password from the request
+//     $credentials = $request->only('email', 'password');
+//     $user_id = $request->input('user_id');
+
+//      // Check if the user exists in the database
+//      $user = User::where('id', $user_id)->first();
+
+//      if (!$user) {
+//          return response()->json(['error' => 'User not found'], 404);
+//      }
+
+//     // Attempt to authenticate the user without updating remember_token
+//     if (!Auth::attempt($credentials, $request->has('remember'))) {
+//         return response()->json(['error' => 'Unauthorized'], 401);
+//     }
+
+//     // User is authenticated, generate JWT token
+//     $user = Auth::user();
+//     $token = JWTAuth::fromUser($user);
+
+//     // Save token in the user's record
+//     $user->update(['remember_token' => $token]);
+
+
+//     // Return response with token and user details
+//     return response()->json([
+//         'status' => 'success',
+//         'data' => $user,
+//         // 'access_token' => $token,
+//         'token_type' => 'bearer',
+//     ]);
+
+//     // Return response with token, user details, and user_id
+//     return response()->json([
+//         'status' => 'success',
+//         'data' => [
+//             'user_id' => $user->id,
+//             'email' => $user->email,
+//             'token_type' => 'bearer',
+//         ],
+//     ]);
+// }
+// public function login(Request $request)
+// {
+//     // Validate incoming request
+//     $request->validate([
+//         'email' => 'required|email',
+//         'password' => 'required',
+//         'user_id' => 'required',
+//     ]);
+
+//     // Retrieve email, password, and user_id from the request
+//     $email = $request->input('email');
+//     $password = $request->input('password');
+//     $user_id = $request->input('user_id');
+
+//     // Check if the user exists in the database
+//     $user = User::find($user_id);
+
+//     if (!$user) {
+//         return response()->json(['error' => 'User not found'], 404);
+//     }
+
+//     // Check if the provided email matches the user's email
+//     if ($user->email !== $email) {
+//         return response()->json(['error' => 'Invalid email'], 401);
+//     }
+
+//     // Check if the provided password matches the user's password
+//     if (!Hash::check($password, $user->password)) {
+//         return response()->json(['error' => 'Invalid password'], 401);
+//     }
+
+//     if (!$user) {
+//         return response()->json(['error' => 'User not found'], 404);
+//     }
+
+//     // Attempt to authenticate the user with email and password
+//     if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+//         return response()->json(['error' => 'Unauthorized'], 401);
+//     }
+
+//     // Check if the authenticated user's ID matches the provided user_id
+//     if (Auth::user()->id != $user_id) {
+//         return response()->json(['error' => 'Unauthorized'], 401);
+//     }
+
+//     // User is authenticated, generate JWT token
+//     $user = Auth::user();
+//     $token = JWTAuth::fromUser($user);
+
+//     // Save token in the user's record
+//     $user->update(['remember_token' => $token]);
+
+//     // Return response with token and user details
+//     return response()->json([
+//         'status' => 'success',
+//         'data' => $user,
+//         // 'access_token' => $token,
+//         'token_type' => 'bearer',
+//     ]);
+// }
 public function login(Request $request)
 {
     // Validate incoming request
@@ -22,53 +133,41 @@ public function login(Request $request)
     ]);
 
     // Retrieve email and password from the request
-    $credentials = $request->only('email', 'password');
+    $email = $request->input('email');
+    $password = $request->input('password');
 
-    // Attempt to authenticate the user without updating remember_token
-    if (!Auth::attempt($credentials, $request->has('remember'))) {
+    // Check if the user exists in the database
+    $user = User::where('email', $email)->first();
+    if (!$user) {
+        return response()->json(['status' => 'False','error' => 'User not found'], 404);
+    }
+
+    // Check if the provided password matches the user's password
+    if (!Hash::check($password, $user->password)) {
+        return response()->json(['status' => 'False','error' => 'Invalid password'], 401);
+    }
+
+    // Attempt to authenticate the user with email and password
+    if (!Auth::attempt(['email' => $email, 'password' => $password])) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
     // User is authenticated, generate JWT token
-    $user = Auth::user();
     $token = JWTAuth::fromUser($user);
 
     // Save token in the user's record
     $user->update(['remember_token' => $token]);
 
-
     // Return response with token and user details
     return response()->json([
-        'status' => 'success',
+        'status' => 'True',
+        'message' => 'Login successfully',
         'data' => $user,
         // 'access_token' => $token,
         'token_type' => 'bearer',
+        // 'expires_in' => auth()->factory()->getTTL() * 60,
     ]);
 }
-
-
-// public function login(Request $request)
-// {
-//     $credentials = $request->only('email', 'password');
-
-//     $user = User::where('email', $credentials['email'])->first();
-
-    // if (!$user || !Hash::check($credentials['password'], $user->password)) {
-    //     return response()->json(['error' => 'Unauthorized'], 401);
-    // }
-
-//     // $token = $user->createToken('AuthToken')->plainTextToken;
-//   $token = $user->createToken('AuthToken')->accessToken;
-//     echo $token;
-//     // die();
- 
-//     // Update the access token in the database
-//     $user->remember_token = $token;
-//     $user->save();
-
-//     return $this->responseWithToken($token, $user);
-// }
-
 // public function logout(Request $request)
 // {
 //     $user = $request->user();

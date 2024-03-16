@@ -52,8 +52,12 @@ class ProjectController extends Controller {
                             ->select('location_id','name')
                             ->get()
                             ->toArray();
+        $dynamic_district = TblArea::where('parent_id', 2)
+                            ->select('location_id','name')
+                            ->get()
+                            ->toArray();
     	// return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
-    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_state'));
+    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_state','dynamic_district'));
     }
 
     public function getCities(Request $request)
@@ -119,65 +123,39 @@ class ProjectController extends Controller {
     }
 
     public function update(Request $request){
-        // $user_data = $this->service->editUsers($request);
-        // return view('admin.pages.users.users-list',compact('user_data'));
 
         $rules = [
-            // 'email' => 'required',
-            // 'u_uname' => 'required',
-            // 'u_password' => 'required',
-            'role_id' => 'required',
-            'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            'l_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            'number' =>  'required|regex:/^[0-9]{10}$/',
-            'imei_no' => 'required',
-            'aadhar_no' => 'required',
-            'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
+            // 'role_id' => 'required',
+            'project_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
             'state' => 'required',
             'district' => 'required',
             'taluka' => 'required',
             'village' => 'required',
-            'pincode' => 'required|regex:/^[0-9]{6}$/',
+            'latitude' =>  'required',
+            'longitude' =>  'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'description' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
          ];       
 
         $messages = [   
-                        // 'email.required' => 'Please enter email.',
-                        // 'email.email' => 'Please enter valid email.',
-                        // 'u_uname.required' => 'Please enter user uname.',
-                        // 'u_password.required' => 'Please enter password.',
-                        'role_id.required' => 'Please select role type.',
-                        'f_name.required' => 'Please enter first name.',
-                         'f_name.regex' => 'Please  enter text only.',
-                        'f_name.max'   => 'Please  enter first name length upto 255 character only.',
-
-                        'm_name.required' =>'Please enter middle name.',
-                        'm_name.regex' => 'Please  enter text only.',
-                        'm_name.max'   => 'Please  enter middle name length upto 255 character only.',
-
-                        'l_name.required' => 'Please enter last name.',
-                        'l_name.regex' => 'Please  enter text only.',
-                        'l_name.max'   => 'Please  enter last name length upto 255 character only.',
-
-                        'number.required' => 'Please enter number.',
-                        'number.regex' => 'Please enter only numbers with 10-digit.',
-
-                        'imei_no.required' =>'Please enter IMEI Number.',
-                        'aadhar_no.required' =>'Please enter Aadhar Number.',
-                        // 'designation.regex' => 'Please  enter text only.',
-                        // 'designation.max'   => 'Please  enter designation length upto 255 character only.',
-
-                        'address.required' => 'Please enter address.',
-                        'address.regex' => 'Please enter right address.',
-                        'address.max'   => 'Please  enter address length upto 255 character only.',
-
+                        'project_name.required' => 'Please enter Project name.',
+                         'project_name.regex' => 'Please  enter text only.',
+                        'project_name.max'   => 'Please  enter Project name length upto 255 character only.',
 
                         'state.required' => 'Please select state.',
                         'district.required' =>'Please select District.',
                         'taluka.required' =>'Please select Taluka.',
                         'village.required' =>'Please select Village.',
-                        'pincode.required' => 'Please enter pincode.',
-                        'pincode.regex' => 'Please enter a 6-digit pincode.',
+                        'latitude.required' =>'Please select Village.',
+                        'longitude.required' =>'Please select Village.',
+                        'start_date.required' =>'Please select Village.',
+                        'end_date.required' =>'Please select Village.',
+                        'end_date.required' =>'Please select Village.',
+
+                        'description.required' => 'Please enter description.',
+                        'description.regex' => 'Please enter right description.',
+                        'description.max'   => 'Please  enter description length upto 255 character only.',
                     ];
 
 
@@ -196,10 +174,10 @@ class ProjectController extends Controller {
                     $msg = $register_user['msg'];
                     $status = $register_user['status'];
                     if($status=='success') {
-                        return redirect('list-users')->with(compact('msg','status'));
+                        return redirect('list-projects')->with(compact('msg','status'));
                     }
                     else {
-                        return redirect('list-users')->withInput()->with(compact('msg','status'));
+                        return redirect('list-projects')->withInput()->with(compact('msg','status'));
                     }
                 }
                 

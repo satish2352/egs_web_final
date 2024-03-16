@@ -43,7 +43,12 @@ Route::group([
         Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
         Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
         Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
+        Route::get('/list-document', [MasterController::class, 'getAllDocument']);
         Route::get('/list-project', [ProjectController::class, 'getAllProject']);
+        Route::get('/filter-project-list', [ProjectController::class, 'filterProjectList']);
+        Route::get('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
+        Route::post('/filter-project-labour-list', [ProjectController::class, 'filterData']);
+        
         Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
 
         Route::post('logout', [AuthController::class, 'logout']);

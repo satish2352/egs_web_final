@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Api\Labour;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
-use App\Models\Labour;
+use App\Models\ {
+	Labour,
+    User,
+    LabourFamilyDetails
+};
 use Illuminate\Support\Facades\Config;
 use Storage;
 use Carbon\Carbon;
@@ -28,7 +32,7 @@ class LabourController extends Controller
 //         'mgnrega_card_id' => 'required',
 //         'location_id' => 'required',
 //         'aadhar_image' => 'required|image',
-//         'pancard_image' => 'required|image',
+//         'mgnrega_image' => 'required|image',
 //         'profile_image' => 'required|image'
 //     ]);
 
@@ -52,24 +56,24 @@ class LabourController extends Controller
 
 //         $last_insert_id = $labour_data->id;
 //         $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-//         $imagePancard = $last_insert_id . '_' . rand(100000, 999999) . '_pan.' . $request->pancard_image->extension();
+//         $imagePancard = $last_insert_id . '_' . rand(100000, 999999) . '_pan.' . $request->mgnrega_image->extension();
 //         $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
 
 //         $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
 //         uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-//         uploadImage($request, 'pancard_image', $path, $imagePancard);
+//         uploadImage($request, 'mgnrega_image', $path, $imagePancard);
 //         uploadImage($request, 'profile_image', $path, $imageProfile);
 
 //         // Update the image paths in the database
 //         $labour_data->aadhar_image = $path . '/' . $imageAadhar;
-//         $labour_data->pancard_image = $path . '/' . $imagePancard;
+//         $labour_data->mgnrega_image = $path . '/' . $imagePancard;
 //         $labour_data->profile_image = $path . '/' . $imageProfile;
 //         $labour_data->save();
 
 //         // Include image paths in the response
 //         $labour_data->aadhar_image = $labour_data->aadhar_image;
-//         $labour_data->pancard_image = $labour_data->pancard_image;
+//         $labour_data->mgnrega_image = $labour_data->mgnrega_image;
 //         $labour_data->profile_image = $labour_data->profile_image;
 
 //         return response()->json(['status' => 'success', 'message' => 'Labor added successfully', 'data' => $labour_data], 200);
@@ -77,19 +81,28 @@ class LabourController extends Controller
 //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
 //     }
 // }
-public function add(Request $request)
+public function add(Request $request )
 {
     $validator = Validator::make($request->all(), [
         'full_name' => 'required|alpha',
         'gender_id' => 'required|numeric',
-        'date_of_birth' => 'required|date_format:d/m/Y',
+        'date_of_birth' => [
+            'required',
+            'date_format:d/m/Y',
+            function ($attribute, $value, $fail) {
+                $dob = Carbon::createFromFormat('d/m/Y', $value);
+                if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
+                    $fail('The date of birth must be a date before today.');
+                }
+            },
+        ],
         'district_id' => 'required|numeric',
         'taluka_id' => 'required|numeric',
         'village_id' => 'required|numeric',
+        'skill_id' => 'required|numeric',
         'mobile_number' => ['required', 'numeric', 'digits:10', 'unique:labour'],
         'landline_number' => ['required', 'regex:/^[0-9]{8,}$/'],
-        'mgnrega_card_id' => 'required|numeric',
-        'location_id' => 'required',
+        'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
         'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
         'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
 
@@ -100,7 +113,14 @@ public function add(Request $request)
     }
 
     try {
+         // Check if the user exists
+         $user = User::find($request->user_id);
+         if (!$user) {
+             return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+         }
+
         $labour_data = new Labour();
+        $labour_data->user_id = $request->user_id; // Assign the user ID
         $labour_data->full_name = $request->full_name;
         $labour_data->gender_id = $request->gender_id;
         $labour_data->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
@@ -110,12 +130,13 @@ public function add(Request $request)
         $labour_data->mobile_number = $request->mobile_number;
         $labour_data->landline_number = $request->landline_number;
         $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        $labour_data->location_id = $request->location_id;
+        $labour_data->skill_id = $request->skill_id;
         $labour_data->latitude = $request->latitude;
         $labour_data->longitude = $request->longitude;
         $labour_data->aadhar_image = 'null';
-        $labour_data->pancard_image = 'null';
+        $labour_data->mgnrega_image = 'null';
         $labour_data->profile_image = 'null';
+        $labour_data->voter_image = 'null';
         $labour_data->save();
 
         return response()->json(['status' => 'success', 'message' => 'Labor added successfully', 'data' => $labour_data], 200);
@@ -129,9 +150,10 @@ public function updateParticularDataLabour(Request $request)
     try {
         $validator = Validator::make($request->all(), [
             // 'id' => 'required|exists:labours,id',
-            'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as per your requirement
-            'pancard_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as per your requirement
-            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust max size as per your requirement
+            'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
         ]);
 
         if ($validator->fails()) {
@@ -141,62 +163,71 @@ public function updateParticularDataLabour(Request $request)
         $labour_data = Labour::findOrFail($request->id);
 
         $imageAadhar = $request->id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-        $imagePancard = $request->id . '_' . rand(100000, 999999) . '_pan.' . $request->pancard_image->extension();
+        $imagePancard = $request->id . '_' . rand(100000, 999999) . '_pan.' . $request->mgnrega_image->extension();
         $imageProfile = $request->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+        $imageVoter = $request->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
 
         $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
         uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-        uploadImage($request, 'pancard_image', $path, $imagePancard);
+        uploadImage($request, 'mgnrega_image', $path, $imagePancard);
         uploadImage($request, 'profile_image', $path, $imageProfile);
+        uploadImage($request, 'voter_image', $path, $imageVoter);
 
         // Update the image paths in the database
         $labour_data->aadhar_image = $imageAadhar;
-        $labour_data->pancard_image = $imagePancard;
+        $labour_data->mgnrega_image = $imagePancard;
         $labour_data->profile_image = $imageProfile;
+        $labour_data->voter_image = $imageVoter;
         $labour_data->save();
 
         // Include image paths in the response
         $labour_data->aadhar_image = $path . '/' . $imageAadhar;
-        $labour_data->pancard_image = $path . '/' . $imagePancard;
+        $labour_data->mgnrega_image = $path . '/' . $imagePancard;
         $labour_data->profile_image = $path . '/' . $imageProfile;
+        $labour_data->voter_image = $path . '/' . $imageVoter;
 
         return response()->json(['status' => 'success', 'message' => 'Labor updated successfully', 'data' => $labour_data], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
-public function getAllLabourList(){
-    try {
-        $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-        ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-          ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-          ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-        //   ->where('gender.is_active', true)
-          ->select(
-              'labour.id',
-              'labour.full_name',
-              'labour.date_of_birth',
-              'gender_labour.gender_name as gender_name',
-              'district_labour.name as district_id',
-              'taluka_labour.name as taluka_id',
-              'village_labour.name as village_id',
-              'labour.mobile_number',
-              'labour.landline_number',
-              'labour.mgnrega_card_id',
-              'labour.latitude',
-              'labour.longitude',
-              'labour.location_id',
-              'labour.profile_image',
-              'labour.aadhar_image',
-              'labour.pancard_image',
-          )->get();
+// public function getAllLabourList(){
+//     try {
+//         $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+//         ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+//           ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+//           ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+//         //   ->where('gender.is_active', true)
+//           ->select(
+//               'labour.id',
+//               'labour.full_name',
+//               'labour.date_of_birth',
+//               'gender_labour.gender_name as gender_name',
+//               'district_labour.name as district_id',
+//               'taluka_labour.name as taluka_id',
+//               'village_labour.name as village_id',
+//               'labour.mobile_number',
+//               'labour.landline_number',
+//               'labour.mgnrega_card_id',
+//               'labour.latitude',
+//               'labour.longitude',
+//               'labour.profile_image',
+//               'labour.aadhar_image',
+//               'labour.mgnrega_image',
+//               'labour.profile_image',
+//           )->get();
 
-        return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-    } catch (\Exception $e) {
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-    }
-}
+//            // Loop through labour data and retrieve family details for each labour
+//         foreach ($data_output as $labour) {
+//             $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
+//         }
+
+//         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+//     }
+// }
 
 public function filterLabourList(Request $request){
     try {
@@ -217,10 +248,10 @@ public function filterLabourList(Request $request){
                 'labour.mgnrega_card_id',
                 'labour.latitude',
                 'labour.longitude',
-                'labour.location_id',
                 'labour.profile_image',
                 'labour.aadhar_image',
-                'labour.pancard_image',
+                'labour.mgnrega_image',
+                'labour.profile_image',
             );
 
         // Apply filters if provided
@@ -234,6 +265,44 @@ public function filterLabourList(Request $request){
             $query->where('village_labour.location_id', $request->input('village_id'));
         }
 
+        $data_output = $query->get();
+
+        return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+}
+
+public function filtermgnregaIdLabourList(Request $request){
+    try {
+        $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+            ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+            ->select(
+                'labour.id',
+                'labour.full_name',
+                'labour.date_of_birth',
+                'gender_labour.gender_name as gender_name',
+                'district_labour.name as district_id',
+                'taluka_labour.name as taluka_id',
+                'village_labour.name as village_id',
+                'labour.mobile_number',
+                'labour.landline_number',
+                'labour.mgnrega_card_id',
+                'labour.latitude',
+                'labour.longitude',
+                'labour.profile_image',
+                'labour.aadhar_image',
+                'labour.mgnrega_image',
+                'labour.profile_image',
+            );
+
+        // Apply filters if provided
+        if ($request->has('mgnrega_card_id')) {
+            $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
+        }
+      
         $data_output = $query->get();
 
         return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);

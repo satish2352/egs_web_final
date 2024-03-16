@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('labour', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('full_name');
             $table->string('gender_id');
             $table->string('date_of_birth');
@@ -22,12 +23,13 @@ return new class extends Migration
             $table->string('mobile_number');
             $table->string('landline_number')->default('null');
             $table->string('mgnrega_card_id');
-            $table->string('location_id');
+            $table->string('skill_id');
             $table->string('latitude');
             $table->string('longitude');
             $table->string('aadhar_image')->default('null');
-            $table->string('pancard_image')->default('null');
+            $table->string('mgnrega_image')->default('null');
             $table->string('profile_image')->default('null');
+            $table->string('voter_image')->default('null');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

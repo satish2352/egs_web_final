@@ -50,17 +50,14 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control" id="state" name="state">
-                                                <option>Select State</option>
+                                            <select class="form-control" id="state" name="state" disabled>
+                                                <!-- <option>Select State</option> -->
                                                 @foreach ($dynamic_state as $state)
-                                                    @if (old('state') == $state['location_id'])
-                                                        <option value="{{ $state['location_id'] }}" selected>
-                                                            {{ $state['name'] }}</option>
-                                                    @else
+                                                    @if ($state['location_id']=='2')
                                                         <option value="{{ $state['location_id'] }}">
-                                                            {{ $state['name'] }}
-                                                        </option>
+                                                            {{ $state['name'] }}</option>
                                                     @endif
+                                                       
                                                 @endforeach
                                             </select>
                                         </div>
@@ -71,6 +68,16 @@
                                             <label for="district">District</label>&nbsp<span class="red-text">*</span>
                                             <select class="form-control" name="district" id="district">
                                                 <option value="">Select District</option>
+                                                @foreach ($dynamic_district as $district)
+                                                    @if (old('district') == $district['location_id'])
+                                                        <option value="{{ $district['location_id'] }}" selected>
+                                                            {{ $district['name'] }}</option>
+                                                    @else
+                                                        <option value="{{ $district['location_id'] }}">
+                                                            {{ $district['name'] }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
                                             </select>
                                             @if ($errors->has('district'))
                                                 <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
