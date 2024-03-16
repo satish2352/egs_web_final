@@ -88,9 +88,6 @@
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-documenttype') }}">Document Type</a></li>
                               @endif
-                              <!-- @if (in_array('list-usertype', $data_for_url)) -->
-                                  
-                              <!-- @endif -->
                           </ul>
                       </div>
                   </li>
