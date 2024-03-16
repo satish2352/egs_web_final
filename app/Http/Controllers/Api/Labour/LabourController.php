@@ -167,6 +167,7 @@ public function updateParticularDataLabour(Request $request)
         $imageProfile = $request->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
         $imageVoter = $request->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
 
+        $baseUrl = Config::get('env.FILE_VIEW');
         $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
         uploadImage($request, 'aadhar_image', $path, $imageAadhar);
@@ -182,10 +183,15 @@ public function updateParticularDataLabour(Request $request)
         $labour_data->save();
 
         // Include image paths in the response
-        $labour_data->aadhar_image = $path . '/' . $imageAadhar;
-        $labour_data->mgnrega_image = $path . '/' . $imagePancard;
-        $labour_data->profile_image = $path . '/' . $imageProfile;
-        $labour_data->voter_image = $path . '/' . $imageVoter;
+        // $labour_data->aadhar_image = $path . '/' . $imageAadhar;
+        // $labour_data->mgnrega_image = $path . '/' . $imagePancard;
+        // $labour_data->profile_image = $path . '/' . $imageProfile;
+        // $labour_data->voter_image = $path . '/' . $imageVoter;
+
+        $labour_data->aadhar_image = $baseUrl . $path . '/' . $imageAadhar;
+        $labour_data->mgnrega_image = $baseUrl . $path . '/' . $imagePancard;
+        $labour_data->profile_image = $baseUrl . $path . '/' . $imageProfile;
+        $labour_data->voter_image = $baseUrl . $path . '/' . $imageVoter;
 
         return response()->json(['status' => 'success', 'message' => 'Labor updated successfully', 'data' => $labour_data], 200);
     } catch (\Exception $e) {
@@ -227,9 +233,9 @@ public function getAllLabourList(Request $request){
             ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
                 ->select(
                     'labour_family_details.id',
-                    'gender_labour.gender_name as gender_name',
-                    'relation_labour.relation_title as relation_title',
-                    'maritalstatus_labour.maritalstatus as maritalstatus',
+                    'gender_labour.gender_name as gender_id',
+                    'relation_labour.relation_title as relationship_id',
+                    'maritalstatus_labour.maritalstatus as married_status_id',
                     'labour_family_details.full_name',
                     'labour_family_details.date_of_birth'
                 )
@@ -283,9 +289,9 @@ public function getAllUserLabourList(Request $request){
             ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
                 ->select(
                     'labour_family_details.id',
-                    'gender_labour.gender_name as gender_name',
-                    'relation_labour.relation_title as relation_title',
-                    'maritalstatus_labour.maritalstatus as maritalstatus',
+                    'gender_labour.gender_name as gender_id',
+                    'relation_labour.relation_title as relationship_id',
+                    'maritalstatus_labour.maritalstatus as married_status_id',
                     'labour_family_details.full_name',
                     'labour_family_details.date_of_birth'
                 )
