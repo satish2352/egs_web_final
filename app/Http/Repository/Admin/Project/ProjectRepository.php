@@ -150,22 +150,19 @@ class ProjectRepository
 	public function update($request)
 	{
         $ipAddress = getIPAddress($request);
-		$user_data = User::where('id',$request['edit_id']) 
+		$user_data = Project::where('id',$request['edit_id']) 
 						->update([
 							// 'u_uname' => $request['u_uname'],
-							'role_id' => $request['role_id'],
-							'f_name' => $request['f_name'],
-							'm_name' => $request['m_name'],
-							'l_name' => $request['l_name'],
-							'number' => $request['number'],
-							'imei_no' => $request['imei_no'],
-							'aadhar_no' => $request['aadhar_no'],
-							'address' => $request['address'],
+							'project_name' => $request['project_name'],
 							'state' => $request['state'],
 							'district' => $request['district'],
 							'taluka' => $request['taluka'],
 							'village' => $request['village'],
-							'pincode' => $request['pincode'],
+							'latitude' => $request['latitude'],
+							'longitude' => $request['longitude'],
+							'start_date' => $request['start_date'],
+							'end_date' => $request['end_date'],
+							'description' => $request['description'],
 							'is_active' => isset($request['is_active']) ? true :false,
 						]);
 		
@@ -287,6 +284,7 @@ class ProjectRepository
 				'projects.description',
 				'projects.state',
 				'projects.district',
+				'projects.taluka',
 				'projects.village',
 				'projects.start_date',
 				'projects.end_date',
@@ -363,10 +361,7 @@ class ProjectRepository
 				'projects.start_date',
 				'projects.end_date',
 				'projects.latitude',
-				'projects.longitude',
-				'projects.aadhar_image',
-				'projects.pancard_image',
-				'projects.profile_image',)
+				'projects.longitude',)
 				->first();
 	
 			if ($data_users) {
@@ -384,13 +379,14 @@ class ProjectRepository
 
 	public function updateOne($request){
         try {
-            $project = Project::find($request); // Assuming $request directly contains the ID
-
+            $project_data = Project::find($request); // Assuming $request directly contains the ID
+			// dd($project_data);
             // Assuming 'is_active' is a field in the userr model
-            if ($project) {
-                $is_active = $project->is_active === 1 ? 0 : 1;
-                $project->is_active = $is_active;
-                $project->save();
+            if ($project_data) {
+                $is_active = $project_data->is_active === 1 ? 0 : 1;
+				// dd($is_active);
+                $project_data->is_active = $is_active;
+                $project_data->save();
 
                 return [
                     'msg' => 'Project updated successfully.',

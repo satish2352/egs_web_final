@@ -37,8 +37,8 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control mb-2" name="state" id="state">
-                                                <option value="">Select State</option>
+                                            <select class="form-control mb-2" name="state" id="state" disabled>
+                                                <!-- <option value="">Select State</option> -->
                                             </select>
                                             @if ($errors->has('state'))
                                                 <span class="red-text"><?php echo $errors->first('state', ':message'); ?></span>
@@ -145,10 +145,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12 col-md-12 col-sm-12 user_tbl">
+                                    <!-- <div class="col-lg-12 col-md-12 col-sm-12 user_tbl">
                                         <div id="data_for_role">
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="col-md-12 col-sm-12 text-center mt-3">
                                         <input type="hidden" class="form-check-input" name="edit_id" id="edit_id"
@@ -170,36 +170,8 @@
         </div>
 
         <script>
-            function getStateCity(stateId, city_id) {
 
-                $('#city').html('<option value="">Select City</option>');
-                if (stateId !== '') {
-                    $.ajax({
-                        url: '{{ route('cities') }}',
-                        type: 'GET',
-                        data: {
-                            stateId: stateId
-                        },
-
-                        success: function(response) {
-                            if (response.city.length > 0) {
-                                $.each(response.city, function(index, city) {
-                                    $('#city').append('<option value="' + city
-                                        .location_id +
-                                        '" selected>' + city.name + '</option>');
-                                });
-                                if (city_id != null) {
-                                    $('#city').val(city_id);
-                                } else {
-                                    $('#city').val("");
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-            function getState(stateId) {
+function getState(stateId) {
                 $('#state').html('<option value="">Select State</option>');
                 if (stateId !== '') {
                     $.ajax({
@@ -221,6 +193,92 @@
                     });
                 }
             }
+            function getStateDistrict(stateId, district_id) {
+
+                $('#district').html('<option value="">Select District</option>');
+                if (stateId !== '') {
+                    $.ajax({
+                        url: '{{ route('district') }}',
+                        type: 'GET',
+                        data: {
+                            stateId: stateId
+                        },
+
+                        success: function(response) {
+                            if (response.district.length > 0) {
+                                $.each(response.district, function(index, district) {
+                                    $('#district').append('<option value="' + district
+                                        .location_id +
+                                        '" selected>' + district.name + '</option>');
+                                });
+                                if (district_id != null) {
+                                    $('#district').val(district_id);
+                                } else {
+                                    $('#district').val("");
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+function getDistrictTaluka(districtId, taluka_id) {
+
+$('#taluka').html('<option value="">Select District</option>');
+if (districtId !== '') {
+    $.ajax({
+        url: '{{ route('taluka') }}',
+        type: 'GET',
+        data: {
+            districtId: districtId
+        },
+
+        success: function(response) {
+            if (response.taluka.length > 0) {
+                $.each(response.taluka, function(index, taluka) {
+                    $('#taluka').append('<option value="' + taluka
+                        .location_id +
+                        '" selected>' + taluka.name + '</option>');
+                });
+                if (taluka_id != null) {
+                    $('#taluka').val(taluka_id);
+                } else {
+                    $('#taluka').val("");
+                }
+            }
+        }
+    });
+}
+}
+
+function getTalukaVillage(talukaId, village_id) {
+
+$('#village').html('<option value="">Select Village</option>');
+if (talukaId !== '') {
+    $.ajax({
+        url: '{{ route('village') }}',
+        type: 'GET',
+        data: {
+            talukaId: talukaId
+        },
+
+        success: function(response) {
+            if (response.village.length > 0) {
+                $.each(response.village, function(index, village) {
+                    $('#village').append('<option value="' + village
+                        .location_id +
+                        '" selected>' + village.name + '</option>');
+                });
+                if (village_id != null) {
+                    $('#village').val(village_id);
+                } else {
+                    $('#village').val("");
+                }
+            }
+        }
+    });
+}
+}
         </script>
 
         <script type="text/javascript">
@@ -256,12 +314,24 @@
         <script>
             $(document).ready(function() {
                 myFunction($("#role_id").val());
-                getStateCity('{{ $user_data['data_users']['state'] }}', '{{ $user_data['data_users']['city'] }}');
-                getState('{{ $user_data['data_users']['state'] }}');
+                
+                getStateDistrict('{{ $project_data['data_projects']['state'] }}', '{{ $project_data['data_projects']['district'] }}');
+                getDistrictTaluka('{{ $project_data['data_projects']['district'] }}', '{{ $project_data['data_projects']['taluka'] }}');
+                getTalukaVillage('{{ $project_data['data_projects']['taluka'] }}', '{{ $project_data['data_projects']['village'] }}');
+                getState('{{ $project_data['data_projects']['state'] }}');
 
                 $("#state").on('change', function() {
-                    getStateCity($("#state").val(),'');
+                    getStateDistrict($("#state").val(),'');
                 });
+
+                $("#district").on('change', function() {
+                    getDistrictTaluka($("#district").val(),'');
+                });
+
+                $("#taluka").on('change', function() {
+                    getTalukaVillage($("#taluka").val(),'');
+                });
+                
             });
 
             function myFunction(role_id) {
