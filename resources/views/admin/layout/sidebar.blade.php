@@ -91,6 +91,7 @@
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-documenttype*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-documenttype') }}">Document Type</a></li>
+                              @endif
                           </ul>
                       </div>
                   </li>
