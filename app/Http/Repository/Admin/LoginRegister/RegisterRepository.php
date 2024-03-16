@@ -35,6 +35,10 @@ class RegisterRepository
 								'users.taluka',
 								'users.village',
 								'users.pincode',
+								'users.user_type',
+								'users.user_district',
+								'users.user_taluka',
+								'users.user_village',
 								'users.id',
 								'users.is_active'
 							)->get();
@@ -100,6 +104,10 @@ class RegisterRepository
 		$user_data->taluka	 = $request['taluka'];
 		$user_data->village = $request['village'];
 		$user_data->pincode = $request['pincode'];
+		$user_data->user_type = $request['user_type'];
+		$user_data->user_district = $request['user_district'];
+		$user_data->user_taluka = $request['user_taluka'];
+		$user_data->user_village = $request['user_village'];
 		$user_data->ip_address = 'null';
 		$user_data->is_active = isset($request['is_active']) ? true : false;
 		$user_data->save();
@@ -138,6 +146,10 @@ class RegisterRepository
 							'taluka' => $request['taluka'],
 							'village' => $request['village'],
 							'pincode' => $request['pincode'],
+							'user_type' => $request['user_type'],
+							'user_district' => $request['user_district'],
+							'user_taluka' => $request['user_taluka'],
+							'user_village' => $request['user_village'],
 							'is_active' => isset($request['is_active']) ? true :false,
 						]);
 		
@@ -276,6 +288,10 @@ class RegisterRepository
 				'users.taluka',
 				'users.village',
 				'users.pincode',
+				'users.user_type',
+				'users.user_district',
+				'users.user_taluka',
+				'users.user_village',
 				'users.id',
 				'users.is_active',
 			)->get()
@@ -306,6 +322,10 @@ class RegisterRepository
 							'users.taluka',
 							'users.village',
 							'users.pincode',
+							'users.user_type',
+							'users.user_district',
+							'users.user_taluka',
+							'users.user_village',
 							'users.id',
 							'users.is_active',
 						)->get()
