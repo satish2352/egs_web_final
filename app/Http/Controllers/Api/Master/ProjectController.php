@@ -146,7 +146,7 @@ class ProjectController extends Controller
                 return response()->json([
                     'status' => 'success', 
                     'message' => 'Filtered project data retrieved successfully', 
-                    'labour_data' => $projectData
+                    'project_data' => $projectData
                 ], 200);
             }
             else {
