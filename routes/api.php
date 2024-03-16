@@ -45,7 +45,7 @@ Route::group([
         Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
         Route::get('/list-document', [MasterController::class, 'getAllDocument']);
         Route::get('/list-project', [ProjectController::class, 'getAllProject']);
-        Route::get('/filter-project-list', [ProjectController::class, 'filterProjectList']);
+        Route::post('/particular-project-labours/{id}', [ProjectController::class, 'ProjectLabours']);
         Route::get('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterData']);
         
