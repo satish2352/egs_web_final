@@ -133,7 +133,7 @@ class ProjectController extends Controller
             
             // Fetch data
             $labourData = $labourQuery->get();
-    
+            $projectData = $projectQuery->get();
             // Check if mgnrega_card_id filter applied and adjust response accordingly
             if ($request->has('mgnrega_card_id')) {
                 return response()->json([
@@ -146,12 +146,12 @@ class ProjectController extends Controller
                 return response()->json([
                     'status' => 'success', 
                     'message' => 'Filtered project data retrieved successfully', 
-                    'labour_data' => $labourData
+                    'labour_data' => $projectData
                 ], 200);
             }
             else {
                 // Fetch project data only if no mgnrega_card_id filter applied
-                $projectData = $projectQuery->get();
+                // $projectData = $projectQuery->get();
                 return response()->json([
                     'status' => 'success', 
                     'message' => 'Filtered data retrieved successfully', 
