@@ -46,7 +46,7 @@ Route::group([
         Route::get('/list-document', [MasterController::class, 'getAllDocument']);
         Route::post('/list-project', [ProjectController::class, 'getAllProject']);
         // Route::post('/particular-labour/{id}', [LabourController::class, 'getParticularLabour']);
-        Route::post('/list-user-labours/{user_id}', [LabourController::class, 'getAllUserLabourList']);
+        Route::post('/list-user-labours', [LabourController::class, 'getAllUserLabourList']);
         
 
         Route::post('/particular-project-labours/{project_id}', [ProjectController::class, 'ProjectLaboursList']);

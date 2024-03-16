@@ -230,8 +230,12 @@ public function getAllLabourList(Request $request){
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
-public function getAllUserLabourList(Request $request, $user_id){
+public function getAllUserLabourList(Request $request){
+   
+   
     try {
+        // echo $request;
+        // die();
         $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
