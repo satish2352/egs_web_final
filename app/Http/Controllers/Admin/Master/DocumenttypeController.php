@@ -31,7 +31,7 @@ class DocumenttypeController extends Controller
 
     public function store(Request $request) {
         $rules = [
-            'documenttype' => 'required|unique:documenttype|regex:/^[a-zA-Z0-9\/\-]+$/u|max:255',
+            'documenttype' => 'required|unique:documenttype|regex:/^[a-zA-Z0-9\/\-\s]+$/u|max:255'
             // 'marathi_title' => 'required|unique:documenttype|max:255',
          ];
         $messages = [   
