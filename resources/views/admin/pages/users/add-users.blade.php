@@ -274,6 +274,80 @@
                                             @endif
                                         </div>
                                     </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        
+                                    </div>
+                                    
+                                    <div class="col-lg-12 col-md-12 col-sm-12" style="border: 1px solid #040479;padding: 2%;">
+                                        <h5 class="d-flex justify-content-center mb-4">User Working Details</h5>
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="usertype_name">User Type</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="user_type" id="user_type">
+                                                        <option value="">Select User Type</option>
+                                                        @foreach ($dynamic_usertype as $usertype)
+                                                            @if (old('usertype_name') == $usertype['id'])
+                                                                <option value="{{ $usertype['id'] }}" selected>
+                                                                    {{ $usertype['usertype_name'] }}</option>
+                                                            @else
+                                                                <option value="{{ $usertype['id'] }}">
+                                                                    {{ $usertype['usertype_name'] }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('usertype_name'))
+                                                        <span class="red-text"><?php echo $errors->first('usertype_name', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="district">User District</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="user_district" id="user_district">
+                                                        <option value="">Select District</option>
+                                                        @foreach ($dynamic_district as $district)
+                                                            @if (old('district') == $district['location_id'])
+                                                                <option value="{{ $district['location_id'] }}" selected>
+                                                                    {{ $district['name'] }}</option>
+                                                            @else
+                                                                <option value="{{ $district['location_id'] }}">
+                                                                    {{ $district['name'] }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('district'))
+                                                        <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="taluka">User Taluka</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="user_taluka" id="user_taluka">
+                                                        <option value="">Select Taluka</option>
+                                                    </select>
+                                                    @if ($errors->has('taluka'))
+                                                        <span class="red-text"><?php echo $errors->first('taluka', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="village">User Village</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="user_village" id="user_village">
+                                                        <option value="">Select Village</option>
+                                                    </select>
+                                                    @if ($errors->has('village'))
+                                                        <span class="red-text"><?php echo $errors->first('village', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-lg-12 col-md-12 col-sm-12 user_tbl">
                                         <div id="data_for_role">
                                         </div>
@@ -496,6 +570,81 @@
                 });
             }
         </script>
+
+        <!--  -->
+
+        <script>
+            $(document).ready(function() {
+
+                $('#user_district').change(function(e) {
+                    e.preventDefault();
+                    var districtId = $('#user_district').val();
+                    console.log(districtId);
+                    $('#user_taluka').html('<option value="">Select Taluka</option>');
+
+                    if (districtId !== '') {
+                        $.ajax({
+                            url: '{{ route('taluka') }}',
+                            type: 'GET',
+                            data: {
+                                districtId: districtId
+                            },
+                            // headers: {
+                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            // },
+                            success: function(response) {
+                                // console.log(response);
+                                if (response.taluka.length > 0) {
+                                    $.each(response.taluka, function(index, taluka) {
+                                        $('#user_taluka').append('<option value="' + taluka
+                                            .location_id +
+                                            '">' + taluka.name + '</option>');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+
+                $('#user_taluka').change(function(e) {
+                    e.preventDefault();
+                    var talukaId = $('#user_taluka').val();
+                    console.log(talukaId);
+                    $('#user_village').html('<option value="">Select Village</option>');
+
+                    if (talukaId !== '') {
+                        $.ajax({
+                            url: '{{ route('village') }}',
+                            type: 'GET',
+                            data: {
+                                talukaId: talukaId
+                            },
+                            // headers: {
+                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            // },
+                            success: function(response) {
+                                // console.log(response);
+                                if (response.village.length > 0) {
+                                    $.each(response.village, function(index, village) {
+                                        $('#user_village').append('<option value="' + village
+                                            .location_id +
+                                            '">' + village.name + '</option>');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+
+        <!--  -->
 
         <script>
             $(document).ready(function() {
