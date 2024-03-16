@@ -81,7 +81,7 @@ class LabourController extends Controller
 //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
 //     }
 // }
-public function add(Request $request)
+public function add(Request $request )
 {
     $validator = Validator::make($request->all(), [
         'full_name' => 'required|alpha',
@@ -265,6 +265,44 @@ public function filterLabourList(Request $request){
             $query->where('village_labour.location_id', $request->input('village_id'));
         }
 
+        $data_output = $query->get();
+
+        return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+}
+
+public function filtermgnregaIdLabourList(Request $request){
+    try {
+        $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+            ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+            ->select(
+                'labour.id',
+                'labour.full_name',
+                'labour.date_of_birth',
+                'gender_labour.gender_name as gender_name',
+                'district_labour.name as district_id',
+                'taluka_labour.name as taluka_id',
+                'village_labour.name as village_id',
+                'labour.mobile_number',
+                'labour.landline_number',
+                'labour.mgnrega_card_id',
+                'labour.latitude',
+                'labour.longitude',
+                'labour.profile_image',
+                'labour.aadhar_image',
+                'labour.mgnrega_image',
+                'labour.profile_image',
+            );
+
+        // Apply filters if provided
+        if ($request->has('mgnrega_card_id')) {
+            $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
+        }
+      
         $data_output = $query->get();
 
         return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
