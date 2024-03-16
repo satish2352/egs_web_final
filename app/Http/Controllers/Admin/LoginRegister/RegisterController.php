@@ -51,7 +51,11 @@ class RegisterController extends Controller {
                             ->select('location_id','name')
                             ->get()
                             ->toArray();
-    	return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
+        $dynamic_district = TblArea::where('parent_id', 2)
+                            ->select('location_id','name')
+                            ->get()
+                            ->toArray();
+    	return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state','dynamic_district'));
     }
 
     public function getCities(Request $request)

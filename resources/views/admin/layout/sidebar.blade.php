@@ -1,6 +1,8 @@
  
  <!-- left sidebar -->
-      <?php $data_for_url = session('data_for_url'); ?>
+      <?php $data_for_url = session('data_for_url');
+    //   dd($data_for_url);
+      ?>
       <style>
         .sidebar li .submenu{ 
 	list-style: none; 
@@ -27,7 +29,7 @@
                       </div>
                   </div>
               </li>
-              {{-- @if (in_array('dashboard', $data_for_url)) --}}
+              @if (in_array('dashboard', $data_for_url))
               <li
               class="{{request()->is('dashboard*') 
                     ? 'nav-item active' : 'nav-item' }}">
@@ -37,9 +39,13 @@
                       <span class="menu-title">Dashboard</span>
                   </a>
               </li>    
-              {{-- @endif           --}}
-              {{-- @if (in_array('list-role', $data_for_url) ||
-                      in_array('list-incident-type', $data_for_url)) --}}
+              <!-- in_array('list-role', $data_for_url) || in_array('list-maritalstatus', $data_for_url) || in_array('list-relation', $data_for_url)
+                      in_array('list-gender', $data_for_url) || in_array('list-skills', $data_for_url) || in_array('list-registrationstatus', $data_for_url)
+                      || in_array('list-documenttype', $data_for_url) -->
+              @endif
+              @if (in_array('list-role', $data_for_url) || in_array('list-maritalstatus', $data_for_url) || in_array('list-relation', $data_for_url) ||
+                      in_array('list-gender', $data_for_url) || in_array('list-skills', $data_for_url) || in_array('list-registrationstatus', $data_for_url)
+                      || in_array('list-documenttype', $data_for_url))
                   <li class="{{request()->is('list-role*') 
                     ? 'nav-item active' : 'nav-item' }}">
                       <a class="{{request()->is('list-role*') 
@@ -51,50 +57,50 @@
                       </a>
                       <div class="collapse" id="master">
                           <ul class="nav flex-column sub-menu">
-                              {{-- @if (in_array('list-role', $data_for_url)) --}}
+                              @if (in_array('list-role', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-role*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-role') }}">Role</a></li>
-                              {{-- @endif --}}
-                              {{-- @if (in_array('list-gender', $data_for_url)) --}}
+                              @endif
+                              @if (in_array('list-gender', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-gender*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-gender') }}">Gender</a></li>
-                              {{-- @endif --}}
-                              {{-- @if (in_array('list-maritalstatus', $data_for_url)) --}}
+                              @endif
+                              @if (in_array('list-maritalstatus', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-maritalstatus*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-maritalstatus') }}">Marital Status</a></li>
-                              {{-- @endif --}}
-                              {{-- @if (in_array('list-relation', $data_for_url)) --}}
+                              @endif
+                              @if (in_array('list-relation', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-relation*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-relation') }}">Relation</a></li>
-                              {{-- @endif --}}
-                              {{-- @if (in_array('list-skills', $data_for_url)) --}}
+                              @endif
+                              @if (in_array('list-skills', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-skills*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-skills') }}">Skills</a></li>
-                              {{-- @endif --}}
-                              {{-- @if (in_array('list-registrationstatus', $data_for_url)) --}}
+                              @endif
+                              @if (in_array('list-registrationstatus', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-registrationstatus*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-registrationstatus') }}">Registration Status</a></li>
-                              {{-- @endif --}}
-                              {{-- @if (in_array('list-documenttype', $data_for_url)) --}}
+                              @endif
+                              @if (in_array('list-documenttype', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-documenttype*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-documenttype') }}">Document Type</a></li>
-                              {{-- @endif --}}
-                              {{-- @if (in_array('list-incident-type', $data_for_url)) --}}
+                              @endif
+                              @if (in_array('list-incident-type', $data_for_url))
                                   <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-incident-type*') 
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-incident-type') }}">Incident Type</a></li>
-                              {{-- @endif --}}
+                              @endif
                           </ul>
                       </div>
                   </li>
-             {{-- @endif --}}
+             @endif
         <li class="{{request()->is('list-users*')
 
             ? 'nav-item active' : 'nav-item' }}">

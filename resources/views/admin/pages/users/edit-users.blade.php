@@ -22,7 +22,7 @@
                                 action="{{ route('update-users') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                                 <div class="row">
-                                    {{-- <div class="col-md-6">
+                                    <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="email">Email ID</label>&nbsp<span class="red-text">*</span>
                                         <input type="text" class="form-control" name="email" id="email"
@@ -33,7 +33,7 @@
                                         @endif
                                     </div>
                                 </div> 
-                                          <div class="col-lg-6 col-md-6 col-sm-6">
+                                {{--  <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="u_uname">User Name</label>&nbsp<span class="red-text">*</span>
                                             <input type="text" class="form-control" name="u_uname" id="u_uname"
@@ -45,12 +45,12 @@
                                     </div> --}}
                                     {{-- <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="password">Password</label>&nbsp<span class="red-text">*</span>
-                                        <input type="text" class="form-control" name="password" id="password"
-                                            placeholder="" value="{{decrypt($user_data['data_users']['password'])}}">
-                                        @if ($errors->has('password'))
+                                        <label for="u_password">Password</label>&nbsp<span class="red-text">*</span>
+                                        <input type="text" class="form-control" name="u_password" id="u_password"
+                                            placeholder="" value="{{decrypt($user_data['data_users']['u_password'])}}">
+                                        @if ($errors->has('u_password'))
                                         <span
-                                            class="red-text"><?php echo $errors->first('password', ':message'); ?></span>
+                                            class="red-text"><?php echo $errors->first('u_password', ':message'); ?></span>
                                         @endif
                                     </div>
                                 </div> --}}
@@ -155,8 +155,8 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control mb-2" name="state" id="state">
-                                                <option value="">Select State</option>
+                                            <select class="form-control mb-2" name="state" id="state" readonly>
+                                                <!-- <option value="">Select State</option> -->
                                             </select>
                                             @if ($errors->has('state'))
                                                 <span class="red-text"><?php echo $errors->first('state', ':message'); ?></span>
@@ -469,7 +469,7 @@
                 $("#frm_register1").validate({
                     rules: {
 
-                        password: {
+                        u_password: {
                             //required: true,
                             minlength: 6,
                             mypassword: true
@@ -477,11 +477,11 @@
                         },
                         password_confirmation: {
                             //required: true,
-                            equalTo: "#password"
+                            equalTo: "#u_password"
                         },
                     },
                     messages: {
-                        password: {
+                        u_password: {
                             required: "Please enter your new password",
                             minlength: "Password should be minimum 8 characters"
                         },
@@ -536,13 +536,13 @@
         var form = $("#regForm");
         var validator = form.validate({
             rules: {
-                // email: {
+                // u_email: {
                 //     required: true,
                 // },
                 role_id: {
                     required: true,
                 },
-                // password: {
+                // u_password: {
                 //     required: true,
                 // },
                 // password_confirmation: {
@@ -580,13 +580,13 @@
                 },
             },
             messages: {
-                // email: {
+                // u_email: {
                 //     required: "Please Enter the Eamil",
                 // },
                 role_id: {
                     required: "Please Select Role Name",
                 },
-                // password: {
+                // u_password: {
                 //     required: "Please Enter the Password",
                 // },
                 // password_confirmation: {
@@ -646,9 +646,9 @@
     $(document).ready(function() {
         // Function to check if all input fields are filled with valid data
         function checkFormValidity() {
-            // const email = $('#email').val();
+            // const u_email = $('#u_email').val();
             const role_id = $('#role_id').val();
-            // const password = $('#password').val();
+            // const u_password = $('#u_password').val();
             // const password_confirmation = $('#password_confirmation').val();
             const f_name = $('#f_name').val();
             const m_name = $('#m_name').val();
@@ -676,13 +676,13 @@
         // Initialize the form validation
         $("#regForm").validate({
             rules: {
-                // email: {
+                // u_email: {
                 //     required: true,
                 // },
                 role_id: {
                     required: true,
                 },
-                // password: {
+                // u_password: {
                 //     required: true,
                 // },
                 // password_confirmation: {
@@ -721,13 +721,13 @@
 
             },
             messages: {
-                // email: {
+                // u_email: {
                 //     required: "Please Enter the Eamil",
                 // },
                 role_id: {
                     required: "Please Select Role Name",
                 },
-                // password: {
+                // u_password: {
                 //     required: "Please Enter the Password",
                 // },
                 // password_confirmation: {

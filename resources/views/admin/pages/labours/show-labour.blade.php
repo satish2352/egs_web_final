@@ -99,21 +99,23 @@
                                             <label>{{ strip_tags($labour_detail->start_date) }}</label>
                                         </div>
                                     </div>
-                                    <!-- <div class="row ">
+
+                                    <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>End Date :</label>
+                                            <label>Addhar Card :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->end_date) }}</label>
+                                            <img src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}"
+                                                style="width:100px; height:100px; border-radius:50%" />
                                         </div>
-                                    </div> -->
+                                    </div>
 
                                     <!-- <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Profile :</label>
+                                            <label>Mnrega Card :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <img src="{{ Config::get('DocumentConstant.USER_PROFILE_VIEW') }}{{ $labour_detail->user_profile }}"
+                                            <img src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}"
                                                 style="width:100px; height:100px; border-radius:50%" />
                                         </div>
                                     </div> -->
