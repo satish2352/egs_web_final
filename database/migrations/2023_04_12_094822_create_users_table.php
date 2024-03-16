@@ -31,6 +31,10 @@ class CreateUsersTable extends Migration
             $table->string('taluka');
             $table->string('village');
             $table->string('pincode');
+            $table->string('user_type');
+            $table->string('user_district');
+            $table->string('user_taluka');
+            $table->string('user_village');
             $table->string('ip_address');
             $table->string('user_agent')->default('null');
             $table->string('user_profile')->default('null');

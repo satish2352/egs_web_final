@@ -163,6 +163,15 @@ Route::post('/show-documenttype', ['as' => 'show-documenttype', 'uses' => 'App\H
 Route::post('/delete-documenttype', ['as' => 'delete-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\DocumenttypeController@destroy']);
 Route::post('/update-one-documenttype', ['as' => 'update-one-documenttype', 'uses' => 'App\Http\Controllers\Admin\Master\DocumenttypeController@updateOne']);
 
+Route::get('/list-usertype', ['as' => 'list-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@index']);
+Route::get('/add-usertype', ['as' => 'add-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@add']);
+Route::post('/add-usertype', ['as' => 'add-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@store']);
+Route::get('/edit-usertype/{edit_id}', ['as' => 'edit-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@edit']);
+Route::post('/update-usertype', ['as' => 'update-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@update']);
+Route::post('/show-usertype', ['as' => 'show-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@show']);
+Route::post('/delete-usertype', ['as' => 'delete-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@destroy']);
+Route::post('/update-one-usertype', ['as' => 'update-one-usertype', 'uses' => 'App\Http\Controllers\Admin\Master\UsertypeController@updateOne']);
+
 
 // Reports======================
 Route::get('/list-location-report', ['as' => 'list-location-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllLabourLocation']);

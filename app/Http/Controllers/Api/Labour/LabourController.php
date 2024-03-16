@@ -167,6 +167,7 @@ public function updateParticularDataLabour(Request $request)
         $imageProfile = $request->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
         $imageVoter = $request->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
 
+        $baseUrl = Config::get('env.FILE_VIEW');
         $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
         uploadImage($request, 'aadhar_image', $path, $imageAadhar);
@@ -182,59 +183,30 @@ public function updateParticularDataLabour(Request $request)
         $labour_data->save();
 
         // Include image paths in the response
-        $labour_data->aadhar_image = $path . '/' . $imageAadhar;
-        $labour_data->mgnrega_image = $path . '/' . $imagePancard;
-        $labour_data->profile_image = $path . '/' . $imageProfile;
-        $labour_data->voter_image = $path . '/' . $imageVoter;
+        // $labour_data->aadhar_image = $path . '/' . $imageAadhar;
+        // $labour_data->mgnrega_image = $path . '/' . $imagePancard;
+        // $labour_data->profile_image = $path . '/' . $imageProfile;
+        // $labour_data->voter_image = $path . '/' . $imageVoter;
+
+        $labour_data->aadhar_image = $baseUrl . $path . '/' . $imageAadhar;
+        $labour_data->mgnrega_image = $baseUrl . $path . '/' . $imagePancard;
+        $labour_data->profile_image = $baseUrl . $path . '/' . $imageProfile;
+        $labour_data->voter_image = $baseUrl . $path . '/' . $imageVoter;
 
         return response()->json(['status' => 'success', 'message' => 'Labor updated successfully', 'data' => $labour_data], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
-// public function getAllLabourList(){
-//     try {
-//         $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-//         ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-//           ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-//           ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-//         //   ->where('gender.is_active', true)
-//           ->select(
-//               'labour.id',
-//               'labour.full_name',
-//               'labour.date_of_birth',
-//               'gender_labour.gender_name as gender_name',
-//               'district_labour.name as district_id',
-//               'taluka_labour.name as taluka_id',
-//               'village_labour.name as village_id',
-//               'labour.mobile_number',
-//               'labour.landline_number',
-//               'labour.mgnrega_card_id',
-//               'labour.latitude',
-//               'labour.longitude',
-//               'labour.profile_image',
-//               'labour.aadhar_image',
-//               'labour.mgnrega_image',
-//               'labour.profile_image',
-//           )->get();
-
-//            // Loop through labour data and retrieve family details for each labour
-//         foreach ($data_output as $labour) {
-//             $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
-//         }
-
-//         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-//     } catch (\Exception $e) {
-//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-//     }
-// }
-
-public function filterLabourList(Request $request){
+public function getAllLabourList(Request $request){
     try {
-        $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+        $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+            ->when($request->get('mgnrega_card_id'), function($query) use ($request) {
+                $query->where('labour.mgnrega_card_id',$request->mgnrega_card_id);
+            })
             ->select(
                 'labour.id',
                 'labour.full_name',
@@ -252,26 +224,132 @@ public function filterLabourList(Request $request){
                 'labour.aadhar_image',
                 'labour.mgnrega_image',
                 'labour.profile_image',
-            );
+            )->get();
 
-        // Apply filters if provided
-        if ($request->has('district_id')) {
-            $query->where('district_labour.location_id', $request->input('district_id'));
+        // Loop through labour data and retrieve family details for each labour
+        foreach ($data_output as $labour) {
+            $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+            ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                ->select(
+                    'labour_family_details.id',
+                    'gender_labour.gender_name as gender_id',
+                    'relation_labour.relation_title as relationship_id',
+                    'maritalstatus_labour.maritalstatus as married_status_id',
+                    'labour_family_details.full_name',
+                    'labour_family_details.date_of_birth'
+                )
+                ->where('labour_family_details.labour_id', $labour->id)
+                ->get();
         }
-        if ($request->has('taluka_id')) {
-            $query->where('taluka_labour.location_id', $request->input('taluka_id'));
-        }
-        if ($request->has('village_id')) {
-            $query->where('village_labour.location_id', $request->input('village_id'));
-        }
-
-        $data_output = $query->get();
-
-        return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
+        return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
+public function getAllUserLabourList(Request $request){
+   
+   
+    try {
+        // echo $request;
+        // die();
+        $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+            ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+            ->when($request->get('user_id'), function($query) use ($request) {
+                $query->where('labour.user_id',$request->user_id);
+            })
+            ->select(
+                'labour.id',
+                'labour.full_name',
+                'labour.date_of_birth',
+                'gender_labour.gender_name as gender_name',
+                'district_labour.name as district_id',
+                'taluka_labour.name as taluka_id',
+                'village_labour.name as village_id',
+                'labour.mobile_number',
+                'labour.landline_number',
+                'labour.mgnrega_card_id',
+                'labour.latitude',
+                'labour.longitude',
+                'labour.profile_image',
+                'labour.aadhar_image',
+                'labour.mgnrega_image',
+                'labour.profile_image',
+            )->get();
+
+        // Loop through labour data and retrieve family details for each labour
+        // foreach ($data_output as $labour) {
+        //     $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
+        // }
+        foreach ($data_output as $labour) {
+            $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+            ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                ->select(
+                    'labour_family_details.id',
+                    'gender_labour.gender_name as gender_id',
+                    'relation_labour.relation_title as relationship_id',
+                    'maritalstatus_labour.maritalstatus as married_status_id',
+                    'labour_family_details.full_name',
+                    'labour_family_details.date_of_birth'
+                )
+                ->where('labour_family_details.labour_id', $labour->id)
+                ->get();
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+}
+// public function filterLabourList(Request $request){
+//     try {
+//         $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+//             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+//             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+//             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+//             ->when($request->get('user_id'), function($query) use ($request) {
+//                 $query->where('labour.user_id',$request->user_id);
+//             })
+//             ->select(
+//                 'labour.id',
+//                 'labour.full_name',
+//                 'labour.date_of_birth',
+//                 'gender_labour.gender_name as gender_name',
+//                 'district_labour.name as district_id',
+//                 'taluka_labour.name as taluka_id',
+//                 'village_labour.name as village_id',
+//                 'labour.mobile_number',
+//                 'labour.landline_number',
+//                 'labour.mgnrega_card_id',
+//                 'labour.latitude',
+//                 'labour.longitude',
+//                 'labour.profile_image',
+//                 'labour.aadhar_image',
+//                 'labour.mgnrega_image',
+//                 'labour.profile_image',
+//             );
+
+//         // Apply filters if provided
+//         if ($request->has('district_id')) {
+//             $query->where('district_labour.location_id', $request->input('district_id'));
+//         }
+//         if ($request->has('taluka_id')) {
+//             $query->where('taluka_labour.location_id', $request->input('taluka_id'));
+//         }
+//         if ($request->has('village_id')) {
+//             $query->where('village_labour.location_id', $request->input('village_id'));
+//         }
+
+//         $data_output = $query->get();
+
+//         return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+//     }
+// }
 
 public function filtermgnregaIdLabourList(Request $request){
     try {
@@ -299,9 +377,9 @@ public function filtermgnregaIdLabourList(Request $request){
             );
 
         // Apply filters if provided
-        if ($request->has('mgnrega_card_id')) {
-            $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
-        }
+        // if ($request->has('mgnrega_card_id')) {
+        //     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
+        // }
       
         $data_output = $query->get();
 
@@ -310,5 +388,44 @@ public function filtermgnregaIdLabourList(Request $request){
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
+
+// public function getParticularLabour(Request $request, $id) {
+//     try {
+//         $labour = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+//             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+//             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+//             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+//             ->where('labour.id', $id) // Filter by laborer ID
+//             ->select(
+//                 'labour.id',
+//                 'labour.full_name',
+//                 'labour.date_of_birth',
+//                 'gender_labour.gender_name as gender_name',
+//                 'district_labour.name as district_name',
+//                 'taluka_labour.name as taluka_name',
+//                 'village_labour.name as village_name',
+//                 'labour.mobile_number',
+//                 'labour.landline_number',
+//                 'labour.mgnrega_card_id',
+//                 'labour.latitude',
+//                 'labour.longitude',
+//                 'labour.profile_image',
+//                 'labour.aadhar_image',
+//                 'labour.mgnrega_image'
+//             )->first(); // Use first() instead of get() to retrieve a single record
+
+//         if (!$labour) {
+//             return response()->json(['status' => 'error', 'message' => 'Labour details not found'], 404);
+//         }
+
+//         // Retrieve family details for the laborer
+//         $labour->family_details = LabourFamilyDetails::where('labour_id', $id)->get();
+
+//         return response()->json(['status' => 'success', 'message' => 'Labour data retrieved successfully', 'data' => $labour], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+//     }
+// }
+
 
 }

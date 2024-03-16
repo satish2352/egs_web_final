@@ -32,6 +32,10 @@ class UsersSeeder extends Seeder
                 'taluka' => 'taluka',
                 'village' => 'village',
                 'pincode' => 'pincode',
+                'user_type' => 'user_type',
+                'user_district' => 'user_district',
+                'user_taluka' => 'user_taluka',
+                'user_village' => 'user_village',
                 'ip_address' => '192.168.1.32',
             ]);
             
@@ -53,6 +57,10 @@ class UsersSeeder extends Seeder
             'taluka' => 'taluka',
             'village' => 'village',
             'pincode' => 'pincode',
+            'user_type' => 'user_type',
+            'user_district' => 'user_district',
+            'user_taluka' => 'user_taluka',
+            'user_village' => 'user_village',
             'ip_address' => '192.168.1.32',
         ]);
 
