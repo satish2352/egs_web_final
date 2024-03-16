@@ -192,42 +192,44 @@ public function updateParticularDataLabour(Request $request)
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
-// public function getAllLabourList(){
-//     try {
-//         $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-//         ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-//           ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-//           ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-//         //   ->where('gender.is_active', true)
-//           ->select(
-//               'labour.id',
-//               'labour.full_name',
-//               'labour.date_of_birth',
-//               'gender_labour.gender_name as gender_name',
-//               'district_labour.name as district_id',
-//               'taluka_labour.name as taluka_id',
-//               'village_labour.name as village_id',
-//               'labour.mobile_number',
-//               'labour.landline_number',
-//               'labour.mgnrega_card_id',
-//               'labour.latitude',
-//               'labour.longitude',
-//               'labour.profile_image',
-//               'labour.aadhar_image',
-//               'labour.mgnrega_image',
-//               'labour.profile_image',
-//           )->get();
+public function getAllLabourList(Request $request){
+    try {
+        $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+            ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+            ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+            ->when($request->get('mgnrega_card_id'), function($query) use ($request) {
+                $query->where('labour.mgnrega_card_id',$request->mgnrega_card_id);
+            })
+            ->select(
+                'labour.id',
+                'labour.full_name',
+                'labour.date_of_birth',
+                'gender_labour.gender_name as gender_name',
+                'district_labour.name as district_id',
+                'taluka_labour.name as taluka_id',
+                'village_labour.name as village_id',
+                'labour.mobile_number',
+                'labour.landline_number',
+                'labour.mgnrega_card_id',
+                'labour.latitude',
+                'labour.longitude',
+                'labour.profile_image',
+                'labour.aadhar_image',
+                'labour.mgnrega_image',
+                'labour.profile_image',
+            )->get();
 
-//            // Loop through labour data and retrieve family details for each labour
-//         foreach ($data_output as $labour) {
-//             $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
-//         }
+        // Loop through labour data and retrieve family details for each labour
+        foreach ($data_output as $labour) {
+            $labour->family_details = LabourFamilyDetails::where('labour_id', $labour->id)->get();
+        }
 
-//         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-//     } catch (\Exception $e) {
-//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-//     }
-// }
+        return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+}
 
 public function filterLabourList(Request $request){
     try {
@@ -310,5 +312,44 @@ public function filtermgnregaIdLabourList(Request $request){
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
+
+// public function getParticularLabour(Request $request, $id) {
+//     try {
+//         $labour = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+//             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+//             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+//             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+//             ->where('labour.id', $id) // Filter by laborer ID
+//             ->select(
+//                 'labour.id',
+//                 'labour.full_name',
+//                 'labour.date_of_birth',
+//                 'gender_labour.gender_name as gender_name',
+//                 'district_labour.name as district_name',
+//                 'taluka_labour.name as taluka_name',
+//                 'village_labour.name as village_name',
+//                 'labour.mobile_number',
+//                 'labour.landline_number',
+//                 'labour.mgnrega_card_id',
+//                 'labour.latitude',
+//                 'labour.longitude',
+//                 'labour.profile_image',
+//                 'labour.aadhar_image',
+//                 'labour.mgnrega_image'
+//             )->first(); // Use first() instead of get() to retrieve a single record
+
+//         if (!$labour) {
+//             return response()->json(['status' => 'error', 'message' => 'Labour details not found'], 404);
+//         }
+
+//         // Retrieve family details for the laborer
+//         $labour->family_details = LabourFamilyDetails::where('labour_id', $id)->get();
+
+//         return response()->json(['status' => 'success', 'message' => 'Labour data retrieved successfully', 'data' => $labour], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+//     }
+// }
+
 
 }

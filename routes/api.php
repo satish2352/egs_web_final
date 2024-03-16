@@ -32,7 +32,7 @@ Route::group([
     // Protected routes that require authentication token
     Route::middleware('auth:api')->group(function () {
         Route::post('/add-labour', [LabourController::class, 'add']);
-        Route::get('/list-labour', [LabourController::class, 'getAllLabourList']);
+        Route::post('/list-labour', [LabourController::class, 'getAllLabourList']);
         Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
         Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
         Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
@@ -45,7 +45,10 @@ Route::group([
         Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
         Route::get('/list-document', [MasterController::class, 'getAllDocument']);
         Route::get('/list-project', [ProjectController::class, 'getAllProject']);
-        Route::post('/particular-project-labours/{id}', [ProjectController::class, 'ProjectLabours']);
+        // Route::post('/particular-labour/{id}', [LabourController::class, 'getParticularLabour']);
+        
+
+        Route::post('/particular-project-labours/{project_id}', [ProjectController::class, 'ProjectLabours']);
         Route::get('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterData']);
         
