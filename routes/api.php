@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Master\DistrictTalukaVillageController;
 use App\Http\Controllers\Api\Labour\LabourController;
 use App\Http\Controllers\Api\Master\MasterController;
 use App\Http\Controllers\Api\Master\ProjectController;
+use App\Http\Controllers\Api\Master\AllMasterController;
 use App\Http\Controllers\Api\Labour\LabourFamilyDetailsController;
 use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 
@@ -24,11 +25,13 @@ use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/list-gender', [MasterController::class, 'getAllGender']);
-Route::post('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
-Route::post('/list-skills', [MasterController::class, 'getAllSkill']);
-Route::post('/list-relation', [MasterController::class, 'getAllRelation']);
-Route::post('/list-document', [MasterController::class, 'getAllDocument']);
+// Route::post('/list-gender', [MasterController::class, 'getAllGender']);
+// Route::post('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+// Route::post('/list-skills', [MasterController::class, 'getAllSkill']);
+// Route::post('/list-relation', [MasterController::class, 'getAllRelation']);
+// Route::post('/list-document', [MasterController::class, 'getAllDocument']);
+Route::post('/list-masters', [AllMasterController::class, 'getAllMasters']);
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
