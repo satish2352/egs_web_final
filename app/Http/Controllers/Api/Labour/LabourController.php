@@ -70,7 +70,7 @@ class LabourController extends Controller
         if(isset($request->landline_number)) {
             $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
         }
-        $validator = Validator::make($request->all(), $all_data_validation);
+        $validator = Validator::make($request, $all_data_validation);
 
 
         if ($validator->fails()) {
