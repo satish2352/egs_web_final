@@ -9,7 +9,6 @@ use App\Http\Controllers\Api\Labour\LabourController;
 use App\Http\Controllers\Api\Master\MasterController;
 use App\Http\Controllers\Api\Master\ProjectController;
 use App\Http\Controllers\Api\Master\AllMasterController;
-use App\Http\Controllers\Api\Labour\LabourFamilyDetailsController;
 use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 
 /*
@@ -24,12 +23,6 @@ use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 */
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
-// Route::post('/list-gender', [MasterController::class, 'getAllGender']);
-// Route::post('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
-// Route::post('/list-skills', [MasterController::class, 'getAllSkill']);
-// Route::post('/list-relation', [MasterController::class, 'getAllRelation']);
-// Route::post('/list-document', [MasterController::class, 'getAllDocument']);
 Route::post('/list-masters', [AllMasterController::class, 'getAllMasters']);
 
 Route::group([
@@ -53,7 +46,6 @@ Route::group([
         Route::post('/particular-project-labours/{project_id}', [ProjectController::class, 'ProjectLaboursList']);
         Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterData']);
-        Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
         
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);
         Route::post('/list-attendance-marked', [LabourAttendanceMarkController::class, 'getAllAttendanceMarkedLabour']);
