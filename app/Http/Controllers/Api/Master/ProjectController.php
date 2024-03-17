@@ -88,10 +88,6 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    
-    
-    
-
     public function filterData(Request $request){
         try {
             $labourQuery = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
