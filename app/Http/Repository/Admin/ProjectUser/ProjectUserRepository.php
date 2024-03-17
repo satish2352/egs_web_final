@@ -20,14 +20,16 @@ class ProjectUserRepository
 
 	public function getProjectsList() {
 		// dd('hhhhhh');
-		 $data_project_users = ProjectUser::leftJoin('users', 'users.id', '=', 'project_users.user_type_id')
+		 $data_project_users = ProjectUser::leftJoin('users', 'users.id', '=', 'project_users.user_id')
 		 ->leftJoin('projects', 'projects.id', '=', 'project_users.project_id')
+		 ->leftJoin('usertype', 'usertype.id', '=', 'project_users.user_type_id')
 		 //   ->where('gender.is_active', true)
 		   ->select(
 			   'project_users.id',
 			   'project_users.user_type_id', 
 			   'project_users.project_id', 
 			   'projects.project_name',
+			   'usertype.usertype_name',
 			   'users.f_name',
 			   'users.m_name',
 			   'users.l_name',
@@ -75,41 +77,19 @@ class ProjectUserRepository
 	// 	return $last_insert_id;
 	// }
 
-	public function addProject($request)
+	public function addProjectUser($request)
 	{
 		try {
 		$data =array();
-		// $ipAddress = getIPAddress($request);
-		$project_data = new Project();
-		// $project_data->email = $request['email'];
-		// $project_data->u_uname = $request['u_uname'];
-		// $project_data->password = bcrypt($request['password']);
-		$project_data->project_name = $request['project_name'];
-		$project_data->state = $request['state'];
-		$project_data->district = $request['district'];
-		$project_data->taluka	 = $request['taluka'];
-		$project_data->village = $request['village'];
-
-		$project_data->latitude = $request['latitude'];
-		$project_data->longitude = $request['longitude'];
-		$project_data->start_date = $request['start_date'];
-		$project_data->end_date = $request['end_date'];
-		$project_data->description = $request['description'];
-		$project_data->is_active = isset($request['is_active']) ? true : false;
-		$project_data->save();
-
-		$last_insert_id = $project_data->id;
-		// $this->insertRolesPermissions($request, $last_insert_id);
-
-		// $imageProfile = $last_insert_id .'_' . rand(100000, 999999) . '_english.' . $request->user_profile->extension();
-        
-        // $user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
-        // $user_detail->user_profile = $imageProfile; // Save the image filename to the database
-        // $user_detail->save();
-        // echo  $user_detail;
-		// die();
-        // $data['imageProfile'] =$imageProfile;
-        return $project_data;
+		$project_user_data = new ProjectUser();
+		$project_user_data->project_id = $request['project_id'];
+		$project_user_data->user_type_id = $request['user_type_id'];
+		$project_user_data->user_id = $request['user_id'];
+		$project_user_data->is_active = isset($request['is_active']) ? true : false;
+		$project_user_data->save();
+// dd($project_user_data);
+		$last_insert_id = $project_user_data->id;
+        return $project_user_data;
 	} catch (\Exception $e) {
 		return [
 			'msg' => $e,
@@ -233,57 +213,29 @@ class ProjectUserRepository
 			->select('id')->get();
 	}
 
-	public function editProjects($reuest)
+	public function editProjectUsers($reuest)
 	{
 
 		$data_projects = [];
-
-		// $data_users['roles'] = Roles::where('is_active', true)
-		// 	->select('id', 'role_name')
-		// 	->get()
-		// 	->toArray();
 		$data_projects['permissions'] = Permissions::where('is_active', true)
 			->select('id', 'route_name', 'permission_name', 'url')
 			->get()
 			->toArray();
 
-		$data_projects_data = Project::where('projects.id', '=', base64_decode($reuest->edit_id))
+		$data_project_users_data = ProjectUser::where('project_users.id', '=', base64_decode($reuest->edit_id))
 			// ->where('roles_permissions.is_active','=',true)
 			// ->where('users.is_active','=',true)
 			->select(
-				// 'roles.id as role_id',
-				'projects.project_name',
-				'projects.description',
-				'projects.state',
-				'projects.district',
-				'projects.taluka',
-				'projects.village',
-				'projects.start_date',
-				'projects.end_date',
-				'projects.latitude',
-				'projects.longitude',
-				'projects.id',
-				'projects.is_active',
+				'project_users.project_id',
+				'project_users.user_type_id',
+				'project_users.user_id',
+				'project_users.is_active',
 			)->get()
 			->toArray();
+		dd($data_project_users_data);
 						
-		$data_projects['data_projects'] = $data_projects_data[0];
-		// $data_users['permissions_user'] = User::join('roles_permissions', function($join) {
-		// 					$join->on('users.id', '=', 'roles_permissions.user_id');
-		// 				})
-		// 				->join('permissions', function($join) {
-		// 					$join->on('roles_permissions.permission_id', '=', 'permissions.id');
-		// 				})
-		// 				->where('roles_permissions.user_id','=',$reuest->edit_id)
-		// 				->where('roles_permissions.is_active','=',true)
-		// 				// ->where('users.is_active','=',true)
-		// 				->select(
-		// 					'roles_permissions.per_add',
-		// 					'roles_permissions.per_update',
-		// 					'roles_permissions.per_delete',
-		// 					'permissions.id as permissions_id'
-		// 					)->get()
-		// 					->toArray();
+		$data_projects['data_project_users'] = $data_project_users_data[0];
+		dd($data_projects);
 
 		return $data_projects;
 	}
@@ -351,28 +303,28 @@ class ProjectUserRepository
 
 	public function updateOne($request){
         try {
-            $project_data = Project::find($request); // Assuming $request directly contains the ID
+            $project_user_data = ProjectUser::find($request); // Assuming $request directly contains the ID
 			// dd($project_data);
             // Assuming 'is_active' is a field in the userr model
-            if ($project_data) {
-                $is_active = $project_data->is_active === 1 ? 0 : 1;
+            if ($project_user_data) {
+                $is_active = $project_user_data->is_active === 1 ? 0 : 1;
 				// dd($is_active);
-                $project_data->is_active = $is_active;
-                $project_data->save();
+                $project_user_data->is_active = $is_active;
+                $project_user_data->save();
 
                 return [
-                    'msg' => 'Project updated successfully.',
+                    'msg' => 'Project Wise User updated successfully.',
                     'status' => 'success'
                 ];
             }
 
             return [
-                'msg' => 'Project not found.',
+                'msg' => 'Project Wise User not found.',
                 'status' => 'error'
             ];
         } catch (\Exception $e) {
             return [
-                'msg' => 'Failed to update Project.',
+                'msg' => 'Failed to update Project Wise User.',
                 'status' => 'error'
             ];
         }

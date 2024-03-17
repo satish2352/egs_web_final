@@ -28,14 +28,14 @@ class ProjectUserServices
         return $data_users;
     }
 
-    public function addProject($request)
+    public function addProjectUser($request)
     {
         try {
-            $add_role = $this->repo->addProject($request);
-            if ($add_role) {
-                return ['status' => 'success', 'msg' => 'Role Added Successfully.'];
+            $project_user_data = $this->repo->addProjectUser($request);
+            if ($project_user_data) {
+                return ['status' => 'success', 'msg' => 'Project Wise User Added Successfully.'];
             } else {
-                return ['status' => 'error', 'msg' => 'Role Not Added.'];
+                return ['status' => 'error', 'msg' => 'Project Wise User Not Added.'];
             }  
         } catch (Exception $e) {
             return ['status' => 'error', 'msg' => $e->getMessage()];
@@ -93,9 +93,9 @@ class ProjectUserServices
             return ['status'=>'success','msg'=>'Data Updated Successful.'];
     }    
 
-    public function editProjects($request) {
-        $data_projects = $this->repo->editProjects($request);
-        return $data_projects;
+    public function editProjectUsers($request) {
+        $data_project_users = $this->repo->editProjectUsers($request);
+        return $data_project_users;
     }
     
 

@@ -11,7 +11,8 @@ use App\Models\ {
     TblArea,
     User,
     ProjectUser,
-    Project
+    Project,
+    Usertype
 };
 use Validator;
 use session;
@@ -51,26 +52,87 @@ class ProjectUserController extends Controller {
                             ->get()
                             ->toArray();
         $dynamic_projects = Project::where('is_active', true)
-                            ->select('id','project_name ')
+                            ->select('id','project_name','District','taluka','village')
                             ->get()
                             ->toArray();
         $dynamic_users = User::where('is_active', true)
                             ->select('id','f_name','m_name','l_name')
                             ->get()
                             ->toArray();
+        $dynamic_user_types = Usertype::where('is_active', true)
+                            ->select('id','usertype_name')
+                            ->get()
+                            ->toArray();
     	// return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
-    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_projects','dynamic_users'));
+    	return view('admin.pages.projectusers.add-project-users',compact('permissions','dynamic_projects','dynamic_users','dynamic_user_types'));
     }
 
-    public function getCities(Request $request)
+    public function getUserTypeUsers(Request $request)
     {
-        $stateId = $request->input('stateId');
+        $usertypeId = $request->input('usertypeId');
+        $dist_val = $request->input('dist_val');
+        $tal_val = $request->input('tal_val');
+        $vil_val = $request->input('vil_val');
 
-        $city = TblArea::where('location_type', 2) // 4 represents cities
-                    ->where('parent_id', $stateId)
-                    ->get(['location_id', 'name']);
-              return response()->json(['city' => $city]);
+        if($usertypeId=='1')
+        {
+            $usertype_userdata = User::where('user_type', $usertypeId) // 4 represents cities
+                                    ->where('user_district', $dist_val)
+                    ->get(['f_name','m_name','l_name','id',]);
+              return response()->json(['usertype_userdata' => $usertype_userdata]);
+        }else if($usertypeId=='2')
+        {
+            $usertype_userdata = User::where('user_type', $usertypeId) // 4 represents cities
+                                    ->where('user_taluka', $tal_val)
+                    ->get(['f_name','m_name','l_name','id',]);
+              return response()->json(['usertype_userdata' => $usertype_userdata]);
+        }else if($usertypeId=='3')
+        {
+            $usertype_userdata = User::where('user_type', $usertypeId) // 4 represents cities
+                                    ->where('user_village', $vil_val)
+                    ->get(['f_name','m_name','l_name','id',]);
+              return response()->json(['usertype_userdata' => $usertype_userdata]);
+        }
 
+    }
+
+    public function store(Request $request)
+    {
+        try {
+
+            $rules = [
+                'project_id' => 'required',
+                'user_type_id' => 'required',
+                'user_id' => 'required',
+            ];
+            $messages = [
+                'project_id.required' => 'Please  Select Project.',
+                'user_type_id.required' => 'Please Select Project Type.',
+                'user_id.required' => 'Please Select User.',
+
+            ];
+
+            $validation = Validator::make($request->all(), $rules, $messages);
+            if ($validation->fails()) {
+                return redirect('add-project-wise-users')
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+                $add_role = $this->service->addProjectUser($request);
+                if ($add_role) {
+                    $msg = $add_role['msg'];
+                    $status = $add_role['status'];
+                    if ($status == 'success') {
+                        return redirect('list-project-wise-users')->with(compact('msg', 'status'));
+                    } else {
+                        return redirect('add-project-wise-users')->withInput()->with(compact('msg', 'status'));
+                    }
+                }
+
+            }
+        } catch (Exception $e) {
+            return redirect('add-project-wise-users')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
     }
 
     public function getDistrict(Request $request)
@@ -118,10 +180,11 @@ class ProjectUserController extends Controller {
 
     }
 
-    public function editProjects(Request $request){
-        
-        $project_data = $this->service->editProjects($request);
-        return view('admin.pages.projects.edit-projects',compact('project_data'));
+    public function editProjectUsers(Request $request){
+        dd('jjjjjjjjjjjj');
+        $project_user_data = $this->service->editProjectUsers($request);
+        dd( $project_user_data);
+        return view('admin.pages.projectusers.edit-project-users',compact('project_user_data'));
     }
 
     public function update(Request $request){
@@ -193,64 +256,7 @@ class ProjectUserController extends Controller {
 
     }
 
-    public function store(Request $request)
-    {
-
-        try {
-
-            $rules = [
-                'project_name' => 'required|unique:projects|regex:/^[a-zA-Z\s]+$/u|max:255',
-                'state' => 'required',
-                'district' => 'required',
-                'taluka' => 'required',
-                'village' => 'required',
-                'latitude' => 'required',
-                'longitude' => 'required',
-                'start_date' => 'required',
-                'end_date' => 'required',
-                'description' => 'required',
-            ];
-            $messages = [
-                'project_name.required' => 'Please  enter title.',
-                // 'role_name.unique' => 'Your role type is already exist.',
-                'project_name.regex' => 'Please  enter text only.',
-                'project_name.max' => 'Please  enter text length upto 255 character only.',
-                'project_name.unique' => 'Title already exist.',
-
-                'state.required' => 'Please  enter state.',
-                'district.required' => 'Please  enter district.',
-                'taluka.required' => 'Please  enter taluka.',
-                'village.required' => 'Please  enter village.',
-                'latitude.required' => 'Please  enter latitude.',
-                'longitude.required' => 'Please  enter longitude.',
-                'start_date.required' => 'Please  enter start_date.',
-                'end_date.required' => 'Please  enter end_date.',
-                'description.required' => 'Please  enter description.',
-
-            ];
-
-            $validation = Validator::make($request->all(), $rules, $messages);
-            if ($validation->fails()) {
-                return redirect('add-projects')
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-                $add_role = $this->service->addProject($request);
-                if ($add_role) {
-                    $msg = $add_role['msg'];
-                    $status = $add_role['status'];
-                    if ($status == 'success') {
-                        return redirect('list-projects')->with(compact('msg', 'status'));
-                    } else {
-                        return redirect('add-projects')->withInput()->with(compact('msg', 'status'));
-                    }
-                }
-
-            }
-        } catch (Exception $e) {
-            return redirect('add-projects')->withInput()->with(['msg' => $e->getMessage(), 'status' => 'error']);
-        }
-    }
+    
 
     public function add(Request $request){
 // dd($request);
@@ -386,7 +392,8 @@ class ProjectUserController extends Controller {
         try {
             $active_id = $request->active_id;
         $result = $this->service->updateOne($active_id);
-            return redirect('list-projects')->with('flash_message', 'Updated!');  
+        // dd($result);
+            return redirect('list-project-wise-users')->with('flash_message', 'Updated!');  
         } catch (\Exception $e) {
             return $e;
         }

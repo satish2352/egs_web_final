@@ -1,16 +1,16 @@
 @extends('admin.layout.master')
 
 @section('content')
-    <?php //$data_permission = getPermissionForCRUDPresentOrNot('list-users', session('permissions')); ?>
+    <?php $data_permission = getPermissionForCRUDPresentOrNot('list-users', session('permissions')); ?>
     <div class="main-panel">
         <div class="content-wrapper mt-7">
             <div class="page-header">
                 <h3 class="page-title">
-                    Project Labour Master List <a href="{{ route('add-projects') }}" class="btn btn-sm btn-primary ml-3">+ Add</a>
+                    Project Labour Master List <a href="{{ route('add-project-wise-users') }}" class="btn btn-sm btn-primary ml-3">+ Add</a>
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('list-users') }}">Project Labour Management</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('list-project-wise-users') }}">Project Labour Management</a></li>
                         <li class="breadcrumb-item active" aria-current="page"> Project Labour </li>
                     </ol>
                 </nav>
@@ -28,6 +28,7 @@
                                                 <tr>
                                                     <th>Sr. No.</th>
                                                     <th>Project Name</th>
+                                                    <th>User Type</th>
                                                     <th>User Name</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
@@ -38,10 +39,8 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->project_name }}</td>
+                                                        <td>{{ $item->usertype_name }}</td>
                                                         <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}</td>
-                                                        <!-- <td>{{ $item->district_name }}</td>
-                                                        <td>{{ $item->taluka_name }}</td>
-                                                        <td>{{ $item->village_name }}</td> -->
 
 
                                                         <td>
@@ -64,20 +63,20 @@
                                                         
                                                         @endif</td> --}}
                                                         <td class="d-flex">
-                                                        <!-- @if (in_array('per_update', $data_permission)) -->
+                                                        @if (in_array('per_update', $data_permission))
                                                             <a href="{{ route('edit-projects', base64_encode($item->id)) }}"
                                                                 class="edit-btn btn btn-sm btn-outline-primary m-1"><i
                                                                     class="fas fa-pencil-alt"></i></a>
-                                                        <!-- @endif -->
+                                                        @endif
 
                                                             <a data-id="{{ $item->id }}"
                                                                 class="show-btn btn btn-sm btn-outline-primary m-1"><i
                                                                     class="fas fa-eye"></i></a>
-                                                        <!-- @if (in_array('per_delete', $data_permission))             -->
+                                                        @if (in_array('per_delete', $data_permission))            
                                                             <a data-id="{{ $item->id }}"
                                                                 class="delete-btn btn btn-sm btn-outline-danger m-1"
                                                                 title="Delete Tender"><i class="fas fa-archive"></i></a>
-                                                        <!-- @endif     -->
+                                                        @endif    
 
                                                         </td>
                                                     </tr>
@@ -103,11 +102,11 @@
             @csrf
             <input type="hidden" name="show_id" id="show_id" value="">
         </form>
-        {{-- <form method="GET" action="{{ url('/edit-users') }}" id="editform">
+        {{-- <form method="GET" action="{{ url('/edit-project-wise-users') }}" id="editform">
             @csrf
             <input type="hidden" name="edit_id" id="edit_id" value="">
         </form> --}}
-        <form method="POST" action="{{ url('/update-active-projects') }}" id="activeform">
+        <form method="POST" action="{{ url('/update-active-project_users') }}" id="activeform">
             @csrf
             <input type="hidden" name="active_id" id="active_id" value="">
         </form>
