@@ -240,10 +240,12 @@ public function updateParticularDataLabour(Request $request)
 public function getAllLabourList(Request $request){
    
     try {
+        $user = Auth::user()->id;
         $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+            ->where('labour.user_id', $user)
             ->when($request->get('mgnrega_card_id'), function($query) use ($request) {
                 $query->where('labour.mgnrega_card_id',$request->mgnrega_card_id);
             })
