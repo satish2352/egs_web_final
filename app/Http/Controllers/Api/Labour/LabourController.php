@@ -18,89 +18,24 @@ use Carbon\Carbon;
 
 class LabourController extends Controller
 {
-// public function add(Request $request)
-// {
-//     $validator = Validator::make($request->all(), [
-//         'full_name' => 'required',
-//         'gender' => 'required',
-//         'date_of_birth' => 'required|date_format:d/m/Y',
-//         'district_id' => 'required',
-//         'taluka_id' => 'required',
-//         'village_id' => 'required',
-//         'mobile_number' => 'required',
-//         'landline_number' => 'required',
-//         'mgnrega_card_id' => 'required',
-//         'location_id' => 'required',
-//         'aadhar_image' => 'required|image',
-//         'mgnrega_image' => 'required|image',
-//         'profile_image' => 'required|image'
-//     ]);
-
-//     if ($validator->fails()) {
-//         return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 400);
-//     }
-
-//     try {
-//         $labour_data = new Labour();
-//         $labour_data->full_name = $request->full_name;
-//         $labour_data->gender = $request->gender;
-//         $labour_data->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
-//         $labour_data->district_id = $request->district_id;
-//         $labour_data->taluka_id = $request->taluka_id;
-//         $labour_data->village_id = $request->village_id;
-//         $labour_data->mobile_number = $request->mobile_number;
-//         $labour_data->landline_number = $request->landline_number;
-//         $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-//         $labour_data->location_id = $request->location_id;
-//         $labour_data->save();
-
-//         $last_insert_id = $labour_data->id;
-//         $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-//         $imagePancard = $last_insert_id . '_' . rand(100000, 999999) . '_pan.' . $request->mgnrega_image->extension();
-//         $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
-
-//         $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
-
-//         uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-//         uploadImage($request, 'mgnrega_image', $path, $imagePancard);
-//         uploadImage($request, 'profile_image', $path, $imageProfile);
-
-//         // Update the image paths in the database
-//         $labour_data->aadhar_image = $path . '/' . $imageAadhar;
-//         $labour_data->mgnrega_image = $path . '/' . $imagePancard;
-//         $labour_data->profile_image = $path . '/' . $imageProfile;
-//         $labour_data->save();
-
-//         // Include image paths in the response
-//         $labour_data->aadhar_image = $labour_data->aadhar_image;
-//         $labour_data->mgnrega_image = $labour_data->mgnrega_image;
-//         $labour_data->profile_image = $labour_data->profile_image;
-
-//         return response()->json(['status' => 'success', 'message' => 'Labor added successfully', 'data' => $labour_data], 200);
-//     } catch (\Exception $e) {
-//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-//     }
-// }
 public function add(Request $request )
 {
     $validator = Validator::make($request->all(), [
-        'full_name' => 'required|alpha',
+        'full_name' => 'required|string',
         'gender_id' => 'required|numeric',
-        'date_of_birth' => [
-            'required',
-            'date_format:d/m/Y',
-            function ($attribute, $value, $fail) {
-                $dob = Carbon::createFromFormat('d/m/Y', $value);
-                if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
-                    $fail('The date of birth must be a date before today.');
-                }
-            },
-        ],
+        'date_of_birth' => ['required', 'date_format:d/m/Y', function ($attribute, $value, $fail) {
+            $dob = Carbon::createFromFormat('d/m/Y', $value);
+            $eighteenYearsAgo = now()->subYears(18);
+    
+            if ($dob->isAfter($eighteenYearsAgo)) {
+                $fail('The date of birth must be at least 18 years ago.');
+            }
+        }],
         'district_id' => 'required|numeric',
         'taluka_id' => 'required|numeric',
         'village_id' => 'required|numeric',
         'skill_id' => 'required|numeric',
-        'mobile_number' => ['required', 'numeric', 'digits:10', 'unique:labour'],
+        'mobile_number' => ['required', 'numeric', 'digits:10'],
         'landline_number' => ['required', 'regex:/^[0-9]{8,}$/'],
         'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
         'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
@@ -163,21 +98,22 @@ public function add(Request $request )
         $labour_data->mgnrega_image = $labour_data->mgnrega_image;
         $labour_data->profile_image = $labour_data->profile_image;
         $labour_data->voter_image = $labour_data->voter_image;
-
+       
         // $familyDetails = [];
 
-        // foreach ($request->input('full_name') as $index => $fullName) {
+        // foreach ($request->input('date_of_birth') as $index => $dob) {
         //     $familyDetail = new LabourFamilyDetails();
         //     $familyDetail->labour_id = $labour_data->id;
-        //     $familyDetail->full_name = $fullName;
+        //     $familyDetail->full_name = $request->input("full_name.$index");
         //     $familyDetail->gender_id = $request->input("gender_id.$index");
         //     $familyDetail->relationship_id = $request->input("relationship_id.$index");
         //     $familyDetail->married_status_id = $request->input("married_status_id.$index");
-        //     $familyDetail->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->input("date_of_birth.$index"))->toDateString();
+        //     $familyDetail->date_of_birth = Carbon::createFromFormat('d/m/Y', $dob)->toDateString();
         //     $familyDetail->save();
-
+        
         //     $familyDetails[] = $familyDetail;
         // }
+        
         return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
