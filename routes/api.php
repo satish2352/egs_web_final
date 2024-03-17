@@ -22,11 +22,11 @@ use App\Http\Controllers\Api\Labour\LabourFamilyDetailsController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/list-gender', [MasterController::class, 'getAllGender']);
-Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
-Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
-Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
-Route::get('/list-document', [MasterController::class, 'getAllDocument']);
+Route::post('/list-gender', [MasterController::class, 'getAllGender']);
+Route::post('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+Route::post('/list-skills', [MasterController::class, 'getAllSkill']);
+Route::post('/list-relation', [MasterController::class, 'getAllRelation']);
+Route::post('/list-document', [MasterController::class, 'getAllDocument']);
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'

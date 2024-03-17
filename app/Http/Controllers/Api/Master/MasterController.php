@@ -8,7 +8,7 @@ use App\Models\ {
 	Gender,
     Maritalstatus,
     Skills,
-    Relation,
+    RelationModel,
     Documenttype
 };
 
@@ -40,7 +40,7 @@ public function getAllSkill(){
 }
 public function getAllRelation(){
     try {
-        $relation = Relation::all();
+        $relation = RelationModel::all();
         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $relation], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
