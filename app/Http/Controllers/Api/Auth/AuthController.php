@@ -168,43 +168,34 @@ public function login(Request $request)
         // 'expires_in' => auth()->factory()->getTTL() * 60,
     ]);
 }
-// public function logout(Request $request)
-// {
-//     $user = $request->user();
-//     // Delete the current access token
-//     $user->currentAccessToken()->delete();
-//     // Empty the remember_token field
-//     $user->update([$request->remember_token => 'null']);
-//     // echo $user;
-//     // die();
-//     return response()->json(['message' => 'Logged out successfully']);
-// }
-
-
-public function logout()
+public function logout(Request $request)
 {
-    Auth::guard('api')->logout();
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Successfully logged out',
-    ]);
+    // Extract token from the request headers
+    $token = $request->bearerToken();
+
+    // Check if the token exists
+    if (!$token) {
+        return response()->json(['status' => 'False', 'error' => 'Token not provided'], 400);
+    }
+
+    try {
+        // Invalidate the token
+        JWTAuth::setToken($token)->invalidate();
+        
+        // Get the authenticated user
+        $user = auth()->user();
+
+        // Update the remember_token to null
+        $user->update(['remember_token' => null]);
+
+    } catch (\Exception $e) {
+        // If token invalidation or user update fails, return an error response
+        return response()->json(['status' => 'False', 'error' => 'Failed to logout'], 500);
+    }
+
+    // Return a success response
+    return response()->json(['status' => 'True', 'message' => 'Successfully logged out']);
 }
-// public function logout(Request $request)
-// {
-//     // Check if the user is authenticated
-//     if (!$request->user()) {
-//         return response()->json(['error' => 'Unauthorized'], 401);
-//     }
-
-//     // Delete the current access token
-//     $request->user()->currentAccessToken()->delete();
-
-//     // Clear remember_token (if applicable)
-//     $request->user()->update(['remember_token' => null]);
-
-//     return response()->json(['message' => 'Logged out successfully']);
-// }
-
 public function register(Request $request)
 {
     $validator = Validator::make($request->all(), [

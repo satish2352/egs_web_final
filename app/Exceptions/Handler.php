@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Exceptions;
-
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -26,5 +27,19 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'error' => [
+                    'message' => 'Authentication required. Please provide valid credentials or authentication token.',
+                    'code' => Response::HTTP_UNAUTHORIZED, // Use constant for status code
+                ]
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return redirect()->guest(route('login')); // Redirect to login page for web requests
     }
 }
