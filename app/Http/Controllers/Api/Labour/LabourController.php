@@ -20,7 +20,9 @@ class LabourController extends Controller
 {
     public function add(Request $request )
     {
-        $validator = Validator::make($request->all(), [
+
+
+        $all_data_validation = [
             'full_name' => 'required|alpha',
             'gender_id' => 'required|numeric',
             'date_of_birth' => [
@@ -38,14 +40,14 @@ class LabourController extends Controller
             'village_id' => 'required|numeric',
             'skill_id' => 'required|numeric',
             'mobile_number' => ['required', 'numeric', 'digits:10', 'unique:labour'],
-            'landline_number' => ['required', 'regex:/^[0-9]{8,}$/'],
+            
             'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
             'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
             'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
-            'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-            'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            // 'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            // 'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            // 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            // 'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
 
             'family.*.full_name' => 'required|string',
             'family.*.gender_id' => 'required|integer',
@@ -63,7 +65,13 @@ class LabourController extends Controller
             ],
             
 
-        ]);
+        ];
+
+
+        if(isset($request->landline_number)) {
+            $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
+        }
+        $validator = Validator::make($request->all(), $all_data_validation);
 
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 400);
@@ -101,10 +109,10 @@ class LabourController extends Controller
 
             $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
-            uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-            uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
-            uploadImage($request, 'profile_image', $path, $imageProfile);
-            uploadImage($request, 'voter_image', $path, $imageVoter);
+            // uploadImage($request, 'aadhar_image', $path, $imageAadhar);
+            // uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
+            // uploadImage($request, 'profile_image', $path, $imageProfile);
+            // uploadImage($request, 'voter_image', $path, $imageVoter);
 
             // Update the image paths in the database
             $labour_data->aadhar_image = $path . '/' . $imageAadhar;
