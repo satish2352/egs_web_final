@@ -29,7 +29,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // Route::post('/list-skills', [MasterController::class, 'getAllSkill']);
 // Route::post('/list-relation', [MasterController::class, 'getAllRelation']);
 // Route::post('/list-document', [MasterController::class, 'getAllDocument']);
-Route::post('/list-masters', [AllMasterController::class, 'getAllMasters']);
+Route::post('/list-masters', [AuthController::class, 'getAllMasters']);
 
 Route::group([
     'middleware' => 'api',

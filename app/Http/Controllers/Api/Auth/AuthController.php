@@ -11,6 +11,15 @@ use Validator;
 use App\Models\ {
 	User
 };
+
+use App\Models\ {
+	Gender,
+    Maritalstatus,
+    Skills,
+    RelationModel,
+    Documenttype
+};
+
 class AuthController extends Controller
 {
 // public function login(Request $request)
@@ -276,5 +285,20 @@ public function responseWithToken($token, $user)
 
 //     ]);
 // }
+
+    public function getAllMasters(){
+        try {
+            $data = [];
+            $data['gender'] = Gender::all();
+            $data['maritalstatus'] = Maritalstatus::all();
+            $data['skills'] = Skills::all();
+            $data['relation'] = RelationModel::all();
+            $data['documenttype'] = Documenttype::all();
+        
+            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
 
 }
