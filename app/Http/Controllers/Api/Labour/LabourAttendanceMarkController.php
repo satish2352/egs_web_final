@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\Labour;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
@@ -18,39 +18,39 @@ use Carbon\Carbon;
 class LabourAttendanceMarkController extends Controller
 {
 
-public function addAttendanceMark(Request $request )
-{
-    $validator = Validator::make($request->all(), [
-        'project_id' => 'required|numeric',
-        'labour_id' => ['required','numeric'],
-        'attendance_day' => 'required', 
-
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 400);
+    public function addAttendanceMark(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'project_id' => 'required|numeric',
+            'mgnrega_card_id' => 'required|numeric',
+            'attendance_day' => 'required', // Assuming 'attendance_day' should be a date
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 400);
+        }
+    
+        try {
+            // Check if the user exists
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+            }
+            
+            $labour_data = new LabourAttendanceMark();
+            $labour_data->user_id = $user->id; // Assign the user ID
+            $labour_data->project_id = $request->project_id;
+            $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+            $labour_data->attendance_day = $request->attendance_day;
+          
+            $labour_data->save();
+    
+            return response()->json(['status' => 'success', 'message' => 'Attendance Mark successfully added', 'data' => $labour_data], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
-
-    try {
-         // Check if the user exists
-         $user = User::find($request->user_id);
-         if (!$user) {
-             return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
-         }
-
-        $labour_data = new LabourAttendanceMark();
-        $labour_data->user_id = $request->user_id; // Assign the user ID
-        $labour_data->project_id = $request->project_id;
-        $labour_data->labour_id = $request->labour_id;
-        $labour_data->attendance_day = $request->attendance_day;
-      
-        $labour_data->save();
-
-        return response()->json(['status' => 'success', 'message' => 'Attendance Mark successfully', 'data' => $labour_data], 200);
-    } catch (\Exception $e) {
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-    }
-}
+    
 public function getAllAttendancMarkedLabour(Request $request){
     try {
         $data_output = LabourAttendanceMark::leftJoin('labour', 'labour.gender_id', '=', 'gender_labour.id')

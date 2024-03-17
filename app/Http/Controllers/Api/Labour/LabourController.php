@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\Labour;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
@@ -199,6 +199,7 @@ public function updateParticularDataLabour(Request $request)
     }
 }
 public function getAllLabourList(Request $request){
+   
     try {
         $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
