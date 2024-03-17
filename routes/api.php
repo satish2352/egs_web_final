@@ -51,9 +51,9 @@ Route::group([
         Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterData']);
         Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
-
+        
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);
-
+        Route::post('/list-attendance-marked', [LabourAttendanceMarkController::class, 'getAllAttendancMarkedLabour']);
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
