@@ -126,7 +126,15 @@
                     <span class="menu-title">Labour Management</span>
                 </a>
             </li>
-            <li class="{{request()->is('list-role*')
+            <li class="{{request()->is('list-labours*')
+                ? 'nav-item active' : 'nav-item' }}">
+                <?php $currenturl = Request::url(); ?>
+                <a class="nav-link" href="{{ route('list-project-wise-users') }}">
+                    <i class="fas fa-user menu-icon"></i>
+                    <span class="menu-title">Project Users Management</span>
+                </a>
+            </li>
+            <li class="{{request()->is('list-role*') 
                 ? 'nav-item active' : 'nav-item' }}">
                   <a class="{{request()->is('list-role*')
                                 ? 'nav-link active' : 'nav-link' }}" data-toggle="collapse" href="#report" aria-expanded="false"
