@@ -297,6 +297,7 @@ public function responseWithToken($token, $user)
         
             return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data], 200);
         } catch (\Exception $e) {
+            dd($e);
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
