@@ -226,12 +226,23 @@ public function getAllLabourList(Request $request){
                 'labour.profile_image',
             )->get();
 
-            // Append image paths to the output data
-// foreach ($data_output as $labour) {
-//     $labour->profile_image_path = asset($labour->profile_image);
-//     $labour->aadhar_image_path = asset($labour->aadhar_image);
-//     $labour->mgnrega_image_path = asset($labour->mgnrega_image);
-// }
+            foreach ($data_output as $labour) {
+                // Append image paths to the output data
+                $labour->profile_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->profile_image;
+                $labour->aadhar_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->aadhar_image;
+                $labour->mgnrega_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->mgnrega_image;
+                $labour->voter_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->voter_image;
+
+                // Check if family details exist before iterating over them
+                if (!is_null($labour->family_details)) {
+                    foreach ($labour->family_details as $familyDetail) {
+                        $familyDetail->profile_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->profile_image;
+                        $familyDetail->aadhar_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->aadhar_image;
+                        $familyDetail->mgnrega_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->mgnrega_image;
+                        $familyDetail->voter_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->voter_image;
+                    }
+                }
+            }
 
         // Loop through labour data and retrieve family details for each labour
         foreach ($data_output as $labour) {

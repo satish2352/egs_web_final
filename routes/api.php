@@ -22,6 +22,11 @@ use App\Http\Controllers\Api\Labour\LabourFamilyDetailsController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/list-gender', [MasterController::class, 'getAllGender']);
+Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
+Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
+Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
+Route::get('/list-document', [MasterController::class, 'getAllDocument']);
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -39,11 +44,7 @@ Route::group([
         Route::get('/district', [DistrictTalukaVillageController::class, 'getDistrict']);
         Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
         Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
-        Route::get('/list-gender', [MasterController::class, 'getAllGender']);
-        Route::get('/list-maritalstatus', [MasterController::class, 'getAllMaritalStatus']);
-        Route::get('/list-skills', [MasterController::class, 'getAllSkill']);
-        Route::get('/list-relation', [MasterController::class, 'getAllRelation']);
-        Route::get('/list-document', [MasterController::class, 'getAllDocument']);
+      
         Route::post('/list-project', [ProjectController::class, 'getAllProject']);
         // Route::post('/particular-labour/{id}', [LabourController::class, 'getParticularLabour']);
         Route::post('/list-user-labours', [LabourController::class, 'getAllUserLabourList']);
