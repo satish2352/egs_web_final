@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\Labour\LabourController;
 use App\Http\Controllers\Api\Master\MasterController;
 use App\Http\Controllers\Api\Master\ProjectController;
 use App\Http\Controllers\Api\Labour\LabourFamilyDetailsController;
-use App\Http\Controllers\Api\LabourAttendanceMark\LabourAttendanceMarkController;
+use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 
 /*
 |--------------------------------------------------------------------------
