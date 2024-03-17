@@ -56,7 +56,7 @@ Route::group([
         Route::post('/add-family-details/{labour_id}', [LabourFamilyDetailsController::class, 'add']);
         
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);
-        Route::post('/list-attendance-marked', [LabourAttendanceMarkController::class, 'getAllAttendancMarkedLabour']);
+        Route::post('/list-attendance-marked', [LabourAttendanceMarkController::class, 'getAllAttendanceMarkedLabour']);
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });

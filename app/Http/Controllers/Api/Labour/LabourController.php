@@ -105,7 +105,10 @@ public function add(Request $request )
         'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
         'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
         'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
-
+        'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+        'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+        'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+        'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
     ]);
 
     if ($validator->fails()) {
@@ -114,13 +117,10 @@ public function add(Request $request )
 
     try {
          // Check if the user exists
-         $user = User::find($request->user_id);
-         if (!$user) {
-             return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
-         }
+         $user = Auth::user();
 
         $labour_data = new Labour();
-        $labour_data->user_id = $request->user_id; // Assign the user ID
+        $labour_data->user_id = $user->id; // Assign the user ID
         $labour_data->full_name = $request->full_name;
         $labour_data->gender_id = $request->gender_id;
         $labour_data->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
@@ -138,8 +138,47 @@ public function add(Request $request )
         $labour_data->profile_image = 'null';
         $labour_data->voter_image = 'null';
         $labour_data->save();
+        $last_insert_id = $labour_data->id;
+        $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+        $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
+        $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+        $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
 
-        return response()->json(['status' => 'success', 'message' => 'Labor added successfully', 'data' => $labour_data], 200);
+        $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
+
+        uploadImage($request, 'aadhar_image', $path, $imageAadhar);
+        uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
+        uploadImage($request, 'profile_image', $path, $imageProfile);
+        uploadImage($request, 'voter_image', $path, $imageVoter);
+
+        // Update the image paths in the database
+        $labour_data->aadhar_image = $path . '/' . $imageAadhar;
+        $labour_data->mgnrega_image = $path . '/' . $imageMgnrega;
+        $labour_data->profile_image = $path . '/' . $imageProfile;
+        $labour_data->voter_image = $path . '/' . $imageVoter;
+        $labour_data->save();
+
+        // Include image paths in the response
+        $labour_data->aadhar_image = $labour_data->aadhar_image;
+        $labour_data->mgnrega_image = $labour_data->mgnrega_image;
+        $labour_data->profile_image = $labour_data->profile_image;
+        $labour_data->voter_image = $labour_data->voter_image;
+
+        // $familyDetails = [];
+
+        // foreach ($request->input('full_name') as $index => $fullName) {
+        //     $familyDetail = new LabourFamilyDetails();
+        //     $familyDetail->labour_id = $labour_data->id;
+        //     $familyDetail->full_name = $fullName;
+        //     $familyDetail->gender_id = $request->input("gender_id.$index");
+        //     $familyDetail->relationship_id = $request->input("relationship_id.$index");
+        //     $familyDetail->married_status_id = $request->input("married_status_id.$index");
+        //     $familyDetail->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->input("date_of_birth.$index"))->toDateString();
+        //     $familyDetail->save();
+
+        //     $familyDetails[] = $familyDetail;
+        // }
+        return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
