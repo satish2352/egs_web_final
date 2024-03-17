@@ -102,10 +102,10 @@ class LabourController extends Controller
             $labour_data->save();
             
             $last_insert_id = $labour_data->id;
-            $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-            $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
-            $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
-            $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
+            // $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+            // $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
+            // $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+            // $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
 
             $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
@@ -115,10 +115,10 @@ class LabourController extends Controller
             // uploadImage($request, 'voter_image', $path, $imageVoter);
 
             // Update the image paths in the database
-            $labour_data->aadhar_image = $path . '/' . $imageAadhar;
-            $labour_data->mgnrega_image = $path . '/' . $imageMgnrega;
-            $labour_data->profile_image = $path . '/' . $imageProfile;
-            $labour_data->voter_image = $path . '/' . $imageVoter;
+            // $labour_data->aadhar_image = $path . '/' . $imageAadhar;
+            // $labour_data->mgnrega_image = $path . '/' . $imageMgnrega;
+            // $labour_data->profile_image = $path . '/' . $imageProfile;
+            // $labour_data->voter_image = $path . '/' . $imageVoter;
             $labour_data->save();
 
             // Include image paths in the response
