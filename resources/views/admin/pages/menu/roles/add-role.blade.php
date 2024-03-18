@@ -2,7 +2,7 @@
 
 @section('content')
     <?php
-    $restricted_options = ['add_5', 'delete_5', 'add_6', 'delete_6', 'add_11', 'delete_11', 'add_17', 'delete_17', 'add_18', 'delete_18', 'add_19', 'delete_19', 'add_20', 'delete_20', 'add_21', 'delete_21', 'add_22', 'delete_22', 'add_23', 'delete_23', 'add_24', 'delete_24', 'add_25', 'delete_25', 'add_26', 'delete_26', 'add_27', 'delete_27', 'add_29', 'delete_29', 'add_30', 'delete_30', 'add_31', 'delete_31', 'add_32', 'update_32', 'add_33', 'update_33', 'add_34', 'update_34', 'add_46', 'update_46', 'add_51', 'delete_51', 'add_53', 'delete_53', 'add_54', 'delete_54'];
+    // $restricted_options = ['add_5', 'delete_5', 'add_6', 'delete_6', 'add_11', 'delete_11', 'add_17', 'delete_17', 'add_18', 'delete_18', 'add_19', 'delete_19', 'add_20', 'delete_20', 'add_21', 'delete_21', 'add_22', 'delete_22', 'add_23', 'delete_23', 'add_24', 'delete_24', 'add_25', 'delete_25', 'add_26', 'delete_26', 'add_27', 'delete_27', 'add_29', 'delete_29', 'add_30', 'delete_30', 'add_31', 'delete_31', 'add_32', 'update_32', 'add_33', 'update_33', 'add_34', 'update_34', 'add_46', 'update_46', 'add_51', 'delete_51', 'add_53', 'delete_53', 'add_54', 'delete_54'];
     ?>
 
     <div class="main-panel">
@@ -71,7 +71,6 @@
                                                                             id="per_add_{{ $permission['id'] }}"
                                                                             value="add_{{ $permission['id'] }}"
                                                                             data-parsley-multiple="per_add"
-                                                                            @if (in_array('add_' . $permission['id'], $restricted_options)) {{ 'disabled' }} @endif
                                                                             {{ old($add_name) ? 'checked' : '' }}>
 
                                                                         <i class="input-helper"></i><i
@@ -85,7 +84,6 @@
                                                                             id="per_update_{{ $permission['id'] }}"
                                                                             value="update_{{ $permission['id'] }}"
                                                                             data-parsley-multiple="per_update"
-                                                                            @if (in_array('update_' . $permission['id'], $restricted_options)) {{ 'disabled' }} @endif
                                                                             {{ old($per_update) ? 'checked' : '' }}>
 
                                                                         <i class="input-helper"></i><i
@@ -99,7 +97,6 @@
                                                                             id="per_delete_{{ $permission['id'] }}"
                                                                             value="delete_{{ $permission['id'] }}"
                                                                             data-parsley-multiple="per_delete"
-                                                                            @if (in_array('delete_' . $permission['id'], $restricted_options)) {{ 'disabled' }} @endif
                                                                             {{ old($per_delete) ? 'checked' : '' }}>
 
                                                                         <i class="input-helper"></i><i
@@ -178,7 +175,6 @@
                 // Function to check if all input fields are filled with valid data
                 function checkFormValidity() {
                     const role_name = $('#role_name').val();
-                    
                     // Enable the submit button if all fields are valid
                     if (role_name) {
                         $('#submitButton').prop('disabled', false);

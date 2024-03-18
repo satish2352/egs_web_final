@@ -14,14 +14,6 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-            // Permissions::create(
-            //     [
-            //         'created_at' => \Carbon\Carbon::now(),
-            //         'updated_at' => \Carbon\Carbon::now(),
-            //         'route_name' => 'Dashboard',
-            //         'url' => 'dashboard',
-            //         'permission_name' => 'Dashboard',
-            //     ]);
             Permissions::create(
                 [
                     'created_at' => \Carbon\Carbon::now(),
@@ -71,6 +63,14 @@ class PermissionsSeeder extends Seeder
                     'url' => 'list-registrationstatus',
                     'permission_name' => 'Registarion Status',
                 ]);
+                Permissions::create(
+                    [
+                        'created_at' => \Carbon\Carbon::now(),
+                        'updated_at' => \Carbon\Carbon::now(),
+                        'route_name' => 'User Type',
+                        'url' => 'list-usertype',
+                        'permission_name' => 'User Type',
+                    ]);
             Permissions::create(
                 [
                     'created_at' => \Carbon\Carbon::now(),
@@ -94,6 +94,22 @@ class PermissionsSeeder extends Seeder
                         'route_name' => 'Projects Managment',
                         'url' => 'list-projects',
                         'permission_name' => 'Projects Managment',
-                    ]);            
+                    ]);
+                Permissions::create(
+                    [
+                        'created_at' => \Carbon\Carbon::now(),
+                        'updated_at' => \Carbon\Carbon::now(),
+                        'route_name' => 'Labours Managment',
+                        'url' => 'list-labours',
+                        'permission_name' => 'Labours Managment',
+                    ]);
+                Permissions::create(
+                    [
+                        'created_at' => \Carbon\Carbon::now(),
+                        'updated_at' => \Carbon\Carbon::now(),
+                        'route_name' => 'Project Wise Users',
+                        'url' => 'list-project-wise-users',
+                        'permission_name' => 'Project Wise Users',
+                    ]);             
     }
 }
