@@ -40,9 +40,9 @@ Route::group([
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);
         Route::post('/list-attendance-marked', [LabourAttendanceMarkController::class, 'getAllAttendanceMarkedLabour']);
         Route::post('/list-project', [ProjectController::class, 'getAllProject']);
+        
 
-
-
+        Route::post('/update-attendance-mark/{id}', [LabourAttendanceMarkController::class, 'updateAttendanceMark']);
         Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
 
         Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);

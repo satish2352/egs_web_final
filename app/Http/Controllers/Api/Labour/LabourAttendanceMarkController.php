@@ -19,7 +19,6 @@ use Carbon\Carbon;
 
 class LabourAttendanceMarkController extends Controller
 {
-
     public function addAttendanceMark(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -113,4 +112,32 @@ class LabourAttendanceMarkController extends Controller
         }
     }
     
+    public function updateAttendanceMark(Request $request){
+    try {
+        $validator = Validator::make($request->all(), [
+            'project_id' => 'required|numeric',
+            'mgnrega_card_id' => 'required|numeric',
+            'attendance_day' => 'required', 
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
+        }
+
+        $attendance_mark_data = LabourAttendanceMark::findOrFail($request->id);
+
+        // Update the attributes based on the request data
+        $attendance_mark_data->project_id = $request->project_id;
+        $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
+        $attendance_mark_data->attendance_day = $request->attendance_day;
+        
+        // Save the updated record
+        $attendance_mark_data->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    }
+}
+
 }
