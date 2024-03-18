@@ -15,8 +15,9 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgb(0, 0, 0);
-        background-color: rgba(0, 0, 0, 0.9);
+        /* background-color: rgb(0, 0, 0); */
+        /* background-color: rgba(0, 0, 0, 0.9); */
+        background-color: rgb(0 0 0 / 25%);
     }
 
     .modal-content {
@@ -28,9 +29,12 @@
 
     .close {
         position: absolute;
-        top: 15px;
-        right: 35px;
-        color: #f1f1f1;
+        /* top: 15px;
+        right: 35px; */
+        top: 18%;
+        right: 50px;
+        /* color: #f1f1f1; */
+        color: #0d0c0c;
         font-size: 40px;
         font-weight: bold;
         transition: 0.3s;
@@ -38,9 +42,16 @@
 
     .close:hover,
     .close:focus {
-        color: #bbb;
+        /* color: #bbb; */
+        color: #0d0c0c;
         text-decoration: none;
         cursor: pointer;
+    }
+
+    .download_btn{
+        display: flex;
+        justify-content: right;
+        top: 20px;
     }
 </style>
     <div class="main-panel">
@@ -146,9 +157,14 @@
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Profile Image :</label>
                                         </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <div class="col-lg-3 col-md-3 col-sm-3">
                                             <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->profile_image }}"
                                                 style="width:100px; height:100px;" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->profile_image }}" download>
+                                            <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
+                                        </a>
                                         </div>
                                     </div>
                                     </br>
@@ -156,9 +172,14 @@
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Addhar Card :</label>
                                         </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <div class="col-lg-3 col-md-3 col-sm-3">
                                             <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}"
                                                 style="width:100px; height:100px;" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}" download>
+                                            <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
+                                        </a>
                                         </div>
                                     </div>
                                     </br>
@@ -166,9 +187,14 @@
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Voter Card :</label>
                                         </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <div class="col-lg-3 col-md-3 col-sm-3">
                                             <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->voter_image }}"
                                                 style="width:100px; height:100px;" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->voter_image }}" download>
+                                            <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
+                                        </a>
                                         </div>
                                     </div>
                                     </br>
@@ -176,9 +202,14 @@
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Mgnrega Card :</label>
                                         </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                        <div class="col-lg-3 col-md-3 col-sm-3">
                                             <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->mgnrega_image }}"
                                                 style="width:100px; height:100px;" />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->mgnrega_image }}" download>
+                                            <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
+                                        </a>
                                         </div>
 
                                         <!-- <div class="row">
