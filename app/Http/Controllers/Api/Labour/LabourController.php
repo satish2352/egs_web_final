@@ -123,10 +123,10 @@ class LabourController extends Controller
             $labour_data->save();
 
             // Include image paths in the response
-            // $labour_data->aadhar_image = $labour_data->aadhar_image;
-            // $labour_data->mgnrega_image = $labour_data->mgnrega_image;
-            // $labour_data->profile_image = $labour_data->profile_image;
-            // $labour_data->voter_image = $labour_data->voter_image;
+            $labour_data->aadhar_image = $labour_data->aadhar_image;
+            $labour_data->mgnrega_image = $labour_data->mgnrega_image;
+            $labour_data->profile_image = $labour_data->profile_image;
+            $labour_data->voter_image = $labour_data->voter_image;
         
 
             // for ($i=0; $i< sizeof($request->input('family')); $i++) {
@@ -139,19 +139,19 @@ class LabourController extends Controller
             //     $familyDetail->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->input("family.$i.date_of_birth"))->toDateString();
             //     $familyDetail->save();
             // }
-            // $familyDetails = [];
-            // foreach ($request->input('family') as $familyMember) {
-            //     $familyDetail = new LabourFamilyDetails();
-            //     $familyDetail->labour_id = $labour_data->id;
-            //     $familyDetail->full_name = $familyMember['full_name'];
-            //     $familyDetail->gender_id = $familyMember['gender_id'];
-            //     $familyDetail->relationship_id = $familyMember['relationship_id'];
-            //     $familyDetail->married_status_id = $familyMember['married_status_id'];
-            //     $familyDetail->date_of_birth = $familyMember['date_of_birth'];
-            //     $familyDetail->save();
-            //     $familyDetails[] = $familyDetail; // Collect family details
-            // }
-            return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
+            $familyDetails = [];
+            foreach ($request->input('family') as $familyMember) {
+                $familyDetail = new LabourFamilyDetails();
+                $familyDetail->labour_id = $labour_data->id;
+                $familyDetail->full_name = $familyMember['full_name'];
+                $familyDetail->gender_id = $familyMember['gender_id'];
+                $familyDetail->relationship_id = $familyMember['relationship_id'];
+                $familyDetail->married_status_id = $familyMember['married_status_id'];
+                $familyDetail->date_of_birth = $familyMember['date_of_birth'];
+                $familyDetail->save();
+                $familyDetails[] = $familyDetail; // Collect family details
+            }
+            return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data, 'familyDetails'=>$familyDetails], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
