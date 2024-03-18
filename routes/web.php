@@ -61,6 +61,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/list-labours', ['as' => 'list-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@index']);
     Route::post('/update-active-labours', ['as' => 'update-active-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@updateOne']);
     Route::post('/show-labours', ['as' => 'show-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@show']);
+    Route::get('/list-labour-attendance', ['as' => 'list-labour-attendance', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@getLabourAttendanceList']);
+
 
     Route::get('/list-project-wise-users', ['as' => 'list-project-wise-users', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@index']);
     Route::get('/add-project-wise-users', ['as' => 'add-project-wise-users', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@addProjectusers']);

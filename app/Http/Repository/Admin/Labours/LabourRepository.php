@@ -73,6 +73,55 @@ class LabourRepository
 		return $data_labours;
 	}
 
+	public function getLabourAttendanceList() {
+		$sess_user_id=session()->get('user_id');
+// dd($sess_user_id);
+		if($sess_user_id=='1')
+		{
+     	
+		  $data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+            // ->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.id')
+            ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
+                // ->where('tbl_mark_attendance.user_id', $user)
+                ->select(
+                    'tbl_mark_attendance.id',
+                    'projects.project_name',
+                    'labour.full_name as full_name',
+                    'labour.date_of_birth',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'tbl_mark_attendance.attendance_day'
+                )->get();
+				// dd($data_labour_attendance);
+		  }else if($sess_user_id!='1')
+		  {
+			$data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+            ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
+			->leftJoin('project_users', 'project_users.project_id', '=', 'projects.id')
+                ->where('tbl_mark_attendance.user_id', $sess_user_id)
+                ->where('labour.user_id', $sess_user_id)
+                ->where('project_users.user_id', $sess_user_id)
+                ->select(
+                    'tbl_mark_attendance.id',
+                    'projects.project_name',
+                    'labour.full_name as full_name',
+                    'labour.date_of_birth',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'tbl_mark_attendance.attendance_day'
+                )->get();
+
+			}	
+			// dd();	
+		return $data_labour_attendance;
+	}
+
 	
 
 

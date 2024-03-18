@@ -130,6 +130,14 @@
                 </a>
             </li>
             @endif
+            <li class="{{request()->is('list-labour-attendance*')
+                ? 'nav-item active' : 'nav-item' }}">
+                <?php $currenturl = Request::url(); ?>
+                <a class="nav-link" href="{{ route('list-labour-attendance') }}">
+                    <i class="fas fa-user menu-icon"></i>
+                    <span class="menu-title">Labour Attendance</span>
+                </a>
+            </li>
 
             <li class="{{request()->is('list-project-wise-users*')
                 ? 'nav-item active' : 'nav-item' }}">

@@ -31,6 +31,12 @@ class LabourServices
         return $data_labours;
     }
 
+    public function getLabourAttendanceList() {
+        $data_labours = $this->repo->getLabourAttendanceList();
+        // dd($data_users);
+        return $data_labours;
+    }
+
     public function addProject($request)
     {
         try {
