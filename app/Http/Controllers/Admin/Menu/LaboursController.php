@@ -10,7 +10,8 @@ use App\Models\ {
     Permissions,
     TblArea,
     User,
-    Labour
+    Labour,
+    LabourAttendanceMark
 };
 use Validator;
 use session;
@@ -30,6 +31,13 @@ class LaboursController extends Controller {
         $labours = $this->service->index();
         // dd($projects);
         return view('admin.pages.labours.list-labour',compact('labours'));
+    }
+
+    public function getLabourAttendanceList()
+    {
+        $labours = $this->service->getLabourAttendanceList();
+        // dd($projects);
+        return view('admin.pages.labours.list-labour-attendence',compact('labours'));
     }
 
     // public function getProf()
@@ -274,8 +282,6 @@ class LaboursController extends Controller {
     }
 
     public function add(Request $request){
-// dd($request);
-// die;
         $rules = [
                 //    'email' => 'required|unique:users,email|regex:/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z])+\.)+([a-zA-Z0-9]{2,4})+$/',
                 //     'password'=>'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[a-zA-Z\d]).{8,}$/',
@@ -385,161 +391,39 @@ class LaboursController extends Controller {
     }
   
    
-    public function delete(Request $request){
-        try {
-            $delete = $this->service->delete($request->delete_id);
-            if ($delete) {
-                $msg = $delete['msg'];
-                $status = $delete['status'];
-                if ($status == 'success') {
-                    return redirect('list-users')->with(compact('msg', 'status'));
-                } else {
-                    return redirect()->back()
-                        ->withInput()
-                        ->with(compact('msg', 'status'));
-                }
-            }
-        } catch (\Exception $e) {
-            return $e;
-        }
-    } 
+    // public function delete(Request $request){
+    //     try {
+    //         $delete = $this->service->delete($request->delete_id);
+    //         if ($delete) {
+    //             $msg = $delete['msg'];
+    //             $status = $delete['status'];
+    //             if ($status == 'success') {
+    //                 return redirect('list-users')->with(compact('msg', 'status'));
+    //             } else {
+    //                 return redirect()->back()
+    //                     ->withInput()
+    //                     ->with(compact('msg', 'status'));
+    //             }
+    //         }
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // } 
 
-    public function updateOne(Request $request){
-        try {
-            $active_id = $request->active_id;
-        $result = $this->service->updateOne($active_id);
-            return redirect('list-labours')->with('flash_message', 'Updated!');  
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
+    // public function updateOne(Request $request){
+    //     try {
+    //         $active_id = $request->active_id;
+    //     $result = $this->service->updateOne($active_id);
+    //         return redirect('list-labours')->with('flash_message', 'Updated!');  
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
     
-    public function editUsersProfile(Request $request){
-        $user_data = $this->service->getProfile($request);
-        // $user_detail= session()->get('user_id');
-        // $id = $user_data->id;
-        // return view('admin.layout.master',compact('user_data'));
-        return view('admin.pages.users.edit-user-profile',compact('user_data'));
-    }
-
-    public function updateProfile(Request $request){
-        $rules = [
-            // 'email' => 'required',
-            // 'password' => 'required',
-            // 'number' => 'regex:/^\d{10}$/',
-         ];       
-
-        $messages = [   
-                        // 'email.required' => 'Please enter email.',
-                        // 'email.email' => 'Please enter valid email.',
-                        // 'password.required' => 'Please enter password.',
-                        // 'number.regex' => 'Please enter 10 digit number.',
-                    ];
-
-
-        try {
-            $validation = Validator::make($request->all(),$rules, $messages);
-            if ($validation->fails()) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-                $register_user = $this->service->updateProfile($request);
-                // dd($register_user);
-                if($register_user)
-                {
-                    if((isset($register_user['password_change']) && ($register_user['password_change'] =='yes')) || (isset($register_user['mobile_change']) && $register_user['mobile_change'] =='yes')) {
-                        return view('admin.pages.users.otp-verify')->with(compact('register_user'));
-                    }
-                    elseif((isset($request->password) && $request->password !== '') && ($request->number == $request->old_number)) {
-                        
-                        return redirect('log-out');
-
-                    }
-                
-
-                    $msg = $register_user['msg'];
-                    $status = $register_user['status'];
-                    if($status=='success') {
-                        return redirect('/dashboard')->with('msg','status');
-                    }
-                    else {
-                        return redirect('/dashboard')->withInput()->with(compact('msg','status'))->with('success', 'Data updated successfully');
-                    }
-                }
-                
-            }
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
-        }
-
-    }
    
 
-    public function updateEmailOtp(Request $request){
-        $rules = [
-            'otp_number' => 'required|numeric', // Add validation rules for otp_number field
-        ];
-    
-        $messages = [
-            'otp_number.required' => 'Please enter the OTP.',
-            'otp_number.numeric' => 'The OTP must be a numeric value.',
-        ];
-    
-        try {
-            $validation = Validator::make($request->all(), $rules, $messages);
-            if ($validation->fails()) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-                // $verification_result = $this->service->verifyOtp($request->otp_number);
-                $update_data = array();
-                $return_data = array();
-                $otp = User::where('id', $request->user_id)->first();
-                if($otp->otp == $request->otp_number) {
-                    
-                    if($request->password_change =='yes') {
-                        $update_data['password'] = $request->password_new;
-                    }
-                    if($request->mobile_change =='yes') {
-                        $update_data['number'] = $request->new_mobile_number;
-                    }
-            
-                    User::where('id', $request->user_id)->update($update_data);
-                    $return_data['msg'] = 'Please login again to use services';
-                    $return_data['msg_alert'] = 'green';
-                                
-                    $request->session()->flush();
-                    $request->session()->regenerate();
-                    return view('admin.login',compact('return_data'));
-                    // return redirect('/login')->with('return_data', $return_data);
-
-                } else {
-                    $register_user = array();
-                    $register_user['user_id'] = $request->user_id;
-                    $register_user['password_new'] = $request->password_new;
-                    $register_user['password_change'] = $request->password_change;
-                    $register_user['new_mobile_number'] = $request->new_mobile_number;
-                    $register_user['mobile_change'] = $request->mobile_change;
-                    $register_user['msg'] = 'Please Enter Valid OTP';
-                    $register_user['msg_alert'] = "red";
-
-
-                    // return redirect()->back()
-                    //     ->withInput()
-                    //     ->with(['msg' => 'Invalid OTP.', 'status' => 'error']);
-                    return view('admin.pages.users.otp-verify')->with(compact('register_user'));
-                }
-            }
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
-        }
-    }
   
+   
+
+   
 }
