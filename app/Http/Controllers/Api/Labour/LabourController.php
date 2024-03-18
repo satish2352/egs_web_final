@@ -140,17 +140,17 @@ class LabourController extends Controller
             //     $familyDetail->save();
             // }
             // $familyDetails = [];
-            // foreach ($request->input('family') as $familyMember) {
-            //     $familyDetail = new LabourFamilyDetails();
-            //     $familyDetail->labour_id = $labour_data->id;
-            //     $familyDetail->full_name = $familyMember['full_name'];
-            //     $familyDetail->gender_id = $familyMember['gender_id'];
-            //     $familyDetail->relationship_id = $familyMember['relationship_id'];
-            //     $familyDetail->married_status_id = $familyMember['married_status_id'];
-            //     $familyDetail->date_of_birth = $familyMember['date_of_birth'];
-            //     $familyDetail->save();
-            //     $familyDetails[] = $familyDetail; // Collect family details
-            // }
+            foreach ($request->input('family') as $familyMember) {
+                $familyDetail = new LabourFamilyDetails();
+                $familyDetail->labour_id = $labour_data->id;
+                $familyDetail->full_name = $familyMember->fullName;
+                $familyDetail->gender_id = $familyMember->genderId;
+                $familyDetail->relationship_id = $familyMember->relationId;
+                $familyDetail->married_status_id = $familyMember->maritalStatusId;
+                $familyDetail->date_of_birth = $familyMember->dob;
+                $familyDetail->save();
+                $familyDetails[] = $familyDetail; // Collect family details
+            }
             return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
