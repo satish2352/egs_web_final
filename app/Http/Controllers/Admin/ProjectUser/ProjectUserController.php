@@ -31,7 +31,7 @@ class ProjectUserController extends Controller {
     {
         $project_users = $this->service->index();
         // dd($project_users);
-        return view('admin.pages.projectUsers.list-project-users',compact('project_users'));
+        return view('admin.pages.projectusers.list-project-users',compact('project_users'));
     }
 
     // public function getProf()
@@ -168,22 +168,22 @@ class ProjectUserController extends Controller {
 
     }
 
-    public function getState(Request $request)
+    public function getProject(Request $request)
     {
-        $stateId = $request->input('stateId');
-        $state =  TblArea::where('location_type', 1)
+        $project_id = $request->input('project_id');
+        $project_data =  Project::where('id', $project_id)
                             // ->where('parent_id', $stateId)
-                            ->select('location_id','name')
+                            ->select('project_name','id')
                             ->get()
                             ->toArray();
-        return response()->json(['state' => $state]);
+        return response()->json(['project_data' => $project_data]);
 
     }
 
     public function editProjectUsers(Request $request){
-        dd('jjjjjjjjjjjj');
+        // dd('jjjjjjjjjjjj');
         $project_user_data = $this->service->editProjectUsers($request);
-        dd( $project_user_data);
+        // dd( $project_user_data);
         return view('admin.pages.projectusers.edit-project-users',compact('project_user_data'));
     }
 
@@ -191,39 +191,16 @@ class ProjectUserController extends Controller {
 
         $rules = [
             // 'role_id' => 'required',
-            'project_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            'state' => 'required',
-            'district' => 'required',
-            'taluka' => 'required',
-            'village' => 'required',
-            'latitude' =>  'required',
-            'longitude' =>  'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
-            'description' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
+            'project_id' => 'required',
+            'user_type_id' => 'required',
+            'user_id' => 'required',
          ];       
 
         $messages = [   
-                        'project_name.required' => 'Please enter Project name.',
-                         'project_name.regex' => 'Please  enter text only.',
-                        'project_name.max'   => 'Please  enter Project name length upto 255 character only.',
-
-                        'state.required' => 'Please select state.',
-                        'district.required' =>'Please select District.',
-                        'taluka.required' =>'Please select Taluka.',
-                        'village.required' =>'Please select Village.',
-                        'latitude.required' =>'Please select Village.',
-                        'longitude.required' =>'Please select Village.',
-                        'start_date.required' =>'Please select Village.',
-                        'end_date.required' =>'Please select Village.',
-                        'end_date.required' =>'Please select Village.',
-
-                        'description.required' => 'Please enter description.',
-                        'description.regex' => 'Please enter right description.',
-                        'description.max'   => 'Please  enter description length upto 255 character only.',
+                    'project_id.required' => 'Please  Select Project.',
+                    'user_type_id.required' => 'Please Select Project Type.',
+                    'user_id.required' => 'Please Select User.',
                     ];
-
-
         try {
             $validation = Validator::make($request->all(),$rules, $messages);
             if ($validation->fails()) {
@@ -231,18 +208,18 @@ class ProjectUserController extends Controller {
                     ->withInput()
                     ->withErrors($validation);
             } else {
-                $register_user = $this->service->update($request);
+                $project_wise_user = $this->service->update($request);
 
-                if($register_user)
+                if($project_wise_user)
                 {
                 
-                    $msg = $register_user['msg'];
-                    $status = $register_user['status'];
+                    $msg = $project_wise_user['msg'];
+                    $status = $project_wise_user['status'];
                     if($status=='success') {
-                        return redirect('list-projects')->with(compact('msg','status'));
+                        return redirect('list-project-wise-users')->with(compact('msg','status'));
                     }
                     else {
-                        return redirect('list-projects')->withInput()->with(compact('msg','status'));
+                        return redirect('list-project-wise-users')->withInput()->with(compact('msg','status'));
                     }
                 }
                 
@@ -259,8 +236,7 @@ class ProjectUserController extends Controller {
     
 
     public function add(Request $request){
-// dd($request);
-// die;
+
         $rules = [
                 //    'email' => 'required|unique:users,email|regex:/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z])+\.)+([a-zA-Z0-9]{2,4})+$/',
                 //     'u_password'=>'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[a-zA-Z\d]).{8,}$/',
@@ -398,133 +374,73 @@ class ProjectUserController extends Controller {
             return $e;
         }
     }
-    
-    public function editUsersProfile(Request $request){
-        $user_data = $this->service->getProfile($request);
-        // $user_detail= session()->get('user_id');
-        // $id = $user_data->id;
-        // return view('admin.layout.master',compact('user_data'));
-        return view('admin.pages.users.edit-user-profile',compact('user_data'));
+
+    // public function getProjectWiseUsers(Request $request)
+    // {
+    //     try {
+    //         $pro_wise_user_data = $this->service->getProjectWiseUsers($request->project_id);
+    //         return view('admin.pages.users.roles-permission', compact('permissions'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+
+    // }
+
+    public function getProjectWiseUsers(Request $request)
+    {
+        $project_id = $request->input('project_id');
+        $user_type_id = $request->input('user_type_id');
+
+        $old_pro_data = Project::where('is_active', true)
+			->where('projects.id', $project_id)
+			->select('id', 'project_name','District','taluka','village')
+			->get()
+			->toArray();
+
+            if($user_type_id=='1'){
+                $user_data_new = User::where('users.user_district', '=',$old_pro_data[0]['District'])
+                ->select(
+                    'id',
+                    'f_name',
+                    'm_name',
+                    'l_name',
+                )->get();
+                // ->toArray();
+                return response()->json(['user_data_new' => $user_data_new]);
+            }	
+
     }
 
-    public function updateProfile(Request $request){
-        $rules = [
-            // 'email' => 'required',
-            // 'u_password' => 'required',
-            // 'number' => 'regex:/^\d{10}$/',
-         ];       
+    public function getUserTypetWiseUsers(Request $request)
+    {
+        $project_id = $request->input('project_id');
+        $user_type_id = $request->input('user_type_id');
 
-        $messages = [   
-                        // 'email.required' => 'Please enter email.',
-                        // 'email.email' => 'Please enter valid email.',
-                        // 'u_password.required' => 'Please enter password.',
-                        // 'number.regex' => 'Please enter 10 digit number.',
-                    ];
+        $old_pro_data = Project::where('is_active', true)
+			->where('projects.id', $project_id)
+			->select('id', 'project_name','District','taluka','village')
+			->get()
+			->toArray();
 
-
-        try {
-            $validation = Validator::make($request->all(),$rules, $messages);
-            if ($validation->fails()) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-                $register_user = $this->service->updateProfile($request);
-                // dd($register_user);
-                if($register_user)
-                {
-                    if((isset($register_user['password_change']) && ($register_user['password_change'] =='yes')) || (isset($register_user['mobile_change']) && $register_user['mobile_change'] =='yes')) {
-                        return view('admin.pages.users.otp-verify')->with(compact('register_user'));
-                    }
-                    elseif((isset($request->u_password) && $request->u_password !== '') && ($request->number == $request->old_number)) {
-                        
-                        return redirect('log-out');
-
-                    }
-                
-
-                    $msg = $register_user['msg'];
-                    $status = $register_user['status'];
-                    if($status=='success') {
-                        return redirect('/dashboard')->with('msg','status');
-                    }
-                    else {
-                        return redirect('/dashboard')->withInput()->with(compact('msg','status'))->with('success', 'Data updated successfully');
-                    }
-                }
-                
-            }
-
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
-        }
+            if($user_type_id=='1'){
+                $user_data_new = User::where('users.user_district', '=',$old_pro_data[0]['District'])
+                ->select(
+                    'id',
+                    'f_name',
+                    'm_name',
+                    'l_name',
+                )->get();
+                // ->toArray();
+                return response()->json(['user_data_new' => $user_data_new]);
+            }	
 
     }
    
+   
 
-    public function updateEmailOtp(Request $request){
-        $rules = [
-            'otp_number' => 'required|numeric', // Add validation rules for otp_number field
-        ];
     
-        $messages = [
-            'otp_number.required' => 'Please enter the OTP.',
-            'otp_number.numeric' => 'The OTP must be a numeric value.',
-        ];
-    
-        try {
-            $validation = Validator::make($request->all(), $rules, $messages);
-            if ($validation->fails()) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors($validation);
-            } else {
-                // $verification_result = $this->service->verifyOtp($request->otp_number);
-                $update_data = array();
-                $return_data = array();
-                $otp = User::where('id', $request->user_id)->first();
-                if($otp->otp == $request->otp_number) {
-                    
-                    if($request->password_change =='yes') {
-                        $update_data['u_password'] = $request->u_password_new;
-                    }
-                    if($request->mobile_change =='yes') {
-                        $update_data['number'] = $request->new_mobile_number;
-                    }
-            
-                    User::where('id', $request->user_id)->update($update_data);
-                    $return_data['msg'] = 'Please login again to use services';
-                    $return_data['msg_alert'] = 'green';
-                                
-                    $request->session()->flush();
-                    $request->session()->regenerate();
-                    return view('admin.login',compact('return_data'));
-                    // return redirect('/login')->with('return_data', $return_data);
+   
 
-                } else {
-                    $register_user = array();
-                    $register_user['user_id'] = $request->user_id;
-                    $register_user['u_password_new'] = $request->u_password_new;
-                    $register_user['password_change'] = $request->password_change;
-                    $register_user['new_mobile_number'] = $request->new_mobile_number;
-                    $register_user['mobile_change'] = $request->mobile_change;
-                    $register_user['msg'] = 'Please Enter Valid OTP';
-                    $register_user['msg_alert'] = "red";
-
-
-                    // return redirect()->back()
-                    //     ->withInput()
-                    //     ->with(['msg' => 'Invalid OTP.', 'status' => 'error']);
-                    return view('admin.pages.users.otp-verify')->with(compact('register_user'));
-                }
-            }
-        } catch (Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
-        }
-    }
+   
   
 }

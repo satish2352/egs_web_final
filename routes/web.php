@@ -68,6 +68,10 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/usertype-users', ['as' => 'usertype-users', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@getUserTypeUsers']);
     Route::post('/update-active-project_users', ['as' => 'update-active-project_users', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@updateOne']);
     Route::get('/edit-project-wise-users/{edit_id}', ['as' => 'edit-project-wise-users', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@editProjectUsers']);
+    Route::post('/update-project-wise-users', ['as' => 'update-project-wise-users', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@update']);
+    Route::get('/list-project-wise-user-edit', ['as' => 'list-project-wise-user-edit', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@getProjectWiseUsers']);
+    Route::get('/list-user-type-wise-user-edit', ['as' => 'list-user-type-wise-user-edit', 'uses' => 'App\Http\Controllers\Admin\ProjectUser\ProjectUserController@getUserTypetWiseUsers']);
+
 
 
 

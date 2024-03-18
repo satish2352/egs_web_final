@@ -64,7 +64,7 @@
                                                         @endif</td> --}}
                                                         <td class="d-flex">
                                                         @if (in_array('per_update', $data_permission))
-                                                            <a href="{{ route('edit-projects', base64_encode($item->id)) }}"
+                                                            <a href="{{ route('edit-project-wise-users', base64_encode($item->id)) }}"
                                                                 class="edit-btn btn btn-sm btn-outline-primary m-1"><i
                                                                     class="fas fa-pencil-alt"></i></a>
                                                         @endif
