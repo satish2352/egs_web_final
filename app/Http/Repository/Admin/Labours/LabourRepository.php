@@ -10,7 +10,8 @@ use App\Models\{
 	Permissions,
 	RolesPermissions,
 	Roles,
-	Labour
+	Labour,
+	LabourAttendanceMark
 };
 use Illuminate\Support\Facades\Mail;
 
@@ -18,11 +19,14 @@ class LabourRepository
 {
 
 	public function getLaboursList() {
+		$sess_user_id=session()->get('user_id');
+
+		if($sess_user_id=='1')
+		{
      	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-        //   ->where('gender.is_active', true)
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -34,9 +38,38 @@ class LabourRepository
 			'labour.mobile_number',
 			'labour.landline_number',
 			'labour.mgnrega_card_id',
-			'labour.location_id',
+			'labour.aadhar_image',
+			'labour.mgnrega_image', 
+			'labour.profile_image', 
+			'labour.voter_image', 
 			'labour.is_active',
           )->get();
+		  }else if($sess_user_id!='1')
+		  {
+			$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+		->where('labour.user_id', $sess_user_id)
+          ->select(
+			'labour.id',
+			'labour.full_name',
+			'labour.date_of_birth',
+			'gender_labour.gender_name as gender_name',
+			'district_labour.name as district_id',
+			'taluka_labour.name as taluka_id',
+			'village_labour.name as village_id',
+			'labour.mobile_number',
+			'labour.landline_number',
+			'labour.mgnrega_card_id',
+			'labour.aadhar_image',
+			'labour.mgnrega_image', 
+			'labour.profile_image', 
+			'labour.voter_image', 
+			'labour.is_active',
+          )->get();
+
+			}		
 		return $data_labours;
 	}
 
@@ -322,6 +355,7 @@ class LabourRepository
 
 	public function getById($id)
 	{
+		// dd($id);
 		try {
 			$data_users = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 			->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
@@ -338,7 +372,10 @@ class LabourRepository
 				'labour.mobile_number',
 				'labour.landline_number',
 				'labour.mgnrega_card_id',
-				'labour.location_id',
+				'labour.aadhar_image',
+				'labour.mgnrega_image', 
+				'labour.profile_image', 
+				'labour.voter_image',
 				'labour.latitude',
 				'labour.longitude',
 				'labour.is_active',)
