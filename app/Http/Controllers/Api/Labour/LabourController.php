@@ -127,7 +127,7 @@ class LabourController extends Controller
             $labour_data->mgnrega_image = $labour_data->mgnrega_image;
             $labour_data->profile_image = $labour_data->profile_image;
             $labour_data->voter_image = $labour_data->voter_image;
-            info($request->input('family'));
+            info($request->family);
 
             // for ($i=0; $i< sizeof($request->input('family')); $i++) {
             //     $familyDetail = new LabourFamilyDetails();
@@ -140,7 +140,7 @@ class LabourController extends Controller
             //     $familyDetail->save();
             // }
             // $familyDetails = [];
-            foreach ($request->input('family') as $familyMember) {
+            foreach ($request->family as $familyMember) {
                 $familyDetail = new LabourFamilyDetails();
                 $familyDetail->labour_id = $labour_data->id;
                 $familyDetail->full_name = $familyMember->fullName;
