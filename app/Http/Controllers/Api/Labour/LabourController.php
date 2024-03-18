@@ -127,7 +127,7 @@ class LabourController extends Controller
             $labour_data->mgnrega_image = $labour_data->mgnrega_image;
             $labour_data->profile_image = $labour_data->profile_image;
             $labour_data->voter_image = $labour_data->voter_image;
-        
+            info($request->input('family'));
 
             // for ($i=0; $i< sizeof($request->input('family')); $i++) {
             //     $familyDetail = new LabourFamilyDetails();
