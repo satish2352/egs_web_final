@@ -89,7 +89,8 @@ class ProjectUserServices
     // }
 
     public function update($request) {
-            $user_register_id = $this->repo->update($request);
+            $project_wise_user_id = $this->repo->update($request);
+            // dd($project_wise_user_id);
             return ['status'=>'success','msg'=>'Data Updated Successful.'];
     }    
 

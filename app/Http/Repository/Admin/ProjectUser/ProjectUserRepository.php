@@ -11,7 +11,8 @@ use App\Models\{
 	RolesPermissions,
 	Roles,
 	Project,
-	ProjectUser
+	ProjectUser,
+	Usertype
 };
 use Illuminate\Support\Facades\Mail;
 
@@ -41,42 +42,6 @@ class ProjectUserRepository
 
 	
 
-
-	public function permissionsData()
-	{
-		$permissions = Permissions::where('is_active', true)
-			->select('id', 'route_name', 'permission_name', 'url')
-			->get()
-			->toArray();
-
-		return $permissions;
-	}
-	// public function register($request)
-	// {
-	// 	$ipAddress = getIPAddress($request);
-	// 	$user_data = new User();
-	// 	$user_data->email = $request['email'];
-	// 	// $user_data->u_uname = $request['u_uname'];
-	// 	$user_data->password = bcrypt($request['password']);
-	// 	$user_data->role_id = $request['role_id'];
-	// 	$user_data->f_name = $request['f_name'];
-	// 	$user_data->m_name = $request['m_name'];
-	// 	$user_data->l_name = $request['l_name'];
-	// 	$user_data->number = $request['number'];
-	// 	$user_data->designation = $request['designation'];
-	// 	$user_data->address = $request['address'];
-	// 	$user_data->state = $request['state'];
-	// 	$user_data->city = $request['city'];
-	// 	$user_data->pincode = $request['pincode'];
-	// 	$user_data->ip_address = $ipAddress;
-	// 	$user_data->is_active = isset($request['is_active']) ? true : false;
-	// 	$user_data->save();
-
-	// 	$last_insert_id = $user_data->id;
-	// 	// $this->insertRolesPermissions($request, $last_insert_id);
-	// 	return $last_insert_id;
-	// }
-
 	public function addProjectUser($request)
 	{
 		try {
@@ -102,115 +67,16 @@ class ProjectUserRepository
 	public function update($request)
 	{
         $ipAddress = getIPAddress($request);
-		$user_data = Project::where('id',$request['edit_id']) 
+		$user_data = ProjectUser::where('id',$request['edit_id']) 
 						->update([
 							// 'u_uname' => $request['u_uname'],
-							'project_name' => $request['project_name'],
-							'state' => $request['state'],
-							'district' => $request['district'],
-							'taluka' => $request['taluka'],
-							'village' => $request['village'],
-							'latitude' => $request['latitude'],
-							'longitude' => $request['longitude'],
-							'start_date' => $request['start_date'],
-							'end_date' => $request['end_date'],
-							'description' => $request['description'],
-							'is_active' => isset($request['is_active']) ? true :false,
+							'project_id' => $request['project_id'],
+							'user_type_id' => $request['user_type_id'],
+							'user_id' => $request['user_id'],
 						]);
 		
 		// $this->updateRolesPermissions($request, $request->edit_id);
 		return $request->edit_id;
-	}
-
-
-	// private function updateRolesPermissions($request, $last_insert_id) {
-
-	// 	$permissions_data_from_table  = $this->permissionsData();
-	// 	$update_data = array();
-	// 	foreach ($permissions_data_from_table as $key => $data) {
-	// 		$permission_id  = 'permission_id_'.$data['id'];
-	// 		$per_add  = 'per_add_'.$data['id'];
-	// 		$per_update  = 'per_update_'.$data['id'];
-	// 		$per_delete  = 'per_delete_'.$data['id'];
-
-	// 		$update_data['role_id'] = $request->role_id;
-	// 		if($request->has($per_add)) {
-	// 			$update_data['per_add']  = true;
-	// 		} else {
-	// 			$update_data['per_add']  = false;
-	// 		}
-
-	// 		if($request->has($per_update)) {
-	// 			$update_data['per_update']  = true;
-	// 		} else {
-	// 			$update_data['per_update']  = false;
-	// 		}
-
-	// 		if($request->has($per_delete)) {
-	// 			$update_data['per_delete']  = true;
-	// 		} else {
-	// 			$update_data['per_delete']  = false;
-	// 		}
-
-	// 		$permissions_data_all = RolesPermissions::where([
-	// 			'user_id' =>$request['edit_id'],
-	// 			'permission_id' =>$data['id']
-	// 		])->get()->toArray();
-	// 		if(count($permissions_data_all)>0) {
-
-	// 			$permissions_data = RolesPermissions::where([
-	// 				'user_id' =>$request['edit_id'],
-	// 				'permission_id' =>$data['id']
-	// 			])->update($update_data);
-	// 		} else {
-	// 			$update_data['user_id']  = $request['edit_id'];
-	// 			$update_data['permission_id']  = $data['id'];
-	// 			$permissions_data = RolesPermissions::insert($update_data);
-	// 		}
-
-	// 	}
-	// 	return "ok";
-	// }
-
-
-	// private function insertRolesPermissions($request, $last_insert_id) {
-
-	// 	$permissions_data_from_table  = $this->permissionsData();
-	// 	foreach ($permissions_data_from_table as $key => $data) {
-	// 		$permission_id  = 'permission_id_'.$data['id'];
-	// 		$per_add  = 'per_add_'.$data['id'];
-	// 		$per_update  = 'per_update_'.$data['id'];
-	// 		$per_delete  = 'per_delete_'.$data['id'];
-	// 		if($request->has($permission_id) && ($request->has($per_add) || $request->has($per_update) || $request->has($per_delete))) {
-	// 			// dd("I am here for permission");
-	// 			$permissions_data = new RolesPermissions();
-	// 			$permissions_data->permission_id = $data['id'];
-	// 			$permissions_data->role_id = $request->role_id;
-	// 			$permissions_data->user_id = $last_insert_id;
-
-	// 			if($request->has($per_add)) {
-	// 				$permissions_data->per_add  = true;
-	// 			}
-
-	// 			if($request->has($per_update)) {
-	// 				$permissions_data->per_update  = true;
-	// 			}
-
-	// 			if($request->has($per_delete)) {
-	// 				$permissions_data->per_delete  = true;
-	// 			}
-	// 			$permissions_data->save();
-	// 		}
-
-	// 	}
-	// 	return "ok";
-	// }
-
-	public function checkDupCredentials($request)
-	{
-		return User::where('email', '=', $request['email'])
-			// ->orWhere('u_uname','=',$request['u_uname'])
-			->select('id')->get();
 	}
 
 	public function editProjectUsers($reuest)
@@ -222,20 +88,51 @@ class ProjectUserRepository
 			->get()
 			->toArray();
 
+		$data_projects['project'] = Project::where('is_active', true)
+			->select('id', 'project_name')
+			->get()
+			->toArray();
+
+		$data_projects['user_type'] = Usertype::where('is_active', true)
+			->select('id', 'usertype_name')
+			->get()
+			->toArray();
+
 		$data_project_users_data = ProjectUser::where('project_users.id', '=', base64_decode($reuest->edit_id))
 			// ->where('roles_permissions.is_active','=',true)
 			// ->where('users.is_active','=',true)
 			->select(
+				'project_users.id',
 				'project_users.project_id',
 				'project_users.user_type_id',
 				'project_users.user_id',
 				'project_users.is_active',
 			)->get()
 			->toArray();
-		dd($data_project_users_data);
+		$prev_pro_id=$data_project_users_data[0]['project_id'];
+		$prev_user_type_id=$data_project_users_data[0]['user_type_id'];
+
+		$old_pro_data = Project::where('is_active', true)
+			->where('projects.id', $prev_pro_id)
+			->select('id', 'project_name','District','taluka','village')
+			->get()
+			->toArray();
+
+		if($prev_user_type_id=='1'){
+			$data_projects['user_data'] = User::where('users.user_district', '=',$old_pro_data[0]['District'])
+			// ->where('roles_permissions.is_active','=',true)
+			// ->where('users.is_active','=',true)
+			->select(
+				'id',
+				'f_name',
+				'm_name',
+				'l_name',
+			)->get()
+			->toArray();
+		}	
 						
 		$data_projects['data_project_users'] = $data_project_users_data[0];
-		dd($data_projects);
+		// dd($data_projects);
 
 		return $data_projects;
 	}

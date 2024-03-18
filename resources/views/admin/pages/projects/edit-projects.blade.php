@@ -22,17 +22,24 @@
                                 action="{{ route('update-projects') }}" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="project_name">Project Title</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control" name="project_name" id="project_name"
-                                                placeholder="" value="{{$project_data['data_projects']['project_name']}}">
-                                            @if ($errors->has('project_name'))
-                                            <span
-                                                class="red-text"><?php echo $errors->first('project_name', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div> 
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <label for="menu_name_english">Project</label>&nbsp<span
+                                                    class="red-text">*</span>
+                                                <select class="form-select form-control" name="project_id" id="project_id"
+                                                    aria-label="Default select example" value="{{ old('project_id') }}"
+                                                    readonly>
+                                                    <option value="">Select Name</option>
+                                                    @foreach ($main_menu_data as $key => $data)
+                                                        <option value="{{ $data['menu_id'] }}_{{ $data['main_sub'] }}"
+                                                            @if ($menu_selected == $data['menu_id'] . '_' . $data['main_sub']) <?php echo 'selected'; ?> @endif>
+                                                            {{ $data['menu_name_english'] }}({{ $data['menu_name_marathi'] }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('menu_data'))
+                                                    <span class="red-text"><?php echo $errors->first('menu_data', ':message'); ?></span>
+                                                @endif
+                                            </div>
                                    
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
