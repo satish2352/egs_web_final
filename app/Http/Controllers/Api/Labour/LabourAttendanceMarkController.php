@@ -56,7 +56,7 @@ class LabourAttendanceMarkController extends Controller
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;
-            $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.id')
+            $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.id')
             ->leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
                 ->where('tbl_mark_attendance.user_id', $user)

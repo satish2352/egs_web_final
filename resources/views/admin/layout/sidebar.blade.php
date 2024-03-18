@@ -88,25 +88,28 @@
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-documenttype') }}">Document Type</a></li>
                               @endif
+                              @if (in_array('list-usertype', $data_for_url))
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-usertype*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-usertype') }}">User Type</a></li>
+                              @endif
+
                           </ul>
                       </div>
                   </li>
              <!-- @endif -->
+             @if (in_array('list-users', $data_for_url))
         <li class="{{request()->is('list-users*')
- 
             ? 'nav-item active' : 'nav-item' }}">
- 
             <?php $currenturl = Request::url(); ?>
- 
               <a class="nav-link" href="{{ route('list-users') }}">
- 
                   <i class="fas fa-user menu-icon"></i>
- 
                   <span class="menu-title">Users Management</span>
- 
               </a>
- 
           </li>
+             @endif
+
+             @if (in_array('list-projects', $data_for_url))
           <li class="{{request()->is('list-projects*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>
@@ -115,9 +118,9 @@
                     <span class="menu-title">Project Management</span>
                 </a>
             </li>
-            <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-usertype*')
-                                    ? 'nav-link active' : 'nav-link' }}"
-                                          href="{{ route('list-usertype') }}">User Type</a></li>
+            @endif
+            
+            @if (in_array('list-labours', $data_for_url))
             <li class="{{request()->is('list-labours*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>
@@ -126,7 +129,9 @@
                     <span class="menu-title">Labour Management</span>
                 </a>
             </li>
-            <li class="{{request()->is('list-labours*')
+            @endif
+
+            <li class="{{request()->is('list-project-wise-users*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>
                 <a class="nav-link" href="{{ route('list-project-wise-users') }}">
@@ -168,6 +173,8 @@
                       </ul>
                   </div>
               </li>
+
+              
            
  
       {{-- @endif --}}

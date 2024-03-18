@@ -1,6 +1,48 @@
 @extends('admin.layout.master')
 
 @section('content')
+
+<!-- CSS -->
+<style>
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
     <div class="main-panel">
         <div class="content-wrapper mt-7">
 
@@ -102,23 +144,58 @@
 
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>Profile Image :</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->profile_image }}"
+                                                style="width:100px; height:100px;" />
+                                        </div>
+                                    </div>
+                                    </br>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Addhar Card :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <img src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}"
-                                                style="width:100px; height:100px; border-radius:50%" />
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}"
+                                                style="width:100px; height:100px;" />
                                         </div>
                                     </div>
-
-                                    <!-- <div class="row ">
+                                    </br>
+                                    <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Mnrega Card :</label>
+                                            <label>Voter Card :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <img src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}"
-                                                style="width:100px; height:100px; border-radius:50%" />
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->voter_image }}"
+                                                style="width:100px; height:100px;" />
                                         </div>
-                                    </div> -->
+                                    </div>
+                                    </br>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>Mgnrega Card :</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->mgnrega_image }}"
+                                                style="width:100px; height:100px;" />
+                                        </div>
+
+                                        <!-- <div class="row">
+                                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                                <label>Profile Image :</label>
+                                            </div>
+                                            <div class="col-lg-8 col-md-8 col-sm-8">
+                                                <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->profile_image }}" style="width:100px; height:100px; border-radius:50%" />
+                                            </div>
+                                        </div> -->
+
+                                        <!-- Modal for Image Preview -->
+                                        <div id="imageModal" class="modal">
+                                            <span class="close">&times;</span>
+                                            <img class="modal-content" id="modalImage">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -127,4 +204,20 @@
             </div>
         </div>
         <!-- content-wrapper ends -->
+        <!-- JavaScript -->
+<script>
+    // When the user clicks on an image, open the modal
+    $(document).on("click", ".preview-image", function() {
+        $("#modalImage").attr("src", $(this).attr("src"));
+        $("#imageModal").css("display", "block");
+    });
+
+    // When the user clicks on the close button or outside the modal, close it
+    $(document).on("click", ".close, .modal", function() {
+        $("#imageModal").css("display", "none");
+    });
+</script>
     @endsection
+
+
+

@@ -196,17 +196,6 @@ class LabourServices
     public function updateOne($id){
         return $this->repo->updateOne($id);
     }
-    //  public function verifyOtp($otp){
-    //     $user = User::where('otp_number', $otp)->first();
-    //     if ($user) {
-    //         // Clear OTP after successful verification
-    //         $user->otp_number = null;
-    //         $user->save();
 
-    //         return true; // Valid OTP
-    //     }
-
-    //     return false; // Invalid OTP
-    // }
 
 }
