@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\Master\MasterController;
 use App\Http\Controllers\Api\Master\ProjectController;
 use App\Http\Controllers\Api\Master\AllMasterController;
 use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
+use App\Http\Controllers\Api\Documents\GramPanchayatDocumentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,8 @@ Route::group([
 
         Route::post('/update-attendance-mark/{id}', [LabourAttendanceMarkController::class, 'updateAttendanceMark']);
         Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
+
+        Route::post('/add-document', [GramPanchayatDocumentController::class, 'add']);
 
         Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
         Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);

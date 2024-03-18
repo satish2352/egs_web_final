@@ -21,60 +21,60 @@ class LabourController extends Controller
     public function add(Request $request )
     {
         $all_data_validation = [
-            // 'full_name' => 'required|alpha',
-            // 'gender_id' => 'required|numeric',
-            // 'date_of_birth' => [
-            //     'required',
-            //     'date_format:d/m/Y',
-            //     function ($attribute, $value, $fail) {
-            //         $dob = Carbon::createFromFormat('d/m/Y', $value);
-            //         if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
-            //             $fail('The date of birth must be a date before today.');
-            //         }
-            //     },
-            // ],
-            // 'district_id' => 'required|numeric',
-            // 'taluka_id' => 'required|numeric',
-            // 'village_id' => 'required|numeric',
-            // 'skill_id' => 'required|numeric',
-            // 'mobile_number' => ['required', 'numeric', 'digits:10', 'unique:labour'],
+            'full_name' => 'required|alpha',
+            'gender_id' => 'required|numeric',
+            'date_of_birth' => [
+                'required',
+                'date_format:d/m/Y',
+                function ($attribute, $value, $fail) {
+                    $dob = Carbon::createFromFormat('d/m/Y', $value);
+                    if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
+                        $fail('The date of birth must be a date before today.');
+                    }
+                },
+            ],
+            'district_id' => 'required|numeric',
+            'taluka_id' => 'required|numeric',
+            'village_id' => 'required|numeric',
+            'skill_id' => 'required|numeric',
+            'mobile_number' => ['required', 'numeric', 'digits:10', 'unique:labour'],
             
-            // 'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
-            // 'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
-            // 'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
+            'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
+            'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
             // 'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
             // 'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
             // 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
             // 'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
 
-            // 'family' => 'required|array',
-            // 'family.*.full_name' => 'required|string',
-            // 'family.*.gender_id' => 'required|integer',
-            // 'family.*.relationship_id' => 'required|integer',
-            // 'family.*.married_status_id' => 'required|integer',
-            // 'family.*.date_of_birth' => [
-            //     'required',
-            //     'date_format:d/m/Y',
-            //     function ($attribute, $value, $fail) {
-            //         $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
-            //         if ($dob->isAfter(\Carbon\Carbon::now())) {
-            //             $fail('The date of birth must be a date before today.');
-            //         }
-            //     },
-            // ],
+            'family' => 'required|array',
+            'family.*.full_name' => 'required|string',
+            'family.*.gender_id' => 'required|integer',
+            'family.*.relationship_id' => 'required|integer',
+            'family.*.married_status_id' => 'required|integer',
+            'family.*.date_of_birth' => [
+                'required',
+                'date_format:d/m/Y',
+                // function ($attribute, $value, $fail) {
+                //     $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+                //     if ($dob->isAfter(\Carbon\Carbon::now())) {
+                //         $fail('The date of birth must be a date before today.');
+                //     }
+                // },
+            ],
             
 
         ];
 
 
-        if(isset($request->landline_number)) {
-            $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
-        }
+        // if(isset($request->landline_number)) {
+        //     $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
+        // }
         $validator = Validator::make($request->all(), $all_data_validation);
 
 
         if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 400);
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
         }
 
 
@@ -86,7 +86,7 @@ class LabourController extends Controller
             $labour_data->user_id = $user->id; // Assign the user ID
             $labour_data->full_name = $request->full_name;
             $labour_data->gender_id = $request->gender_id;
-            $labour_data->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
+            $labour_data->date_of_birth = $request->date_of_birth;//Carbon::createFromFormat('d/m/Y', )->format('Y-m-d');
             $labour_data->district_id = $request->district_id;
             $labour_data->taluka_id = $request->taluka_id;
             $labour_data->village_id = $request->village_id;
@@ -138,20 +138,19 @@ class LabourController extends Controller
             //     $familyDetail->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->input("family.$i.date_of_birth"))->toDateString();
             //     $familyDetail->save();
             // }
-            // $familyDetails = [];
-            // foreach ($request->input('family') as $familyMember) {
-            //     $familyDetail = new LabourFamilyDetails();
-            //     $familyDetail->labour_id = $labour_data->id;
-            //     $familyDetail->full_name = $familyMember['full_name'];
-            //     $familyDetail->gender_id = $familyMember['gender_id'];
-            //     $familyDetail->relationship_id = $familyMember['relationship_id'];
-            //     $familyDetail->married_status_id = $familyMember['married_status_id'];
-            //     $familyDetail->date_of_birth = $familyMember['date_of_birth'];
-            //     $familyDetail->save();
-            //     $familyDetails[] = $familyDetail; // Collect family details
-            // }
-            // return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data, 'familyDetails'=>$familyDetails], 200);
-            return response()->json(['status' => 'success', 'message' => 'Labor added successfully'], 200);
+            $familyDetails = [];
+            foreach ($request->input('family') as $familyMember) {
+                $familyDetail = new LabourFamilyDetails();
+                $familyDetail->labour_id = $labour_data->id;
+                $familyDetail->full_name = $familyMember['full_name'];
+                $familyDetail->gender_id = $familyMember['gender_id'];
+                $familyDetail->relationship_id = $familyMember['relationship_id'];
+                $familyDetail->married_status_id = $familyMember['married_status_id'];
+                $familyDetail->date_of_birth = $familyMember['date_of_birth'];
+                $familyDetail->save();
+                $familyDetails[] = $familyDetail; // Collect family details
+            }
+            return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
