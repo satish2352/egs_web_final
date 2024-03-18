@@ -21,7 +21,7 @@ class LabourController extends Controller
     public function add(Request $request )
     {
         $all_data_validation = [
-            'full_name' => 'required|alpha',
+            'full_name' => 'required',
             'gender_id' => 'required',
             // 'date_of_birth' => [
             //     'required',
