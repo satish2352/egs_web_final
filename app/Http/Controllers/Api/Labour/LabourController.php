@@ -129,16 +129,16 @@ class LabourController extends Controller
             $labour_data->voter_image = $labour_data->voter_image;
         
 
-            for ($i=0; $i< sizeof($request->input('family')); $i++) {
-                $familyDetail = new LabourFamilyDetails();
-                $familyDetail->labour_id = $labour_data->id;
-                $familyDetail->full_name = $request->input("family.$i.full_name");
-                $familyDetail->gender_id = $request->input("family.$i.gender_id");
-                $familyDetail->relationship_id = $request->input("family.$i.relationship_id");
-                $familyDetail->married_status_id = $request->input("family.$i.married_status_id");
-                $familyDetail->date_of_birth =  $request->input("family.$i.date_of_birth");
-                $familyDetail->save();
-            }
+            // for ($i=0; $i< sizeof($request->input('family')); $i++) {
+            //     $familyDetail = new LabourFamilyDetails();
+            //     $familyDetail->labour_id = $labour_data->id;
+            //     $familyDetail->full_name = $request->input("family.$i.full_name");
+            //     $familyDetail->gender_id = $request->input("family.$i.gender_id");
+            //     $familyDetail->relationship_id = $request->input("family.$i.relationship_id");
+            //     $familyDetail->married_status_id = $request->input("family.$i.married_status_id");
+            //     $familyDetail->date_of_birth =  $request->input("family.$i.date_of_birth");
+            //     $familyDetail->save();
+            // }
             // $familyDetails = [];
             // foreach ($request->input('family') as $familyMember) {
             //     $familyDetail = new LabourFamilyDetails();
