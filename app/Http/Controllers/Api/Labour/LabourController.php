@@ -21,8 +21,8 @@ class LabourController extends Controller
     public function add(Request $request )
     {
         $all_data_validation = [
-            'full_name' => 'required',
-            'gender_id' => 'required',
+            // 'full_name' => 'required',
+            // 'gender_id' => 'required',
             // 'date_of_birth' => [
             //     'required',
             //     'date_format:d/m/Y',
@@ -33,35 +33,36 @@ class LabourController extends Controller
             //         }
             //     },
             // ],
-            'district_id' => 'required',
-            'taluka_id' => 'required',
-            'village_id' => 'required',
-            'skill_id' => 'required',
-            'mobile_number' => ['required', 'digits:10', 'unique:labour'],
+            // 'district_id' => 'required',
+            // 'taluka_id' => 'required',
+            // 'village_id' => 'required',
+            // 'skill_id' => 'required',
+            // 'mobile_number' => ['required', 'digits:10', 'unique:labour'],
             
-            'mgnrega_card_id' => ['required', 'unique:labour'],
-            'latitude' => ['required', 'between:-90,90'], // Latitude range
-            'longitude' => ['required', 'between:-180,180'], // Longitude range
+            // 'mgnrega_card_id' => ['required', 'unique:labour'],
+            // 'latitude' => ['required', 'between:-90,90'], // Latitude range
+            // 'longitude' => ['required', 'between:-180,180'], // Longitude range
             // 'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
             // 'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
             // 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
             // 'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
 
-            'family' => 'required|array',
-            'family.*.full_name' => 'required',
-            'family.*.gender_id' => 'required',
-            'family.*.relationship_id' => 'required',
-            'family.*.married_status_id' => 'required',
-            'family.*.date_of_birth' => [
-                'required',
-                'date_format:d/m/Y',
+            // 'family' => 'required|
+            // ',
+            // 'family.*.full_name' => 'required',
+            // 'family.*.gender_id' => 'required',
+            // 'family.*.relationship_id' => 'required',
+            // 'family.*.married_status_id' => 'required',
+            // 'family.*.date_of_birth' => [
+            //     'required',
+            //     'date_format:d/m/Y',
                 // function ($attribute, $value, $fail) {
                 //     $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
                 //     if ($dob->isAfter(\Carbon\Carbon::now())) {
                 //         $fail('The date of birth must be a date before today.');
                 //     }
                 // },
-            ],
+            // ],
             
 
         ];
@@ -122,10 +123,10 @@ class LabourController extends Controller
             $labour_data->save();
 
             // Include image paths in the response
-            $labour_data->aadhar_image = $labour_data->aadhar_image;
-            $labour_data->mgnrega_image = $labour_data->mgnrega_image;
-            $labour_data->profile_image = $labour_data->profile_image;
-            $labour_data->voter_image = $labour_data->voter_image;
+            // $labour_data->aadhar_image = $labour_data->aadhar_image;
+            // $labour_data->mgnrega_image = $labour_data->mgnrega_image;
+            // $labour_data->profile_image = $labour_data->profile_image;
+            // $labour_data->voter_image = $labour_data->voter_image;
         
 
             // for ($i=0; $i< sizeof($request->input('family')); $i++) {
@@ -138,18 +139,18 @@ class LabourController extends Controller
             //     $familyDetail->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->input("family.$i.date_of_birth"))->toDateString();
             //     $familyDetail->save();
             // }
-            $familyDetails = [];
-            foreach ($request->input('family') as $familyMember) {
-                $familyDetail = new LabourFamilyDetails();
-                $familyDetail->labour_id = $labour_data->id;
-                $familyDetail->full_name = $familyMember['full_name'];
-                $familyDetail->gender_id = $familyMember['gender_id'];
-                $familyDetail->relationship_id = $familyMember['relationship_id'];
-                $familyDetail->married_status_id = $familyMember['married_status_id'];
-                $familyDetail->date_of_birth = $familyMember['date_of_birth'];
-                $familyDetail->save();
-                $familyDetails[] = $familyDetail; // Collect family details
-            }
+            // $familyDetails = [];
+            // foreach ($request->input('family') as $familyMember) {
+            //     $familyDetail = new LabourFamilyDetails();
+            //     $familyDetail->labour_id = $labour_data->id;
+            //     $familyDetail->full_name = $familyMember['full_name'];
+            //     $familyDetail->gender_id = $familyMember['gender_id'];
+            //     $familyDetail->relationship_id = $familyMember['relationship_id'];
+            //     $familyDetail->married_status_id = $familyMember['married_status_id'];
+            //     $familyDetail->date_of_birth = $familyMember['date_of_birth'];
+            //     $familyDetail->save();
+            //     $familyDetails[] = $familyDetail; // Collect family details
+            // }
             return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
