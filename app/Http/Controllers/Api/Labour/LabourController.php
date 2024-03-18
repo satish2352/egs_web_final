@@ -147,11 +147,11 @@ class LabourController extends Controller
             foreach ($familyDetailNew as $key => $familyMember) {
                 $familyDetail = new LabourFamilyDetails();
                 $familyDetail->labour_id = $labour_data->id;
-                $familyDetail->full_name = $familyMember->fullName;
-                $familyDetail->gender_id = $familyMember->genderId;
-                $familyDetail->relationship_id = $familyMember->relationId;
-                $familyDetail->married_status_id = $familyMember->maritalStatusId;
-                $familyDetail->date_of_birth = $familyMember->dob;
+                $familyDetail->full_name = $familyMember['fullName'];
+                $familyDetail->gender_id = $familyMember['genderId'];
+                $familyDetail->relationship_id = $familyMember['relationId'];
+                $familyDetail->married_status_id = $familyMember['maritalStatusId'];
+                $familyDetail->date_of_birth = $familyMember['dob'];
                 $familyDetail->save();
                 $familyDetails[] = $familyDetail; // Collect family details
             }
