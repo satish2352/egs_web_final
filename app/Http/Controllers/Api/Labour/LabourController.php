@@ -55,12 +55,12 @@ class LabourController extends Controller
             'family.*.date_of_birth' => [
                 'required',
                 'date_format:d/m/Y',
-                function ($attribute, $value, $fail) {
-                    $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
-                    if ($dob->isAfter(\Carbon\Carbon::now())) {
-                        $fail('The date of birth must be a date before today.');
-                    }
-                },
+                // function ($attribute, $value, $fail) {
+                //     $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+                //     if ($dob->isAfter(\Carbon\Carbon::now())) {
+                //         $fail('The date of birth must be a date before today.');
+                //     }
+                // },
             ],
             
 
@@ -86,7 +86,7 @@ class LabourController extends Controller
             $labour_data->user_id = $user->id; // Assign the user ID
             $labour_data->full_name = $request->full_name;
             $labour_data->gender_id = $request->gender_id;
-            $labour_data->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
+            $labour_data->date_of_birth = $request->date_of_birth;//Carbon::createFromFormat('d/m/Y', )->format('Y-m-d');
             $labour_data->district_id = $request->district_id;
             $labour_data->taluka_id = $request->taluka_id;
             $labour_data->village_id = $request->village_id;
