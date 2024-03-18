@@ -42,10 +42,10 @@ class LabourController extends Controller
             'mgnrega_card_id' => ['required', 'numeric', 'unique:labour'],
             'latitude' => ['required', 'numeric', 'between:-90,90'], // Latitude range
             'longitude' => ['required', 'numeric', 'between:-180,180'], // Longitude range
-            'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-            'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            // 'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            // 'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            // 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            // 'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
 
             'family' => 'required|array',
             'family.*.full_name' => 'required|string',
