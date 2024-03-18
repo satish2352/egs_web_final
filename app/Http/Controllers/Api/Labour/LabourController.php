@@ -140,7 +140,11 @@ class LabourController extends Controller
             //     $familyDetail->save();
             // }
             // $familyDetails = [];
-            foreach ($request->family as $familyMember) {
+            $familyDetailNew = json_decode($request->family,true);
+            info($familyDetailNew);
+
+            
+            foreach ($familyDetailNew as $key => $familyMember) {
                 $familyDetail = new LabourFamilyDetails();
                 $familyDetail->labour_id = $labour_data->id;
                 $familyDetail->full_name = $familyMember->fullName;
