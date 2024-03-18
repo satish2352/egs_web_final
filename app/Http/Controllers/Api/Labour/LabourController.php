@@ -150,7 +150,7 @@ class LabourController extends Controller
                 $familyDetail->save();
                 $familyDetails[] = $familyDetail; // Collect family details
             }
-            return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data, 'familyDetails'=>$familyDetails], 200);
+            return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
