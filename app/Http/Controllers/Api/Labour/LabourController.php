@@ -23,16 +23,16 @@ class LabourController extends Controller
         $all_data_validation = [
             'full_name' => 'required|alpha',
             'gender_id' => 'required|numeric',
-            'date_of_birth' => [
-                'required',
-                'date_format:d/m/Y',
-                function ($attribute, $value, $fail) {
-                    $dob = Carbon::createFromFormat('d/m/Y', $value);
-                    if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
-                        $fail('The date of birth must be a date before today.');
-                    }
-                },
-            ],
+            // 'date_of_birth' => [
+            //     'required',
+            //     'date_format:d/m/Y',
+            //     function ($attribute, $value, $fail) {
+            //         $dob = Carbon::createFromFormat('d/m/Y', $value);
+            //         if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
+            //             $fail('The date of birth must be a date before today.');
+            //         }
+            //     },
+            // ],
             'district_id' => 'required|numeric',
             'taluka_id' => 'required|numeric',
             'village_id' => 'required|numeric',
@@ -102,23 +102,23 @@ class LabourController extends Controller
             $labour_data->voter_image = 'null';
             $labour_data->save();
             $last_insert_id = $labour_data->id;
-            $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-            $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
-            $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
-            $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
+            // $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+            // $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
+            // $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+            // $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
 
             $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
-            uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-            uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
-            uploadImage($request, 'profile_image', $path, $imageProfile);
-            uploadImage($request, 'voter_image', $path, $imageVoter);
+            // uploadImage($request, 'aadhar_image', $path, $imageAadhar);
+            // uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
+            // uploadImage($request, 'profile_image', $path, $imageProfile);
+            // uploadImage($request, 'voter_image', $path, $imageVoter);
 
             // Update the image paths in the database
-            $labour_data->aadhar_image =  $imageAadhar;
-            $labour_data->mgnrega_image = $imageMgnrega;
-            $labour_data->profile_image = $imageProfile;
-            $labour_data->voter_image =  $imageVoter;
+            // $labour_data->aadhar_image =  $imageAadhar;
+            // $labour_data->mgnrega_image = $imageMgnrega;
+            // $labour_data->profile_image = $imageProfile;
+            // $labour_data->voter_image =  $imageVoter;
             $labour_data->save();
 
             // Include image paths in the response
