@@ -136,7 +136,7 @@ class LabourController extends Controller
                 $familyDetail->gender_id = $request->input("family.$i.gender_id");
                 $familyDetail->relationship_id = $request->input("family.$i.relationship_id");
                 $familyDetail->married_status_id = $request->input("family.$i.married_status_id");
-                $familyDetail->date_of_birth = Carbon::createFromFormat('d/m/Y', $request->input("family.$i.date_of_birth"))->toDateString();
+                $familyDetail->date_of_birth =  $request->input("family.$i.date_of_birth");
                 $familyDetail->save();
             }
             // $familyDetails = [];
