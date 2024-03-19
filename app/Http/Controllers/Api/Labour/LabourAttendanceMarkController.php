@@ -46,9 +46,9 @@ class LabourAttendanceMarkController extends Controller
           
             $labour_data->save();
     
-            return response()->json(['status' => 'success', 'message' => 'Attendance Mark successfully added', 'data' => $labour_data], 200);
+            return response()->json(['status' => 'true', 'message' => 'Attendance Mark successfully added', 'data' => $labour_data], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Attendance Mark Fail','error' => $e->getMessage()], 500);
         }
     }
     
