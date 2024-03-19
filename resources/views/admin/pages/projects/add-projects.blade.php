@@ -50,7 +50,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control" id="state" name="state" disabled>
+                                            <select class="form-control" id="state" name="state" readonly>
                                                 <!-- <option>Select State</option> -->
                                                 @foreach ($dynamic_state as $state)
                                                     @if ($state['location_id']=='2')
@@ -399,93 +399,69 @@
                 // Initialize the form validation
                 $("#regForm").validate({
                     rules: {
-                        role_id: {
-                            required: true,
-                        },
-                        password: {
-                            required: true,
-                        },
-                        password_confirmation: {
-                            required: true,
-                        },
-                        f_name: {
-                            required: true,
-                        },
-                        m_name: {
-                            required: true,
-                        },
-                        l_name: {
-                            required: true,
-                        },
-                        number: {
-                            required: true,
-                            number:true,
-                        },
-                        designation: {
-                            required: true,
-                        },
-                        address: {
+                        project_name: {
                             required: true,
                         },
                         state: {
                             required: true,
                         },
-                        city: {
+                        district: {
                             required: true,
                         },
-                        user_profile: {
+                        taluka: {
                             required: true,
                         },
-                        pincode: {
+                        village: {
+                            required: true,
+                        },
+                        latitude: {
+                            required: true,
+                        },
+                        longitude: {
+                            required: true,
+                        },
+                        start_date: {
+                            required: true,
+                        },
+                        end_date: {
+                            required: true,
+                        },
+                        description: {
                             required: true,
                         },
 
                     },
                     messages: {
-                        email: {
+                        project_name: {
                             required: "Please Enter the Eamil",
                             // remote: "This Email already exists."
                         },
-                        role_id: {
+                        state: {
                             required: "Please Select Role Name",
                         },
-                        password: {
+                        district: {
                             required: "Please Enter the Password",
                         },
-                        password_confirmation: {
+                        taluka: {
                             required: "Please Enter the Confirmation Password",
                         },
-                        f_name: {
+                        village: {
                             required: "Please Enter the First Name",
                         },
-                        m_name: {
+                        latitude: {
                             required: "Please Enter the Middle Name",
                         },
-                        l_name: {
+                        longitude: {
                             required: "Please Enter the Last Name",
                         },
-                        number: {
+                        start_date: {
                             required: "Please Enter the Number",
                         },
-                        designation: {
+                        end_date: {
                             required: "Please Enter the Designation",
                         },
-                        address: {
+                        description: {
                             required: "Please Enter the Address",
-                        },
-
-                        state: {
-                            required: "Please Select State",
-                        },
-                        city: {
-                            required: "Please Select State",
-                        },
-                        user_profile: {
-                            required: "Upload Media File",
-                            accept: "Only png, jpeg, and jpg image files are allowed.", // Update the error message for the accept rule
-                        },
-                        pincode: {
-                            required: "Please Enter the Pincode",
                         },
                     },
 

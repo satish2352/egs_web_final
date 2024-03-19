@@ -46,6 +46,7 @@
                                                         <tr>
                                                             <th>Sr. No.</th>
                                                             <th>Functionality Name</th>
+                                                            <th>List</th>
                                                             <th>Add</th>
                                                             <th>Update</th>
                                                             <th>Delete</th>
@@ -62,6 +63,19 @@
                                                                         value="{{ $permission['id'] }}"
                                                                         data-parsley-multiple="permission_id">
                                                                     {{ $permission['permission_name'] }}
+                                                                </td>
+                                                                <td>
+                                                                    <label class="form-check-label">
+                                                                        <?php $add_name = 'per_list_' . $permission['id']; ?>
+                                                                        <input type="checkbox" class="form-check-input"
+                                                                            name="per_list_{{ $permission['id'] }}"
+                                                                            id="per_list_{{ $permission['id'] }}"
+                                                                            value="list_{{ $permission['id'] }}"
+                                                                            data-parsley-multiple="per_list"
+                                                                            {{ old($add_name) ? 'checked' : '' }}>
+
+                                                                        <i class="input-helper"></i><i
+                                                                            class="input-helper"></i></label>
                                                                 </td>
                                                                 <td>
                                                                     <label class="form-check-label">

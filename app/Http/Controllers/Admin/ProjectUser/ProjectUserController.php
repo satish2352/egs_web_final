@@ -69,10 +69,13 @@ class ProjectUserController extends Controller {
 
     public function getUserTypeUsers(Request $request)
     {
+        // dd($request);
         $usertypeId = $request->input('usertypeId');
         $dist_val = $request->input('dist_val');
         $tal_val = $request->input('tal_val');
         $vil_val = $request->input('vil_val');
+
+        // dd($vil_val);
 
         if($usertypeId=='1')
         {

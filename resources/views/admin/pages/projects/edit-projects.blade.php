@@ -23,23 +23,22 @@
                                 <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
                                 <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6">
-                                                <label for="menu_name_english">Project</label>&nbsp<span
-                                                    class="red-text">*</span>
-                                                <select class="form-select form-control" name="project_id" id="project_id"
-                                                    aria-label="Default select example" value="{{ old('project_id') }}"
-                                                    readonly>
-                                                    <option value="">Select Name</option>
-                                                    @foreach ($main_menu_data as $key => $data)
-                                                        <option value="{{ $data['menu_id'] }}_{{ $data['main_sub'] }}"
-                                                            @if ($menu_selected == $data['menu_id'] . '_' . $data['main_sub']) <?php echo 'selected'; ?> @endif>
-                                                            {{ $data['menu_name_english'] }}({{ $data['menu_name_marathi'] }})
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @if ($errors->has('menu_data'))
-                                                    <span class="red-text"><?php echo $errors->first('menu_data', ':message'); ?></span>
-                                                @endif
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="project_id">Projects</label>&nbsp<span class="red-text">*</span>
+                                            <select class="form-control" id="project_id" name="project_id"
+                                                onchange="myFunction(this.value)">
+                                                <option>Select</option>
+                                                @foreach ($project_user_data['project'] as $project_d)
+                                                    <option value="{{ $project_d['id'] }}"
+                                                        @if ($project_d['id'] == $project_user_data['data_project_users']['project_id']) <?php echo 'selected'; ?> @endif>
+                                                        {{ $project_d['project_name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('project_id'))
+                                                <span class="red-text"><?php echo $errors->first('project_id', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
                                    
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
