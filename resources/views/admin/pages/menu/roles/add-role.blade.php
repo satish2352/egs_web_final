@@ -66,13 +66,13 @@
                                                                 </td>
                                                                 <td>
                                                                     <label class="form-check-label">
-                                                                        <?php $add_name = 'per_list_' . $permission['id']; ?>
+                                                                        <?php $per_list = 'per_list_' . $permission['id']; ?>
                                                                         <input type="checkbox" class="form-check-input"
                                                                             name="per_list_{{ $permission['id'] }}"
                                                                             id="per_list_{{ $permission['id'] }}"
                                                                             value="list_{{ $permission['id'] }}"
                                                                             data-parsley-multiple="per_list"
-                                                                            {{ old($add_name) ? 'checked' : '' }}>
+                                                                            {{ old($per_list) ? 'checked' : '' }}>
 
                                                                         <i class="input-helper"></i><i
                                                                             class="input-helper"></i></label>
