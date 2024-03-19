@@ -123,33 +123,76 @@ class LabourAttendanceMarkController extends Controller
         }
     }
     
-    public function updateAttendanceMark(Request $request){
+//     public function updateAttendanceMark(Request $request){
+//     try {
+//         $user = Auth::user();
+
+//         $validator = Validator::make($request->all(), [
+//             'id' => 'required|numeric',
+//             'project_id' => 'required|numeric',
+//             'mgnrega_card_id' => 'required',
+//             'attendance_day' => 'required', 
+//         ]);
+
+//         if ($validator->fails()) {
+//             return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
+//         }
+
+//         $attendance_mark_data = LabourAttendanceMark::findOrFail($request->id);
+//         $attendance_mark_data->user_id = $user->id; // Assign the user ID
+//         // Update the attributes based on the request data
+//         $attendance_mark_data->project_id = $request->project_id;
+//         $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
+//         $attendance_mark_data->attendance_day = $request->attendance_day;
+        
+//         // Save the updated record
+//         $attendance_mark_data->save();
+
+//         return response()->json(['status' => 'true', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'false', 'message' => 'Attendance Mark updated fail','error' => $e->getMessage()], 500);
+//     }
+// }
+public function updateAttendanceMark(Request $request){
+
     try {
+        // Retrieve the authenticated user
+        $user = Auth::user();
+
+        // Validate the request data
         $validator = Validator::make($request->all(), [
+            'id' => 'required|numeric',
             'project_id' => 'required|numeric',
             'mgnrega_card_id' => 'required',
-            'attendance_day' => 'required', 
+            'attendance_day' => 'required|date', // Assuming attendance_day should be a date
         ]);
 
+        // Check for validation failure
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
         }
-        $user = Auth::user();
+
+        // Find the attendance mark data by ID
         $attendance_mark_data = LabourAttendanceMark::findOrFail($request->id);
-dd($attendance_mark_data);
+       
+        // Check if the authenticated user is authorized to update this data
+        if ($attendance_mark_data->user_id !== $user->id) {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
 
         // Update the attributes based on the request data
-        $attendance_mark_data->user_id = $user->id; // Assign the user ID
         $attendance_mark_data->project_id = $request->project_id;
         $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
         $attendance_mark_data->attendance_day = $request->attendance_day;
         
         // Save the updated record
         $attendance_mark_data->save();
-// dd($attendance_mark_data);
-        return response()->json(['status' => 'true', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
+
+        // Return success response
+        return response()->json(['status' => 'success', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
     } catch (\Exception $e) {
-        return response()->json(['status' => 'false', 'message' => 'Attendance Mark updated fail','error' => $e->getMessage()], 500);
+        // Return error response if any exception occurs
+        return response()->json(['status' => 'error', 'message' => 'Attendance Mark update failed', 'error' => $e->getMessage()], 500);
     }
 }
 
