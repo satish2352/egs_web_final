@@ -17,7 +17,7 @@ class ProjectController extends Controller
     public function getAllProject(Request $request){
         try {
             $user = Auth::user()->id;
-            dd($user);
+            // dd($user);
             $project = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
             ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
             ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
