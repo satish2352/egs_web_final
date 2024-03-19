@@ -136,6 +136,7 @@ class LabourAttendanceMarkController extends Controller
         }
         $user = Auth::user();
         $attendance_mark_data = LabourAttendanceMark::findOrFail($request->id);
+dd($attendance_mark_data);
 
         // Update the attributes based on the request data
         $attendance_mark_data->user_id = $user->id; // Assign the user ID
@@ -145,7 +146,7 @@ class LabourAttendanceMarkController extends Controller
         
         // Save the updated record
         $attendance_mark_data->save();
-dd($attendance_mark_data);
+// dd($attendance_mark_data);
         return response()->json(['status' => 'true', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'false', 'message' => 'Attendance Mark updated fail','error' => $e->getMessage()], 500);
