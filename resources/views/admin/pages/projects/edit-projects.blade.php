@@ -24,26 +24,19 @@
                                 <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="project_id">Projects</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control" id="project_id" name="project_id"
-                                                onchange="myFunction(this.value)">
-                                                <option>Select</option>
-                                                @foreach ($project_user_data['project'] as $project_d)
-                                                    <option value="{{ $project_d['id'] }}"
-                                                        @if ($project_d['id'] == $project_user_data['data_project_users']['project_id']) <?php echo 'selected'; ?> @endif>
-                                                        {{ $project_d['project_name'] }}</option>
-                                                @endforeach
-                                            </select>
-                                            @if ($errors->has('project_id'))
-                                                <span class="red-text"><?php echo $errors->first('project_id', ':message'); ?></span>
+                                            <label for="project_name">Project Name</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control" name="project_name" id="project_name"
+                                                placeholder="" value="{{ $project_data['data_projects']['project_name'] }}">
+                                            @if ($errors->has('project_name'))
+                                                <span class="red-text"><?php echo $errors->first('project_name', ':message'); ?></span>
                                             @endif
                                         </div>
-                                    </div>
+                                    </div> 
                                    
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control mb-2" name="state" id="state" disabled>
+                                            <select class="form-control mb-2" name="state" id="state" readonly>
                                                 <!-- <option value="">Select State</option> -->
                                             </select>
                                             @if ($errors->has('state'))
@@ -163,7 +156,7 @@
                                                 Save &amp; Update
                                             </button>
                                         {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
-                                        <span><a href="{{ route('list-users') }}"
+                                        <span><a href="{{ route('list-projects') }}"
                                                 class="btn btn-sm btn-primary ">Back</a></span>
                                     </div>
                                     

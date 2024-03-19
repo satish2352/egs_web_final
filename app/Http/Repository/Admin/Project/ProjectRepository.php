@@ -107,11 +107,7 @@ class ProjectRepository
 	{
 		try {
 		$data =array();
-		// $ipAddress = getIPAddress($request);
 		$project_data = new Project();
-		// $project_data->email = $request['email'];
-		// $project_data->u_uname = $request['u_uname'];
-		// $project_data->password = bcrypt($request['password']);
 		$project_data->project_name = $request['project_name'];
 		$project_data->state = $request['state'];
 		$project_data->district = $request['district'];
@@ -127,16 +123,7 @@ class ProjectRepository
 		$project_data->save();
 
 		$last_insert_id = $project_data->id;
-		// $this->insertRolesPermissions($request, $last_insert_id);
 
-		// $imageProfile = $last_insert_id .'_' . rand(100000, 999999) . '_english.' . $request->user_profile->extension();
-        
-        // $user_detail = User::find($last_insert_id); // Assuming $request directly contains the ID
-        // $user_detail->user_profile = $imageProfile; // Save the image filename to the database
-        // $user_detail->save();
-        // echo  $user_detail;
-		// die();
-        // $data['imageProfile'] =$imageProfile;
         return $project_data;
 	} catch (\Exception $e) {
 		return [
@@ -171,89 +158,6 @@ class ProjectRepository
 	}
 
 
-	// private function updateRolesPermissions($request, $last_insert_id) {
-
-	// 	$permissions_data_from_table  = $this->permissionsData();
-	// 	$update_data = array();
-	// 	foreach ($permissions_data_from_table as $key => $data) {
-	// 		$permission_id  = 'permission_id_'.$data['id'];
-	// 		$per_add  = 'per_add_'.$data['id'];
-	// 		$per_update  = 'per_update_'.$data['id'];
-	// 		$per_delete  = 'per_delete_'.$data['id'];
-
-	// 		$update_data['role_id'] = $request->role_id;
-	// 		if($request->has($per_add)) {
-	// 			$update_data['per_add']  = true;
-	// 		} else {
-	// 			$update_data['per_add']  = false;
-	// 		}
-
-	// 		if($request->has($per_update)) {
-	// 			$update_data['per_update']  = true;
-	// 		} else {
-	// 			$update_data['per_update']  = false;
-	// 		}
-
-	// 		if($request->has($per_delete)) {
-	// 			$update_data['per_delete']  = true;
-	// 		} else {
-	// 			$update_data['per_delete']  = false;
-	// 		}
-
-	// 		$permissions_data_all = RolesPermissions::where([
-	// 			'user_id' =>$request['edit_id'],
-	// 			'permission_id' =>$data['id']
-	// 		])->get()->toArray();
-	// 		if(count($permissions_data_all)>0) {
-
-	// 			$permissions_data = RolesPermissions::where([
-	// 				'user_id' =>$request['edit_id'],
-	// 				'permission_id' =>$data['id']
-	// 			])->update($update_data);
-	// 		} else {
-	// 			$update_data['user_id']  = $request['edit_id'];
-	// 			$update_data['permission_id']  = $data['id'];
-	// 			$permissions_data = RolesPermissions::insert($update_data);
-	// 		}
-
-	// 	}
-	// 	return "ok";
-	// }
-
-
-	// private function insertRolesPermissions($request, $last_insert_id) {
-
-	// 	$permissions_data_from_table  = $this->permissionsData();
-	// 	foreach ($permissions_data_from_table as $key => $data) {
-	// 		$permission_id  = 'permission_id_'.$data['id'];
-	// 		$per_add  = 'per_add_'.$data['id'];
-	// 		$per_update  = 'per_update_'.$data['id'];
-	// 		$per_delete  = 'per_delete_'.$data['id'];
-	// 		if($request->has($permission_id) && ($request->has($per_add) || $request->has($per_update) || $request->has($per_delete))) {
-	// 			// dd("I am here for permission");
-	// 			$permissions_data = new RolesPermissions();
-	// 			$permissions_data->permission_id = $data['id'];
-	// 			$permissions_data->role_id = $request->role_id;
-	// 			$permissions_data->user_id = $last_insert_id;
-
-	// 			if($request->has($per_add)) {
-	// 				$permissions_data->per_add  = true;
-	// 			}
-
-	// 			if($request->has($per_update)) {
-	// 				$permissions_data->per_update  = true;
-	// 			}
-
-	// 			if($request->has($per_delete)) {
-	// 				$permissions_data->per_delete  = true;
-	// 			}
-	// 			$permissions_data->save();
-	// 		}
-
-	// 	}
-	// 	return "ok";
-	// }
-
 	public function checkDupCredentials($request)
 	{
 		return User::where('email', '=', $request['email'])
@@ -266,10 +170,6 @@ class ProjectRepository
 
 		$data_projects = [];
 
-		// $data_users['roles'] = Roles::where('is_active', true)
-		// 	->select('id', 'role_name')
-		// 	->get()
-		// 	->toArray();
 		$data_projects['permissions'] = Permissions::where('is_active', true)
 			->select('id', 'route_name', 'permission_name', 'url')
 			->get()
@@ -296,23 +196,7 @@ class ProjectRepository
 			->toArray();
 						
 		$data_projects['data_projects'] = $data_projects_data[0];
-		// $data_users['permissions_user'] = User::join('roles_permissions', function($join) {
-		// 					$join->on('users.id', '=', 'roles_permissions.user_id');
-		// 				})
-		// 				->join('permissions', function($join) {
-		// 					$join->on('roles_permissions.permission_id', '=', 'permissions.id');
-		// 				})
-		// 				->where('roles_permissions.user_id','=',$reuest->edit_id)
-		// 				->where('roles_permissions.is_active','=',true)
-		// 				// ->where('users.is_active','=',true)
-		// 				->select(
-		// 					'roles_permissions.per_add',
-		// 					'roles_permissions.per_update',
-		// 					'roles_permissions.per_delete',
-		// 					'permissions.id as permissions_id'
-		// 					)->get()
-		// 					->toArray();
-
+	
 		return $data_projects;
 	}
 
