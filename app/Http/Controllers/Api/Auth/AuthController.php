@@ -55,7 +55,7 @@ public function login(Request $request)
         'data' => $user,
         // 'access_token' => $token,
         'token_type' => 'bearer',
-        'expires_in' => auth()->factory()->getTTL() * 60 * 24 * 365 * 10, // 10 years
+        // 'expires_in' => auth()->factory()->getTTL() * 60 * 24 * 365 * 10, // 10 years
         // 'expires_in' => auth()->factory()->getTTL() * 60,
     ]);
 }
