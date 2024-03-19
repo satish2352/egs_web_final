@@ -127,7 +127,7 @@ class LabourController extends Controller
             $labour_data->mgnrega_image = $labour_data->mgnrega_image;
             $labour_data->profile_image = $labour_data->profile_image;
             $labour_data->voter_image = $labour_data->voter_image;
-            info($request->family);
+            // info($request->family);
 
             // for ($i=0; $i< sizeof($request->input('family')); $i++) {
             //     $familyDetail = new LabourFamilyDetails();
@@ -141,8 +141,6 @@ class LabourController extends Controller
             // }
             // $familyDetails = [];
             $familyDetailNew = json_decode($request->family,true);
-            info($familyDetailNew);
-
             
             foreach ($familyDetailNew as $key => $familyMember) {
                 $familyDetail = new LabourFamilyDetails();

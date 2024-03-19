@@ -31,27 +31,27 @@ class GramPanchayatDocumentController extends Controller
             // Check if the user exists
             $user = Auth::user();
     
-            $labour_data = new GramPanchayatDocuments();
-            $labour_data->user_id = $user->id; // Assign the user ID
-            $labour_data->document_type_id = $request->document_type_id;
+            $document_data = new GramPanchayatDocuments();
+            $document_data->user_id = $user->id; // Assign the user ID
+            $document_data->document_type_id = $request->document_type_id;
     
-            $labour_data->save();
-            $last_insert_id = $labour_data->id;
+            $document_data->save();
+            $last_insert_id = $document_data->id;
             $documentPdf = $last_insert_id . '_' . rand(100000, 999999) . '_document.pdf';
     
             $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
     
             // Assuming you have a function named uploadDocument which handles PDF uploads
-            uploadDocument($request, 'document_pdf', $path, $documentPdf);
+            uploadImage($request, 'document_pdf', $path, $documentPdf);
     
             // Update the document path in the database
-            $labour_data->document_pdf = $documentPdf;
-            $labour_data->save();
+            $document_data->document_pdf = $documentPdf;
+            $document_data->save();
     
             // Include document path in the response
-            $labour_data->document_pdf = $labour_data->document_pdf;
+            $document_data->document_pdf = $document_data->document_pdf;
     
-            return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
+            return response()->json(['status' => 'success', 'message' => 'Document Uploaded successfully',  'data' => $document_data], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
