@@ -299,8 +299,8 @@ class LabourController extends Controller
 
             $user_id = Auth::user();
 
-            info('$user_id');
-            info($user_id);
+            // info('$user_id');
+            // info($user_id);
 
             $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
@@ -312,7 +312,7 @@ class LabourController extends Controller
                     $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
                     $query->where('tbl_mark_attendance.project_id',$request->project_id);
                 })
-                ->where('labour.user_id',$user_id)
+                ->where('labour.user_id',$user_id->id)
                 ->select(
                     'labour.id',
                     'labour.full_name',
