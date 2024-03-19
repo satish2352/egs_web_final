@@ -307,8 +307,7 @@ class LabourController extends Controller
                 ->when($request->get('project_id'), function($query) use ($request) {
                     
                     $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
-                    $query->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.user_id');
-                    $query->where('project_users.project_id',$request->project_id);
+                    $query->where('tbl_mark_attendance.project_id',$request->project_id);
                 })
                 // ->where('labour.user_id',$user_id)
                 ->select(
