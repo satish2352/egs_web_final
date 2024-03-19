@@ -59,6 +59,16 @@ class LabourAttendanceMarkController extends Controller
             ->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.id')
             ->leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
                 ->where('tbl_mark_attendance.user_id', $user)
+                ->when($request->has('project_name'), function($query) use ($request) {
+                    $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
+                })   
+                ->when($request->has('updated_at'), function($query) use ($request) {
+                    $date = date('Y-m-d', strtotime($request->updated_at));
+                    $query->whereDate('tbl_mark_attendance.updated_at', $date);
+                })
+                // ->when($request->get('updated_at'), function($query) use ($request) {
+                //     $query->where('tbl_mark_attendance.updated_at',$request->updated_at);
+                // })  
                 ->select(
                     'tbl_mark_attendance.id',
                     'projects.project_name',
@@ -69,7 +79,8 @@ class LabourAttendanceMarkController extends Controller
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
-                    'tbl_mark_attendance.attendance_day'
+                    'tbl_mark_attendance.attendance_day',
+                    'tbl_mark_attendance.updated_at'
                 )->get();
     
                 foreach ($data_output as $labour) {
@@ -106,9 +117,9 @@ class LabourAttendanceMarkController extends Controller
                     ->where('labour_family_details.labour_id', $labour->id)
                     ->get();
             }
-            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
         }
     }
     
@@ -116,7 +127,7 @@ class LabourAttendanceMarkController extends Controller
     try {
         $validator = Validator::make($request->all(), [
             'project_id' => 'required|numeric',
-            'mgnrega_card_id' => 'required|numeric',
+            'mgnrega_card_id' => 'required',
             'attendance_day' => 'required', 
         ]);
 
@@ -134,9 +145,9 @@ class LabourAttendanceMarkController extends Controller
         // Save the updated record
         $attendance_mark_data->save();
 
-        return response()->json(['status' => 'success', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
+        return response()->json(['status' => 'true', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
     } catch (\Exception $e) {
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        return response()->json(['status' => 'false', 'message' => 'Attendance Mark updated fail','error' => $e->getMessage()], 500);
     }
 }
 
