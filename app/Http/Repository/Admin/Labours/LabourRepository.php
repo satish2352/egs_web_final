@@ -20,7 +20,7 @@ class LabourRepository
 
 	public function getLaboursList() {
 		$sess_user_id=session()->get('user_id');
-
+		dd($sess_user_id);
 		if($sess_user_id=='1')
 		{
      	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
@@ -80,9 +80,7 @@ class LabourRepository
 		{
      	
 		  $data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
-            // ->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
-                // ->where('tbl_mark_attendance.user_id', $user)
                 ->select(
                     'tbl_mark_attendance.id',
                     'projects.project_name',
