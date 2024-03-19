@@ -45,6 +45,7 @@
                                                     <tr>
                                                         <th>Sr. No.</th>
                                                         <th>Functionality Name</th>
+                                                        <th>List</th>
                                                         <th>Add</th>
                                                         <th>Update</th>
                                                         <th>Delete</th>
@@ -54,6 +55,7 @@
                                                     @foreach ($user_data['permissions'] as $key => $permission)
                                                         <?php
                                                         $permissions_id = '';
+                                                        $per_list = false;
                                                         $per_add = false;
                                                         $per_update = false;
                                                         $per_delete = false;
@@ -61,6 +63,9 @@
                                                         foreach ($data_all as $key_new => $permissions_data) {
                                                             if ($permissions_data['permissions_id'] == $permission['id']) {
                                                                 $permissions_id = $permissions_data['permissions_id'];
+                                                                if ($permissions_data['per_list']) {
+                                                                    $per_list = true;
+                                                                }
                                                                 if ($permissions_data['per_add']) {
                                                                     $per_add = true;
                                                                 }
@@ -83,6 +88,20 @@
                                                                     value="{{ $permission['id'] }}"
                                                                     data-parsley-multiple="permission_id">
                                                                 {{ $permission['permission_name'] }}
+                                                            </td>
+                                                            <td>
+                                                                <label class="form-check-label">
+                                                                    <?php //$add_name = 'per_add_' . $permission['id'];
+                                                                    ?>
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                        name="per_list_{{ $permission['id'] }}"
+                                                                        id="per_list_{{ $permission['id'] }}"
+                                                                        value="list_{{ $permission['id'] }}"
+                                                                        data-parsley-multiple="per_list"
+                                                                        @if ($per_list) {{ 'checked' }} @endif>
+
+                                                                    <i class="input-helper"></i><i
+                                                                        class="input-helper"></i></label>
                                                             </td>
                                                             <td>
                                                                 <label class="form-check-label">
