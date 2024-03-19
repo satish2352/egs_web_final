@@ -23,9 +23,9 @@ class ProjectController extends Controller
             ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
               ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
               ->where('project_users.user_id', $user)
-              ->when($request->get('project_name'), function($query) use ($request) {
-                $query->where('projects.project_name',$request->project_name);
-            })
+              ->when($request->has('project_name'), function($query) use ($request) {
+                $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
+            })             
               ->select(
                   'projects.id',
                   'projects.project_name',
