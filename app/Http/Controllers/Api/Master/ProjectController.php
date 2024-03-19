@@ -44,6 +44,7 @@ class ProjectController extends Controller
                   'projects.longitude',
                 
               )->get();
+              dd($project);
             return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
