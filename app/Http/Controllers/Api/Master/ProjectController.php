@@ -17,6 +17,7 @@ class ProjectController extends Controller
     public function getAllProject(Request $request){
         try {
             $user = Auth::user()->id;
+            dd($user);
             $project = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
             ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
             ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
@@ -44,7 +45,7 @@ class ProjectController extends Controller
                   'projects.longitude',
                 
               )->get();
-              dd($project);
+            //   dd($project);
             return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
