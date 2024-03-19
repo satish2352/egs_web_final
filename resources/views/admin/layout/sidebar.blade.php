@@ -138,7 +138,8 @@
                     <span class="menu-title">Labour Attendance</span>
                 </a>
             </li>
-
+             
+            @if (in_array('list-project-wise-users', $data_for_url))
             <li class="{{request()->is('list-project-wise-users*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>
@@ -147,6 +148,8 @@
                     <span class="menu-title">Project Users Management</span>
                 </a>
             </li>
+            @endif
+
             <li class="{{request()->is('list-role*') 
                 ? 'nav-item active' : 'nav-item' }}">
                   <a class="{{request()->is('list-role*')
