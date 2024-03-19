@@ -48,6 +48,8 @@ Route::group([
         Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
 
         Route::post('/add-document', [GramPanchayatDocumentController::class, 'add']);
+        Route::post('/list-document', [GramPanchayatDocumentController::class, 'getAllDocuments']);
+        Route::post('/update-document/{id}', [GramPanchayatDocumentController::class, 'updateDocuments']);
 
         Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
         Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);

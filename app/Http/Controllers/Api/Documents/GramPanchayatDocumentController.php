@@ -15,8 +15,7 @@ use Carbon\Carbon;
 
 class GramPanchayatDocumentController extends Controller
 {
-    public function add(Request $request)
-    {
+    public function add(Request $request){
         $all_data_validation = [
             'document_type_id' => 'required',            
             'document_pdf' => 'required|mimes:pdf|min:1|max:10240', // 10MB max size
@@ -26,13 +25,10 @@ class GramPanchayatDocumentController extends Controller
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 400);
         }
-    
         try {
-            // Check if the user exists
             $user = Auth::user();
-    
             $document_data = new GramPanchayatDocuments();
-            $document_data->user_id = $user->id; // Assign the user ID
+            $document_data->user_id = $user->id; 
             $document_data->document_type_id = $request->document_type_id;
     
             $document_data->save();
@@ -41,14 +37,11 @@ class GramPanchayatDocumentController extends Controller
     
             $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
     
-            // Assuming you have a function named uploadDocument which handles PDF uploads
             uploadImage($request, 'document_pdf', $path, $documentPdf);
     
-            // Update the document path in the database
             $document_data->document_pdf = $documentPdf;
             $document_data->save();
     
-            // Include document path in the response
             $document_data->document_pdf = $document_data->document_pdf;
     
             return response()->json(['status' => 'success', 'message' => 'Document Uploaded successfully',  'data' => $document_data], 200);
@@ -56,6 +49,53 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
+    public function getAllDocuments(Request $request){
     
+        try {
+            $user = Auth::user()->id;
+            $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+                ->where('tbl_gram_panchayat_documents.user_id', $user)
+                ->when($request->has('documenttype'), function($query) use ($request) {
+                    $query->where('tbl_documenttype.documenttype', 'like', '%' . $request->documenttype . '%');
+                })
+                ->select(
+                    'tbl_gram_panchayat_documents.id',
+                    'tbl_documenttype.documenttype',
+                )->get();
 
+                foreach ($data_output as $document_data) {
+                    $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
+                    
+                }           
+            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function updateDocuments(Request $request){
+        try {
+            $validator = Validator::make($request->all(), [
+                'document_type_id' => 'required',            
+                'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
+            }
+    
+            $document_data = GramPanchayatDocuments::findOrFail($request->id);
+    
+            // Update the attributes based on the request data
+            $document_data->document_type_id = $request->document_type_id;
+            $document_data->document_pdf = $request->document_pdf;
+           
+            
+            // Save the updated record
+            $document_data->save();
+    
+            return response()->json(['status' => 'success', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
 }
