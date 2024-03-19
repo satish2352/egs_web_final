@@ -294,16 +294,23 @@ class LabourController extends Controller
     public function getAllUserLabourList(Request $request){
     
     
+
         try {
+
+            $user_id = Auth::user();
 
             $data_output = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                
-                ->when($request->get('user_id'), function($query) use ($request) {
-                    $query->where('labour.user_id',$request->user_id);
+                ->when($request->get('project_id'), function($query) use ($request) {
+                    
+                    $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
+                    $query->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.user_id');
+                    $query->where('project_users.user_id',$request->project_id);
                 })
+                ->where('labour.user_id',$user_id)
                 ->select(
                     'labour.id',
                     'labour.full_name',

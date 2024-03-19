@@ -121,7 +121,7 @@ class ProjectController extends Controller
                 );
     
             $projectQuery = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
-            ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+                ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
                 ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
                 ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
                 ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
