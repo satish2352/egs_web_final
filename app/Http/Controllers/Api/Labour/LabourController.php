@@ -308,9 +308,9 @@ class LabourController extends Controller
                     
                     $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
                     $query->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.user_id');
-                    $query->where('project_users.user_id',$request->project_id);
+                    $query->where('project_users.project_id',$request->project_id);
                 })
-                ->where('labour.user_id',$user_id)
+                // ->where('labour.user_id',$user_id)
                 ->select(
                     'labour.id',
                     'labour.full_name',
@@ -330,38 +330,38 @@ class LabourController extends Controller
                     'labour.voter_image',
                 )->get();
 
-                foreach ($data_output as $labour) {
-                    // Append image paths to the output data
-                    $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-                    $labour->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->aadhar_image;
-                    $labour->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->mgnrega_image;
-                    $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
+            // foreach ($data_output as $labour) {
+            //     // Append image paths to the output data
+            //     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
+            //     $labour->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->aadhar_image;
+            //     $labour->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->mgnrega_image;
+            //     $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
 
-                    // Check if family details exist before iterating over them
-                    if (!is_null($labour->family_details)) {
-                        foreach ($labour->family_details as $familyDetail) {
-                            $familyDetail->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->profile_image;
-                            $familyDetail->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->aadhar_image;
-                            $familyDetail->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->mgnrega_image;
-                            $familyDetail->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->voter_image;
-                        }
-                    }
-                }
-            foreach ($data_output as $labour) {
-                $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
-                ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
-                    ->select(
-                        'labour_family_details.id',
-                        'gender_labour.gender_name as gender_id',
-                        'relation_labour.relation_title as relationship_id',
-                        'maritalstatus_labour.maritalstatus as married_status_id',
-                        'labour_family_details.full_name',
-                        'labour_family_details.date_of_birth'
-                    )
-                    ->where('labour_family_details.labour_id', $labour->id)
-                    ->get();
-            }
+            //     // Check if family details exist before iterating over them
+            //     if (!is_null($labour->family_details)) {
+            //         foreach ($labour->family_details as $familyDetail) {
+            //             $familyDetail->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->profile_image;
+            //             $familyDetail->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->aadhar_image;
+            //             $familyDetail->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->mgnrega_image;
+            //             $familyDetail->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->voter_image;
+            //         }
+            //     }
+            // }
+            // foreach ($data_output as $labour) {
+            //     $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+            //     ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+            //     ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+            //         ->select(
+            //             'labour_family_details.id',
+            //             'gender_labour.gender_name as gender_id',
+            //             'relation_labour.relation_title as relationship_id',
+            //             'maritalstatus_labour.maritalstatus as married_status_id',
+            //             'labour_family_details.full_name',
+            //             'labour_family_details.date_of_birth'
+            //         )
+            //         ->where('labour_family_details.labour_id', $labour->id)
+            //         ->get();
+            // }
 
             return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
