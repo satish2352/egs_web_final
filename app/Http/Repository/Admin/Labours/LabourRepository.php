@@ -20,7 +20,6 @@ class LabourRepository
 
 	public function getLaboursList() {
 		$sess_user_id=session()->get('user_id');
-		dd($sess_user_id);
 		if($sess_user_id=='1')
 		{
      	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
