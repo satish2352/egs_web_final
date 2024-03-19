@@ -46,15 +46,20 @@ class RoleRepository  {
 
         foreach ($permissions_data_from_table as $key => $data) {
             $permission_id  = 'permission_id_'.$data['id'];
+            $per_list  = 'per_list_'.$data['id'];
             $per_add  = 'per_add_'.$data['id'];
             $per_update  = 'per_update_'.$data['id'];
             $per_delete  = 'per_delete_'.$data['id'];
             
-            if($request->has($permission_id) && ($request->has($per_add) || $request->has($per_update) || $request->has($per_delete))) {
+            if($request->has($permission_id) && ($request->has($per_list) || $request->has($per_add) || $request->has($per_update) || $request->has($per_delete))) {
                 $permissions_data = new RolesPermissions();
                 $permissions_data->permission_id = $data['id'];
                 $permissions_data->role_id = $last_insert_id;
                 
+                if($request->has($per_list)) {
+                    $permissions_data->per_list  = true;
+                }
+
                 if($request->has($per_add)) {
                     $permissions_data->per_add  = true;
                 }
@@ -106,6 +111,7 @@ class RoleRepository  {
 						->where('roles_permissions.is_active','=',true)
 						// ->where('users.is_active','=',true)
 						->select(
+							'roles_permissions.per_list',
 							'roles_permissions.per_add',
 							'roles_permissions.per_update',
 							'roles_permissions.per_delete',
@@ -156,11 +162,18 @@ class RoleRepository  {
 		$update_data = array();
 		foreach ($permissions_data_from_table as $key => $data) {
 			$permission_id  = 'permission_id_'.$data['id'];
+			$per_list  = 'per_list_'.$data['id'];
 			$per_add  = 'per_add_'.$data['id'];
 			$per_update  = 'per_update_'.$data['id'];
 			$per_delete  = 'per_delete_'.$data['id'];
 
 			$update_data['role_id'] = $role_id;
+            if($request->has($per_list)) {
+				$update_data['per_list']  = true;
+			} else {
+				$update_data['per_list']  = false;
+			}
+
 			if($request->has($per_add)) {
 				$update_data['per_add']  = true;
 			} else {
