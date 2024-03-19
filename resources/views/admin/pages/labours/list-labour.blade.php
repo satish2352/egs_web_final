@@ -33,7 +33,7 @@
                                                     <th>District</th>
                                                     <!-- <th>Taluka</th>
                                                     <th>Village</th> -->
-                                                    <th>Status</th>
+                                                    <!-- <th>Status</th> -->
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -48,7 +48,7 @@
                                                         <!-- <td>{{ $item->village_name }}</td> -->
 
 
-                                                        <td>
+                                                        <!-- <td>
                                                             <label class="switch">
                                                                 <input data-id="{{ $item->id }}" type="checkbox"
                                                                     {{ $item->is_active ? 'checked' : '' }}
@@ -58,7 +58,7 @@
                                                                 <span class="slider round "></span>
                                                             </label>
 
-                                                        </td>
+                                                        </td> -->
 
 
                                                         {{-- <td>@if ($item->is_active)
