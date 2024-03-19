@@ -244,6 +244,11 @@ class LabourController extends Controller
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
+                    'labour.profile_image',
+                    'labour.aadhar_image',
+                    'labour.mgnrega_image',
+                    'labour.voter_image',
+
                 )->get();
 
                 foreach ($data_output as $labour) {
