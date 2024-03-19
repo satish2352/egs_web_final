@@ -228,8 +228,8 @@ class LabourController extends Controller
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->where('labour.user_id', $user)
-                ->when($request->get('mgnrega_card_id'), function($query) use ($request) {
-                    $query->where('labour.mgnrega_card_id',$request->mgnrega_card_id);
+                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
                 })
                 ->select(
                     'labour.id',
