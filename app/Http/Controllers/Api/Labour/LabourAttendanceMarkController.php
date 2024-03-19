@@ -79,8 +79,13 @@ class LabourAttendanceMarkController extends Controller
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
+                    'labour.profile_image',
+                    'labour.aadhar_image',
+                    'labour.mgnrega_image',
+                    'labour.voter_image',
                     'tbl_mark_attendance.attendance_day',
                     'tbl_mark_attendance.updated_at'
+
                 )->get();
     
                 foreach ($data_output as $labour) {
@@ -123,20 +128,51 @@ class LabourAttendanceMarkController extends Controller
         }
     }
     
-    public function updateAttendanceMark(Request $request, $id){
+//     public function updateAttendanceMark(Request $request, $id){
+//     try {
+//         echo "hiii";
+//         $validator = Validator::make($request->all(), [
+//             'project_id' => 'required|numeric',
+//             'mgnrega_card_id' => 'required|numeric',
+//             'attendance_day' => 'required', 
+//         ]);
+
+//         if ($validator->fails()) {
+//             return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
+//         }
+
+//         $attendance_mark_data = LabourAttendanceMark::findOrFail($request->id);
+
+//         // Update the attributes based on the request data
+//         $attendance_mark_data->project_id = $request->project_id;
+//         $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
+//         $attendance_mark_data->attendance_day = $request->attendance_day;
+        
+//         // Save the updated record
+//         $attendance_mark_data->save();
+
+//         return response()->json(['status' => 'success', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+//     }
+// }
+public function updateAttendanceMark(Request $request, $id)
+{
     try {
-        echo "hiii";
+        // Validate the incoming request data
         $validator = Validator::make($request->all(), [
             'project_id' => 'required|numeric',
             'mgnrega_card_id' => 'required|numeric',
             'attendance_day' => 'required', 
         ]);
 
+        // Check if validation fails
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
         }
 
-        $attendance_mark_data = LabourAttendanceMark::findOrFail($request->id);
+        // Find the attendance mark data by ID
+        $attendance_mark_data = LabourAttendanceMark::findOrFail($id);
 
         // Update the attributes based on the request data
         $attendance_mark_data->project_id = $request->project_id;
@@ -146,10 +182,11 @@ class LabourAttendanceMarkController extends Controller
         // Save the updated record
         $attendance_mark_data->save();
 
+        // Respond with success message and updated data
         return response()->json(['status' => 'success', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
     } catch (\Exception $e) {
+        // Respond with error message if an exception occurs
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
-
 }
