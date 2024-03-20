@@ -28,14 +28,14 @@ class LabourAttendanceMarkController extends Controller
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 400);
+            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
         }
     
         try {
             // Check if the user exists
             $user = Auth::user();
             if (!$user) {
-                return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+                return response()->json(['status' => 'error', 'message' => 'User not found'], 200);
             }
 
              
@@ -51,7 +51,7 @@ class LabourAttendanceMarkController extends Controller
          ->first();
 
      if ($existingEntry) {
-         return response()->json(['status' => 'error', 'message' => 'Attendance for this card ID already marked for today'], 400);
+         return response()->json(['status' => 'error', 'message' => 'Attendance for this card ID already marked for today'], 200);
      }
             
             $labour_data = new LabourAttendanceMark();
