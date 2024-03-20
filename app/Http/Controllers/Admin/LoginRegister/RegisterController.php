@@ -120,9 +120,16 @@ class RegisterController extends Controller {
     }
 
     public function editUsers(Request $request){
-        
+        $dynamic_district = TblArea::where('parent_id', 2)
+                            ->select('location_id','name')
+                            ->get()
+                            ->toArray();
+        $dynamic_usertype = Usertype::where('is_active', true)
+                            ->select('id','usertype_name')
+                            ->get()
+                            ->toArray();
         $user_data = $this->service->editUsers($request);
-        return view('admin.pages.users.edit-users',compact('user_data'));
+        return view('admin.pages.users.edit-users',compact('user_data','dynamic_district','dynamic_usertype'));
     }
 
     public function update(Request $request){
@@ -145,6 +152,11 @@ class RegisterController extends Controller {
             'district' => 'required',
             'taluka' => 'required',
             'village' => 'required',
+            'village' => 'required',
+            'user_type' => 'required',
+            'user_district' => 'required',
+            'user_taluka' => 'required',
+            'user_village' => 'required',
             'pincode' => 'required|regex:/^[0-9]{6}$/',
          ];       
 
@@ -183,6 +195,10 @@ class RegisterController extends Controller {
                         'district.required' =>'Please select District.',
                         'taluka.required' =>'Please select Taluka.',
                         'village.required' =>'Please select Village.',
+                        'user_type' => 'Please select User Type.',
+                        'user_district' => 'Please select District.',
+                        'user_taluka' => 'Please select Taluka.',
+                        'user_village' => 'Please select Village.',
                         'pincode.required' => 'Please enter pincode.',
                         'pincode.regex' => 'Please enter a 6-digit pincode.',
                     ];

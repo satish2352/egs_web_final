@@ -265,12 +265,8 @@ class RegisterRepository
 		$data_users_data = User::join('roles', function ($join) {
 			$join->on('users.role_id', '=', 'roles.id');
 		})
-			// ->join('roles_permissions', function($join) {
-			// 	$join->on('users.id', '=', 'roles_permissions.user_id');
-			// })
+			
 			->where('users.id', '=', base64_decode($reuest->edit_id))
-			// ->where('roles_permissions.is_active','=',true)
-			// ->where('users.is_active','=',true)
 			->select(
 				'roles.id as role_id',
 				// 'users.u_uname',
