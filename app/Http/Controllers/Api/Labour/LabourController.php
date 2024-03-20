@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Labour;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use DateTime;
 use Validator;
 use App\Models\ {
 	Labour,
@@ -21,8 +22,8 @@ class LabourController extends Controller
     public function add(Request $request )
     {
         $all_data_validation = [
-            // 'full_name' => 'required',
-            // 'gender_id' => 'required',
+            'full_name' => 'required',
+            'gender_id' => 'required',
             // 'date_of_birth' => [
             //     'required',
             //     'date_format:d/m/Y',
@@ -33,35 +34,52 @@ class LabourController extends Controller
             //         }
             //     },
             // ],
-            // 'district_id' => 'required',
-            // 'taluka_id' => 'required',
-            // 'village_id' => 'required',
-            // 'skill_id' => 'required',
-            // 'mobile_number' => ['required', 'digits:10', 'unique:labour'],
+            // 'date_of_birth' => ['required', 'date_format:d/m/Y', function ($attribute, $value, $fail) {
+            //     $dob = DateTime::createFromFormat('d/m/Y', $value);
+            //     $eighteenYearsAgo = (new DateTime())->modify('-18 years');
             
-            // 'mgnrega_card_id' => ['required', 'unique:labour'],
-            // 'latitude' => ['required', 'between:-90,90'], // Latitude range
-            // 'longitude' => ['required', 'between:-180,180'], // Longitude range
-            // 'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            // 'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            // 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-            // 'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            //     if ($dob > $eighteenYearsAgo) {
+            //         $fail('The date of birth must be at least 18 years ago.');
+            //     }
+            // }],
+            
+            'district_id' => 'required',
+            'taluka_id' => 'required',
+            'village_id' => 'required',
+            'skill_id' => 'required',
+            'mobile_number' => ['required', 'digits:10'],
+            'mgnrega_card_id' => ['required', 'unique:labour'],
+            'latitude' => ['required', 'between:-90,90'], // Latitude range
+            'longitude' => ['required', 'between:-180,180'], // Longitude range
+            'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
 
-            // 'family' => 'required|
-            // ',
-            // 'family.*.full_name' => 'required',
-            // 'family.*.gender_id' => 'required',
-            // 'family.*.relationship_id' => 'required',
-            // 'family.*.married_status_id' => 'required',
+            'family' => 'required|
+            ',
+            'family.*.full_name' => 'required',
+            'family.*.gender_id' => 'required',
+            'family.*.relationship_id' => 'required',
+            'family.*.married_status_id' => 'required',
+            // 'family.*.date_of_birth' => ['required', function ($attribute, $value, $fail) {
+            //     $dob = DateTime::createFromFormat('d/m/Y', $value);
+            //     $currentDate = new DateTime();
+            
+            //     if ($dob > $currentDate) {
+            //         $fail('The date of birth must be a date before today.');
+            //     }
+            // }],
+            
             // 'family.*.date_of_birth' => [
             //     'required',
             //     'date_format:d/m/Y',
-                // function ($attribute, $value, $fail) {
-                //     $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
-                //     if ($dob->isAfter(\Carbon\Carbon::now())) {
-                //         $fail('The date of birth must be a date before today.');
-                //     }
-                // },
+            //     function ($attribute, $value, $fail) {
+            //         $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+            //         if ($dob->isAfter(\Carbon\Carbon::now())) {
+            //             $fail('The date of birth must be a date before today.');
+            //         }
+            //     },
             // ],
             
 

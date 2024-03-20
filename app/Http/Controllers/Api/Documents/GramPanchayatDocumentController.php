@@ -72,7 +72,8 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    public function updateDocuments(Request $request){
+    public function updateDocuments(Request $request)
+    {
         try {
             $validator = Validator::make($request->all(), [
                 'document_type_id' => 'required',            
@@ -85,12 +86,22 @@ class GramPanchayatDocumentController extends Controller
     
             $document_data = GramPanchayatDocuments::findOrFail($request->id);
     
-            // Update the attributes based on the request data
+            // Delete old document PDF if it exists
+            if (!empty($document_data->document_pdf)) {
+                $old_pdf_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_DELETE') . $document_data->document_pdf;
+                if (file_exists_s3($old_pdf_path)) {
+                    removeImage($old_pdf_path);
+                }
+            }
+    
+            // Upload the new document PDF
+            $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
+            $new_pdf_name = $request->id . '_' . rand(100000, 999999) . '.' . $request->document_pdf->extension();
+            uploadImage($request, 'document_pdf', $path, $new_pdf_name);
+    
+            // Update document information in the database
             $document_data->document_type_id = $request->document_type_id;
-            $document_data->document_pdf = $request->document_pdf;
-           
-            
-            // Save the updated record
+            $document_data->document_pdf = $new_pdf_name;
             $document_data->save();
     
             return response()->json(['status' => 'success', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
@@ -98,4 +109,5 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
+    
 }

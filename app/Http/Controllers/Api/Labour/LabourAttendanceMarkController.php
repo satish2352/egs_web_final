@@ -37,6 +37,22 @@ class LabourAttendanceMarkController extends Controller
             if (!$user) {
                 return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
             }
+
+             
+        // $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+        // if ($existingEntry) {
+        //     return response()->json(['status' => 'error', 'message' => 'mgnrega card id already exists'], 400);
+        // }
+
+         
+         $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+        //  ->whereDate('attendance_day', '=', date('Y-m-d'))
+        ->whereDate('updated_at', '=', now()->toDateString())
+         ->first();
+
+     if ($existingEntry) {
+         return response()->json(['status' => 'error', 'message' => 'Attendance for this card ID already marked for today'], 400);
+     }
             
             $labour_data = new LabourAttendanceMark();
             $labour_data->user_id = $user->id; // Assign the user ID
@@ -159,11 +175,10 @@ class LabourAttendanceMarkController extends Controller
 public function updateAttendanceMark(Request $request, $id)
 {
     try {
-        echo "newwwwwwwwwwww";
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
-            'project_id' => 'required|numeric',
-            'mgnrega_card_id' => 'required|numeric',
+            'project_id' => 'required',
+            'mgnrega_card_id' => 'required',
             'attendance_day' => 'required', 
         ]);
 
@@ -184,10 +199,10 @@ public function updateAttendanceMark(Request $request, $id)
         $attendance_mark_data->save();
 
         // Respond with success message and updated data
-        return response()->json(['status' => 'success', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
+        return response()->json(['status' => 'true', 'message' => 'Attendance Mark updated successfully', 'data' => $attendance_mark_data], 200);
     } catch (\Exception $e) {
         // Respond with error message if an exception occurs
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        return response()->json(['status' => 'false', 'message' => 'Attendance Mark updated Fail','error' => $e->getMessage()], 500);
     }
 }
 }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('taluka_id');
             $table->string('village_id');
             $table->string('mobile_number');
-            $table->string('landline_number')->default('null');
+            $table->string('landline_number');
             $table->string('mgnrega_card_id');
             $table->string('skill_id');
             $table->string('latitude');
