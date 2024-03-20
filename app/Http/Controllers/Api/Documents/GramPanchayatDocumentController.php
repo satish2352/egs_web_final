@@ -30,6 +30,7 @@ class GramPanchayatDocumentController extends Controller
             $user = Auth::user();
             $document_data = new GramPanchayatDocuments();
             $document_data->user_id = $user->id; 
+            $document_data->document_name = $request->document_name;
             $document_data->document_type_id = $request->document_type_id;
     
             $document_data->save();
