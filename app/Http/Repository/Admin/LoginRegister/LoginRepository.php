@@ -41,6 +41,7 @@ class LoginRepository
                                         $roles_permissions = $roles_permissions->where('role_id','=',$data['user_details']->role_id);
                                         
                                         $roles_permissions = $roles_permissions->select(
+                                                "roles_permissions.per_list",
                                                 "roles_permissions.per_add",
                                                 "roles_permissions.per_edit",
                                                 "roles_permissions.per_update",
