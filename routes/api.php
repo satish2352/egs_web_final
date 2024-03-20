@@ -38,6 +38,8 @@ Route::group([
         Route::post('/add-labour', [LabourController::class, 'add']);
         Route::post('/list-labour', [LabourController::class, 'getAllLabourList']);
         Route::post('/list-user-labours', [LabourController::class, 'getAllUserLabourList']);
+        Route::post('/particular-labour-details', [LabourController::class, 'getParticularLabour']);
+
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterDataProjectsLaboursMap']);
         Route::post('/list-project', [ProjectController::class, 'getAllProject']);
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);

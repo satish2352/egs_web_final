@@ -71,17 +71,22 @@ class LabourAttendanceMarkController extends Controller
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;
+            // $date = date('Y-m-d', strtotime($request->updated_at));
+            $date = date('Y-m-d'); // Get current date
+
+        // dd($date);
             $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.id')
             ->leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
                 ->where('tbl_mark_attendance.user_id', $user)
+                ->whereDate('tbl_mark_attendance.updated_at', $date)
                   ->when($request->get('project_id'), function($query) use ($request) {
                     $query->where('tbl_mark_attendance.project_id',$request->project_id);
                 })  
-                ->when($request->has('updated_at'), function($query) use ($request) {
-                    $date = date('Y-m-d', strtotime($request->updated_at));
-                    $query->whereDate('tbl_mark_attendance.updated_at', $date);
-                })
+                // ->when($request->has('updated_at'), function($query) use ($request) {
+                //     $date = date('Y-m-d', strtotime($request->updated_at));
+                //     $query->whereDate('tbl_mark_attendance.updated_at', $date);
+                // })
                 // ->when($request->get('updated_at'), function($query) use ($request) {
                 //     $query->where('tbl_mark_attendance.updated_at',$request->updated_at);
                 // })  
