@@ -44,7 +44,7 @@ Route::group([
         Route::post('/list-attendance-marked', [LabourAttendanceMarkController::class, 'getAllAttendanceMarkedLabour']);
 
         // Route::post('/update-attendance-mark/{id}', [LabourAttendanceMarkController::class, 'updateAttendanceMark']);
-        Route::post('/update-attendance-mark/{id}', [LabourAttendanceMarkController::class, 'updateAttendanceMark']);
+        Route::post('/update-attendance-mark', [LabourAttendanceMarkController::class, 'updateAttendanceMark']);
         Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
 
         Route::post('/add-document', [GramPanchayatDocumentController::class, 'add']);
