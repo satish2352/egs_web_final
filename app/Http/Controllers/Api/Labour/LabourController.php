@@ -56,12 +56,12 @@ class LabourController extends Controller
             'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
             'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
 
-            'family' => 'required|
-            ',
-            'family.*.full_name' => 'required',
-            'family.*.gender_id' => 'required',
-            'family.*.relationship_id' => 'required',
-            'family.*.married_status_id' => 'required',
+            // 'family' => 'required|
+            // ',
+            // 'family.*.full_name' => 'required',
+            // 'family.*.gender_id' => 'required',
+            // 'family.*.relationship_id' => 'required',
+            // 'family.*.married_status_id' => 'required',
             // 'family.*.date_of_birth' => ['required', function ($attribute, $value, $fail) {
             //     $dob = DateTime::createFromFormat('d/m/Y', $value);
             //     $currentDate = new DateTime();
