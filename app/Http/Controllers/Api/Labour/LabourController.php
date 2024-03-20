@@ -115,10 +115,10 @@ class LabourController extends Controller
             $labour_data->skill_id = $request->skill_id;
             $labour_data->latitude = $request->latitude;
             $labour_data->longitude = $request->longitude;
-            $labour_data->aadhar_image = 'null';
-            $labour_data->mgnrega_image = 'null';
-            $labour_data->profile_image = 'null';
-            $labour_data->voter_image = 'null';
+            // $labour_data->aadhar_image = 'null';
+            // $labour_data->mgnrega_image = 'null';
+            // $labour_data->profile_image = 'null';
+            // $labour_data->voter_image = 'null';
             $labour_data->save();
             $last_insert_id = $labour_data->id;
             $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
