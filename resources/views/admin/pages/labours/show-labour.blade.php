@@ -83,7 +83,7 @@
                                             <label>labour Name :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ $labour_detail->full_name }}</label>
+                                            <label>{{ $labour_detail['data_users']['full_name'] }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -91,7 +91,7 @@
                                             <label>Mobile Number :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->mobile_number) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['mobile_number']) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -99,7 +99,7 @@
                                             <label>Mnrega ID :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->mgnrega_card_id) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['mgnrega_card_id']) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -107,7 +107,7 @@
                                             <label>District :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->district_id) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['district_id']) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -115,7 +115,7 @@
                                             <label>Taluka :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->taluka_id) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['taluka_id']) }}</label>
                                         </div>
                                     </div>
 
@@ -125,7 +125,7 @@
                                             <label>Village :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->village_id) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['village_id']) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -133,7 +133,7 @@
                                             <label>Latitude :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->latitude) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['latitude']) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -141,7 +141,7 @@
                                             <label>Longitude :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->longitude) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['longitude']) }}</label>
                                         </div>
                                     </div>
                                     <div class="row ">
@@ -149,7 +149,7 @@
                                             <label>Start Date :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail->start_date) }}</label>
+                                            <label>{{ strip_tags($labour_detail['data_users']['start_date']) }}</label>
                                         </div>
                                     </div>
 
@@ -158,11 +158,11 @@
                                             <label>Profile Image :</label>
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3">
-                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->profile_image }}"
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['profile_image'] }}"
                                                 style="width:100px; height:100px;" />
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
-                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->profile_image }}" download>
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['profile_image'] }}" download>
                                             <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
                                         </a>
                                         </div>
@@ -173,11 +173,11 @@
                                             <label>Addhar Card :</label>
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3">
-                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}"
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['aadhar_image'] }}"
                                                 style="width:100px; height:100px;" />
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
-                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->aadhar_image }}" download>
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['aadhar_image'] }}" download>
                                             <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
                                         </a>
                                         </div>
@@ -188,11 +188,11 @@
                                             <label>Voter Card :</label>
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3">
-                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->voter_image }}"
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['voter_image'] }}"
                                                 style="width:100px; height:100px;" />
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
-                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->voter_image }}" download>
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['voter_image'] }}" download>
                                             <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
                                         </a>
                                         </div>
@@ -203,28 +203,61 @@
                                             <label>Mgnrega Card :</label>
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3">
-                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->mgnrega_image }}"
+                                            <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['mgnrega_image'] }}"
                                                 style="width:100px; height:100px;" />
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-2 download_btn">
-                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->mgnrega_image }}" download>
+                                        <a href="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users']['mgnrega_image'] }}" download>
                                             <button class="btn btn-primary download-image" style="position: absolute; top: 5px; right: 45px;"><i class="fas fa-download"></i></button>
                                         </a>
                                         </div>
-
-                                        <!-- <div class="row">
-                                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                                <label>Profile Image :</label>
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                                <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail->profile_image }}" style="width:100px; height:100px; border-radius:50%" />
-                                            </div>
-                                        </div> -->
-
                                         <!-- Modal for Image Preview -->
                                         <div id="imageModal" class="modal">
                                             <span class="close">&times;</span>
                                             <img class="modal-content" id="modalImage">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 grid-margin">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    @include('admin.layout.alert')
+                                                    <div class="table-responsive">
+                                                        <table id="order-listing" class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Sr. No.</th>
+                                                                    <th>Full Name</th>
+                                                                    <th>Date of Birth</th>
+                                                                    <th>Gender</th>
+                                                                    <th>Relationship</th>
+                                                                    <th>Married Status</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <!-- <?php //dd($labour_detail['data_family_users']); ?> -->
+                                                            @foreach ($labour_detail['data_family_users'] as $item)
+                                                                <tr>
+                                                                    <td>{{ $loop->iteration }}</td>
+                                                                    <td>{{ $item['full_name'] }}</td>
+                                                                    <td>{{ $item['date_of_birth'] }}</td>
+                                                                    <td>{{ $item['gender_name'] }}</td>
+                                                                    <td>{{ $item['relation_title'] }}</td>
+                                                                    <td>{{ $item['maritalstatus'] }}</td>
+                                                                </tr>
+                                                            @endforeach
+ 
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+ 
+ 
                                         </div>
                                     </div>
                                 </div>

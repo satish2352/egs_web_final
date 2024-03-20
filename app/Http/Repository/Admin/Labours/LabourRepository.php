@@ -11,7 +11,8 @@ use App\Models\{
 	RolesPermissions,
 	Roles,
 	Labour,
-	LabourAttendanceMark
+	LabourAttendanceMark,
+	LabourFamilyDetails
 };
 use Illuminate\Support\Facades\Mail;
 
@@ -26,6 +27,7 @@ class LabourRepository
 		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+		->leftJoin('users', 'labour.user_id', '=', 'users.id')
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -42,6 +44,9 @@ class LabourRepository
 			'labour.profile_image', 
 			'labour.voter_image', 
 			'labour.is_active',
+			'users.f_name',
+			'users.m_name',
+			'users.l_name',
           )->get();
 		  }else if($sess_user_id!='1')
 		  {
@@ -402,8 +407,9 @@ class LabourRepository
 	public function getById($id)
 	{
 		// dd($id);
+		$data_projects = [];
 		try {
-			$data_users = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+			$data_projects['data_users'] = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 			->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 			  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 			  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
@@ -424,11 +430,26 @@ class LabourRepository
 				'labour.voter_image',
 				'labour.latitude',
 				'labour.longitude',
-				'labour.is_active',)
+				'labour.is_active')
 				->first();
+
+				$data_projects['data_family_users'] = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('relation as relationship_labour', 'labour_family_details.relationship_id', '=', 'relationship_labour.id')
+                ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                ->where('labour_family_details.labour_id', $id)
+                ->select('labour_family_details.id',
+                'labour_family_details.full_name',
+                'labour_family_details.date_of_birth',
+                'gender_labour.gender_name as gender_name',
+				'relationship_labour.relation_title',
+				'maritalstatus_labour.maritalstatus')
+				->get()
+				->toArray();
+
+				// dd($data_projects);
 	
-			if ($data_users) {
-				return $data_users;
+			if ($data_projects) {
+				return $data_projects;
 			} else {
 				return null;
 			}
