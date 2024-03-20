@@ -42,6 +42,7 @@ function getRouteDetailsPresentOrNot($data_for_session) {
 function getPermissionForCRUDPresentOrNot($url,$data_for_session) {
     $data =[];
     if(session('role_id') =='1') {
+        array_push($data,'per_list');
         array_push($data,'per_add');
         array_push($data,'per_update');
         array_push($data,'per_delete');
