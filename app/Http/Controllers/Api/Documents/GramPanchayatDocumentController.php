@@ -46,9 +46,9 @@ class GramPanchayatDocumentController extends Controller
     
             $document_data->document_pdf = $document_data->document_pdf;
     
-            return response()->json(['status' => 'success', 'message' => 'Document Uploaded successfully',  'data' => $document_data], 200);
+            return response()->json(['status' => 'true', 'message' => 'Document Uploaded successfully',  'data' => $document_data], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Document Uploaded failed', 'error' => $e->getMessage()], 500);
         }
     }
     public function getAllDocuments(Request $request){
@@ -64,15 +64,18 @@ class GramPanchayatDocumentController extends Controller
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
                     'tbl_documenttype.documenttype',
+                    'tbl_gram_panchayat_documents.document_pdf',
                 )->get();
 
+                  
+                
                 foreach ($data_output as $document_data) {
+                    // Append image paths to the output data
                     $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
-                    
-                }           
-            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                }
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
         }
     }
     public function updateDocuments(Request $request)
