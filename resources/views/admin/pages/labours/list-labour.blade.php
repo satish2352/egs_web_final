@@ -27,6 +27,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sr. No.</th>
+                                                    <th>User Name</th>
                                                     <th>Labour Name</th>
                                                     <th>Mobile Number</th>
                                                     <th>Mnrega ID</th>
@@ -41,6 +42,7 @@
                                                 @foreach ($labours as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}</td>
                                                         <td>{{ $item->full_name }}</td>
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
