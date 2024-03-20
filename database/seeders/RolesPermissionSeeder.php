@@ -19,7 +19,7 @@ class RolesPermissionSeeder extends Seeder
             [
                 'permission_id' =>1,
                 'role_id' => 1,
-                'per_llist' => true,
+                'per_list' => true,
                 'per_add' => true,
                 'per_edit' => false,
                 'per_update' => false,
@@ -32,7 +32,7 @@ class RolesPermissionSeeder extends Seeder
             [
                 'permission_id' =>2,
                 'role_id' => 1,
-                'per_llist' => true,
+                'per_list' => true,
                 'per_add' => false,
                 'per_edit' => false,
                 'per_update' => true,
