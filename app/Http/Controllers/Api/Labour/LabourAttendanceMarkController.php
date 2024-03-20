@@ -87,6 +87,7 @@ class LabourAttendanceMarkController extends Controller
                 // })  
                 ->select(
                     'tbl_mark_attendance.id',
+                    'tbl_mark_attendance.project_id',
                     'projects.project_name',
                     'labour.full_name as full_name',
                     'labour.date_of_birth',
