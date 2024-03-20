@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('document_type_id');
+            $table->string('document_name');
             $table->string('document_pdf')->default('null');
             $table->string('is_deleted')->default(false);
             $table->boolean('is_active')->default(true);

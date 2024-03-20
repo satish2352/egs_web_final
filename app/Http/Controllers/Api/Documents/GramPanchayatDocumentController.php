@@ -17,7 +17,8 @@ class GramPanchayatDocumentController extends Controller
 {
     public function add(Request $request){
         $all_data_validation = [
-            'document_type_id' => 'required',            
+            'document_type_id' => 'required',  
+            'document_name' => 'required', 
             'document_pdf' => 'required|mimes:pdf|min:1|max:10240', // 10MB max size
         ];       
         $validator = Validator::make($request->all(), $all_data_validation);
@@ -60,6 +61,7 @@ class GramPanchayatDocumentController extends Controller
                 })
                 ->select(
                     'tbl_gram_panchayat_documents.id',
+                    'tbl_gram_panchayat_documents.document_name',
                     'tbl_documenttype.documenttype',
                 )->get();
 
@@ -76,7 +78,8 @@ class GramPanchayatDocumentController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'document_type_id' => 'required',            
+                'document_type_id' => 'required',
+                'document_name' => 'required',             
                 'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
             ]);
     
@@ -89,7 +92,7 @@ class GramPanchayatDocumentController extends Controller
             // Delete old document PDF if it exists
             if (!empty($document_data->document_pdf)) {
                 $old_pdf_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_DELETE') . $document_data->document_pdf;
-                if (file_exists_s3($old_pdf_path)) {
+                if (file_exists_view($old_pdf_path)) {
                     removeImage($old_pdf_path);
                 }
             }
