@@ -97,9 +97,6 @@ class LabourAttendanceMarkController extends Controller
                     'labour.latitude',
                     'labour.longitude',
                     'labour.profile_image',
-                    'labour.aadhar_image',
-                    'labour.mgnrega_image',
-                    'labour.voter_image',
                     'tbl_mark_attendance.attendance_day',
                     'tbl_mark_attendance.updated_at'
 
@@ -107,38 +104,28 @@ class LabourAttendanceMarkController extends Controller
     
                 foreach ($data_output as $labour) {
                     // Append image paths to the output data
-                    $labour->profile_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->profile_image;
-                    $labour->aadhar_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->aadhar_image;
-                    $labour->mgnrega_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->mgnrega_image;
-                    $labour->voter_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $labour->voter_image;
+                    $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
+                 
     
-                    // Check if family details exist before iterating over them
-                    if (!is_null($labour->family_details)) {
-                        foreach ($labour->family_details as $familyDetail) {
-                            $familyDetail->profile_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->profile_image;
-                            $familyDetail->aadhar_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->aadhar_image;
-                            $familyDetail->mgnrega_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->mgnrega_image;
-                            $familyDetail->voter_image = Config::get('DocumentConstant.USER_PROFILE_VIEW') . $familyDetail->voter_image;
-                        }
-                    }
+                   
                 }
     
             // Loop through labour data and retrieve family details for each labour
-            foreach ($data_output as $labour) {
-                $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
-                ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
-                    ->select(
-                        'labour_family_details.id',
-                        'gender_labour.gender_name as gender_id',
-                        'relation_labour.relation_title as relationship_id',
-                        'maritalstatus_labour.maritalstatus as married_status_id',
-                        'labour_family_details.full_name',
-                        'labour_family_details.date_of_birth'
-                    )
-                    ->where('labour_family_details.labour_id', $labour->id)
-                    ->get();
-            }
+            // foreach ($data_output as $labour) {
+            //     $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+            //     ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+            //     ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+            //         ->select(
+            //             'labour_family_details.id',
+            //             'gender_labour.gender_name as gender_id',
+            //             'relation_labour.relation_title as relationship_id',
+            //             'maritalstatus_labour.maritalstatus as married_status_id',
+            //             'labour_family_details.full_name',
+            //             'labour_family_details.date_of_birth'
+            //         )
+            //         ->where('labour_family_details.labour_id', $labour->id)
+            //         ->get();
+            // }
             return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
@@ -178,14 +165,14 @@ public function updateAttendanceMark(Request $request, $id)
     try {
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
-            'project_id' => 'required',
-            'mgnrega_card_id' => 'required',
-            'attendance_day' => 'required', 
+            // 'project_id' => 'required',
+            // 'mgnrega_card_id' => 'required',
+            // 'attendance_day' => 'required', 
         ]);
 
         // Check if validation fails
         if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
+            return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
         }
 
         // Find the attendance mark data by ID
