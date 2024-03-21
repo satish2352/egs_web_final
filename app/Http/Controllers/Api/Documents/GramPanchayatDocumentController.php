@@ -66,9 +66,6 @@ class GramPanchayatDocumentController extends Controller
                     'tbl_documenttype.documenttype',
                     'tbl_gram_panchayat_documents.document_pdf',
                 )->get();
-
-                  
-                
                 foreach ($data_output as $document_data) {
                     // Append image paths to the output data
                     $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
@@ -88,10 +85,10 @@ class GramPanchayatDocumentController extends Controller
             ]);
     
             if ($validator->fails()) {
-                return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
-            }
-    
-            $document_data = GramPanchayatDocuments::findOrFail($request->id);
+                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+            }          
+            $document_data = GramPanchayatDocuments::where('id', $request->id)
+            ->first();
     
             // Delete old document PDF if it exists
             if (!empty($document_data->document_pdf)) {
@@ -108,12 +105,13 @@ class GramPanchayatDocumentController extends Controller
     
             // Update document information in the database
             $document_data->document_type_id = $request->document_type_id;
+            $document_data->document_name = $request->document_name;
             $document_data->document_pdf = $new_pdf_name;
             $document_data->save();
     
-            return response()->json(['status' => 'success', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
+            return response()->json(['status' => 'true', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Document updated fail', 'error' => $e->getMessage()], 500);
         }
     }
     

@@ -51,14 +51,16 @@ Route::group([
 
         Route::post('/add-document', [GramPanchayatDocumentController::class, 'add']);
         Route::post('/list-document', [GramPanchayatDocumentController::class, 'getAllDocuments']);
-        Route::post('/update-document/{id}', [GramPanchayatDocumentController::class, 'updateDocuments']);
+        Route::post('/update-document', [GramPanchayatDocumentController::class, 'updateDocuments']);
 
         Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
         Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
         Route::get('/district', [DistrictTalukaVillageController::class, 'getDistrict']);
         Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
         Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
-       
+
+        Route::post('/list-labour-status', [LabourController::class, 'getLabourStatusList']);
+        
        
         // Route::post('/particular-project-labours/{project_id}', [ProjectController::class, 'ProjectLaboursList']);
         // Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
