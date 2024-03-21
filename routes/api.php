@@ -59,7 +59,7 @@ Route::group([
         Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
         Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
 
-        Route::post('/list-labour-status', [LabourController::class, 'getLabourStatusList']);
+        Route::post('/list-send-approved-labour', [LabourController::class, 'getSendApprovedLabourList']);
         
        
 

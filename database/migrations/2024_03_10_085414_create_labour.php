@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('skill_id');
             $table->string('latitude');
             $table->string('longitude');
-            $table->string('status')->default('SendApproved');
+            $table->boolean('status')->default(true);
             $table->string('remark')->default('null');
             $table->string('sync_reason')->default('null');
             $table->string('aadhar_image')->default('null');
