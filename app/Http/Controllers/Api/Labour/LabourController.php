@@ -577,9 +577,9 @@ class LabourController extends Controller
         return $this->getLabourStatusList($request, 3);
     }
 
-    public function getOtherLabourList(Request $request) {
-        return $this->getLabourStatusList($request, 4);
-    }
+    // public function getOtherLabourList(Request $request) {
+    //     return $this->getLabourStatusList($request, 4);
+    // }
 
     public function updateLabourStatusApproved(Request $request){
     
@@ -627,8 +627,11 @@ class LabourController extends Controller
             
             $updated = Labour::where('user_id', $user)
                 ->where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('status', 2)
-                ->update(['status' => 3]); 
+                ->where('status', 1)
+                ->update([
+                    'status' => 3,
+                    'remark' => $request->remark, 
+                ]);
                 
     
             if ($updated) {
@@ -641,36 +644,7 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
         }
     }
-    public function updateLabourStatusOther(Request $request){
-    
-        try {
-            $user = Auth::user()->id;
-    
-            // Validate the incoming request
-            $validator = Validator::make($request->all(), [
-                'mgnrega_card_id' => 'required',
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
-            }
-            
-            $updated = Labour::where('user_id', $user)
-                ->where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('status', 3)
-                ->update(['status' => 4]); 
-                
-    
-            if ($updated) {
-                return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
-            } else {
-                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id'], 200);
-            }
-    
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
-        }
-    }
+   
     
 
 
