@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('longitude');
             $table->boolean('status')->default(true);
             $table->string('remark')->default('null');
+            $table->string('reason')->default('null');
             $table->string('sync_reason')->default('null');
             $table->string('aadhar_image')->default('null');
             $table->string('mgnrega_image')->default('null');
