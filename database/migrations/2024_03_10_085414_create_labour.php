@@ -21,11 +21,14 @@ return new class extends Migration
             $table->string('taluka_id');
             $table->string('village_id');
             $table->string('mobile_number');
-            $table->string('landline_number');
+            $table->string('landline_number')->default('null');
             $table->string('mgnrega_card_id');
             $table->string('skill_id');
             $table->string('latitude');
             $table->string('longitude');
+            $table->string('status')->default('SendApproved');
+            $table->string('remark')->default('null');
+            $table->string('sync_reason')->default('null');
             $table->string('aadhar_image')->default('null');
             $table->string('mgnrega_image')->default('null');
             $table->string('profile_image')->default('null');

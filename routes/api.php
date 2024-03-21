@@ -62,7 +62,7 @@ Route::group([
         Route::post('/list-labour-status', [LabourController::class, 'getLabourStatusList']);
         
        
-        // Route::post('/particular-project-labours/{project_id}', [ProjectController::class, 'ProjectLaboursList']);
+
         // Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
        
         
