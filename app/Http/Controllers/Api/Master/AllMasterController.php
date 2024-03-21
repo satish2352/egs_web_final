@@ -9,7 +9,8 @@ use App\Models\ {
     Maritalstatus,
     Skills,
     RelationModel,
-    Documenttype
+    Documenttype,
+    Registrationstatus
 };
 
 class AllMasterController extends Controller
@@ -22,7 +23,7 @@ public function getAllMasters(){
         $data['skills'] = Skills::all();
         $data['relation'] = RelationModel::orderBy('id', 'asc')->get();
         $data['documenttype'] = Documenttype::all();
-       
+        $data['Registrationstatus'] = Registrationstatus::orderBy('id', 'asc')->get();
         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data], 200);
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);

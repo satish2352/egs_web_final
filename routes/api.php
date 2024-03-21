@@ -70,7 +70,7 @@ Route::group([
         
         
        
-
+        Route::post('/project-list-lat-long', [ProjectController::class, 'getAllProjectLatLong']);
         // Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
        
         

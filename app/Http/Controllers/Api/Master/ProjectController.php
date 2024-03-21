@@ -145,6 +145,52 @@ class ProjectController extends Controller
         }
     }
     
+    public function getAllProjectLatLong(Request $request){
+        try {
+            $user = Auth::user()->id;
+            $userLatitude = $request->latitude; // Latitude of the user
+            $userLongitude = $request->longitude; // Longitude of the user
+            $distanceInKm = 2; // Distance in kilometers
+    // dd($userLatitude);
+            // Haversine formula to calculate distance
+            $project = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
+                ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+                ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
+                ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
+                ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
+                // ->where('project_users.user_id')
+                ->where('projects.is_active', true)
+                ->when($request->has('project_name'), function($query) use ($request) {
+                    $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
+                })             
+                ->select(
+                    'projects.id',
+                    'projects.project_name',
+                    'projects.description',
+                    'state_projects.name as state',
+                    'district_projects.name as district',
+                    'taluka_projects.name as taluka',
+                    'village_projects.name as village',
+                    'projects.start_date',
+                    'projects.end_date',
+                    'projects.latitude',
+                    'projects.longitude'
+                )
+                ->selectRaw(
+                    '( 6371 * acos( cos( radians(?) ) *
+                            cos( radians( projects.latitude ) ) *
+                            cos( radians( projects.longitude ) - radians(?) ) +
+                            sin( radians(?) ) *
+                            sin( radians( projects.latitude ) ) )
+                    ) AS distance', [$userLatitude, $userLongitude, $userLatitude])
+                ->having('distance', '<=', $distanceInKm)
+                ->get();
+                dd($userLatitude);
+            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
     
     
 }
