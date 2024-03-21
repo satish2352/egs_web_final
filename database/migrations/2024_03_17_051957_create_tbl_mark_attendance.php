@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tbl_mark_attendance', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('mgnrega_card_id');
+            $table->string('mgnrega_card_id');
             $table->unsignedBigInteger('user_id');
             $table->string('attendance_day');
             $table->string('is_deleted')->default(false);
