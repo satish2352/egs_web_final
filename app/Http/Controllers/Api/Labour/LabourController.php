@@ -550,6 +550,8 @@ class LabourController extends Controller
                     'labour.aadhar_image',
                     'labour.mgnrega_image',
                     'labour.voter_image',
+                    'registrationstatus.status_name'
+                    
 
                 )->get();
 
@@ -587,9 +589,9 @@ class LabourController extends Controller
                     ->where('labour_family_details.labour_id', $labour->id)
                     ->get();
             }
-            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Send Approved Labour List fail','error' => $e->getMessage()], 500);
         }
     }
 }
