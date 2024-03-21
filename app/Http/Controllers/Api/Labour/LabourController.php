@@ -529,7 +529,8 @@ class LabourController extends Controller
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->where('labour.user_id', $user)
-                ->where('labour.status', true)
+                ->where('registrationstatus.is_active', true)
+                ->where('labour.status', 1)
                 ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
                     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
                 })
@@ -561,16 +562,6 @@ class LabourController extends Controller
                     $labour->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->aadhar_image;
                     $labour->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->mgnrega_image;
                     $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
-
-                    // Check if family details exist before iterating over them
-                    if (!is_null($labour->family_details)) {
-                        foreach ($labour->family_details as $familyDetail) {
-                            $familyDetail->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->profile_image;
-                            $familyDetail->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->aadhar_image;
-                            $familyDetail->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->mgnrega_image;
-                            $familyDetail->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $familyDetail->voter_image;
-                        }
-                    }
                 }
 
             // Loop through labour data and retrieve family details for each labour
@@ -594,4 +585,139 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Send Approved Labour List fail','error' => $e->getMessage()], 500);
         }
     }
+
+    public function getApprovedLabourList(Request $request){
+    
+        try {
+            $user = Auth::user()->id;
+            $data_output = Labour::leftJoin('registrationstatus', 'labour.status', '=', 'registrationstatus.id')
+                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+                ->where('labour.user_id', $user)
+                ->where('registrationstatus.is_active', true)
+                ->where('labour.status', 2)
+                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+                })
+                ->select(
+                    'labour.id',
+                    'labour.full_name',
+                    'labour.date_of_birth',
+                    'gender_labour.gender_name as gender_name',
+                    'district_labour.name as district_id',
+                    'taluka_labour.name as taluka_id',
+                    'village_labour.name as village_id',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'labour.profile_image',
+                    'labour.aadhar_image',
+                    'labour.mgnrega_image',
+                    'labour.voter_image',
+                    'registrationstatus.status_name'
+                    
+
+                )->get();
+
+                foreach ($data_output as $labour) {
+                    // Append image paths to the output data
+                    $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
+                    $labour->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->aadhar_image;
+                    $labour->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->mgnrega_image;
+                    $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
+                }
+
+            // Loop through labour data and retrieve family details for each labour
+            foreach ($data_output as $labour) {
+                $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+                ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                    ->select(
+                        'labour_family_details.id',
+                        'gender_labour.gender_name as gender_id',
+                        'relation_labour.relation_title as relationship_id',
+                        'maritalstatus_labour.maritalstatus as married_status_id',
+                        'labour_family_details.full_name',
+                        'labour_family_details.date_of_birth'
+                    )
+                    ->where('labour_family_details.labour_id', $labour->id)
+                    ->get();
+            }
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Send Approved Labour List fail','error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getNotApprovedLabourList(Request $request){
+    
+        try {
+            $user = Auth::user()->id;
+            $data_output = Labour::leftJoin('registrationstatus', 'labour.status', '=', 'registrationstatus.id')
+                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+                ->where('labour.user_id', $user)
+                ->where('registrationstatus.is_active', true)
+                ->where('labour.status', 3)
+                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+                })
+                ->select(
+                    'labour.id',
+                    'labour.full_name',
+                    'labour.date_of_birth',
+                    'gender_labour.gender_name as gender_name',
+                    'district_labour.name as district_id',
+                    'taluka_labour.name as taluka_id',
+                    'village_labour.name as village_id',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'labour.profile_image',
+                    'labour.aadhar_image',
+                    'labour.mgnrega_image',
+                    'labour.voter_image',
+                    'registrationstatus.status_name'
+                    
+
+                )->get();
+
+                foreach ($data_output as $labour) {
+                    // Append image paths to the output data
+                    $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
+                    $labour->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->aadhar_image;
+                    $labour->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->mgnrega_image;
+                    $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
+                }
+
+            // Loop through labour data and retrieve family details for each labour
+            foreach ($data_output as $labour) {
+                $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+                ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                    ->select(
+                        'labour_family_details.id',
+                        'gender_labour.gender_name as gender_id',
+                        'relation_labour.relation_title as relationship_id',
+                        'maritalstatus_labour.maritalstatus as married_status_id',
+                        'labour_family_details.full_name',
+                        'labour_family_details.date_of_birth'
+                    )
+                    ->where('labour_family_details.labour_id', $labour->id)
+                    ->get();
+            }
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Send Approved Labour List fail','error' => $e->getMessage()], 500);
+        }
+    }
+
 }
