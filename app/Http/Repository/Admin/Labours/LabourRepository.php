@@ -95,7 +95,9 @@ class LabourRepository
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
-                    'tbl_mark_attendance.attendance_day'
+                    'tbl_mark_attendance.attendance_day',
+                    'tbl_mark_attendance.created_at',
+                    'tbl_mark_attendance.attendance_day',
                 )->get();
 				// dd($data_labour_attendance);
 		  }else if($sess_user_id!='1')
@@ -116,7 +118,9 @@ class LabourRepository
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
-                    'tbl_mark_attendance.attendance_day'
+                    'tbl_mark_attendance.attendance_day',
+					'tbl_mark_attendance.created_at',
+                    'tbl_mark_attendance.attendance_day',
                 )->get();
 
 			}	

@@ -59,7 +59,7 @@ class ProjectRepository
               'projects.end_date',
               'projects.latitude',
               'projects.longitude',
-            //   'labour.profile_image',
+              'projects.is_active',
           )->get();
 			// dd($data_users);
 		return $data_users;
