@@ -665,11 +665,10 @@ class LabourController extends Controller
             // Validate the incoming request
             $validator = Validator::make($request->all(), [
                 'mgnrega_card_id' => 'required',
-                'reason' => 'required',
+                'reason_id' => 'required',
                 'other_remark' => 'required',
                 'is_approved' => 'required',
-                // 'reason_id' => 'required', // Assuming this field is required
-                // 'other_remark' => 'required', // Assuming this field is required
+                
             ]);
     
             if ($validator->fails()) {
@@ -682,7 +681,7 @@ class LabourController extends Controller
                 ->where('is_approved', 1)
                 ->update([
                     'is_approved' => 3,
-                    'reason' => $request->reason, 
+                    'reason_id' => $request->reason_id, 
                     'other_remark' => $request->other_remark, 
                 ]);
     
@@ -693,7 +692,7 @@ class LabourController extends Controller
                 $history->role_id = $user->role_id; 
                 $history->mgnrega_card_id = $request->mgnrega_card_id;
                 $history->is_approved = $request->is_approved;
-                $history->reason_id = $request->reason; 
+                $history->reason_id = $request->reason_id; 
                 $history->other_remark = $request->other_remark; 
                 
     
