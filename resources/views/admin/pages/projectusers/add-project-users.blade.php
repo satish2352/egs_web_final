@@ -128,6 +128,7 @@
                 $('#user_type_id').change(function(e) {
                     e.preventDefault();
                     var usertypeId = $('#user_type_id').val();
+                    var pro_id = $('#project_id').val();
                     var dist_val = $('#project_id').find(':selected').attr('attr-dist');
                     var tal_val = $('#project_id').find(':selected').attr('attr-tal');
                     var vil_val = $('#project_id').find(':selected').attr('attr-vil');
@@ -139,6 +140,7 @@
                             url: '{{ route('usertype-users') }}',
                             type: 'GET',
                             data: {
+                                pro_id: pro_id,
                                 usertypeId: usertypeId,
                                 dist_val: dist_val,
                                 tal_val: tal_val,

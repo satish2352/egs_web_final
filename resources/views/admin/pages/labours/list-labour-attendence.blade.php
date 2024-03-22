@@ -31,11 +31,8 @@
                                                     <th>Project Name</th>
                                                     <th>Mobile Number</th>
                                                     <th>Mnrega ID</th>
-                                                    <!-- <th>District</th> -->
-                                                    <!-- <th>Taluka</th>
-                                                    <th>Village</th> -->
-                                                    <!-- <th>Status</th> -->
-                                                    <th>Action</th>
+                                                    <th>Attendance Type</th>
+                                                    <th>Attendance Date</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -46,6 +43,8 @@
                                                         <td>{{ $item->project_name }}</td>
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
+                                                        <td>{{ $item->attendance_day }}</td>
+                                                        <td>{{ $item->created_at->format('Y-m-d') }}</td>
                                                         <!-- <td>{{ $item->district_id }}</td> -->
                                                         <!-- <td>{{ $item->village_name }}</td> -->
 
@@ -69,7 +68,7 @@
                                                         <button type="button" class="btn btn-danger btn-sm">In Active</button>
                                                         
                                                         @endif</td> --}}
-                                                        <td class="d-flex">
+                                                        <!-- <td class="d-flex">
                                                        
 
                                                             <a data-id="{{ $item->id }}"
@@ -77,7 +76,7 @@
                                                                     class="fas fa-eye"></i></a>
                                                            
 
-                                                        </td>
+                                                        </td> -->
                                                     </tr>
                                                 @endforeach
 
