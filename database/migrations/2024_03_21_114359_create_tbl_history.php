@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('mgnrega_card_id');
             $table->unsignedBigInteger('is_approved');
             $table->unsignedBigInteger('reason_id');
-            $table->string('other_remark');
+            $table->string('other_remark')->default('null');
             $table->string('is_deleted')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
