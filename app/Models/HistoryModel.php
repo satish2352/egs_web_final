@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HistoryModel extends Model
 {
     use HasFactory;
-    protected $table = 'tbl_reason';
+    protected $table = 'tbl_history';
     protected $primaryKey = 'id';
+   
 }

@@ -337,7 +337,7 @@ class LabourController extends Controller
                     'labour.aadhar_image',
                     'labour.mgnrega_image',
                     'labour.voter_image',
-                    'labour.remark',
+                    'labour.other_remark',
                     'registrationstatus.status_name'
 
 
@@ -523,7 +523,7 @@ class LabourController extends Controller
     //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     //     }
     // }
-    public function getLabourStatusList(Request $request, $status){
+    public function getLabourStatusList(Request $request, $is_approved){
         try {
             $user = Auth::user()->id;
             $data_output = Labour::leftJoin('registrationstatus', 'labour.status', '=', 'registrationstatus.id')
@@ -533,7 +533,7 @@ class LabourController extends Controller
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->where('labour.user_id', $user)
                 ->where('registrationstatus.is_active', true)
-                ->where('labour.status', $status)
+                ->where('labour.is_approved', $is_approved)
                 ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
                     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
                 })
@@ -598,8 +598,8 @@ class LabourController extends Controller
             
             $updated = Labour::where('user_id', $user)
                 ->where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('status', 1)
-                ->update(['status' => 2]); 
+                ->where('is_approved', 1)
+                ->update(['is_approved' => 2]); 
                 
     
             if ($updated) {
@@ -661,55 +661,54 @@ class LabourController extends Controller
     public function updateLabourStatusNotApproved(Request $request) {
         try {
             $user = Auth::user();
-            
+    
             // Validate the incoming request
             $validator = Validator::make($request->all(), [
                 'mgnrega_card_id' => 'required',
                 'reason' => 'required',
-                'remark' => 'required',
-                'status' => 'required',
-                // 'role_id' => 'required', // Assuming this field is required
+                'other_remark' => 'required',
+                'is_approved' => 'required',
                 // 'reason_id' => 'required', // Assuming this field is required
+                // 'other_remark' => 'required', // Assuming this field is required
             ]);
     
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
-            
+    
+            // Update labor entry
             $updated = Labour::where('user_id', $user->id)
                 ->where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('status', 1)
+                ->where('is_approved', 1)
                 ->update([
-                    'status' => 3,
+                    'is_approved' => 3,
                     'reason' => $request->reason, 
-                    'remark' => $request->remark, 
+                    'other_remark' => $request->other_remark, 
                 ]);
     
             if ($updated) {
                 // Create a history record
-                $labour_data = new HistoryModel();
-                // $labour_data->user_id = $user->id;
-                // $labour_data->role_id = $request->role_id;
-                // $labour_data->role_id = $user->role_id;
-                // $labour_data->reason_id = $request->reason_id;
-                // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-                // $labour_data->remark = $request->remark;
-                // $labour_data->status = $request->status;
-    
-             
-                // Add more fields as needed
-    
-                $labour_data->save();
+                $history = new HistoryModel();
+                $history->user_id = $user->id; 
+                $history->role_id = $user->role_id; 
+                $history->mgnrega_card_id = $request->mgnrega_card_id;
+                $history->is_approved = $request->is_approved;
+                $history->reason_id = $request->reason; 
+                $history->other_remark = $request->other_remark; 
                 
+    
+                $history->save();
+    
                 return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
             } else {
-                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id or status is not approved'], 200);
+                return response()->json(['status' => 'false', 'message' => 'No labor found with the provided MGNREGA card Id or status is not approved'], 200);
             }
     
         } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
         }
     }
+    
     
     
 

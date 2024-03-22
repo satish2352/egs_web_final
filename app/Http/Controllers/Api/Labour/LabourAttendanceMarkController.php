@@ -38,12 +38,11 @@ class LabourAttendanceMarkController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'User not found'], 200);
             }
 
-             
-        // $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
-        // if ($existingEntry) {
-        //     return response()->json(['status' => 'error', 'message' => 'mgnrega card id already exists'], 400);
-        // }
-
+        // Check if labour status is approved
+        $labour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+        if (!$labour || $labour->is_approved != 2) {
+            return response()->json(['status' => 'error', 'message' => 'Labour status not approved'], 200);
+        }
          
          $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
         //  ->whereDate('attendance_day', '=', date('Y-m-d'))
