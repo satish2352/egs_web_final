@@ -526,7 +526,7 @@ class LabourController extends Controller
     public function getLabourStatusList(Request $request, $is_approved){
         try {
             $user = Auth::user()->id;
-            $data_output = Labour::leftJoin('registrationstatus', 'labour.status', '=', 'registrationstatus.id')
+            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
