@@ -98,6 +98,32 @@
                       </div>
                   </li>
              <!-- @endif -->
+
+            <li class="nav-item">
+                      <a class="{{request()->is('list-role*')
+                                    ? 'nav-link active' : 'nav-link' }}" data-toggle="collapse" href="#master" aria-expanded="false"
+                          aria-controls="master">
+                          <i class="fa fa-th-large menu-icon"></i>
+                          <span class="menu-title">Labour Managment</span>
+                          <i class="menu-arrow"></i>
+                      </a>
+                      <div class="collapse" id="master">
+                          <ul class="nav flex-column sub-menu">
+                          @if (in_array('list-labours', $data_for_url))
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-labours*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-labours') }}">Labours</a></li>
+                              @endif
+
+                          </ul>
+                      </div>
+                  </li>                    
+
+
+
+
+
+
              @if (in_array('list-users', $data_for_url))
         <li class="{{request()->is('list-users*')
             ? 'nav-item active' : 'nav-item' }}">
@@ -119,17 +145,19 @@
                 </a>
             </li>
             @endif
+
+          
             
-            @if (in_array('list-labours', $data_for_url))
+            <!-- @if (in_array('list-labours', $data_for_url))
             <li class="{{request()->is('list-labours*')
                 ? 'nav-item active' : 'nav-item' }}">
-                <?php $currenturl = Request::url(); ?>
+                <?php //$currenturl = Request::url(); ?>
                 <a class="nav-link" href="{{ route('list-labours') }}">
                     <i class="fas fa-user menu-icon"></i>
                     <span class="menu-title">Labour Management</span>
                 </a>
             </li>
-            @endif
+            @endif -->
             <li class="{{request()->is('list-labour-attendance*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>

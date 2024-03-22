@@ -199,35 +199,12 @@
                 document.getElementById("frm_register").submit();
             }
         </script>
-        <!-- <script>
-            function addvalidateMobileNumber(number) {
-                var mobileNumberPattern = /^\d*$/;
-                var validationMessage = document.getElementById("validation-message");
-
-                if (mobileNumberPattern.test(number)) {
-                    validationMessage.textContent = "";
-                } else {
-                    validationMessage.textContent = "Please enter only numbers.";
-                }
-            }
-        </script> -->
-        <!-- <script>
-            function addvalidatePincode(number) {
-                var pincodePattern = /^\d*$/;
-                var validationMessage = document.getElementById("validation-message-pincode");
-
-                if (pincodePattern.test(number)) {
-                    validationMessage.textContent = "";
-                } else {
-                    validationMessage.textContent = "Please enter only numbers.";
-                }
-            }
-        </script> -->
+        
 
 
         <script>
             $(document).ready(function() {
-
+              
                 $('#state').change(function(e) {
                     e.preventDefault();
                     var stateId = $('#state').val();
