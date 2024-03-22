@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('labour', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('gender_id');
+            $table->unsignedBigInteger('district_id');
+            $table->unsignedBigInteger('taluka_id');
+            $table->unsignedBigInteger('village_id');
+            $table->unsignedBigInteger('skill_id');
             $table->string('full_name');
-            $table->string('gender_id');
             $table->string('date_of_birth');
-            $table->string('district_id');
-            $table->string('taluka_id');
-            $table->string('village_id');
             $table->string('mobile_number');
             $table->string('landline_number')->default('null');
             $table->string('mgnrega_card_id');
-            $table->string('skill_id');
             $table->string('latitude');
             $table->string('longitude');
             $table->boolean('is_approved')->default(true);
