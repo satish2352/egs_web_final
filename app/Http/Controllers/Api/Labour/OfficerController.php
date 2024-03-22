@@ -160,35 +160,72 @@ class OfficerController extends Controller
         try {
             $user = Auth::user()->id;
             // dd($user);
-            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
-            ->leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+
+            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $user)
+                ->first();
+
+            $utype=$data_output->user_type;
+            $user_working_dist=$data_output->user_district;
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
+
+            if($utype=='1')
+            {
+            $data_user_output = User::where('users.user_district', $user_working_dist)
+            ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='2')
+            {
+                $data_user_output = User::where('users.user_taluka', $user_working_tal)
+                ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='3')
+            {
+                $data_user_output = User::where('users.user_village', $user_working_vil)
+                ->select('id')
+                ->get()
+				->toArray();
+            }         
+
+
+// dd($data_user_output);
+
+            // if($utype=='1')
+            // {
+                $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-                // ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-                // ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-                // ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                // ->where('labour.user_id', $user)
+                ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+                ->whereIn('labour.user_id',$data_user_output)
                 ->where('registrationstatus.is_active', true)
-                ->where('labour.is_approved', $is_approved)
-                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
-                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
-                })
                 ->select(
                     'labour.id',
                     'labour.full_name',
                     'labour.date_of_birth',
                     'gender_labour.gender_name as gender_name',
-                    // 'district_labour.name as district_id',
-                    // 'taluka_labour.name as taluka_id',
-                    // 'village_labour.name as village_id',
+                    'skills_labour.skills as skills',
+                    'district_labour.name as district_id',
+                    'taluka_labour.name as taluka_id',
+                    'village_labour.name as village_id',
                     'labour.mobile_number',
                     'labour.landline_number',
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
                     'labour.profile_image',
-                    'registrationstatus.status_name'
-                )->get();
-    
+                    'registrationstatus.status_name',
+                )
+                    ->get()
+					->toArray();
+                    dd($data_labour);
+                    die();
+         
+
             foreach ($data_output as $labour) {
                 // Append image paths to the output data
                 $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;

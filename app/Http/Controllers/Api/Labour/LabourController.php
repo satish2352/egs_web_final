@@ -101,9 +101,11 @@ class LabourController extends Controller
         try {
             // Check if the user exists
             $user = Auth::user();
+        //  dd($user);
 
             $labour_data = new Labour();
             $labour_data->user_id = $user->id; // Assign the user ID
+            $labour_data->user_type = $user->user_type; // Assign the user ID
             $labour_data->full_name = $request->full_name;
             $labour_data->gender_id = $request->gender_id;
             $labour_data->date_of_birth = $request->date_of_birth;//Carbon::createFromFormat('d/m/Y', )->format('Y-m-d');
