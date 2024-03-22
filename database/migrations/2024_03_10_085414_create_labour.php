@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('labour', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('reason_id')->nullable();
             $table->string('full_name');
             $table->string('gender_id');
             $table->string('date_of_birth');
@@ -28,6 +27,7 @@ return new class extends Migration
             $table->string('latitude');
             $table->string('longitude');
             $table->boolean('is_approved')->default(true);
+            $table->unsignedBigInteger('reason_id')->nullable();
             $table->string('other_remark')->default('null');
             $table->string('sync_reason')->default('null');
             $table->string('aadhar_image')->default('null');
