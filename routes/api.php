@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\Master\ProjectController;
 use App\Http\Controllers\Api\Master\AllMasterController;
 use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 use App\Http\Controllers\Api\Documents\GramPanchayatDocumentController;
+use App\Http\Controllers\Api\Labour\OfficerController;
+
 
 
 /*
@@ -67,7 +69,8 @@ Route::group([
         Route::post('/update-labour-status-approved', [LabourController::class, 'updateLabourStatusApproved']);
         Route::post('/update-labour-status-not-approved', [LabourController::class, 'updateLabourStatusNotApproved']);
       
-        
+        Route::post('/list-received-approved-labour', [OfficerController::class, 'getSendApprovedLabourListOfficer']);
+
         
        
         Route::post('/project-list-lat-long', [ProjectController::class, 'getAllProjectLatLong']);

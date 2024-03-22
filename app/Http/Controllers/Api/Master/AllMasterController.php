@@ -24,7 +24,9 @@ public function getAllMasters(){
         $data['skills'] = Skills::all();
         $data['relation'] = RelationModel::where('is_active', true)->orderBy('id', 'asc')->get();
         $data['documenttype'] = Documenttype::all();
-        $data['registrationstatus'] = Registrationstatus::where('is_active', true)->orderBy('id', 'asc')->get();
+        $data['registrationstatus'] = Registrationstatus::where('is_active', true)
+        ->whereNotIn('id', [1])
+        ->orderBy('id', 'asc')->get();
         $data['reasons'] = Reasons::where('is_active', true)->orderBy('id', 'asc')->get();
         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data], 200);
     } catch (\Exception $e) {

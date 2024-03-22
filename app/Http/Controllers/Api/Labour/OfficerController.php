@@ -18,7 +18,7 @@ use Carbon\Carbon;
 
 
 
-class LabourController extends Controller
+class OfficerController extends Controller
 {
    
 
@@ -156,15 +156,17 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Labour details get failed', 'error' => $e->getMessage()], 500);
         }
     }
-    public function getLabourStatusList(Request $request, $is_approved){
+    public function getLabourStatusListReceived(Request $request, $is_approved){
         try {
             $user = Auth::user()->id;
+            // dd($user);
             $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+            ->leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                ->where('labour.user_id', $user)
+                // ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                // ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                // ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+                // ->where('labour.user_id', $user)
                 ->where('registrationstatus.is_active', true)
                 ->where('labour.is_approved', $is_approved)
                 ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
@@ -175,9 +177,9 @@ class LabourController extends Controller
                     'labour.full_name',
                     'labour.date_of_birth',
                     'gender_labour.gender_name as gender_name',
-                    'district_labour.name as district_id',
-                    'taluka_labour.name as taluka_id',
-                    'village_labour.name as village_id',
+                    // 'district_labour.name as district_id',
+                    // 'taluka_labour.name as taluka_id',
+                    // 'village_labour.name as village_id',
                     'labour.mobile_number',
                     'labour.landline_number',
                     'labour.mgnrega_card_id',
@@ -198,8 +200,8 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
         }
     }
-    public function getSendApprovedLabourList(Request $request) {
-        return $this->getLabourStatusList($request, 1);
+    public function getSendApprovedLabourListOfficer(Request $request) {
+        return $this->getLabourStatusListReceived($request, 1);
     }
     public function getApprovedLabourList(Request $request) {
         return $this->getLabourStatusList($request, 2);
