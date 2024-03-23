@@ -616,52 +616,7 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
         }
     }
-    // public function updateLabourStatusNotApproved(Request $request){
     
-    //     try {
-    //         $user = Auth::user()->id;
-    
-    //         // Validate the incoming request
-    //         $validator = Validator::make($request->all(), [
-    //             'mgnrega_card_id' => 'required',
-    //         ]);
-    
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
-    //         }
-            
-    //         $updated = Labour::where('user_id', $user)
-    //             ->where('mgnrega_card_id', $request->mgnrega_card_id)
-    //             ->where('status', 1)
-    //             ->update([
-    //                 'status' => 3,
-    //                 'reason' => $request->reason, 
-    //                 'remark' => $request->remark, 
-    //             ]);
-
-    //             $labour_data = new HistoryModel();
-    //             $labour_data->user_id = $user->id; // Assign the user ID
-    //             $labour_data->role_id = $request->role_id;
-    //             $labour_data->reason_id = $request->reason_id;
-    //             $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-    //             $labour_data->remark = $request->remark;
-    //             $labour_data->status = $request->status;
-                
-              
-    //             $labour_data->save();
-                
-    
-
-    //         if ($updated) {
-    //             return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
-    //         } else {
-    //             return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id'], 200);
-    //         }
-    
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
-    //     }
-    // }
     public function updateLabourStatusNotApproved(Request $request) {
         try {
             $user = Auth::user();

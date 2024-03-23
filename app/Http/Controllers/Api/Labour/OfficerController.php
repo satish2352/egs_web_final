@@ -159,7 +159,6 @@ class OfficerController extends Controller
     public function getLabourStatusListReceived(Request $request, $is_approved){
         try {
             $user = Auth::user()->id;
-            // dd($user);
 
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                 ->where('users.id', $user)
@@ -189,12 +188,7 @@ class OfficerController extends Controller
                 ->get()
 				->toArray();
             }         
-
-
-// dd($data_user_output);
-
-            // if($utype=='1')
-            // {
+            
                 $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
@@ -203,6 +197,10 @@ class OfficerController extends Controller
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->whereIn('labour.user_id',$data_user_output)
                 ->where('registrationstatus.is_active', true)
+                ->where('labour.is_approved', $is_approved)
+                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+                })
                 ->select(
                     'labour.id',
                     'labour.full_name',
@@ -222,17 +220,12 @@ class OfficerController extends Controller
                 )
                     ->get()
 					->toArray();
-                    dd($data_labour);
-                    die();
-         
-
-            foreach ($data_output as $labour) {
-                // Append image paths to the output data
-                $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-                
-            }
+                   
+                    foreach ($data_labour as $labour) {
+                        $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
+                    }
     
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                    return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
         }
@@ -240,18 +233,17 @@ class OfficerController extends Controller
     public function getSendApprovedLabourListOfficer(Request $request) {
         return $this->getLabourStatusListReceived($request, 1);
     }
-    public function getApprovedLabourList(Request $request) {
-        return $this->getLabourStatusList($request, 2);
+    public function getApprovedLabourListOfficer(Request $request) {
+        return $this->getLabourStatusListReceived($request, 2);
     }
     
-    public function getNotApprovedLabourList(Request $request) {
-        return $this->getLabourStatusList($request, 3);
+    public function getNotApprovedLabourListOfficer(Request $request) {
+        return $this->getLabourStatusListReceived($request, 3);
     }
 
-    // public function getOtherLabourList(Request $request) {
-    //     return $this->getLabourStatusList($request, 4);
-    // }
-
+    public function getRejectedLabourListOfficer(Request $request) {
+        return $this->getLabourStatusListReceived($request, 4);
+    }
     public function updateLabourStatusApproved(Request $request){
     
         try {
@@ -332,9 +324,45 @@ class OfficerController extends Controller
         }
     }
     
+    public function countOfficerLabour(Request $request) {
+        try {
+            $user = Auth::id();
+        
+            $counts = Labour::where('user_id', $user)
+                ->selectRaw('is_approved, COUNT(*) as count')
+                ->groupBy('is_approved')
+                ->get();
     
+            // Initialize counters
+            $sentForApprovalCount = 0;
+            $approvedCount = 0;
+            $notApprovedCount = 0;
     
-
-
+            // Counting each status
+            foreach ($counts as $count) {
+                if ($count->is_approved == 1) {
+                    $sentForApprovalCount = $count->count;
+                } elseif ($count->is_approved == 2) {
+                    $approvedCount = $count->count;
+                } elseif ($count->is_approved == 3) {
+                    $notApprovedCount = $count->count;
+                }
+            }
+    
+            // Return the counts in the response
+            return response()->json([
+                'status' => 'true',
+                'message' => 'Counts retrieved successfully',
+                'sent_for_approval_count' => $sentForApprovalCount,
+                'approved_count' => $approvedCount,
+                'not_approved_count' => $notApprovedCount
+            ], 200);
+    
+        } catch (\Exception $e) {
+            // Return error if any exception occurs
+            return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
+        }
+    }
+    
     
 }

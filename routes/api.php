@@ -64,15 +64,17 @@ Route::group([
         Route::post('/list-send-approved-labour', [LabourController::class, 'getSendApprovedLabourList']);
         Route::post('/list-approved-labour', [LabourController::class, 'getApprovedLabourList']);
         Route::post('/list-not-approved-labour', [LabourController::class, 'getNotApprovedLabourList']);
-  
 
         Route::post('/update-labour-status-approved', [LabourController::class, 'updateLabourStatusApproved']);
         Route::post('/update-labour-status-not-approved', [LabourController::class, 'updateLabourStatusNotApproved']);
       
         Route::post('/list-received-approved-labour', [OfficerController::class, 'getSendApprovedLabourListOfficer']);
+        Route::post('/list-approved-labour-officer', [OfficerController::class, 'getApprovedLabourListOfficer']);
+        Route::post('/list-not-approved-labour-officer', [OfficerController::class, 'getNotApprovedLabourListOfficer']);
+        Route::post('/list-rejected-labour-officer', [OfficerController::class, 'getRejectedLabourListOfficer']);
 
-        
-       
+        Route::post('/count-labour', [OfficerController::class, 'countOfficerLabour']);
+
         Route::post('/project-list-lat-long', [ProjectController::class, 'getAllProjectLatLong']);
         // Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
        
