@@ -72,8 +72,9 @@ Route::group([
         Route::post('/list-labour-approved-by-officer', [OfficerController::class, 'getApprovedLabourListOfficer']);
         Route::post('/list-labour-not-approved-by-officer', [OfficerController::class, 'getNotApprovedLabourListOfficer']);
         Route::post('/list-labour-rejected-by-officer', [OfficerController::class, 'getRejectedLabourListOfficer']);
-
+        
         Route::post('/count-labour', [OfficerController::class, 'countOfficerLabour']);
+        Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
 
         Route::post('/project-list-lat-long', [ProjectController::class, 'getAllProjectLatLong']);
         // Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);

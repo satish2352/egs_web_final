@@ -95,22 +95,57 @@ class OfficerController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    public function getParticularLabour(Request $request){
+    public function getParticularLabourOfficer(Request $request){
         try {
             $user = Auth::user()->id;
             $mgnrega_card_id = $request->input('mgnrega_card_id');
-            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $user)
+                ->first();
+
+            $utype=$data_output->user_type;
+            $user_working_dist=$data_output->user_district;
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
+
+            if($utype=='1')
+            {
+            $data_user_output = User::where('users.user_district', $user_working_dist)
+            ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='2')
+            {
+                $data_user_output = User::where('users.user_taluka', $user_working_tal)
+                ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='3')
+            {
+                $data_user_output = User::where('users.user_village', $user_working_vil)
+                ->select('id')
+                ->get()
+				->toArray();
+            }         
+            
+                $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                ->where('labour.user_id', $user)
+                ->whereIn('labour.user_id',$data_user_output)
                 ->where('labour.mgnrega_card_id', $mgnrega_card_id)
+                ->where('registrationstatus.is_active', true)
+                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+                })
                 ->select(
                     'labour.id',
                     'labour.full_name',
                     'labour.date_of_birth',
                     'gender_labour.gender_name as gender_name',
+                    'skills_labour.skills as skills',
                     'district_labour.name as district_id',
                     'taluka_labour.name as taluka_id',
                     'village_labour.name as village_id',
@@ -125,37 +160,37 @@ class OfficerController extends Controller
                     'labour.voter_image',
                     'labour.other_remark',
                     'registrationstatus.status_name'
-
-
-                )->get();
-
-                foreach ($data_output as $labour) {
-                    $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-                    $labour->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->aadhar_image;
-                    $labour->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->mgnrega_image;
-                    $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
-                  }
-
-            foreach ($data_output as $labour) {
-                $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
-                ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
-                    ->select(
-                        'labour_family_details.id',
-                        'gender_labour.gender_name as gender_id',
-                        'relation_labour.relation_title as relationship_id',
-                        'maritalstatus_labour.maritalstatus as married_status_id',
-                        'labour_family_details.full_name',
-                        'labour_family_details.date_of_birth'
-                    )
-                    ->where('labour_family_details.labour_id', $labour->id)
-                    ->get();
-            }
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                )
+                    ->get()
+					->toArray();
+                   
+                    foreach ($data_labour as &$labour) { 
+                        $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
+                        $labour['aadhar_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['aadhar_image'];
+                        $labour['mgnrega_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['mgnrega_image'];
+                        $labour['voter_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['voter_image'];
+                    }
+    
+                foreach ($data_labour as &$labour) {
+                    $labour['family_details'] = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+                        ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+                        ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                        ->select(
+                            'labour_family_details.id',
+                            'gender_labour.gender_name as gender_id',
+                            'relation_labour.relation_title as relationship_id',
+                            'maritalstatus_labour.maritalstatus as married_status_id',
+                            'labour_family_details.full_name',
+                            'labour_family_details.date_of_birth'
+                        )
+                        ->where('labour_family_details.labour_id', $labour['id'])
+                        ->get();
+                }
+                    return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Labour details get failed', 'error' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
         }
-    }
+    }    
     public function getLabourStatusListReceived(Request $request, $is_approved){
         try {
             $user = Auth::user()->id;
