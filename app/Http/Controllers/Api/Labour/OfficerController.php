@@ -131,6 +131,7 @@ class OfficerController extends Controller
                 $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+                ->leftJoin('tbl_reason as reason_labour', 'labour.reason_id', '=', 'reason_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
@@ -146,6 +147,7 @@ class OfficerController extends Controller
                     'labour.date_of_birth',
                     'gender_labour.gender_name as gender_name',
                     'skills_labour.skills as skills',
+                    'reason_labour.reason_name as reason_name',
                     'district_labour.name as district_id',
                     'taluka_labour.name as taluka_id',
                     'village_labour.name as village_id',
