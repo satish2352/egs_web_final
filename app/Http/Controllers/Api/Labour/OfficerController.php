@@ -280,11 +280,9 @@ class OfficerController extends Controller
         return $this->getLabourStatusListReceived($request, 4);
     }
     public function updateLabourStatusApproved(Request $request){
-    
         try {
             $user = Auth::user()->id;
-    
-            // Validate the incoming request
+                // Validate the incoming request
             $validator = Validator::make($request->all(), [
                 'mgnrega_card_id' => 'required',
             ]);
@@ -293,8 +291,8 @@ class OfficerController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
             
-            $updated = Labour::where('user_id', $user)
-                ->where('mgnrega_card_id', $request->mgnrega_card_id)
+           
+            $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
                 ->where('is_approved', 1)
                 ->update(['is_approved' => 2]); 
                 
@@ -312,7 +310,9 @@ class OfficerController extends Controller
     public function updateLabourStatusNotApproved(Request $request) {
         try {
             $user = Auth::user();
-    
+            
+            $mgnrega_card_id = $request->input('mgnrega_card_id'); 
+       
             // Validate the incoming request
             $validator = Validator::make($request->all(), [
                 'mgnrega_card_id' => 'required',
@@ -325,17 +325,16 @@ class OfficerController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
-    
+   
             // Update labor entry
-            $updated = Labour::where('user_id', $user->id)
-                ->where('mgnrega_card_id', $request->mgnrega_card_id)
+            $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
                 ->where('is_approved', 1)
                 ->update([
                     'is_approved' => 3,
                     'reason_id' => $request->reason_id, 
                     'other_remark' => $request->other_remark, 
                 ]);
-    
+  
             if ($updated) {
                 // Create a history record
                 $history = new HistoryModel();
