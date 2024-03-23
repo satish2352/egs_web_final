@@ -432,7 +432,7 @@ class OfficerController extends Controller
                 $history->reason_id = $request->reason_id; 
                 
                 if ($request->has('other_remark')) {
-                    $history->other_remark = $request->other_remark ?: ''; // Set to empty string if not provided
+                    $history->other_remark = $request->other_remark ?: 'null'; // Set to empty string if not provided
                 }
     
                 $history->save();
