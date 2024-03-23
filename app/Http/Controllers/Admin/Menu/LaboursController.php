@@ -11,7 +11,9 @@ use App\Models\ {
     TblArea,
     User,
     Labour,
-    LabourAttendanceMark
+    LabourAttendanceMark,
+    Registrationstatus,
+    Reasons
 };
 use Validator;
 use session;
@@ -29,7 +31,12 @@ class LaboursController extends Controller {
     public function index()
     {
         $labours = $this->service->index();
-        // dd($projects);
+        return view('admin.pages.labours.list-labour',compact('labours'));
+    }
+
+    public function listApprovedLabours()
+    {
+        $labours = $this->service->listApprovedLabours();
         return view('admin.pages.labours.list-labour',compact('labours'));
     }
 
@@ -381,10 +388,20 @@ class LaboursController extends Controller {
 
     public function show(Request $request)
     {
+        $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+                            ->where('id', '!=', 1)
+                            ->select('id','status_name')
+                            ->get()
+                            ->toArray();
+        $dynamic_reasons = Reasons::where('is_active', 1)
+                            ->select('id','reason_name')
+                            ->get()
+                            ->toArray();
+
         try {
             $labour_detail = $this->service->getById($request->show_id);
             // dd($labour_detail);
-            return view('admin.pages.labours.show-labour', compact('labour_detail'));
+            return view('admin.pages.labours.show-labour', compact('labour_detail','dynamic_registrationstatus','dynamic_reasons'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -420,7 +437,69 @@ class LaboursController extends Controller {
     //     }
     // }
     
-   
+    public function updateLabourStatus(Request $request){
+        // $user_data = $this->service->editUsers($request);
+        // return view('admin.pages.users.users-list',compact('user_data'));
+// dd($request);
+        $rules = [
+            'is_approved' => 'required',
+            // 'u_uname' => 'required',
+            // 'password' => 'required',
+            // 'role_id' => 'required',
+            // 'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+            // 'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+            // 'l_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
+            // 'number' =>  'required|regex:/^[0-9]{10}$/',
+            // 'imei_no' => 'required',
+            // 'aadhar_no' => 'required',
+            // 'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
+            // 'state' => 'required',
+            // 'district' => 'required',
+            // 'taluka' => 'required',
+            // 'village' => 'required',
+            // 'pincode' => 'required|regex:/^[0-9]{6}$/',
+         ];       
+
+        $messages = [   
+                        'is_approved.required' => 'Please enter email.',
+                        // 'email.email' => 'Please enter valid email.',
+                        // 'u_uname.required' => 'Please enter user uname.',
+                        // 'password.required' => 'Please enter password.',
+                    ];
+
+
+        try {
+            $validation = Validator::make($request->all(),$rules, $messages);
+            if ($validation->fails()) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors($validation);
+            } else {
+                $register_user = $this->service->updateLabourStatus($request);
+                // dd($register_user);
+
+                if($register_user)
+                {
+                
+                    $msg = $register_user['msg'];
+                    $status = $register_user['status'];
+                    if($status=='success') {
+                        return redirect('list-labours')->with(compact('msg','status'));
+                    }
+                    else {
+                        return redirect('list-labours')->withInput()->with(compact('msg','status'));
+                    }
+                }
+                
+            }
+
+        } catch (Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with(['msg' => $e->getMessage(), 'status' => 'error']);
+        }
+
+    }
 
   
    

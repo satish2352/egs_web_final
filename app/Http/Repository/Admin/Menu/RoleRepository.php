@@ -159,6 +159,7 @@ class RoleRepository  {
     private function updateRolesPermissions($request, $role_id) {
 
 		$permissions_data_from_table  = $this->permissionsData();
+        
 		$update_data = array();
 		foreach ($permissions_data_from_table as $key => $data) {
 			$permission_id  = 'permission_id_'.$data['id'];
@@ -205,7 +206,7 @@ class RoleRepository  {
 					])->update($update_data);
 				} else {
                     // dd($request->has($per_add));
-                    if($request->has($per_add) || $request->has($per_update) || $request->has($per_delete)) {
+                    if($request->has($per_list) || $request->has($per_add) || $request->has($per_update) || $request->has($per_delete)) {
                         $update_data['role_id']  = $role_id;
                         $update_data['permission_id']  = $data['id'];
                         $permissions_data = RolesPermissions::insert($update_data);

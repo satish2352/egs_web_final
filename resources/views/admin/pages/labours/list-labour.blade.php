@@ -34,12 +34,14 @@
                                                     <th>District</th>
                                                     <!-- <th>Taluka</th>
                                                     <th>Village</th> -->
-                                                    <!-- <th>Status</th> -->
+                                                    <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                
                                                 @foreach ($labours as $item)
+                                              
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}</td>
@@ -47,22 +49,16 @@
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
                                                         <td>{{ $item->district_id }}</td>
-                                                        <!-- <td>{{ $item->village_name }}</td> -->
-
-
-                                                        <!-- <td>
-                                                            <label class="switch">
-                                                                <input data-id="{{ $item->id }}" type="checkbox"
-                                                                    {{ $item->is_active ? 'checked' : '' }}
-                                                                    class="active-btn btn btn-sm btn-outline-primary m-1"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="{{ $item->is_active ? 'Active' : 'Inactive' }}">
-                                                                <span class="slider round "></span>
-                                                            </label>
-
-                                                        </td> -->
-
-
+                                                        <td>
+                                                            @if ($item->is_approved=='1')
+                                                                Received For Approval
+                                                            @elseif($item->is_approved=='2')
+                                                                Approved
+                                                            @elseif($item->is_approved=='2')
+                                                                Send For Correction
+                                                            @endif
+                                                        </td>
+                                                      
                                                         {{-- <td>@if ($item->is_active)
                                                         <button type="button" class="btn btn-success btn-sm">Active</button>
                                                         @else 

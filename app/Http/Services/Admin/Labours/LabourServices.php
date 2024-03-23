@@ -27,7 +27,11 @@ class LabourServices
 
     public function index() {
         $data_labours = $this->repo->getLaboursList();
-        // dd($data_users);
+        return $data_labours;
+    }
+
+    public function listApprovedLabours() {
+        $data_labours = $this->repo->getApprovedLaboursList();
         return $data_labours;
     }
 
@@ -101,6 +105,11 @@ class LabourServices
             $user_register_id = $this->repo->update($request);
             return ['status'=>'success','msg'=>'Data Updated Successful.'];
     }    
+
+    public function updateLabourStatus($request) {
+        $user_register_id = $this->repo->updateLabourStatus($request);
+        return ['status'=>'success','msg'=>'Data Updated Successful.'];
+} 
 
     public function editProjects($request) {
         $data_projects = $this->repo->editProjects($request);

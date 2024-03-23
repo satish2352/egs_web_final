@@ -21,13 +21,16 @@ class LabourRepository
 
 	public function getLaboursList() {
 		$sess_user_id=session()->get('user_id');
-		if($sess_user_id=='1')
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		if($sess_user_role=='1')
 		{
      	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
+		->where('labour.is_approved', '1')
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -44,17 +47,134 @@ class LabourRepository
 			'labour.profile_image', 
 			'labour.voter_image', 
 			'labour.is_active',
+			'labour.is_approved',
 			'users.f_name',
 			'users.m_name',
 			'users.l_name',
           )->get();
-		  }else if($sess_user_id!='1')
+		  }else if($sess_user_role=='2')
 		  {
-			$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+
+			$data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $sess_user_id)
+                ->first();
+
+            $utype=$data_output->user_type;
+            $user_working_dist=$data_output->user_district;
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
+
+			$data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $sess_user_id)
+                ->first();
+
+            if($utype=='1')
+            {
+            $data_user_output = User::where('users.user_district', $user_working_dist)
+            ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='2')
+            {
+                $data_user_output = User::where('users.user_taluka', $user_working_tal)
+                ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='3')
+            {
+                $data_user_output = User::where('users.user_village', $user_working_vil)
+                ->select('id')
+                ->get()
+				->toArray();
+            }         
+            
+                $data_labours = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+				->leftJoin('users', 'labour.user_id', '=', 'users.id')
+				->where('labour.is_approved', '1')
+                ->whereIn('labour.user_id',$data_user_output)
+                ->where('registrationstatus.is_active', true)
+                ->select(
+                    'labour.id',
+                    'labour.full_name',
+                    'labour.date_of_birth',
+                    'gender_labour.gender_name as gender_name',
+                    'skills_labour.skills as skills',
+                    'district_labour.name as district_id',
+                    'taluka_labour.name as taluka_id',
+                    'village_labour.name as village_id',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'labour.profile_image',
+                    'registrationstatus.status_name',
+					'labour.is_approved',
+					'users.f_name',
+					'users.m_name',
+					'users.l_name',
+                )
+                    ->get();
+			}else if($sess_user_role=='3')
+			{
+
+				  $data_labours = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+				  ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+				  ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+				  ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+				  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+				  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+				  ->leftJoin('users', 'labour.user_id', '=', 'users.id')
+				  ->where('labour.is_approved', '1')
+				  ->where('labour.user_id',$sess_user_id)
+				  ->where('registrationstatus.is_active', true)
+				  // ->where('labour.is_approved', $is_approved)
+				  // ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+				  //     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+				  // })
+				  ->select(
+					  'labour.id',
+					  'labour.full_name',
+					  'labour.date_of_birth',
+					  'gender_labour.gender_name as gender_name',
+					  'skills_labour.skills as skills',
+					  'district_labour.name as district_id',
+					  'taluka_labour.name as taluka_id',
+					  'village_labour.name as village_id',
+					  'labour.mobile_number',
+					  'labour.landline_number',
+					  'labour.mgnrega_card_id',
+					  'labour.latitude',
+					  'labour.longitude',
+					  'labour.profile_image',
+					  'registrationstatus.status_name',
+					  'labour.is_approved',
+					  'users.f_name',
+					  'users.m_name',
+					  'users.l_name',
+				  )
+					  ->get();
+			  }		
+		return $data_labours;
+	}
+
+	public function getApprovedLaboursList() {
+		$sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		if($sess_user_role=='1')
+		{
+     	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-		->where('labour.user_id', $sess_user_id)
+		->leftJoin('users', 'labour.user_id', '=', 'users.id')
+		->where('labour.is_approved', '2')
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -71,11 +191,183 @@ class LabourRepository
 			'labour.profile_image', 
 			'labour.voter_image', 
 			'labour.is_active',
+			'labour.is_approved',
+			'users.f_name',
+			'users.m_name',
+			'users.l_name',
           )->get();
+		  }else if($sess_user_role=='2')
+		  {
 
-			}		
+			$data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $sess_user_id)
+                ->first();
+
+            $utype=$data_output->user_type;
+            $user_working_dist=$data_output->user_district;
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
+
+			$data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $sess_user_id)
+                ->first();
+
+            if($utype=='1')
+            {
+            $data_user_output = User::where('users.user_district', $user_working_dist)
+            ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='2')
+            {
+                $data_user_output = User::where('users.user_taluka', $user_working_tal)
+                ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='3')
+            {
+                $data_user_output = User::where('users.user_village', $user_working_vil)
+                ->select('id')
+                ->get()
+				->toArray();
+            }         
+            
+                $data_labours = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+				->leftJoin('users', 'labour.user_id', '=', 'users.id')
+				->where('labour.is_approved', '2')
+                ->whereIn('labour.user_id',$data_user_output)
+                ->where('registrationstatus.is_active', true)
+                ->select(
+                    'labour.id',
+                    'labour.full_name',
+                    'labour.date_of_birth',
+                    'gender_labour.gender_name as gender_name',
+                    'skills_labour.skills as skills',
+                    'district_labour.name as district_id',
+                    'taluka_labour.name as taluka_id',
+                    'village_labour.name as village_id',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'labour.profile_image',
+                    'registrationstatus.status_name',
+					'labour.is_approved',
+					'users.f_name',
+					'users.m_name',
+					'users.l_name',
+                )
+                    ->get();
+			}else if($sess_user_role=='3')
+			{
+
+				  $data_labours = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+				  ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+				  ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+				  ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+				  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+				  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+				  ->leftJoin('users', 'labour.user_id', '=', 'users.id')
+				  ->where('labour.is_approved', '2')
+				  ->where('labour.user_id',$sess_user_id)
+				  ->where('registrationstatus.is_active', true)
+				  // ->where('labour.is_approved', $is_approved)
+				  // ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+				  //     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+				  // })
+				  ->select(
+					  'labour.id',
+					  'labour.full_name',
+					  'labour.date_of_birth',
+					  'gender_labour.gender_name as gender_name',
+					  'skills_labour.skills as skills',
+					  'district_labour.name as district_id',
+					  'taluka_labour.name as taluka_id',
+					  'village_labour.name as village_id',
+					  'labour.mobile_number',
+					  'labour.landline_number',
+					  'labour.mgnrega_card_id',
+					  'labour.latitude',
+					  'labour.longitude',
+					  'labour.profile_image',
+					  'registrationstatus.status_name',
+					  'labour.is_approved',
+					  'users.f_name',
+					  'users.m_name',
+					  'users.l_name',
+				  )
+					  ->get();
+			  }		
 		return $data_labours;
 	}
+
+	// public function getApprovedLaboursList() {
+	// 	$sess_user_id=session()->get('user_id');
+	// 	if($sess_user_id=='1')
+	// 	{
+    //  	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+	// 	->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+	// 	->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+	// 	->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+	// 	->leftJoin('users', 'labour.user_id', '=', 'users.id')
+	// 	->where('labour.is_approved', '2')
+    //       ->select(
+	// 		'labour.id',
+	// 		'labour.full_name',
+	// 		'labour.date_of_birth',
+	// 		'gender_labour.gender_name as gender_name',
+	// 		'district_labour.name as district_id',
+	// 		'taluka_labour.name as taluka_id',
+	// 		'village_labour.name as village_id',
+	// 		'labour.mobile_number',
+	// 		'labour.landline_number',
+	// 		'labour.mgnrega_card_id',
+	// 		'labour.aadhar_image',
+	// 		'labour.mgnrega_image', 
+	// 		'labour.profile_image', 
+	// 		'labour.voter_image', 
+	// 		'labour.is_active',
+	// 		'labour.is_approved',
+	// 		'users.f_name',
+	// 		'users.m_name',
+	// 		'users.l_name',
+    //       )->get();
+	// 	  }else if($sess_user_id!='2')
+	// 	  {
+	// 		$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+	// 	->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+	// 	->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+	// 	->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+	// 	->where('labour.user_id', $sess_user_id)
+	// 	->where('labour.is_approved', '1')
+    //       ->select(
+	// 		'labour.id',
+	// 		'labour.full_name',
+	// 		'labour.date_of_birth',
+	// 		'gender_labour.gender_name as gender_name',
+	// 		'district_labour.name as district_id',
+	// 		'taluka_labour.name as taluka_id',
+	// 		'village_labour.name as village_id',
+	// 		'labour.mobile_number',
+	// 		'labour.landline_number',
+	// 		'labour.mgnrega_card_id',
+	// 		'labour.aadhar_image',
+	// 		'labour.mgnrega_image', 
+	// 		'labour.profile_image', 
+	// 		'labour.voter_image', 
+	// 		'labour.is_active',
+	// 		'labour.is_approved',
+    //       )->get();
+
+	// 		}		
+	// 	return $data_labours;
+	// }
 
 	public function getLabourAttendanceList() {
 		$sess_user_id=session()->get('user_id');
@@ -411,9 +703,9 @@ class LabourRepository
 	public function getById($id)
 	{
 		// dd($id);
-		$data_projects = [];
+		$data_labours = [];
 		try {
-			$data_projects['data_users'] = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+			$data_labours['data_users_data'] = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 			->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 			  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 			  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
@@ -434,10 +726,13 @@ class LabourRepository
 				'labour.voter_image',
 				'labour.latitude',
 				'labour.longitude',
-				'labour.is_active')
+				'labour.is_active',
+				'labour.is_approved',
+				'labour.reason_id',
+				'labour.other_remark')
 				->first();
 
-				$data_projects['data_family_users'] = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+				$data_labours['data_family_users'] = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('relation as relationship_labour', 'labour_family_details.relationship_id', '=', 'relationship_labour.id')
                 ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
                 ->where('labour_family_details.labour_id', $id)
@@ -450,10 +745,10 @@ class LabourRepository
 				->get()
 				->toArray();
 
-				// dd($data_projects);
+				// dd($data_labours);
 	
-			if ($data_projects) {
-				return $data_projects;
+			if ($data_labours) {
+				return $data_labours;
 			} else {
 				return null;
 			}
@@ -605,22 +900,19 @@ class LabourRepository
 			info($e);
 		}
 	}
-	
-	// public function checkEmailExists(Request $request) {
-    //     $userEmail = $request->input('email');
-      
-    //     $user = User::where('email', $userEmail)->first();
-      
-    //     if ($user) {
-    //       return response()->json([
-    //         'success' => false,
-    //         'message' => 'This Email already exists.',
-    //       ]);
-    //     } else {
-    //       return response()->json([
-    //         'success' => true,
-    //         'message' => 'This Email does not exist.',
-    //       ]);
-    //     }
-    // }
+
+	public function updateLabourStatus($request)
+	{
+		// dd($request);
+		$user_data = Labour::where('id',$request['edit_id']) 
+						->update([
+							'is_approved' => $request['is_approved'],
+							'reason_id' => $request['reason_id'],
+							'other_remark' => $request['other_remark']
+						]);
+		
+		// $this->updateRolesPermissions($request, $request->edit_id);
+		return $request->edit_id;
+	}
+
 }

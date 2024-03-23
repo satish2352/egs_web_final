@@ -109,11 +109,21 @@
                       </a>
                       <div class="collapse" id="master">
                           <ul class="nav flex-column sub-menu">
-                          @if (in_array('list-labours', $data_for_url))
+                            @if (in_array('list-labours', $data_for_url))
                               <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-labours*')
                                     ? 'nav-link active' : 'nav-link' }}"
-                                          href="{{ route('list-labours') }}">Labours</a></li>
-                              @endif
+                                          href="{{ route('list-labours') }}">New Labours</a></li>
+                            @endif
+                            @if (in_array('list-labours', $data_for_url))
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-approved-labours*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-approved-labours') }}">Approved Labours</a></li>
+                            @endif
+                            @if (in_array('list-labours', $data_for_url))
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-rejected-labours*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-rejected-labours') }}">Rejected Labours</a></li>
+                            @endif
 
                           </ul>
                       </div>
