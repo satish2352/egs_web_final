@@ -586,6 +586,9 @@ class LabourController extends Controller
         return $this->getLabourStatusList($request, 3);
     }
 
+    public function getRejectedLabourList(Request $request) {
+        return $this->getLabourStatusList($request, 4);
+    }
     // public function getOtherLabourList(Request $request) {
     //     return $this->getLabourStatusList($request, 4);
     // }

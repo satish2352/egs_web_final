@@ -64,6 +64,7 @@ Route::group([
         Route::post('/list-send-approved-labour', [LabourController::class, 'getSendApprovedLabourList']);
         Route::post('/list-approved-labour', [LabourController::class, 'getApprovedLabourList']);
         Route::post('/list-not-approved-labour', [LabourController::class, 'getNotApprovedLabourList']);
+        Route::post('/list-labour-rejected', [LabourController::class, 'getRejectedLabourList']);
 
         Route::post('/update-labour-status-approved', [LabourController::class, 'updateLabourStatusApproved']);
         Route::post('/update-labour-status-not-approved', [LabourController::class, 'updateLabourStatusNotApproved']);
