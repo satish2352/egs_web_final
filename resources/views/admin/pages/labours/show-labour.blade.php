@@ -263,7 +263,7 @@
                                 </div>
                             </div>
                         @if(session()->get('user_type')=='1')
-                        @if($labour_detail['data_users_data']['is_approved']=='3')    
+                        @if($labour_detail['data_users_data']['is_approved']=='3' || $labour_detail['data_users_data']['is_approved']=='1')    
                             <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
                                         <h5 class="d-flex justify-content-center mb-4">User Working Details</h5>
                                         <form class="forms-sample" id="frm_register" name="frm_register" method="post" role="form"
