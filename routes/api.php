@@ -86,7 +86,8 @@ Route::group([
         Route::post('/project-list-lat-long', [ProjectController::class, 'getAllProjectLatLong']);
         
        
-        Route::post('/update-labour', [LabourController::class, 'updateLabour']);
+        Route::post('/update-labour-first-form', [LabourController::class, 'updateLabourFirstForm']);
+        Route::post('/update-labour-second-form', [LabourController::class, 'updateLabourSecondForm']);
         Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
        
         Route::post('logout', [AuthController::class, 'logout']);
