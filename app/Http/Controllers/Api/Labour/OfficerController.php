@@ -221,7 +221,7 @@ class OfficerController extends Controller
                     ->get()
 					->toArray();
                    
-                    foreach ($data_labour as $labour) {
+                    foreach ($data_labour as &$labour) { 
                         $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
                     }
     
