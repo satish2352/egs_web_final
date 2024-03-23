@@ -84,10 +84,10 @@ Route::group([
         Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
 
         Route::post('/project-list-lat-long', [ProjectController::class, 'getAllProjectLatLong']);
-        // Route::post('/filter-mgnrega-id-labour-list', [LabourController::class, 'filtermgnregaIdLabourList']);
+        
        
-        
-        
+        Route::post('/update-labour', [LabourController::class, 'updateLabour']);
+        Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
        
         Route::post('logout', [AuthController::class, 'logout']);
     });

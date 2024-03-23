@@ -185,7 +185,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-
     public function updateParticularDataLabour(Request $request)
     {
         try {
@@ -239,7 +238,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-
     public function getAllLabourList(Request $request){
     
         try {
@@ -319,7 +317,7 @@ class LabourController extends Controller
             $mgnrega_card_id = $request->input('mgnrega_card_id');
             $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+                ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
                 ->leftJoin('tbl_reason as reason_labour', 'labour.reason_id', '=', 'reason_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
@@ -446,7 +444,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-
     public function filterLabourList(Request $request){
         try {
             $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
@@ -493,44 +490,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-
-    // public function filtermgnregaIdLabourList(Request $request){
-    //     try {
-    //         $query = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-    //             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-    //             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-    //             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-    //             ->select(
-    //                 'labour.id',
-    //                 'labour.full_name',
-    //                 'labour.date_of_birth',
-    //                 'gender_labour.gender_name as gender_name',
-    //                 'district_labour.name as district_id',
-    //                 'taluka_labour.name as taluka_id',
-    //                 'village_labour.name as village_id',
-    //                 'labour.mobile_number',
-    //                 'labour.landline_number',
-    //                 'labour.mgnrega_card_id',
-    //                 'labour.latitude',
-    //                 'labour.longitude',
-    //                 'labour.profile_image',
-    //                 'labour.aadhar_image',
-    //                 'labour.mgnrega_image',
-    //                 'labour.profile_image',
-    //             );
-
-    //         // Apply filters if provided
-    //         // if ($request->has('mgnrega_card_id')) {
-    //         //     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
-    //         // }
-        
-    //         $data_output = $query->get();
-
-    //         return response()->json(['status' => 'success', 'message' => 'Filtered data retrieved successfully', 'data' => $data_output], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-    //     }
-    // }
     public function getLabourStatusList(Request $request, $is_approved){
         try {
             $user = Auth::user()->id;
@@ -573,26 +532,18 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
         }
     }
-    
     public function getSendApprovedLabourList(Request $request) {
         return $this->getLabourStatusList($request, 1);
     }
-    
     public function getApprovedLabourList(Request $request) {
         return $this->getLabourStatusList($request, 2);
     }
-    
     public function getNotApprovedLabourList(Request $request) {
         return $this->getLabourStatusList($request, 3);
     }
-
     public function getRejectedLabourList(Request $request) {
         return $this->getLabourStatusList($request, 4);
     }
-    // public function getOtherLabourList(Request $request) {
-    //     return $this->getLabourStatusList($request, 4);
-    // }
-
     public function updateLabourStatusApproved(Request $request){
     
         try {
@@ -623,7 +574,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
         }
     }
-    
     public function updateLabourStatusNotApproved(Request $request) {
         try {
             $user = Auth::user();
@@ -674,6 +624,166 @@ class LabourController extends Controller
         }
     }
     
+    public function getParticularLabourForUpdate(Request $request){
+        try {
+            $user = Auth::user()->id;
+            $mgnrega_card_id = $request->input('mgnrega_card_id');
+            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
+                ->leftJoin('tbl_reason as reason_labour', 'labour.reason_id', '=', 'reason_labour.id')
+                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+                ->where('labour.user_id', $user)
+                ->where('labour.mgnrega_card_id', $mgnrega_card_id)
+                ->select(
+                    'labour.id',
+                    'labour.full_name',
+                    'labour.date_of_birth',
+                    'labour.gender_id',
+                    'gender_labour.gender_name as gender_name',
+                    'labour.skill_id',
+                    'skills_labour.skills as skills',
+                    'labour.reason_id',
+                    'reason_labour.reason_name as reason_name',
+                    'labour.district_id',
+                    'district_labour.name as district_name',
+                    'labour.taluka_id',
+                    'taluka_labour.name as taluka_name',
+                    'labour.village_id',
+                    'village_labour.name as village_name',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'labour.profile_image',
+                    'labour.aadhar_image',
+                    'labour.mgnrega_image',
+                    'labour.voter_image',
+                    'labour.other_remark',
+                    'registrationstatus.status_name'
+
+
+                )->get();
+
+                foreach ($data_output as $labour) {
+                    $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
+                    $labour->aadhar_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->aadhar_image;
+                    $labour->mgnrega_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->mgnrega_image;
+                    $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
+                  }
+
+            foreach ($data_output as $labour) {
+                $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+                ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+                    ->select(
+                        'labour_family_details.id',
+                        'labour_family_details.gender_id',
+                        'gender_labour.gender_name as gender_id',
+                        'labour_family_details.relationship_id',
+                        'relation_labour.relation_title as relationship_id',
+                        'labour_family_details.married_status_id',
+                        'maritalstatus_labour.maritalstatus as married_status_id',
+                        'labour_family_details.full_name',
+                        'labour_family_details.date_of_birth'
+                    )
+                    ->where('labour_family_details.labour_id', $labour->id)
+                    ->get();
+            }
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Labour details get failed', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function updateLabour(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $validator = Validator::make($request->all(), [
+                // 'project_id' => 'required',
+                // 'mgnrega_card_id' => 'required',
+                // 'attendance_day' => 'required',
+               
+            ]);
+            // Check if validation fails
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+            }
+            // Find the attendance mark data
+            $labour_data = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+                ->first();
+    
+            // Check if attendance mark data exists
+            if (!$labour_data) {
+                return response()->json(['status' => 'error', 'message' => 'Attendance mark data not found'], 200);
+            }
+            $labour_data->user_id = $user->id; // Assign the user ID
+            $labour_data->full_name = $request->full_name;
+            $labour_data->gender_id = $request->gender_id;
+            $labour_data->date_of_birth = $request->date_of_birth;//Carbon::createFromFormat('d/m/Y', )->format('Y-m-d');
+            $labour_data->district_id = $request->district_id;
+            $labour_data->taluka_id = $request->taluka_id;
+            $labour_data->village_id = $request->village_id;
+            $labour_data->mobile_number = $request->mobile_number;
+            $labour_data->landline_number = $request->landline_number;
+            $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+            $labour_data->skill_id = $request->skill_id;
+            $labour_data->latitude = $request->latitude;
+            $labour_data->longitude = $request->longitude;
+            $labour_data->save();
+    
+            $imageAadhar = $request->id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+            $imagePancard = $request->id . '_' . rand(100000, 999999) . '_pan.' . $request->mgnrega_image->extension();
+            $imageProfile = $request->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+            $imageVoter = $request->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
+
+            $baseUrl = Config::get('env.FILE_VIEW');
+            $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
+
+            uploadImage($request, 'aadhar_image', $path, $imageAadhar);
+            uploadImage($request, 'mgnrega_image', $path, $imagePancard);
+            uploadImage($request, 'profile_image', $path, $imageProfile);
+            uploadImage($request, 'voter_image', $path, $imageVoter);
+
+            // Update the image paths in the database
+            $labour_data->aadhar_image = $imageAadhar;
+            $labour_data->mgnrega_image = $imagePancard;
+            $labour_data->profile_image = $imageProfile;
+            $labour_data->voter_image = $imageVoter;
+            $labour_data->save();
+
+
+            $labour_data->aadhar_image = $baseUrl . $path . '/' . $imageAadhar;
+            $labour_data->mgnrega_image = $baseUrl . $path . '/' . $imagePancard;
+            $labour_data->profile_image = $baseUrl . $path . '/' . $imageProfile;
+            $labour_data->voter_image = $baseUrl . $path . '/' . $imageVoter;
+
+
+
+            $familyDetailNew = json_decode($request->family,true);
+            
+            foreach ($familyDetailNew as $key => $familyMember) {
+                $familyDetail = new LabourFamilyDetails();
+                $familyDetail->labour_id = $labour_data->id;
+                $familyDetail->full_name = $familyMember['fullName'];
+                $familyDetail->gender_id = $familyMember['genderId'];
+                $familyDetail->relationship_id = $familyMember['relationId'];
+                $familyDetail->married_status_id = $familyMember['maritalStatusId'];
+                $familyDetail->date_of_birth = $familyMember['dob'];
+                $familyDetail->save();
+                $familyDetails[] = $familyDetail; // Collect family details
+            }
+
+            return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $attendance_mark_data], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
+        }
+    }
     
     
 
