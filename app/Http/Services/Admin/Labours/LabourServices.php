@@ -217,5 +217,18 @@ class LabourServices
         return $this->repo->updateOne($id);
     }
 
+    public function getGramsevakList() {
+        $data_gramsevaks = $this->repo->getGramsevakList();
+        return $data_gramsevaks;
+    }
+
+    public function showGramsevakDocuments($id){
+        try {
+            return $this->repo->showGramsevakDocuments($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
 
 }

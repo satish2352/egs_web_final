@@ -507,6 +507,43 @@ class LaboursController extends Controller {
 
     }
 
+    public function getGramsevakList()
+    {
+        $gramsevaks = $this->service->getGramsevakList();
+        return view('admin.pages.gramsevak.list-gramsevaks',compact('gramsevaks'));
+    }
+
+    public function showGramsevakDocuments(Request $request)
+    {
+        try {
+            $data_gram_doc_details = $this->service->showGramsevakDocuments($request->show_id);
+            return view('admin.pages.gramsevak.show-gramsevak-doc', compact('data_gram_doc_details'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    // public function showGramsevakDocuments(Request $request)
+    // {
+    //     $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+    //                         ->where('id', '!=', 1)
+    //                         ->select('id','status_name')
+    //                         ->get()
+    //                         ->toArray();
+    //     $dynamic_reasons = Reasons::where('is_active', 1)
+    //                         ->select('id','reason_name')
+    //                         ->get()
+    //                         ->toArray();
+
+    //     try {
+    //         $labour_detail = $this->service->getById($request->show_id);
+    //         // dd($labour_detail);
+    //         return view('admin.pages.labours.show-gramsevak-docs', compact('labour_detail','dynamic_registrationstatus','dynamic_reasons'));
+    //     } catch (\Exception $e) {
+    //         return $e;
+    //     }
+    // }
+
   
    
 
