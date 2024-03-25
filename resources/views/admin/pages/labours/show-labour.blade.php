@@ -262,8 +262,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @if(session()->get('user_type')=='1')
-                        @if($labour_detail['data_users_data']['is_approved']=='3' || $labour_detail['data_users_data']['is_approved']=='1')    
+                        @if($labour_detail['data_users_data']['is_approved']=='1' && session()->get('role_id')=='2')    
                             <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
                                         <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
                                         <form class="forms-sample" id="frm_register" name="frm_register" method="post" role="form"
@@ -275,7 +274,7 @@
                                                 <div class="form-group">
                                                     <label for="is_approved">Registartion Status</label>&nbsp<span class="red-text">*</span>
                                                     <select class="form-control" name="is_approved" id="is_approved">
-                                                        <option value="">Select User Type</option>
+                                                        <option value="">Select Status</option>
 
                                                         @foreach ($dynamic_registrationstatus as $registration_status_data)
                                                     <option value="{{ $registration_status_data['id'] }}"
@@ -290,14 +289,21 @@
                                             </div>
                                             <div class="col-lg-3 col-md-3 col-sm-3" id="reason_div">
                                                 <div class="form-group">
-                                                    <label for="reason_id">Disaprove Reasons</label>&nbsp<span class="red-text">*</span>
+                                                    <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
                                                     <select class="form-control" name="reason_id" id="reason_id">
                                                         <option value="">Select Reason</option>
+                                                        @if($labour_detail['data_users_data']['reason_id']=='0')
+                                                        <option value="0" <?php echo 'selected'; ?>>Others</option>
+                                                        @else
+                                                        <option value="0">Others</option>
+                                                        @endif
                                                             @foreach ($dynamic_reasons as $dynamic_reasons_data)
                                                             <option value="{{ $dynamic_reasons_data['id'] }}"
                                                             @if ($dynamic_reasons_data['id'] == $labour_detail['data_users_data']['reason_id']) <?php echo 'selected'; ?> @endif>
                                                             {{ $dynamic_reasons_data['reason_name'] }}</option>
+                                                           
                                                             @endforeach  
+                                                             
 
                                                     </select>
                                                     @if ($errors->has('reason_id'))
@@ -326,8 +332,68 @@
                                         </div>
                                     </form>
                                     </div>
+                                    @elseif($labour_detail['data_users_data']['is_approved']=='3' && session()->get('role_id')=='1' || session()->get('role_id')=='2'
+                                    || session()->get('role_id')=='3')    
+                                    <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
+                                        <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
+                                       
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="is_approved">Registartion Status</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="is_approved" id="is_approved" disabled>
+                                                        <option value="">Select Status</option>
+
+                                                        @foreach ($dynamic_registrationstatus as $registration_status_data)
+                                                    <option value="{{ $registration_status_data['id'] }}"
+                                                        @if ($registration_status_data['id'] == $labour_detail['data_users_data']['is_approved']) <?php echo 'selected'; ?> @endif>
+                                                        {{ $registration_status_data['status_name'] }}</option>
+                                                @endforeach    
+                                                    </select>
+                                                    @if ($errors->has('is_approved'))
+                                                        <span class="red-text"><?php echo $errors->first('is_approved', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3" id="reason_div">
+                                                <div class="form-group">
+                                                    <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="reason_id" id="reason_id" disabled>
+                                                        <option value="">Select Reason</option>
+                                                        @if($labour_detail['data_users_data']['reason_id']=='0')
+                                                        <option value="0" <?php echo 'selected'; ?>>Others</option>
+                                                        @else
+                                                        <option value="0">Others</option>
+                                                        @endif
+                                                            @foreach ($dynamic_reasons as $dynamic_reasons_data)
+                                                            <option value="{{ $dynamic_reasons_data['id'] }}"
+                                                            @if ($dynamic_reasons_data['id'] == $labour_detail['data_users_data']['reason_id']) <?php echo 'selected'; ?> @endif>
+                                                            {{ $dynamic_reasons_data['reason_name'] }}</option>
+                                                           
+                                                            @endforeach  
+                                                             
+
+                                                    </select>
+                                                    @if ($errors->has('reason_id'))
+                                                        <span class="red-text"><?php echo $errors->first('reason_id', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6" id="remark_div">
+                                                <div class="form-group">
+                                                    <label for="other_remark">Remark</label>&nbsp<span
+                                                        class="red-text">*</span>
+                                                    <textarea class="form-control other_remark" name="other_remark" id="other_remark"
+                                                        placeholder="Enter the other_remark" name="other_remark" disabled>{{ $labour_detail['data_users_data']['other_remark'] }}</textarea>
+                                                    @if ($errors->has('other_remark'))
+                                                        <span class="red-text"><?php echo $errors->first('other_remark', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
                                     @endif
-                            @endif        
                         </div>
                     </div>
                 </div>
@@ -349,7 +415,6 @@
 
     $("#is_approved").on('change', function() {
         var status_val=$(this).val();
-        alert(status_val);
         if(status_val == '2')
         {
             $('#reason_div').hide();
@@ -357,6 +422,18 @@
         }else
         {
             $('#reason_div').show();
+            $('#remark_div').show();
+        }
+    });
+
+    $("#reason_id").on('change', function() {
+        var reason_val=$(this).val();
+        alert(reason_val);
+        if(reason_val != '0')
+        {
+            $('#remark_div').hide();
+        }else
+        {
             $('#remark_div').show();
         }
     });
