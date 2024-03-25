@@ -32,8 +32,6 @@
                                                     <th>Mobile Number</th>
                                                     <th>Mnrega ID</th>
                                                     <th>District</th>
-                                                    <!-- <th>Taluka</th>
-                                                    <th>Village</th> -->
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -54,7 +52,7 @@
                                                                 Received For Approval
                                                             @elseif($item->is_approved=='2')
                                                                 Approved
-                                                            @elseif($item->is_approved=='2')
+                                                            @elseif($item->is_approved=='3')
                                                                 Send For Correction
                                                             @endif
                                                         </td>

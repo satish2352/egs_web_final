@@ -265,7 +265,7 @@
                         @if(session()->get('user_type')=='1')
                         @if($labour_detail['data_users_data']['is_approved']=='3' || $labour_detail['data_users_data']['is_approved']=='1')    
                             <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
-                                        <h5 class="d-flex justify-content-center mb-4">User Working Details</h5>
+                                        <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
                                         <form class="forms-sample" id="frm_register" name="frm_register" method="post" role="form"
                                         action="{{ route('update-labour-status') }}" enctype="multipart/form-data">
                                         <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
@@ -288,7 +288,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                            <div class="col-lg-3 col-md-3 col-sm-3" id="reason_div">
                                                 <div class="form-group">
                                                     <label for="reason_id">Disaprove Reasons</label>&nbsp<span class="red-text">*</span>
                                                     <select class="form-control" name="reason_id" id="reason_id">
@@ -305,7 +305,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <div class="col-lg-6 col-md-6 col-sm-6" id="remark_div">
                                                 <div class="form-group">
                                                     <label for="other_remark">Remark</label>&nbsp<span
                                                         class="red-text">*</span>
@@ -345,6 +345,20 @@
     // When the user clicks on the close button or outside the modal, close it
     $(document).on("click", ".close, .modal", function() {
         $("#imageModal").css("display", "none");
+    });
+
+    $("#is_approved").on('change', function() {
+        var status_val=$(this).val();
+        alert(status_val);
+        if(status_val == '2')
+        {
+            $('#reason_div').hide();
+            $('#remark_div').hide();
+        }else
+        {
+            $('#reason_div').show();
+            $('#remark_div').show();
+        }
     });
 </script>
 
