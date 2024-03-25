@@ -189,9 +189,9 @@ class OfficerController extends Controller
                         ->get();
                 }
 
-                if ($labour['is_resubmitted']) {
+                if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
                 foreach ($data_labour as &$labourhistory) {
-                    $labour['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'gender_labour.id')
+                    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'gender_labour.id')
                         ->leftJoin('users as users_labour', 'labour_history_details.user_id', '=', 'users_labour.id')
                         ->leftJoin('tbl_reason', 'labour_history_details.reason_id', '=', 'tbl_reason.id')
                         ->leftJoin('labour', 'labour_history_details.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
@@ -203,7 +203,7 @@ class OfficerController extends Controller
                             'labour_history_details.other_remark',
                             'labour_history_details.updated_at',
                         )
-                        ->where('labour_history_details.mgnrega_card_id', $labour['mgnrega_card_id'])
+                        ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
                         ->get();
                 }
             }
