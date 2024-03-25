@@ -64,7 +64,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/list-labour-attendance', ['as' => 'list-labour-attendance', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@getLabourAttendanceList']);
 
     Route::get('/list-approved-labours', ['as' => 'list-approved-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@listApprovedLabours']);
-    Route::get('/list-rejected-labours', ['as' => 'list-rejected-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@listRejectedLabours']);
+    Route::get('/list-disapproved-labours', ['as' => 'list-disapproved-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@listDisapprovedLabours']);
     Route::post('/update-labour-status', ['as' => 'update-labour-status', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@updateLabourStatus']);
 
 

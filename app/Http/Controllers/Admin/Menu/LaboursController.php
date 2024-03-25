@@ -40,6 +40,12 @@ class LaboursController extends Controller {
         return view('admin.pages.labours.list-labour',compact('labours'));
     }
 
+    public function listDisapprovedLabours()
+    {
+        $labours = $this->service->listDisapprovedLabours();
+        return view('admin.pages.labours.list-labour',compact('labours'));
+    }
+
     public function getLabourAttendanceList()
     {
         $labours = $this->service->getLabourAttendanceList();

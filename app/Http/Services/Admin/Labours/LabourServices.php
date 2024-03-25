@@ -35,6 +35,11 @@ class LabourServices
         return $data_labours;
     }
 
+    public function listDisapprovedLabours() {
+        $data_labours = $this->repo->getDisapprovedLaboursList();
+        return $data_labours;
+    }
+
     public function getLabourAttendanceList() {
         $data_labours = $this->repo->getLabourAttendanceList();
         // dd($data_users);

@@ -120,9 +120,9 @@
                                           href="{{ route('list-approved-labours') }}">Approved Labours</a></li>
                             @endif
                             @if (in_array('list-labours', $data_for_url))
-                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-rejected-labours*')
+                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-disapproved-labours*')
                                     ? 'nav-link active' : 'nav-link' }}"
-                                          href="{{ route('list-rejected-labours') }}">Rejected Labours</a></li>
+                                          href="{{ route('list-disapproved-labours') }}">Not Approved Labours</a></li>
                             @endif
 
                           </ul>
