@@ -1065,7 +1065,6 @@ class LabourRepository
 	public function getGramsevakList() {
 
 		$data_users = User::leftJoin('roles', 'roles.id', '=', 'users.role_id')
-				// ->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
 				->leftJoin('tbl_area as district_user', 'users.user_district', '=', 'district_user.location_id')
 				->leftJoin('tbl_area as taluka_user', 'users.user_taluka', '=', 'taluka_user.location_id')
 				->leftJoin('tbl_area as village_user', 'users.user_village', '=', 'village_user.location_id')
@@ -1074,28 +1073,24 @@ class LabourRepository
 				'users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state',
 				'district_user.name as district','taluka_user.name as taluka','village_user.name as village')
 				->get();
-				// dd($data_users);
 
 		$sess_user_id=session()->get('user_id');
 		$sess_user_type=session()->get('user_type');
 		$sess_user_role=session()->get('role_id');
-			// dd($data_users);
 		return $data_users;
 	}
 
 	public function showGramsevakDocuments($id)
 	{
-		
-		$data_gram_doc = [];
+		$data_gram_doc=[];
 		try {
 			$data_gram_doc['user_data'] = User::leftJoin('roles', 'roles.id', '=', 'users.role_id')
-				// ->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
 				->leftJoin('tbl_area as district_user', 'users.user_district', '=', 'district_user.location_id')
 				->leftJoin('tbl_area as taluka_user', 'users.user_taluka', '=', 'taluka_user.location_id')
 				->leftJoin('tbl_area as village_user', 'users.user_village', '=', 'village_user.location_id')
 				->where('users.id', $id)
 				->select('users.f_name','users.m_name','users.l_name','users.email','users.number','users.imei_no','users.aadhar_no',
-				'users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state',
+				'users.address','users.pincode','users.user_profile','roles.role_name',
 				'district_user.name as district','taluka_user.name as taluka','village_user.name as village')
 				->first();
 
@@ -1110,7 +1105,6 @@ class LabourRepository
 				->get();
 					
 
-				// dd($data_labours);
 	
 			if ($data_gram_doc) {
 				return $data_gram_doc;
