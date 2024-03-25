@@ -816,6 +816,8 @@ public function updateLabourSecondForm(Request $request)
         $labour_data->save();
 
         // $familyDetails = [];
+
+        
         $familyDetailNew = json_decode($request->family,true);
             
         foreach ($familyDetailNew as $key => $familyMember) {

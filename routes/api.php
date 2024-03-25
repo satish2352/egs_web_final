@@ -13,6 +13,9 @@ use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 use App\Http\Controllers\Api\Documents\GramPanchayatDocumentController;
 use App\Http\Controllers\Api\Labour\OfficerController;
 
+use App\Http\Controllers\Api\Labour\AttendanceMarkVisibleForOfficerController;
+
+
 
 
 /*
@@ -90,6 +93,8 @@ Route::group([
         Route::post('/update-labour-second-form', [LabourController::class, 'updateLabourSecondForm']);
         Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
        
+        Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
+        
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });

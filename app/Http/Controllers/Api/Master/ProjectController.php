@@ -145,13 +145,20 @@ class ProjectController extends Controller
         }
     }
     
-    public function getAllProjectLatLong(Request $request){
+    public function getAllProjectLatLong(Request $request)
+    {
         try {
             $user = Auth::user()->id;
             $userLatitude = $request->latitude; // Latitude of the user
             $userLongitude = $request->longitude; // Longitude of the user
             $distanceInKm = 2; // Distance in kilometers
-    // dd($userLatitude);
+
+        $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
+        $latN = $latLongArr['latN'];
+        $latS = $latLongArr['latS'];
+        $lonE = $latLongArr['lonE'];
+        $lonW = $latLongArr['lonW'];
+			
             // Haversine formula to calculate distance
             $project = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
                 ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
@@ -160,6 +167,13 @@ class ProjectController extends Controller
                 ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
                 // ->where('project_users.user_id')
                 ->where('projects.is_active', true)
+               
+                ->when($request->has('latitude'), function($query) use ($request) {
+                    $query->where('projects.latitude', '<=', $latN)
+                    ->where('projects.latitude', '>=', $latS)
+                    ->where('projects.longitude', '<=', $lonE)
+                    ->where('projects.longitude', '>=', $lonW);
+                })  
                 ->when($request->has('project_name'), function($query) use ($request) {
                     $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
                 })             
@@ -190,6 +204,58 @@ class ProjectController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
+    }
+
+
+
+    public function getLatitudeLongitude($latitude,$longitude, $distanceInKm)
+    {
+        $d = 0.621371*$distanceInKm; // 15 km in miles
+        $r = 3959; //earth's radius in miles
+
+        $latLongArr = array();
+        
+       
+
+        $latN = rad2deg(asin(sin(deg2rad($latitude)) * cos($d / $r)
+                + cos(deg2rad($latitude)) * sin($d / $r) * cos(deg2rad(0))));
+
+        $latS = rad2deg(asin(sin(deg2rad($latitude)) * cos($d / $r)
+                + cos(deg2rad($latitude)) * sin($d / $r) * cos(deg2rad(180))));
+
+        $lonE = rad2deg(deg2rad($longitude) + atan2(sin(deg2rad(90))
+                * sin($d / $r) * cos(deg2rad($latitude)), cos($d / $r)
+                - sin(deg2rad($latitude)) * sin(deg2rad($latN))));
+
+        $lonW = rad2deg(deg2rad($longitude) + atan2(sin(deg2rad(270))
+                * sin($d / $r) * cos(deg2rad($latitude)), cos($d / $r)
+                - sin(deg2rad($latitude)) * sin(deg2rad($latN))));
+
+        $latLongArr = 
+        [
+            'pincodeLatitude' => $latitude,
+            'pincodeLongitude' => $longitude,
+            'latN' => $latN,
+            'latS' => $latS,
+            'lonE' => $lonE,
+            'lonW' => $lonW
+        ];
+        }
+        else
+        {
+            $latLongArr = 
+        [
+            'pincodeLatitude' => '0',
+            'pincodeLongitude' => '0',
+            'latN' => '0',
+            'latS' => '0',
+            'lonE' => '0',
+            'lonW' => '0'
+        ];
+        }
+       
+       return $latLongArr;
+
     }
     
     
