@@ -766,6 +766,14 @@ public function updateLabourSecondForm(Request $request)
             return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
         }
 
+        // Delete existing family details for the labor
+        // LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
+
+         // Check if labour_id is greater than zero before deleting family details
+         if ($labour_data->id > 0) {
+            LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
+        }
+
         $labour_data->user_id = $user->id;
         $labour_data->latitude = $request->latitude;
         $labour_data->longitude = $request->longitude;
@@ -817,9 +825,10 @@ public function updateLabourSecondForm(Request $request)
 
         // $familyDetails = [];
 
-        
+
         $familyDetailNew = json_decode($request->family,true);
             
+        if ($labour_data->id > 0) {
         foreach ($familyDetailNew as $key => $familyMember) {
             $familyDetail = new LabourFamilyDetails();
             $familyDetail->labour_id = $labour_data->id;
@@ -831,6 +840,7 @@ public function updateLabourSecondForm(Request $request)
             $familyDetail->save();
             $familyDetails[] = $familyDetail; // Collect family details
         }
+    }
 
         return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
     } catch (\Exception $e) {
