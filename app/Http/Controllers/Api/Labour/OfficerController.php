@@ -173,43 +173,43 @@ class OfficerController extends Controller
                         $labour['voter_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['voter_image'];
                     }
     
-                foreach ($data_labour as &$labour) {
-                    $labour['family_details'] = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
-                        ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
-                        ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
-                        ->select(
-                            'labour_family_details.id',
-                            'gender_labour.gender_name as gender',
-                            'labour_family_details.gender_id',
-                            'relation_labour.relation_title as relation',
-                            'labour_family_details.relationship_id',
-                            'maritalstatus_labour.maritalstatus as maritalStatus',
-                            'maritalstatus_labour.married_status_id',
-                            'labour_family_details.full_name',
-                            'labour_family_details.date_of_birth'
-                        )
-                        ->where('labour_family_details.labour_id', $labour['id'])
-                        ->get();
-                }
+            //     foreach ($data_labour as &$labour) {
+            //         $labour['family_details'] = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
+            //             ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
+            //             ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
+            //             ->select(
+            //                 'labour_family_details.id',
+            //                 'gender_labour.gender_name as gender',
+            //                 'labour_family_details.gender_id',
+            //                 'relation_labour.relation_title as relation',
+            //                 'labour_family_details.relationship_id',
+            //                 'maritalstatus_labour.maritalstatus as maritalStatus',
+            //                 'maritalstatus_labour.married_status_id',
+            //                 'labour_family_details.full_name',
+            //                 'labour_family_details.date_of_birth'
+            //             )
+            //             ->where('labour_family_details.labour_id', $labour['id'])
+            //             ->get();
+            //     }
 
-                if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
-                foreach ($data_labour as &$labourhistory) {
-                    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'gender_labour.id')
-                        ->leftJoin('users as users_labour', 'labour_history_details.user_id', '=', 'users_labour.id')
-                        ->leftJoin('tbl_reason', 'labour_history_details.reason_id', '=', 'tbl_reason.id')
-                        ->leftJoin('labour', 'labour_history_details.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
-                        ->select(
-                            'labour_history_details.id',
-                            'roles_labour.role_name as role_name',
-                            'users_labour.f_name as f_name',
-                            'tbl_reason.reason_name as reason_name',
-                            'labour_history_details.other_remark',
-                            'labour_history_details.updated_at',
-                        )
-                        ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
-                        ->get();
-                }
-            }
+            //     if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
+            //     foreach ($data_labour as &$labourhistory) {
+            //         $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'gender_labour.id')
+            //             ->leftJoin('users as users_labour', 'labour_history_details.user_id', '=', 'users_labour.id')
+            //             ->leftJoin('tbl_reason', 'labour_history_details.reason_id', '=', 'tbl_reason.id')
+            //             ->leftJoin('labour', 'labour_history_details.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+            //             ->select(
+            //                 'labour_history_details.id',
+            //                 'roles_labour.role_name as role_name',
+            //                 'users_labour.f_name as f_name',
+            //                 'tbl_reason.reason_name as reason_name',
+            //                 'labour_history_details.other_remark',
+            //                 'labour_history_details.updated_at',
+            //             )
+            //             ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
+            //             ->get();
+            //     }
+            // }
                     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
