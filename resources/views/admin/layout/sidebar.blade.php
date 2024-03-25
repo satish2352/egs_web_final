@@ -112,7 +112,7 @@
                             @if (in_array('list-labours', $data_for_url))
                               <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-labours*')
                                     ? 'nav-link active' : 'nav-link' }}"
-                                          href="{{ route('list-labours') }}">New Labours</a></li>
+                                          href="{{ route('list-labours') }}">Received For Approval</a></li>
                             @endif
                             @if (in_array('list-labours', $data_for_url))
                               <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-approved-labours*')
