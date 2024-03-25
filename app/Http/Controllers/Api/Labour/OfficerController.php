@@ -127,7 +127,7 @@ class OfficerController extends Controller
                 ->get()
 				->toArray();
             }         
-            
+        //    dd($data_user_output);
                 $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
@@ -165,7 +165,7 @@ class OfficerController extends Controller
                 )
                     ->get()
 					->toArray();
-                   
+                    // dd($data_labour);
                     foreach ($data_labour as &$labour) { 
                         $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
                         $labour['aadhar_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['aadhar_image'];
@@ -189,24 +189,24 @@ class OfficerController extends Controller
                         ->get();
                 }
 
-                if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
-                foreach ($data_labour as &$labourhistory) {
-                    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'gender_labour.id')
-                        ->leftJoin('users as users_labour', 'labour_history_details.user_id', '=', 'users_labour.id')
-                        ->leftJoin('tbl_reason', 'labour_history_details.reason_id', '=', 'tbl_reason.id')
-                        ->leftJoin('labour', 'labour_history_details.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
-                        ->select(
-                            'labour_history_details.id',
-                            'roles_labour.role_name as role_name',
-                            'users_labour.f_name as f_name',
-                            'tbl_reason.reason_name as reason_name',
-                            'labour_history_details.other_remark',
-                            'labour_history_details.updated_at',
-                        )
-                        ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
-                        ->get();
-                }
-            }
+            //     if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
+            //     foreach ($data_labour as &$labourhistory) {
+            //         $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'gender_labour.id')
+            //             ->leftJoin('users as users_labour', 'labour_history_details.user_id', '=', 'users_labour.id')
+            //             ->leftJoin('tbl_reason', 'labour_history_details.reason_id', '=', 'tbl_reason.id')
+            //             ->leftJoin('labour', 'labour_history_details.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+            //             ->select(
+            //                 'labour_history_details.id',
+            //                 'roles_labour.role_name as role_name',
+            //                 'users_labour.f_name as f_name',
+            //                 'tbl_reason.reason_name as reason_name',
+            //                 'labour_history_details.other_remark',
+            //                 'labour_history_details.updated_at',
+            //             )
+            //             ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
+            //             ->get();
+            //     }
+            // }
                     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
@@ -445,7 +445,7 @@ class OfficerController extends Controller
                 // Create a history record
                 $history = new HistoryModel();
                 $history->user_id = $user->id; 
-                $history->roles_id = $user->roles_id; 
+                $history->roles_id = $user->role_id; 
                 $history->mgnrega_card_id = $request->mgnrega_card_id;
                 $history->is_approved = $request->is_approved;
                 $history->reason_id = $request->reason_id; 
