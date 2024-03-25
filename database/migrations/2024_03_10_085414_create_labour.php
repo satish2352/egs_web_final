@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('latitude');
             $table->string('longitude');
             $table->boolean('is_approved')->default(true);
+            $table->boolean('is_resubmitted')->default(false);
             $table->unsignedBigInteger('reason_id')->nullable();
             $table->string('other_remark')->default('null');
             $table->string('sync_reason')->default('null');

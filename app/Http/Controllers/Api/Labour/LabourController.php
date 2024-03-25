@@ -777,6 +777,7 @@ public function updateLabourSecondForm(Request $request)
         $labour_data->user_id = $user->id;
         $labour_data->latitude = $request->latitude;
         $labour_data->longitude = $request->longitude;
+        $labour_data->is_approved = 1;
 
         $labour_data->save();
 
@@ -820,7 +821,7 @@ public function updateLabourSecondForm(Request $request)
         uploadImage($request, 'voter_image', $path, $voterImageName);
         $labour_data->voter_image = $voterImageName;
         }
-
+        $labour_data->is_resubmitted = true;
         $labour_data->save();
 
         // $familyDetails = [];
