@@ -179,14 +179,14 @@ class OfficerController extends Controller
                         ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
                         ->select(
                             'labour_family_details.id',
-                            'gender_labour.gender_name as gender',
-                            'labour_family_details.gender_id',
-                            'relation_labour.relation_title as relation',
-                            'labour_family_details.relationship_id',
-                            'maritalstatus_labour.maritalstatus as maritalStatus',
-                            'maritalstatus_labour.married_status_id',
-                            'labour_family_details.full_name',
-                            'labour_family_details.date_of_birth'
+                        'gender_labour.gender_name as gender',
+                        'labour_family_details.gender_id',
+                        'relation_labour.relation_title as relation',
+                        'labour_family_details.relationship_id',
+                        'maritalstatus_labour.maritalstatus as maritalStatus',
+                        'labour_family_details.married_status_id',
+                        'labour_family_details.full_name',
+                        'labour_family_details.date_of_birth'
                         )
                         ->where('labour_family_details.labour_id', $labour['id'])
                         ->get();

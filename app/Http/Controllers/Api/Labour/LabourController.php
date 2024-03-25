@@ -313,7 +313,9 @@ class LabourController extends Controller
     public function getParticularLabour(Request $request){
         try {
             $user = Auth::user()->id;
+            // dd($user);
             $mgnrega_card_id = $request->input('mgnrega_card_id');
+            // dd($mgnrega_card_id);
             $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
@@ -366,9 +368,16 @@ class LabourController extends Controller
                         'relation_labour.relation_title as relation',
                         'labour_family_details.relationship_id',
                         'maritalstatus_labour.maritalstatus as maritalStatus',
-                        'maritalstatus_labour.married_status_id',
+                        'labour_family_details.married_status_id',
                         'labour_family_details.full_name',
                         'labour_family_details.date_of_birth'
+                        // 'labour_family_details.id',
+                        // 'gender_labour.gender_name as gender_id',
+                        // 'relation_labour.relation_title as relationship_id',
+                        // 'maritalstatus_labour.maritalstatus as married_status_id',
+                        // 'labour_family_details.full_name',
+                        // 'labour_family_details.date_of_birth'
+                        
                     )
                     ->where('labour_family_details.labour_id', $labour->id)
                     ->get();
