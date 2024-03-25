@@ -1065,10 +1065,10 @@ class LabourRepository
 	public function getGramsevakList() {
 
 		$data_users = User::leftJoin('roles', 'roles.id', '=', 'users.role_id')
-				->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
-				->leftJoin('tbl_area as district_user', 'users.district', '=', 'district_user.location_id')
-				->leftJoin('tbl_area as taluka_user', 'users.taluka', '=', 'taluka_user.location_id')
-				->leftJoin('tbl_area as village_user', 'users.village', '=', 'village_user.location_id')
+				// ->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
+				->leftJoin('tbl_area as district_user', 'users.user_district', '=', 'district_user.location_id')
+				->leftJoin('tbl_area as taluka_user', 'users.user_taluka', '=', 'taluka_user.location_id')
+				->leftJoin('tbl_area as village_user', 'users.user_village', '=', 'village_user.location_id')
 				->where('users.role_id','3')
 				->select('users.id','users.f_name','users.m_name','users.l_name','users.email','users.number','users.imei_no','users.aadhar_no',
 				'users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state',
@@ -1089,10 +1089,10 @@ class LabourRepository
 		$data_gram_doc = [];
 		try {
 			$data_gram_doc['user_data'] = User::leftJoin('roles', 'roles.id', '=', 'users.role_id')
-				->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
-				->leftJoin('tbl_area as district_user', 'users.district', '=', 'district_user.location_id')
-				->leftJoin('tbl_area as taluka_user', 'users.taluka', '=', 'taluka_user.location_id')
-				->leftJoin('tbl_area as village_user', 'users.village', '=', 'village_user.location_id')
+				// ->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
+				->leftJoin('tbl_area as district_user', 'users.user_district', '=', 'district_user.location_id')
+				->leftJoin('tbl_area as taluka_user', 'users.user_taluka', '=', 'taluka_user.location_id')
+				->leftJoin('tbl_area as village_user', 'users.user_village', '=', 'village_user.location_id')
 				->where('users.id', $id)
 				->select('users.f_name','users.m_name','users.l_name','users.email','users.number','users.imei_no','users.aadhar_no',
 				'users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state',
