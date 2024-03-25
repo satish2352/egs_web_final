@@ -63,11 +63,12 @@
 
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Profile :</label>
+                                            <label>{{ $item->document_type_name }}:</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <img src="{{ Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD') }}{{ $item->document_pdf }}"
-                                                style="width:100px; height:100px; border-radius:50%" />
+                                        <a href="{{ Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD') }}{{ $item->document_pdf }}" target="_blank">
+                                            {{ $item->document_pdf }}
+                                        </a>
                                         </div>
                                     </div>
                                     @endforeach
