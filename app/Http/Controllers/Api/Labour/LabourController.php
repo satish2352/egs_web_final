@@ -230,6 +230,8 @@ class LabourController extends Controller
             $labour_data->profile_image = $baseUrl . $path . '/' . $imageProfile;
             $labour_data->voter_image = $baseUrl . $path . '/' . $imageVoter;
 
+            
+
             return response()->json(['status' => 'success', 'message' => 'Labor updated successfully', 'data' => $labour_data], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
@@ -359,9 +361,12 @@ class LabourController extends Controller
                 ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
                     ->select(
                         'labour_family_details.id',
-                        'gender_labour.gender_name as gender_id',
-                        'relation_labour.relation_title as relationship_id',
-                        'maritalstatus_labour.maritalstatus as married_status_id',
+                        'gender_labour.gender_name as gender',
+                        'labour_family_details.gender_id',
+                        'relation_labour.relation_title as relation',
+                        'labour_family_details.relationship_id',
+                        'maritalstatus_labour.maritalstatus as maritalStatus',
+                        'maritalstatus_labour.married_status_id',
                         'labour_family_details.full_name',
                         'labour_family_details.date_of_birth'
                     )
