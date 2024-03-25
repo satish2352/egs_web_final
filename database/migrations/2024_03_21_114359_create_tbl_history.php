@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tbl_history', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('roles_id');
             $table->unsignedBigInteger('user_id');
             $table->string('mgnrega_card_id');
             $table->unsignedBigInteger('is_approved');
