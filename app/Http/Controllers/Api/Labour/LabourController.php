@@ -602,7 +602,7 @@ class LabourController extends Controller
                 // Create a history record
                 $history = new HistoryModel();
                 $history->user_id = $user->id; 
-                $history->roles_id = $user->roles_id; 
+                $history->roles_id = $user->role_id; 
                 $history->mgnrega_card_id = $request->mgnrega_card_id;
                 $history->is_approved = $request->is_approved;
                 $history->reason_id = $request->reason_id; 
