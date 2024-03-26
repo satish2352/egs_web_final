@@ -33,6 +33,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         $user_working_tal=$data_output->user_taluka;
         $user_working_vil=$data_output->user_village;
 
+        // dd($user_working_dist);
         if($utype=='1')
         {
         $data_user_output = User::where('users.user_district', $user_working_dist)
@@ -77,6 +78,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'projects.latitude',
                     'projects.longitude'
                 )->get();
+                // dd($data_output);
                     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
