@@ -57,6 +57,16 @@ class ProjectController extends Controller
     public function filterDataProjectsLaboursMap(Request $request){
         try {
             $user = Auth::user()->id;
+            $userLatitude = $request->latitude; // Latitude of the user
+            $userLongitude = $request->longitude; // Longitude of the user
+            $distanceInKm = 5; // Distance in kilometers
+
+            $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
+            $latN = $latLongArr['latN'];
+            $latS = $latLongArr['latS'];
+            $lonE = $latLongArr['lonE'];
+            $lonW = $latLongArr['lonW'];
+
             $labourQuery = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
@@ -81,13 +91,22 @@ class ProjectController extends Controller
                     'labour.profile_image',
                 );
     
-            $projectQuery = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
-                ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+            $projectQuery = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
                 ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
                 ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
                 ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-                ->where('project_users.user_id', $user)
+                // ->where('project_users.user_id', $user)
                 ->where('projects.is_active', true)
+                ->when($request->has('latitude'), function($query) use ($request, $latN, $latS, $lonE, $lonW) {
+                    $query->where('projects.latitude', '<=', $latN)
+                        ->where('projects.latitude', '>=', $latS)
+                        ->where('projects.longitude', '<=', $lonE)
+                        ->where('projects.longitude', '>=', $lonW);
+                })
+                
+                ->when($request->has('project_name'), function($query) use ($request) {
+                    $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
+                })
                 ->select(
                     'projects.id',
                     'projects.project_name',
