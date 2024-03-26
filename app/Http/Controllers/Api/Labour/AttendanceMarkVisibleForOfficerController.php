@@ -20,13 +20,10 @@ use Carbon\Carbon;
 
 class AttendanceMarkVisibleForOfficerController extends Controller
 {
-
-
     public function getAllProjectListForOfficer(Request $request) {
         try {
             $user = Auth::user()->id;            
-            $date = date('Y-m-d'); // Get current date
-
+            $date = date('Y-m-d'); 
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             ->where('users.id', $user)
             ->first();
@@ -80,15 +77,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'projects.latitude',
                     'projects.longitude'
                 )->get();
-    
-                // foreach ($data_output as $labour) {
-                //     // Append image paths to the output data
-                //     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-                                    
-                // }
-    
-            
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                    return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
         }
@@ -98,7 +87,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;            
-            $date = date('Y-m-d'); // Get current date
+            $date = date('Y-m-d'); 
 
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             ->where('users.id', $user)
@@ -160,30 +149,10 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
                                     
                 }
-    
-            // Loop through labour data and retrieve family details for each labour
-            // foreach ($data_output as $labour) {
-            //     $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
-            //     ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
-            //     ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
-            //         ->select(
-            //             'labour_family_details.id',
-            //             'gender_labour.gender_name as gender_id',
-            //             'relation_labour.relation_title as relationship_id',
-            //             'maritalstatus_labour.maritalstatus as married_status_id',
-            //             'labour_family_details.full_name',
-            //             'labour_family_details.date_of_birth'
-            //         )
-            //         ->where('labour_family_details.labour_id', $labour->id)
-            //         ->get();
-            // }
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
         }
     }
     
-
-    
-
 }
