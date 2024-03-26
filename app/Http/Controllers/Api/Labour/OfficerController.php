@@ -201,7 +201,7 @@ foreach ($data_labour as &$labourhistory) {
          ->where('tbl_history.mgnrega_card_id', $labour['mgnrega_card_id'])
         ->select(
             // 'labour_history_details.id',
-            'roles_labour.role_name as role_name',
+            // 'roles_labour.role_name as role_name',
             'users_labour.f_name as f_name',
             'tbl_reason.reason_name as reason_name',
             // 'labour_history_details.other_remark',
