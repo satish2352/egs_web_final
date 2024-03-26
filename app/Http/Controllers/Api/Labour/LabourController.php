@@ -399,13 +399,14 @@ class LabourController extends Controller
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-               
+                ->where('labour.user_id',$user_id->id)
+                ->where('labour.is_approved', 2)
                 ->when($request->get('project_id'), function($query) use ($request) {
                     
                     $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
                     $query->where('tbl_mark_attendance.project_id',$request->project_id);
                 })
-                ->where('labour.user_id',$user_id->id)
+               
                 ->select(
                     'labour.id',
                     'labour.full_name',
