@@ -818,6 +818,8 @@ public function updateLabourFirstForm(Request $request){
         $labour_data->landline_number = $request->landline_number;
         $labour_data->is_approved = 1;
         $labour_data->is_resubmitted = true;
+        $labour_data->reason_id = false;
+        
         // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
         if ($labour_data->is_approved != 2) {
             $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
@@ -866,6 +868,7 @@ public function updateLabourSecondForm(Request $request)
         $labour_data->latitude = $request->latitude;
         $labour_data->longitude = $request->longitude;
         $labour_data->is_approved = 1;
+        $labour_data->reason_id = false;
 
         $labour_data->save();
 
