@@ -57,7 +57,11 @@ Route::group([
         Route::post('/add-document', [GramPanchayatDocumentController::class, 'add']);
         Route::post('/list-document', [GramPanchayatDocumentController::class, 'getAllDocuments']);
         Route::post('/update-document', [GramPanchayatDocumentController::class, 'updateDocuments']);
+        Route::post('/download-document', [GramPanchayatDocumentController::class, 'getDownloadDocument']);
+        
 
+        Route::post('/list-document-officer', [GramPanchayatDocumentController::class, 'getAllDocumentsOfficer']);
+        
         Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
         Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
         Route::get('/district', [DistrictTalukaVillageController::class, 'getDistrict']);

@@ -849,9 +849,12 @@ public function updateLabourSecondForm(Request $request)
             $familyDetail->labour_id = $labour_data->id;
             $familyDetail->full_name = $familyMember['full_name'];
             $familyDetail->gender_id = $familyMember['gender_id'];
+            $familyDetail->gender_id = $familyMember['gender'];
             $familyDetail->relationship_id = $familyMember['relationship_id'];
+            $familyDetail->relationship_id = $familyMember['relation'];
             $familyDetail->married_status_id = $familyMember['married_status_id'];
-            $familyDetail->date_of_birth = $familyMember['date_of_birth'];
+            $familyDetail->married_status_id = $familyMember['maritalStatus'];
+            $familyDetail->date_of_birth = $familyMember['date_of_birth'];           
             $familyDetail->save();
             $familyDetails[] = $familyDetail; // Collect family details
         }

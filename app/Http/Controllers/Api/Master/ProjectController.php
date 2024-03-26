@@ -151,8 +151,8 @@ class ProjectController extends Controller
             $user = Auth::user()->id;
             $userLatitude = $request->latitude; // Latitude of the user
             $userLongitude = $request->longitude; // Longitude of the user
-            $distanceInKm = 2; // Distance in kilometers
-
+            $distanceInKm = 5; // Distance in kilometers
+            // dd($userLatitude);
         $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
         $latN = $latLongArr['latN'];
         $latS = $latLongArr['latS'];
@@ -168,12 +168,19 @@ class ProjectController extends Controller
                 // ->where('project_users.user_id')
                 ->where('projects.is_active', true)
                
-                ->when($request->has('latitude'), function($query) use ($request) {
+                // ->when($request->has('latitude'), function($query) use ($request) {
+                //     $query->where('projects.latitude', '<=', $latN)
+                //     ->where('projects.latitude', '>=', $latS)
+                //     ->where('projects.longitude', '<=', $lonE)
+                //     ->where('projects.longitude', '>=', $lonW);
+                // })  
+                ->when($request->has('latitude'), function($query) use ($request, $latN, $latS, $lonE, $lonW) {
                     $query->where('projects.latitude', '<=', $latN)
-                    ->where('projects.latitude', '>=', $latS)
-                    ->where('projects.longitude', '<=', $lonE)
-                    ->where('projects.longitude', '>=', $lonW);
-                })  
+                        ->where('projects.latitude', '>=', $latS)
+                        ->where('projects.longitude', '<=', $lonE)
+                        ->where('projects.longitude', '>=', $lonW);
+                })
+                
                 ->when($request->has('project_name'), function($query) use ($request) {
                     $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
                 })             
@@ -190,26 +197,15 @@ class ProjectController extends Controller
                     'projects.latitude',
                     'projects.longitude'
                 )
-                ->selectRaw(
-                    '( 6371 * acos( cos( radians(?) ) *
-                            cos( radians( projects.latitude ) ) *
-                            cos( radians( projects.longitude ) - radians(?) ) +
-                            sin( radians(?) ) *
-                            sin( radians( projects.latitude ) ) )
-                    ) AS distance', [$userLatitude, $userLongitude, $userLatitude])
-                ->having('distance', '<=', $distanceInKm)
                 ->get();
-                dd($userLatitude);
+                
             return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
 
-
-
-    public function getLatitudeLongitude($latitude,$longitude, $distanceInKm)
-    {
+    public function getLatitudeLongitude($latitude,$longitude, $distanceInKm){
         $d = 0.621371*$distanceInKm; // 15 km in miles
         $r = 3959; //earth's radius in miles
 
@@ -240,23 +236,9 @@ class ProjectController extends Controller
             'lonE' => $lonE,
             'lonW' => $lonW
         ];
+        return $latLongArr;
         }
-        else
-        {
-            $latLongArr = 
-        [
-            'pincodeLatitude' => '0',
-            'pincodeLongitude' => '0',
-            'latN' => '0',
-            'latS' => '0',
-            'lonE' => '0',
-            'lonW' => '0'
-        ];
-        }
-       
-       return $latLongArr;
-
-    }
+        
     
     
 }
