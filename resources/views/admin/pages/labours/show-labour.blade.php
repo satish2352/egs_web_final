@@ -96,7 +96,7 @@
                                     </div>
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Mnrega ID :</label>
+                                            <label>Mgnrega ID :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
                                             <label>{{ strip_tags($labour_detail['data_users_data']['mgnrega_card_id']) }}</label>
@@ -227,6 +227,7 @@
                                                 <div class="col-12">
                                                     @include('admin.layout.alert')
                                                     <div class="table-responsive">
+                                                    <h5 class="d-flex justify-content-center mb-4">Family Details</h5>
                                                         <table id="order-listing" class="table table-bordered">
                                                             <thead>
                                                                 <tr>
@@ -292,10 +293,10 @@
                                                     <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
                                                     <select class="form-control" name="reason_id" id="reason_id">
                                                         <option value="">Select Reason</option>
-                                                        @if($labour_detail['data_users_data']['reason_id']=='0')
-                                                        <option value="0" <?php echo 'selected'; ?>>Others</option>
+                                                        @if($labour_detail['data_users_data']['reason_id']=='01')
+                                                        <option value="01" <?php echo 'selected'; ?>>Others</option>
                                                         @else
-                                                        <option value="0">Others</option>
+                                                        <option value="01">Others</option>
                                                         @endif
                                                             @foreach ($dynamic_reasons as $dynamic_reasons_data)
                                                             <option value="{{ $dynamic_reasons_data['id'] }}"
@@ -364,7 +365,7 @@
                                                     <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
                                                     <select class="form-control" name="reason_id" id="reason_id" disabled>
                                                         <option value="">Select Reason</option>
-                                                        @if($labour_detail['data_users_data']['reason_id']=='0')
+                                                        @if($labour_detail['data_users_data']['reason_id']=='01')
                                                         <option value="0" <?php echo 'selected'; ?>>Others</option>
                                                         @else
                                                         <option value="0">Others</option>
@@ -384,7 +385,7 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        @if($labour_detail['data_users_data']['reason_id']='0')
+                                        @if($labour_detail['data_users_data']['reason_id']='01')
                                             <div class="col-lg-6 col-md-6 col-sm-6" id="remark_div">
                                                 <div class="form-group">
                                                     <label for="other_remark">Remark</label>&nbsp<span
@@ -434,8 +435,8 @@
 
     $("#reason_id").on('change', function() {
         var reason_val=$(this).val();
-        alert(reason_val);
-        if(reason_val != '0')
+        // alert(reason_val);
+        if(reason_val != '01')
         {
             $('#remark_div').hide();
         }else

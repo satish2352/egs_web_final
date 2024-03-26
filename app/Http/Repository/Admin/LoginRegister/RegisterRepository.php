@@ -41,7 +41,9 @@ class RegisterRepository
 								'users.user_village',
 								'users.id',
 								'users.is_active'
-							)->get();
+							)
+							->orderBy('users.id', 'desc')
+							->get();
 							// ->toArray();
 
 		return $data_users;
