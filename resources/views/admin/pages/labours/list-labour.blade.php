@@ -30,7 +30,7 @@
                                                     <th>User Name</th>
                                                     <th>Labour Name</th>
                                                     <th>Mobile Number</th>
-                                                    <th>Mnrega ID</th>
+                                                    <th>Mgnrega ID</th>
                                                     <th>District</th>
                                                     <th>Status</th>
                                                     <th>Action</th>

@@ -110,9 +110,16 @@
                       <div class="collapse" id="master">
                           <ul class="nav flex-column sub-menu">
                             @if (in_array('list-labours', $data_for_url))
-                              <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-labours*')
+                                @if(session()->get('role_id')=='1' || session()->get('role_id')=='2')
+                                    <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-labours*')
                                     ? 'nav-link active' : 'nav-link' }}"
                                           href="{{ route('list-labours') }}">Received For Approval</a></li>
+                                @elseif(session()->get('role_id')=='3')
+                                    <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-labours*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-labours') }}">Sended For Approval</a></li>
+                                @endif
+
                             @endif
                             @if (in_array('list-labours', $data_for_url))
                               <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-approved-labours*')

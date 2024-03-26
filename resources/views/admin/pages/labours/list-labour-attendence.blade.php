@@ -30,7 +30,7 @@
                                                     <th>Labour Name</th>
                                                     <th>Project Name</th>
                                                     <th>Mobile Number</th>
-                                                    <th>Mnrega ID</th>
+                                                    <th>Mgnrega ID</th>
                                                     <th>Attendance Type</th>
                                                     <th>Attendance Date</th>
                                                 </tr>
