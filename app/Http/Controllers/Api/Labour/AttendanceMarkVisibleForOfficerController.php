@@ -124,16 +124,22 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
+            ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->where('projects.District', $user_working_dist)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
 
-                // ->when($request->get('project_id'), function($query) use ($request) {
-                //     $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
-                //     $query->where('tbl_mark_attendance.project_id',$request->project_id);
-                // })
-
-                  ->when($request->get('project_id'), function($query) use ($request) {
+                ->when($request->get('project_id'), function($query) use ($request) {
+                    $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
+                    $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
                     $query->where('tbl_mark_attendance.project_id',$request->project_id);
+                })
+
+                  ->when($request->get('taluka_id'), function($query) use ($request) {
+                    $query->where('labour.taluka_id',$request->taluka_id);
+                })  
+                ->when($request->get('village_id'), function($query) use ($request) {
+                    $query->where('labour.village_id',$request->village_id);
                 })  
                 ->select(
                     'tbl_mark_attendance.id',
@@ -145,6 +151,8 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'labour.mobile_number',
                     'labour.landline_number',
                     'labour.mgnrega_card_id',
+                    'taluka_labour.name as taluka_id',
+                    'village_labour.name as village_id',
                     'labour.latitude',
                     'labour.longitude',
                     'labour.profile_image',
