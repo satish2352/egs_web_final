@@ -155,18 +155,13 @@ class GramPanchayatDocumentController extends Controller
             $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 // ->where('tbl_gram_panchayat_documents.user_id', $user)
                 ->whereIn('tbl_gram_panchayat_documents.user_id',$data_user_output)
-                // ->when($request->has('documenttype'), function($query) use ($request) {
-                //     $query->where('tbl_documenttype.documenttype', 'like', '%' . $request->documenttype . '%');
-                // })
-
                 ->when($request->has('documenttype'), function($query) use ($request) {
-                    $query->where('tbl_documenttype.document_type', 'like', '%' . $request->documenttype . '%');
+                    $query->where('tbl_documenttype.documenttype', 'like', '%' . $request->documenttype . '%');
                 })
-                
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
-                    'tbl_documenttype.document_type',
+                    'tbl_documenttype.documenttype',
                     'tbl_gram_panchayat_documents.document_pdf',
                 )->get();
                 foreach ($data_output as $document_data) {
@@ -225,7 +220,7 @@ class GramPanchayatDocumentController extends Controller
         $file_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
     
         $file_path11 = rtrim($file_path, '\\/');
-    dd($file_path11);
+    
         if (file_exists($file_path11)) {
             // Download the file
             return response()->download($file_path11);
