@@ -192,7 +192,7 @@ class OfficerController extends Controller
                         ->get();
                 }
 
-                if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
+                // if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
                 foreach ($data_labour as &$labourhistory) {
                     $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'gender_labour.id')
                         ->leftJoin('users as users_labour', 'labour_history_details.user_id', '=', 'users_labour.id')
@@ -209,7 +209,7 @@ class OfficerController extends Controller
                         ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
                         ->get();
                 }
-            }
+            // }
                     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
