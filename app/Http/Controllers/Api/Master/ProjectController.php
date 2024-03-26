@@ -160,12 +160,11 @@ class ProjectController extends Controller
         $lonW = $latLongArr['lonW'];
 			
             // Haversine formula to calculate distance
-            $project = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
-                ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+            $project = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
                 ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
                 ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
                 ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-                // ->where('project_users.user_id')
+                // ->where('projects.user_id', $user)
                 ->where('projects.is_active', true)
                
                 // ->when($request->has('latitude'), function($query) use ($request) {
