@@ -192,24 +192,25 @@ class OfficerController extends Controller
                         ->get();
                 }
 
-                // if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
-                foreach ($data_labour as &$labourhistory) {
-                    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'labour_history_details.roles_id', '=', 'roles_labour.id')
-                        ->leftJoin('users as users_labour', 'labour_history_details.user_id', '=', 'users_labour.id')
-                        ->leftJoin('tbl_reason', 'labour_history_details.reason_id', '=', 'tbl_reason.id')
-                        ->leftJoin('labour', 'labour_history_details.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
-                        ->select(
-                            // 'labour_history_details.id',
-                            'roles_labour.role_name as role_name',
-                            'users_labour.f_name as f_name',
-                            'tbl_reason.reason_name as reason_name',
-                            // 'labour_history_details.other_remark',
-                            // 'labour_history_details.updated_at',
-                        )
-                        // ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
-                        ->get();
-                }
-            // }
+               // if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
+foreach ($data_labour as &$labourhistory) {
+    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'roles_labour.id', '=', 'labour_history_details.roles_id')
+        ->leftJoin('users as users_labour', 'users_labour.id', '=', 'labour_history_details.user_id')
+        ->leftJoin('tbl_reason', 'tbl_reason.id', '=', 'labour_history_details.reason_id')
+        ->leftJoin('labour', 'labour.mgnrega_card_id', '=', 'labour_history_details.mgnrega_card_id')
+        ->select(
+            // 'labour_history_details.id',
+            'roles_labour.role_name as role_name',
+            'users_labour.f_name as f_name',
+            'tbl_reason.reason_name as reason_name',
+            // 'labour_history_details.other_remark',
+            // 'labour_history_details.updated_at',
+        )
+        // ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
+        ->get();
+}
+// }
+
                     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
