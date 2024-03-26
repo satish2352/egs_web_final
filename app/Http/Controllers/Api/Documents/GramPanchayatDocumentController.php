@@ -174,118 +174,143 @@ class GramPanchayatDocumentController extends Controller
         }
     }
 
-
-
     public function getDownloadDocument(Request $request)
-     {
-        // try {
-            $user = Auth::user()->id;
-            
-            $document_pdffile = $request->input('document_pdf');
-            
-// dd($document_pdf);
-            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+    {
+        $user = Auth::user()->id;
+        $document_pdffile = $request->input('document_pdf');
+    
+        $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             ->where('users.id', $user)
             ->first();
-
-        $utype=$data_output->user_type;
-        $user_working_dist=$data_output->user_district;
-        $user_working_tal=$data_output->user_taluka;
-        $user_working_vil=$data_output->user_village;
-
-        if($utype=='1')
-        {
-        $data_user_output = User::where('users.user_district', $user_working_dist)
-        ->select('id')
-            ->get()
-            ->toArray();
-        }else if($utype=='2')
-        {
+    
+        $utype = $data_output->user_type;
+        $user_working_dist = $data_output->user_district;
+        $user_working_tal = $data_output->user_taluka;
+        $user_working_vil = $data_output->user_village;
+    
+        if ($utype == '1') {
+            $data_user_output = User::where('users.user_district', $user_working_dist)
+                ->select('id')
+                ->get()
+                ->toArray();
+        } else if ($utype == '2') {
             $data_user_output = User::where('users.user_taluka', $user_working_tal)
-            ->select('id')
-            ->get()
-            ->toArray();
-        }else if($utype=='3')
-        {
+                ->select('id')
+                ->get()
+                ->toArray();
+        } else if ($utype == '3') {
             $data_user_output = User::where('users.user_village', $user_working_vil)
-            ->select('id')
-            ->get()
-            ->toArray();
-        }     
+                ->select('id')
+                ->get()
+                ->toArray();
+        }
+    
+        $query = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+            // ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
+            ->where('tbl_gram_panchayat_documents.document_pdf', $document_pdffile);
+    
+        $document = $query->first(); // Execute the query and get the first result
+    
+        // Check if the document exists
+        if (!$document) {
+            return response()->json(['status' => 'false', 'message' => 'Document not found'], 200);
+        }
+    
+        // Construct absolute file path
+        $file_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
+    
+        $file_path11 = rtrim($file_path, '\\/');
+    dd($file_path11);
+        if (file_exists($file_path11)) {
+            // Download the file
+            return response()->download($file_path11);
+        } else {
+            $response = [
+                "status" => "false",
+                "message" => "Document Download Failed",
+                "error" => "$file_path11"
+            ];
+            return response()->json($response);
+        }
+    }
+
+//     public function getDownloadDocument(Request $request)
+//      {
+//         // try {
+//             $user = Auth::user()->id;
+            
+//             $document_pdffile = $request->input('document_pdf');
+            
+// // dd($document_pdf);
+//             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+//             ->where('users.id', $user)
+//             ->first();
+
+//         $utype=$data_output->user_type;
+//         $user_working_dist=$data_output->user_district;
+//         $user_working_tal=$data_output->user_taluka;
+//         $user_working_vil=$data_output->user_village;
+
+//         if($utype=='1')
+//         {
+//         $data_user_output = User::where('users.user_district', $user_working_dist)
+//         ->select('id')
+//             ->get()
+//             ->toArray();
+//         }else if($utype=='2')
+//         {
+//             $data_user_output = User::where('users.user_taluka', $user_working_tal)
+//             ->select('id')
+//             ->get()
+//             ->toArray();
+//         }else if($utype=='3')
+//         {
+//             $data_user_output = User::where('users.user_village', $user_working_vil)
+//             ->select('id')
+//             ->get()
+//             ->toArray();
+//         }     
            
-    $query = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-    // ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
-    ->where('tbl_gram_panchayat_documents.document_pdf', $document_pdffile);
+//     $query = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+//     // ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
+//     ->where('tbl_gram_panchayat_documents.document_pdf', $document_pdffile);
 
-$document = $query->first(); // Execute the query and get the first result
+// $document = $query->first(); // Execute the query and get the first result
 
 
-// Check if the document exists
-if (!$document) {
-    return response()->json(['status' => 'false', 'message' => 'Document not found'], 404);
-}
+// // Check if the document exists
+// if (!$document) {
+//     return response()->json(['status' => 'false', 'message' => 'Document not found'], 200);
+// }
 
-// // Construct absolute file path
-// $filePath = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
-// // dd($filePath);
-// // Set headers for the response
-// $headers = array(
-//     'Content-Type: application/pdf',
-// );
-// // dd($headers);
-// Download the file
-// return response()->download($filePath, 'filename.pdf', $headers);
+// // // Construct absolute file path
+//  $file_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
+ 
+// $file_path11 = rtrim($file_path, '\\/');
 
-$file_path = 'http://localhost/egs_web_final/storage/all_web_data/documents/GramPanchayatDoc/2_593521_document.pdf';
-
-// Remove the trailing backslash if it exists
-// $file_path11 = rtrim($file_path, '/\\');
-// $file_path = rtrim($file_path, '\\/');
-// // dd($file_path11 );
-// $headers = array(
-//     'Content-Type: application/pdf',
-// );
-// return response()->download($file_path, 'filename.pdf', $headers);
-// Remove the trailing backslash if it exists
-$file_path = rtrim($file_path, '\\/');
-
-// Check if the file exists
-if (file_exists($file_path)) {
-    // Set headers
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename="2_593521_document.pdf"');
-    // Read the file and output it to the browser
-    readfile($file_path);
-    exit;
-} else {
-    // If the file doesn't exist, return an error
-    $response = [
-        "status" => "false",
-        "message" => "Document Download Failed",
-        "error" => "The file \"$file_path\" does not exist"
-    ];
-    echo json_encode($response);
-}
-// Check if the file exists
 // if (file_exists($file_path11)) {
-//     // Set headers
+    
 //     header('Content-Type: application/pdf');
-//     // header('Content-Disposition: attachment; filename="2_593521_document.pdf"');
-//     // Read the file and output it to the browser
+   
 //     readfile($file_path11);
-
-//     dd($file_path11);
 //     exit;
 // } else {
-//     // If the file doesn't exist, return an error
+   
 //     $response = [
 //         "status" => "false",
 //         "message" => "Document Download Failed",
-//         "error" => "The file \"$file_path11\" does not exist"
+//          "error" => "$file_path11"
 //     ];
 //     echo json_encode($response);
 // }
-     }
+
+//      }
+
+
+
+
+
+
 // } catch (\Exception $e) {
 // return response()->json(['status' => 'false', 'message' => 'Document Download Failed', 'error' => $e->getMessage()], 500);
 // }
