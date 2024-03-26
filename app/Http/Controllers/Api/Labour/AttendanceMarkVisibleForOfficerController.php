@@ -128,19 +128,29 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->where('projects.District', $user_working_dist)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
-
                 ->when($request->get('project_id'), function($query) use ($request) {
-                    $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
-                    $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
-                    $query->where('tbl_mark_attendance.project_id',$request->project_id);
+                    $query->leftJoin('tbl_mark_attendance as ma1', 'labour.mgnrega_card_id', '=', 'ma1.mgnrega_card_id');
+                    $query->where('ma1.project_id', $request->project_id);
                 })
-
-                  ->when($request->get('taluka_id'), function($query) use ($request) {
-                    $query->where('labour.taluka_id',$request->taluka_id);
+                ->when($request->get('taluka_id'), function($query) use ($request) {
+                    $query->where('labour.taluka_id', $request->taluka_id);
                 })  
                 ->when($request->get('village_id'), function($query) use ($request) {
-                    $query->where('labour.village_id',$request->village_id);
-                })  
+                    $query->where('labour.village_id', $request->village_id);
+                })
+                
+                // ->when($request->get('project_id'), function($query) use ($request) {
+                //     $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
+                //     $query->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id');
+                //     $query->where('tbl_mark_attendance.project_id',$request->project_id);
+                // })
+
+                //   ->when($request->get('taluka_id'), function($query) use ($request) {
+                //     $query->where('labour.taluka_id',$request->taluka_id);
+                // })  
+                // ->when($request->get('village_id'), function($query) use ($request) {
+                //     $query->where('labour.village_id',$request->village_id);
+                // })  
                 ->select(
                     'tbl_mark_attendance.id',
                     'users.f_name',
