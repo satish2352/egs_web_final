@@ -206,7 +206,7 @@ class OfficerController extends Controller
                             // 'labour_history_details.other_remark',
                             // 'labour_history_details.updated_at',
                         )
-                        ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
+                        // ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
                         ->get();
                 }
             // }
