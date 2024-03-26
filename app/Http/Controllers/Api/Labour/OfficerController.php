@@ -204,7 +204,7 @@ class OfficerController extends Controller
                             'users_labour.f_name as f_name',
                             'tbl_reason.reason_name as reason_name',
                             // 'labour_history_details.other_remark',
-                            'labour_history_details.updated_at',
+                            // 'labour_history_details.updated_at',
                         )
                         ->where('labour_history_details.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
                         ->get();
