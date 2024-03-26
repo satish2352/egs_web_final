@@ -8,6 +8,7 @@ use Validator;
 use App\Models\ {
     User,
     Labour,
+    Project,
     LabourFamilyDetails,
 	LabourAttendanceMark
 };
@@ -19,30 +20,124 @@ use Carbon\Carbon;
 
 class AttendanceMarkVisibleForOfficerController extends Controller
 {
-   
-    public function getAllAttendanceMarkedLabour(Request $request) {
+
+
+    public function getAllProjectListForOfficer(Request $request) {
         try {
-            $user = Auth::user()->id;
-            // dd($user);
-            // $date = date('Y-m-d', strtotime($request->updated_at));
+            $user = Auth::user()->id;            
             $date = date('Y-m-d'); // Get current date
 
-        // dd($date);
-            $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
-            ->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.id')
-            ->leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
-                ->where('tbl_mark_attendance.user_id', $user)
+            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+            ->where('users.id', $user)
+            ->first();
+
+        $utype=$data_output->user_type;
+        $user_working_dist=$data_output->user_district;
+        $user_working_tal=$data_output->user_taluka;
+        $user_working_vil=$data_output->user_village;
+
+        if($utype=='1')
+        {
+        $data_user_output = User::where('users.user_district', $user_working_dist)
+        ->select('id')
+            ->get()
+            ->toArray();
+        }else if($utype=='2')
+        {
+            $data_user_output = User::where('users.user_taluka', $user_working_tal)
+            ->select('id')
+            ->get()
+            ->toArray();
+        }else if($utype=='3')
+        {
+            $data_user_output = User::where('users.user_village', $user_working_vil)
+            ->select('id')
+            ->get()
+            ->toArray();
+        }         
+        // dd($data_user_output);
+        // dd($user_working_dist);
+            $data_output = Project::leftJoin('tbl_mark_attendance', 'projects.id', '=', 'tbl_mark_attendance.project_id')
+            ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+            ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
+            ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
+            ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')  
+            ->where('tbl_mark_attendance.user_id', $data_user_output)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
                   ->when($request->get('project_id'), function($query) use ($request) {
                     $query->where('tbl_mark_attendance.project_id',$request->project_id);
                 })  
-                // ->when($request->has('updated_at'), function($query) use ($request) {
-                //     $date = date('Y-m-d', strtotime($request->updated_at));
-                //     $query->whereDate('tbl_mark_attendance.updated_at', $date);
-                // })
-                // ->when($request->get('updated_at'), function($query) use ($request) {
-                //     $query->where('tbl_mark_attendance.updated_at',$request->updated_at);
-                // })  
+                ->select(
+                    'projects.id',
+                    'projects.project_name',
+                    'projects.description',
+                    'state_projects.name as state',
+                    'district_projects.name as district',
+                    'taluka_projects.name as taluka',
+                    'village_projects.name as village',
+                    'projects.start_date',
+                    'projects.end_date',
+                    'projects.latitude',
+                    'projects.longitude'
+                )->get();
+    
+                // foreach ($data_output as $labour) {
+                //     // Append image paths to the output data
+                //     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
+                                    
+                // }
+    
+            
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
+        }
+    }
+
+   
+    public function getAllAttendanceMarkedLabour(Request $request) {
+        try {
+            $user = Auth::user()->id;            
+            $date = date('Y-m-d'); // Get current date
+
+            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+            ->where('users.id', $user)
+            ->first();
+
+        $utype=$data_output->user_type;
+        $user_working_dist=$data_output->user_district;
+        $user_working_tal=$data_output->user_taluka;
+        $user_working_vil=$data_output->user_village;
+
+        if($utype=='1')
+        {
+        $data_user_output = User::where('users.user_district', $user_working_dist)
+        ->select('id')
+            ->get()
+            ->toArray();
+        }else if($utype=='2')
+        {
+            $data_user_output = User::where('users.user_taluka', $user_working_tal)
+            ->select('id')
+            ->get()
+            ->toArray();
+        }else if($utype=='3')
+        {
+            $data_user_output = User::where('users.user_village', $user_working_vil)
+            ->select('id')
+            ->get()
+            ->toArray();
+        }         
+        // dd($data_user_output);
+        // dd($user_working_dist);
+            $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+            // ->leftJoin('project_users', 'tbl_mark_attendance.project_id', '=', 'project_users.id')
+            ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
+                ->where('tbl_mark_attendance.user_id', $data_user_output)
+                ->whereDate('tbl_mark_attendance.updated_at', $date)
+                  ->when($request->get('project_id'), function($query) use ($request) {
+                    $query->where('tbl_mark_attendance.project_id',$request->project_id);
+                })  
                 ->select(
                     'tbl_mark_attendance.id',
                     'tbl_mark_attendance.project_id',
