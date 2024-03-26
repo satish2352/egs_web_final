@@ -816,6 +816,8 @@ public function updateLabourFirstForm(Request $request){
         $labour_data->village_id = $request->village_id;
         $labour_data->mobile_number = $request->mobile_number;
         $labour_data->landline_number = $request->landline_number;
+        $labour_data->is_approved = 1;
+        $labour_data->is_resubmitted = true;
         // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
         if ($labour_data->is_approved != 2) {
             $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
