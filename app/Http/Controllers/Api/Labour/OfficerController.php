@@ -194,7 +194,7 @@ class OfficerController extends Controller
 
                 // if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
                 foreach ($data_labour as &$labourhistory) {
-                    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'tbl_history.roles_id', '=', 'gender_labour.id')
+                    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'tbl_history.roles_id', '=', 'roles_labour.id')
                         ->leftJoin('users as users_labour', 'tbl_history.user_id', '=', 'users_labour.id')
                         ->leftJoin('tbl_reason', 'tbl_history.reason_id', '=', 'tbl_reason.id')
                         ->leftJoin('labour', 'tbl_history.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
