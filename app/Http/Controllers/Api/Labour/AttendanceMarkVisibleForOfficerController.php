@@ -128,8 +128,8 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
 
-            ->leftJoin('tbl_area as taluka_labour', 'users.taluka_id', '=', 'taluka_labour.location_id')
-            ->leftJoin('tbl_area as village_labour', 'users.village_id', '=', 'village_labour.location_id')
+            ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
                 ->where('projects.District', $user_working_dist)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
                 // ->whereDate('tbl_mark_attendance.updated_at', '>=', $fromDate)
@@ -154,9 +154,9 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'labour.mobile_number',
                     'labour.landline_number',
                     'labour.mgnrega_card_id',
-                    'users.taluka_id',
+                    'users.user_taluka',
                     'taluka_labour.name as taluka_name',
-                    'users.village_id',
+                    'users.user_village',
                     'village_labour.name as village_name',
                     'labour.latitude',
                     'labour.longitude',
