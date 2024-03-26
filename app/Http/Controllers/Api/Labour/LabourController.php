@@ -741,6 +741,24 @@ class LabourController extends Controller
         if ($labour_data->is_approved == 2) {
             return response()->json(['status' => 'error', 'message' => 'Cannot update mgnrega card id when labour is approved'], 200);
         }
+
+        // Check if the provided mgnrega_card_id already exists in the database
+        $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+        // if ($existingLabour && $existingLabour->id !== $labour_data->id ) {
+        //     return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists'], 200);
+        // }
+
+        if ($existingLabour) {
+            if ($existingLabour->is_approved == 2) {
+                // If is_approved is 2, do not update the MGNREGA card ID
+                return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists and is not approved for update'], 200);
+            } else {
+                // If is_approved is 1 or 3, update the MGNREGA card ID
+                if ($existingLabour->id !== $labour_data->id) {
+                    return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists'], 200);
+                }
+            }
+        }
         // Update labour details
         $labour_data->user_id = $user->id;
         $labour_data->full_name = $request->full_name;
