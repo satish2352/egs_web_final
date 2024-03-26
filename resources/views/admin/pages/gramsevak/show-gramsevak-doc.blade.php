@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-end align-items-center">
                             <div>
-                                <a href="{{ route('list-users') }}" class="btn btn-sm btn-primary ml-3">Back</a>
+                                <a href="{{ route('list-gramsevak') }}" class="btn btn-sm btn-primary ml-3">Back</a>
                             </div>
                         </div>
 
@@ -66,7 +66,7 @@
                                             <label>{{ $item->document_type_name }}:</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
-                                        <a href="{{ Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD') }}{{ $item->document_pdf }}" target="_blank">
+                                        <a href="{{ Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') }}{{ $item->document_pdf }}" download target="_blank">
                                             {{ $item->document_pdf }}
                                         </a>
                                         </div>

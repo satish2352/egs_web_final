@@ -338,6 +338,8 @@
                                         <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
                                        
                                         <div class="row">
+
+
                                             <div class="col-lg-3 col-md-3 col-sm-3">
                                                 <div class="form-group">
                                                     <label for="is_approved">Registartion Status</label>&nbsp<span class="red-text">*</span>
@@ -355,6 +357,8 @@
                                                     @endif
                                                 </div>
                                             </div>
+
+                                        @if($labour_detail['data_users_data']['is_approved']='3')
                                             <div class="col-lg-3 col-md-3 col-sm-3" id="reason_div">
                                                 <div class="form-group">
                                                     <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
@@ -379,6 +383,8 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                        @endif
+                                        @if($labour_detail['data_users_data']['reason_id']='0')
                                             <div class="col-lg-6 col-md-6 col-sm-6" id="remark_div">
                                                 <div class="form-group">
                                                     <label for="other_remark">Remark</label>&nbsp<span
@@ -390,7 +396,7 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                           
+                                        @endif   
                                         </div>
                                     </div>
                                     @endif
