@@ -713,7 +713,7 @@ class LabourController extends Controller
     public function updateLabourFirstForm(Request $request){
     try {
         $user = Auth::user();
-        $mgnrega_card_id = $request->input('mgnrega_card_id');
+        // $labour_id = $request->input('id');
         // dd($mgnrega_card_id);
         $validator = Validator::make($request->all(), [
             'full_name' => 'required',
@@ -723,7 +723,7 @@ class LabourController extends Controller
             'village_id' => 'required',
             'skill_id' => 'required',
             'mobile_number' => ['required', 'digits:10'],
-            'mgnrega_card_id' => ['required'],
+            // 'mgnrega_card_id' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -731,16 +731,16 @@ class LabourController extends Controller
         }
 
         // Find the labour data to update
-        $labour_data = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+        $labour_data = Labour::where('id', $request->id)->first();
 // dd($labour_data);
-        // if (!$labour_data) {
-        //     return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
-        // }
+        if (!$labour_data) {
+            return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
+        }
 
          // Check if the mgnrega_card_id can be updated based on is_approved
-        // if ($labour_data->is_approved == 2) {
-        //     return response()->json(['status' => 'error', 'message' => 'Cannot update mgnrega card id when labour is approved'], 200);
-        // }
+        if ($labour_data->is_approved == 2) {
+            return response()->json(['status' => 'error', 'message' => 'Cannot update mgnrega card id when labour is approved'], 200);
+        }
         // Update labour details
         $labour_data->user_id = $user->id;
         $labour_data->full_name = $request->full_name;
@@ -752,10 +752,10 @@ class LabourController extends Controller
         $labour_data->village_id = $request->village_id;
         $labour_data->mobile_number = $request->mobile_number;
         $labour_data->landline_number = $request->landline_number;
-        $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        // if ($labour_data->is_approved != 2) {
-        //     $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        // }
+        // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+        if ($labour_data->is_approved != 2) {
+            $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+        }
         $labour_data->save();
 
         return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
