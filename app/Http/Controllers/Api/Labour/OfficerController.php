@@ -199,7 +199,7 @@ class OfficerController extends Controller
                         ->leftJoin('tbl_reason', 'labour_history_details.reason_id', '=', 'tbl_reason.id')
                         ->leftJoin('labour', 'labour_history_details.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
                         ->select(
-                            'labour_history_details.id',
+                            // 'labour_history_details.id',
                             'roles_labour.role_name as role_name',
                             'users_labour.f_name as f_name',
                             'tbl_reason.reason_name as reason_name',
