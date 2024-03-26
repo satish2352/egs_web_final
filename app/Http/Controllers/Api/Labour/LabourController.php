@@ -738,9 +738,9 @@ class LabourController extends Controller
         // }
 
          // Check if the mgnrega_card_id can be updated based on is_approved
-        if ($labour_data->is_approved == 2) {
-            return response()->json(['status' => 'error', 'message' => 'Cannot update mgnrega card id when labour is approved'], 200);
-        }
+        // if ($labour_data->is_approved == 2) {
+        //     return response()->json(['status' => 'error', 'message' => 'Cannot update mgnrega card id when labour is approved'], 200);
+        // }
         // Update labour details
         $labour_data->user_id = $user->id;
         $labour_data->full_name = $request->full_name;
@@ -752,10 +752,10 @@ class LabourController extends Controller
         $labour_data->village_id = $request->village_id;
         $labour_data->mobile_number = $request->mobile_number;
         $labour_data->landline_number = $request->landline_number;
-        // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        if ($labour_data->is_approved != 2) {
-            $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        }
+        $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+        // if ($labour_data->is_approved != 2) {
+        //     $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+        // }
         $labour_data->save();
 
         return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
