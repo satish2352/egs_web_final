@@ -71,6 +71,7 @@ class ProjectController extends Controller
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->where('labour.user_id', $user)
+                ->where('labour.is_approved', 2)
                 ->select(
                     'labour.id',
                     'labour.full_name',
