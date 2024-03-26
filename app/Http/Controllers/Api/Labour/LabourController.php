@@ -710,7 +710,53 @@ class LabourController extends Controller
         }
     }
 
-    public function updateLabourFirstForm(Request $request){
+//     public function updateLabourFirstForm(Request $request){
+//     try {
+//         $user = Auth::user();
+//         $validator = Validator::make($request->all(), [
+//             'full_name' => 'required',
+//             'gender_id' => 'required',
+//             'district_id' => 'required',
+//             'taluka_id' => 'required',
+//             'village_id' => 'required',
+//             'skill_id' => 'required',
+//             'mobile_number' => ['required', 'digits:10'],
+//             'mgnrega_card_id' => ['required'],
+//         ]);
+
+//         if ($validator->fails()) {
+//             return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+//         }
+
+//         // Find the labour data to update
+//         $labour_data = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+
+//         if (!$labour_data) {
+//             return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
+//         }
+
+//         // Update labour details
+//         $labour_data->user_id = $user->id;
+//         $labour_data->full_name = $request->full_name;
+//         $labour_data->gender_id = $request->gender_id;
+//         $labour_data->date_of_birth = $request->date_of_birth;
+//         $labour_data->skill_id = $request->skill_id;  
+//         $labour_data->district_id = $request->district_id;
+//         $labour_data->taluka_id = $request->taluka_id;
+//         $labour_data->village_id = $request->village_id;
+//         $labour_data->mobile_number = $request->mobile_number;
+//         $labour_data->landline_number = $request->landline_number;
+//         $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+           
+//         $labour_data->save();
+
+//         return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
+//     }
+//    }
+
+public function updateLabourFirstForm(Request $request){
     try {
         $user = Auth::user();
         // $labour_id = $request->input('id');
