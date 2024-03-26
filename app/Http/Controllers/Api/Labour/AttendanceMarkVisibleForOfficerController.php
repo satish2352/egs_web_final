@@ -23,7 +23,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;
-            dd($user);
+            // dd($user);
             // $date = date('Y-m-d', strtotime($request->updated_at));
             $date = date('Y-m-d'); // Get current date
 
@@ -63,9 +63,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                 foreach ($data_output as $labour) {
                     // Append image paths to the output data
                     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-                 
-    
-                   
+                                    
                 }
     
             // Loop through labour data and retrieve family details for each labour
