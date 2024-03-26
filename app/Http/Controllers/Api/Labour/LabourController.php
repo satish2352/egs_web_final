@@ -693,11 +693,11 @@ class LabourController extends Controller
                     ->select(
                         'labour_family_details.id',
                         'labour_family_details.gender_id',
-                        'gender_labour.gender_name as gender_id',
+                        'gender_labour.gender_name as gender',
                         'labour_family_details.relationship_id',
-                        'relation_labour.relation_title as relationship_id',
+                        'relation_labour.relation_title as relation',
                         'labour_family_details.married_status_id',
-                        'maritalstatus_labour.maritalstatus as married_status_id',
+                        'maritalstatus_labour.maritalstatus as maritalStatus',
                         'labour_family_details.full_name',
                         'labour_family_details.date_of_birth'
                     )
