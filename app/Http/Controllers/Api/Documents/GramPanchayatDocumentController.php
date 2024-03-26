@@ -166,7 +166,7 @@ class GramPanchayatDocumentController extends Controller
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
-                    'tbl_documenttype.documenttype',
+                    'tbl_documenttype.document_type',
                     'tbl_gram_panchayat_documents.document_pdf',
                 )->get();
                 foreach ($data_output as $document_data) {
