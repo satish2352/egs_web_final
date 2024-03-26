@@ -54,16 +54,16 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         }         
         // dd($data_user_output);
         // dd($user_working_dist);
-            $data_output = Project::leftJoin('tbl_mark_attendance', 'projects.id', '=', 'tbl_mark_attendance.project_id')
-            ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+            $data_output = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
             ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
             ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
             ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')  
-            ->where('tbl_mark_attendance.user_id', $data_user_output)
-                ->whereDate('tbl_mark_attendance.updated_at', $date)
-                  ->when($request->get('project_id'), function($query) use ($request) {
-                    $query->where('tbl_mark_attendance.project_id',$request->project_id);
-                })  
+            ->where('projects.District', $user_working_dist)
+                // ->whereDate('tbl_mark_attendance.updated_at', $date)
+                //   ->when($request->get('project_id'), function($query) use ($request) {
+                //     $query->where('tbl_mark_attendance.project_id',$request->project_id);
+                // }
+                // )  
                 ->select(
                     'projects.id',
                     'projects.project_name',
