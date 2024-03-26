@@ -90,7 +90,7 @@ Route::group([
         Route::post('/count-labour', [OfficerController::class, 'countOfficerLabour']);
         Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
 
-        Route::post('/project-list-lat-long', [ProjectController::class, 'getAllProjectLatLong']);
+        Route::post('/project-list-lat-log', [ProjectController::class, 'getAllProjectLatLong']);
         
        
         Route::post('/update-labour-first-form', [LabourController::class, 'updateLabourFirstForm']);
