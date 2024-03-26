@@ -138,10 +138,10 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     $query->where('ma1.project_id', $request->project_id);
                 })
                 ->when($request->get('taluka_id'), function($query) use ($request) {
-                    $query->where('taluka_labour.taluka_id', $request->taluka_id);
+                    $query->where('labour.taluka_id', $request->taluka_id);
                 })  
                 ->when($request->get('village_id'), function($query) use ($request) {
-                    $query->where('taluka_labour.village_id', $request->village_id);
+                    $query->where('labour.village_id', $request->village_id);
                 })
                 ->select(
                     'tbl_mark_attendance.id',
