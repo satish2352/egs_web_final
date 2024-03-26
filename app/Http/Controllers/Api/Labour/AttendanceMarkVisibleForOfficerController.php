@@ -127,7 +127,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
-            ->leftJoin('tbl_area as district_labour', 'users.user_district', '=', 'district_labour.location_id')
+            // ->leftJoin('tbl_area as district_labour', 'users.user_district', '=', 'district_labour.location_id')
             ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
             ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
                 ->where('projects.District', $user_working_dist)
@@ -154,8 +154,8 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'labour.mobile_number',
                     'labour.landline_number',
                     'labour.mgnrega_card_id',
-                    'users.user_district',
-                    'user_district.name as district_name',
+                    // 'users.user_district',
+                    // 'user_district.name as district_name',
                     'users.user_taluka',
                     'taluka_labour.name as taluka_name',
                     'users.user_village',
