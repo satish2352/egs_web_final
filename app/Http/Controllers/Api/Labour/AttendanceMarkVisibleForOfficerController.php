@@ -91,8 +91,8 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $user = Auth::user()->id;            
             $date = date('Y-m-d'); 
 
-            $fromDate = $request->input('from_date');
-            $toDate = $request->input('to_date');
+            // $fromDate = $request->input('from_date');
+            // $toDate = $request->input('to_date');
 
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             ->where('users.id', $user)
@@ -127,8 +127,9 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
-            ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-            ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+
+            ->leftJoin('tbl_area as taluka_labour', 'users.taluka_id', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'users.village_id', '=', 'village_labour.location_id')
                 ->where('projects.District', $user_working_dist)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
                 // ->whereDate('tbl_mark_attendance.updated_at', '>=', $fromDate)
@@ -153,9 +154,9 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'labour.mobile_number',
                     'labour.landline_number',
                     'labour.mgnrega_card_id',
-                    'labour.taluka_id',
+                    'users.taluka_id',
                     'taluka_labour.name as taluka_name',
-                    'labour.village_id',
+                    'users.village_id',
                     'village_labour.name as village_name',
                     'labour.latitude',
                     'labour.longitude',
