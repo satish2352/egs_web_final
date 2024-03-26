@@ -155,9 +155,14 @@ class GramPanchayatDocumentController extends Controller
             $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 // ->where('tbl_gram_panchayat_documents.user_id', $user)
                 ->whereIn('tbl_gram_panchayat_documents.user_id',$data_user_output)
+                // ->when($request->has('documenttype'), function($query) use ($request) {
+                //     $query->where('tbl_documenttype.documenttype', 'like', '%' . $request->documenttype . '%');
+                // })
+
                 ->when($request->has('documenttype'), function($query) use ($request) {
-                    $query->where('tbl_documenttype.documenttype', 'like', '%' . $request->documenttype . '%');
+                    $query->where('tbl_documenttype.document_type', 'like', '%' . $request->documenttype . '%');
                 })
+                
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
