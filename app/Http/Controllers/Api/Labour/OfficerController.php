@@ -198,6 +198,7 @@ foreach ($data_labour as &$labourhistory) {
         ->leftJoin('users as users_labour', 'users_labour.id', '=', 'labour_history_details.user_id')
         ->leftJoin('tbl_reason', 'tbl_reason.id', '=', 'labour_history_details.reason_id')
         ->leftJoin('labour', 'labour.mgnrega_card_id', '=', 'labour_history_details.mgnrega_card_id')
+         ->where('tbl_history.mgnrega_card_id', $labour['mgnrega_card_id'])
         ->select(
             // 'labour_history_details.id',
             'roles_labour.role_name as role_name',
