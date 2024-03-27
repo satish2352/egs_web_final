@@ -52,9 +52,7 @@ class LabourRepository
 			'users.f_name',
 			'users.m_name',
 			'users.l_name',
-          )
-		  ->orderBy('labour.id', 'desc')
-		  ->get();
+          )->get();
 		  }else if($sess_user_role=='2')
 		  {
 
@@ -198,9 +196,7 @@ class LabourRepository
 			'users.f_name',
 			'users.m_name',
 			'users.l_name',
-          )
-		  ->orderBy('labour.id', 'desc')
-		  ->get();
+          )->get();
 		  }else if($sess_user_role=='2')
 		  {
 
@@ -344,9 +340,7 @@ class LabourRepository
 			'users.f_name',
 			'users.m_name',
 			'users.l_name',
-          )
-		  ->orderBy('labour.id', 'desc')
-		  ->get();
+          )->get();
 		  }else if($sess_user_role=='2')
 		  {
 
@@ -414,7 +408,6 @@ class LabourRepository
 					'users.m_name',
 					'users.l_name',
                 )
-				->orderBy('labour.id', 'desc')
                     ->get();
 			}else if($sess_user_role=='3')
 			{
@@ -454,7 +447,6 @@ class LabourRepository
 					  'users.m_name',
 					  'users.l_name',
 				  )
-		  			->orderBy('labour.id', 'desc')
 					  ->get();
 			  }		
 		return $data_labours;
