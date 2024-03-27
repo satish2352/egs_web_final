@@ -469,11 +469,42 @@ class OfficerController extends Controller
         }
     }
     
+
     public function countOfficerLabour(Request $request) {
         try {
-            $user = Auth::id();
+            $user = Auth::user()->id;
+
+            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $user)
+                ->first();
+
+            $utype=$data_output->user_type;
+            $user_working_dist=$data_output->user_district;
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
+
+            if($utype=='1')
+            {
+            $data_user_output = User::where('users.user_district', $user_working_dist)
+            ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='2')
+            {
+                $data_user_output = User::where('users.user_taluka', $user_working_tal)
+                ->select('id')
+                ->get()
+				->toArray();
+            }else if($utype=='3')
+            {
+                $data_user_output = User::where('users.user_village', $user_working_vil)
+                ->select('id')
+                ->get()
+				->toArray();
+            }         
+            
         
-            $counts = Labour::where('user_id', $user)
+            $counts = Labour::where('user_id', $user_working_dist)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
                 ->get();
@@ -508,6 +539,45 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
+    // public function countOfficerLabour(Request $request) {
+    //     try {
+    //         $user = Auth::id();
+        
+    //         $counts = Labour::where('user_id', $user)
+    //             ->selectRaw('is_approved, COUNT(*) as count')
+    //             ->groupBy('is_approved')
+    //             ->get();
+    
+    //         // Initialize counters
+    //         $sentForApprovalCount = 0;
+    //         $approvedCount = 0;
+    //         $notApprovedCount = 0;
+    
+    //         // Counting each status
+    //         foreach ($counts as $count) {
+    //             if ($count->is_approved == 1) {
+    //                 $sentForApprovalCount = $count->count;
+    //             } elseif ($count->is_approved == 2) {
+    //                 $approvedCount = $count->count;
+    //             } elseif ($count->is_approved == 3) {
+    //                 $notApprovedCount = $count->count;
+    //             }
+    //         }
+    
+    //         // Return the counts in the response
+    //         return response()->json([
+    //             'status' => 'true',
+    //             'message' => 'Counts retrieved successfully',
+    //             'sent_for_approval_count' => $sentForApprovalCount,
+    //             'approved_count' => $approvedCount,
+    //             'not_approved_count' => $notApprovedCount
+    //         ], 200);
+    
+    //     } catch (\Exception $e) {
+    //         // Return error if any exception occurs
+    //         return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
+    //     }
+    // }
     
     
 }

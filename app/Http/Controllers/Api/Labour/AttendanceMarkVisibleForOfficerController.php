@@ -90,11 +90,17 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         try {
             $user = Auth::user()->id;            
             $date = date('Y-m-d'); 
+            $changedate = date('Y-m-d', strtotime($request->input('updated_at')));
+            // dd($changedate);
+            $fromDate = $request->input('from_date');
+            $toDate = $request->input('to_date');
 
-            // $fromDate = $request->input('from_date');
-            // $toDate = $request->input('to_date');
+
+            $changedate = $request->input('updated_at');
+        $changedate = ($changedate) ? date('Y-m-d', strtotime($changedate)) : $date;
 
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+            
             ->where('users.id', $user)
             ->first();
 
