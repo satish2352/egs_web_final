@@ -42,20 +42,51 @@ class LaboursController extends Controller {
         $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
                     ->where('parent_id', $sess_user_working_dist)
                     ->get(['location_id', 'name']);
+
+        $labour_type='1';            
         $labours = $this->service->index();
-        return view('admin.pages.labours.list-labour',compact('labours','district_data','taluka_data'));
+        return view('admin.pages.labours.list-labour',compact('labours','district_data','taluka_data','labour_type'));
     }
 
     public function listApprovedLabours()
     {
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+
+        $district_data = TblArea::where('location_type', 2) // 4 represents cities
+                    ->where('parent_id', '2')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
+                    ->where('parent_id', $sess_user_working_dist)
+                    ->get(['location_id', 'name']);
+                    
+        $labour_type='2';            
+
         $labours = $this->service->listApprovedLabours();
-        return view('admin.pages.labours.list-labour',compact('labours'));
+        return view('admin.pages.labours.list-labour',compact('labours','district_data','taluka_data','labour_type'));
     }
 
     public function listDisapprovedLabours()
     {
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+
+        $district_data = TblArea::where('location_type', 2) // 4 represents cities
+                    ->where('parent_id', '2')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
+                    ->where('parent_id', $sess_user_working_dist)
+                    ->get(['location_id', 'name']);
+
+        $labour_type='2'; 
         $labours = $this->service->listDisapprovedLabours();
-        return view('admin.pages.labours.list-labour',compact('labours'));
+        return view('admin.pages.labours.list-labour',compact('labours','district_data','taluka_data','labour_type'));
     }
 
     public function getLabourAttendanceList()
@@ -545,6 +576,18 @@ class LaboursController extends Controller {
         $districtId = $request->input('districtId');
         $talukaId = $request->input('talukaId');
         $villageId = $request->input('villageId');
+        $IsApprovedId = $request->input('IsApprovedId');
+
+        if($IsApprovedId=='1')
+        {
+            $IsApprovedIdNew='1';
+        }elseif($IsApprovedId=='2')
+        {
+            $IsApprovedIdNew='2';
+        }elseif($IsApprovedId=='3')
+        {
+            $IsApprovedIdNew='3';
+        }
 
             if($sess_user_role=='1')
 		{
@@ -568,7 +611,7 @@ class LaboursController extends Controller {
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
-		->where('labour.is_approved', '1')
+		->where('labour.is_approved', $IsApprovedIdNew)
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -613,7 +656,7 @@ class LaboursController extends Controller {
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 				->leftJoin('users', 'labour.user_id', '=', 'users.id')
-				->where('labour.is_approved', '1')
+				->where('labour.is_approved', $IsApprovedIdNew)
                 ->whereIn('labour.user_id',$data_user_output)
                 ->where('registrationstatus.is_active', true)
                 ->select(
