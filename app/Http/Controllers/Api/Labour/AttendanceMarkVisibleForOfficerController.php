@@ -92,8 +92,9 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $date = date('Y-m-d'); 
            
             $fromDate = date('Y-m-d', strtotime($request->input('from_date')));
+            $fromDate =  $fromDate.' 00:00:01';
             $toDate = date('Y-m-d', strtotime($request->input('to_date')));
-
+            $toDate =  $toDate.' 23:59:59';
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             
             ->where('users.id', $user)
@@ -133,8 +134,6 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             ->where('tbl_mark_attendance.user_id', $data_user_output)
                 ->where('projects.District', $user_working_dist)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
-                ->whereDate('tbl_mark_attendance.updated_at', '>=', $fromDate)
-                ->whereDate('tbl_mark_attendance.updated_at', '<=', $toDate)
                 ->when($request->get('project_id'), function($query) use ($request) {
                     $query->leftJoin('tbl_mark_attendance as ma1', 'labour.mgnrega_card_id', '=', 'ma1.mgnrega_card_id');
                     $query->where('ma1.project_id', $request->project_id);
@@ -145,6 +144,11 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                 ->when($request->get('user_village'), function($query) use ($request) {
                     $query->where('users.user_village', $request->user_village);
                 })
+
+                ->when($request->get('from_date'), function($query) use ($fromDate, $toDate) {
+                    $query->whereBetween('tbl_mark_attendance.updated_at', [$fromDate, $toDate]);
+                })
+                
                 ->select(
                     'tbl_mark_attendance.id',
                     'users.f_name',
