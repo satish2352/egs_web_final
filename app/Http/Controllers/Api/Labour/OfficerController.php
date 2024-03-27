@@ -411,6 +411,7 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
         }
     }
+
     public function countOfficerLabour(Request $request) {
         try {
             $user = Auth::user()->id;
@@ -445,7 +446,7 @@ class OfficerController extends Controller
             }         
             // dd($data_user_output);
         
-            $counts = Labour::where('user_id', $user_working_dist)
+            $counts = Labour::where('user_id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
                 ->get();
