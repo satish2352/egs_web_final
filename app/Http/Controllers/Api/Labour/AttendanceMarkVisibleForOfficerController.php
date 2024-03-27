@@ -90,14 +90,9 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         try {
             $user = Auth::user()->id;            
             $date = date('Y-m-d'); 
-            $changedate = date('Y-m-d', strtotime($request->input('updated_at')));
-            // dd($changedate);
-            $fromDate = $request->input('from_date');
-            $toDate = $request->input('to_date');
-
-
-            $changedate = $request->input('updated_at');
-        $changedate = ($changedate) ? date('Y-m-d', strtotime($changedate)) : $date;
+           
+            $fromDate = date('Y-m-d', strtotime($request->input('from_date')));
+            $toDate = date('Y-m-d', strtotime($request->input('to_date')));
 
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             
@@ -133,13 +128,13 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
-            // ->leftJoin('tbl_area as district_labour', 'users.user_district', '=', 'district_labour.location_id')
             ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
             ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
+            ->where('tbl_mark_attendance.user_id', $data_user_output)
                 ->where('projects.District', $user_working_dist)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
-                // ->whereDate('tbl_mark_attendance.updated_at', '>=', $fromDate)
-                // ->whereDate('tbl_mark_attendance.updated_at', '<=', $toDate)
+                ->whereDate('tbl_mark_attendance.updated_at', '>=', $fromDate)
+                ->whereDate('tbl_mark_attendance.updated_at', '<=', $toDate)
                 ->when($request->get('project_id'), function($query) use ($request) {
                     $query->leftJoin('tbl_mark_attendance as ma1', 'labour.mgnrega_card_id', '=', 'ma1.mgnrega_card_id');
                     $query->where('ma1.project_id', $request->project_id);
@@ -160,8 +155,6 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'labour.mobile_number',
                     'labour.landline_number',
                     'labour.mgnrega_card_id',
-                    // 'users.user_district',
-                    // 'user_district.name as district_name',
                     'users.user_taluka',
                     'taluka_labour.name as taluka_name',
                     'users.user_village',
@@ -175,7 +168,6 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                 )->get();
     
                 foreach ($data_output as $labour) {
-                    // Append image paths to the output data
                     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
                                     
                 }
