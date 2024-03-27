@@ -24,7 +24,9 @@
                         @if(session()->get('role_id')=='1')
                         <div class="row">
 
-                        
+                        <?php 
+                            dd($district_data);
+                            ?>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                                     <select class="form-control" name="district_id" id="district_id">
