@@ -153,19 +153,33 @@ class GramPanchayatDocumentController extends Controller
 
 
             $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-                // ->where('tbl_gram_panchayat_documents.user_id', $user)
+            ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
+            ->leftJoin('tbl_area as district_labour', 'users.user_district', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
                 ->whereIn('tbl_gram_panchayat_documents.user_id',$data_user_output)
                 ->when($request->has('document_type_name'), function($query) use ($request) {
                     $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
                 })
+                ->when($request->get('user_taluka'), function($query) use ($request) {
+                    $query->where('users.user_taluka', $request->user_taluka);
+                })  
+                ->when($request->get('user_village'), function($query) use ($request) {
+                    $query->where('users.user_village', $request->user_village);
+                })  
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
                     'tbl_documenttype.document_type_name',
                     'tbl_gram_panchayat_documents.document_pdf',
+                    'users.user_district',
+                    'district_labour.name as district_name',
+                    'users.user_taluka',
+                    'taluka_labour.name as taluka_name',
+                    'users.user_village',
+                    'village_labour.name as village_name',
                 )->get();
                 foreach ($data_output as $document_data) {
-                    // Append image paths to the output data
                     $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
                 }
             return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
