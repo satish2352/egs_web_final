@@ -371,15 +371,26 @@ class LabourController extends Controller
                         'labour_family_details.married_status_id',
                         'labour_family_details.full_name',
                         'labour_family_details.date_of_birth'
-                        // 'labour_family_details.id',
-                        // 'gender_labour.gender_name as gender_id',
-                        // 'relation_labour.relation_title as relationship_id',
-                        // 'maritalstatus_labour.maritalstatus as married_status_id',
-                        // 'labour_family_details.full_name',
-                        // 'labour_family_details.date_of_birth'
                         
                     )
                     ->where('labour_family_details.labour_id', $labour->id)
+                    ->get();
+            }
+
+            foreach ($data_output as &$labourhistory) {
+                $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'tbl_history.roles_id', '=', 'roles_labour.id')
+                    ->leftJoin('users as users_labour', 'tbl_history.user_id', '=', 'users_labour.id')
+                    ->leftJoin('tbl_reason', 'tbl_history.reason_id', '=', 'tbl_reason.id')
+                    ->leftJoin('labour', 'tbl_history.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+                    ->select(
+                        'tbl_history.id',
+                        'roles_labour.role_name as role_name',
+                        'users_labour.f_name as f_name',
+                        'tbl_reason.reason_name as reason_name',
+                        'tbl_history.other_remark',
+                        'tbl_history.updated_at',
+                    )
+                    ->where('tbl_history.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
                     ->get();
             }
             return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
