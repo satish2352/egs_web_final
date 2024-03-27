@@ -86,20 +86,15 @@ class LabourController extends Controller
             
 
         ];
-
-        if ($request->has('landline_number')) {
-            $all_data_validation['landline_number'] = ['required', 'regex:/^[0-9]{8,}$/'];
+        if(isset($request->landline_number)) {
+            $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
         }
-        // if(isset($request->landline_number)) {
-        //     $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
-        // }
         $validator = Validator::make($request->all(), $all_data_validation);
 
 
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
         }
-
 
         try {
             // Check if the user exists
@@ -116,7 +111,6 @@ class LabourController extends Controller
             $labour_data->taluka_id = $request->taluka_id;
             $labour_data->village_id = $request->village_id;
             $labour_data->mobile_number = $request->mobile_number;
-            $labour_data->landline_number = $request->landline_number;
             $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
             $labour_data->skill_id = $request->skill_id;
             $labour_data->latitude = $request->latitude;
