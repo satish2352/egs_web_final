@@ -50,14 +50,17 @@ class RegisterController extends Controller {
                             ->toArray();
         $dynamic_state = TblArea::where('location_type', 1)
                             ->select('location_id','name')
+                            ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
         $dynamic_district = TblArea::where('parent_id', 2)
                             ->select('location_id','name')
+                            ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
         $dynamic_usertype = Usertype::where('is_active', true)
                             ->select('id','usertype_name')
+                            ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
     	return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state','dynamic_district','dynamic_usertype'));
@@ -80,6 +83,7 @@ class RegisterController extends Controller {
 
         $district = TblArea::where('location_type', 2) // 4 represents cities
                     ->where('parent_id', $stateId)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
               return response()->json(['district' => $district]);
 
@@ -91,6 +95,7 @@ class RegisterController extends Controller {
 
         $taluka = TblArea::where('location_type', 3) // 4 represents cities
                     ->where('parent_id', $districtId)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
               return response()->json(['taluka' => $taluka]);
 
@@ -102,6 +107,7 @@ class RegisterController extends Controller {
 
         $village = TblArea::where('location_type', 4) // 4 represents cities
                     ->where('parent_id', $talukaId)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
               return response()->json(['village' => $village]);
 
@@ -113,6 +119,7 @@ class RegisterController extends Controller {
         $state =  TblArea::where('location_type', 1)
                             // ->where('parent_id', $stateId)
                             ->select('location_id','name')
+                            ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
         return response()->json(['state' => $state]);
@@ -122,10 +129,12 @@ class RegisterController extends Controller {
     public function editUsers(Request $request){
         $dynamic_district = TblArea::where('parent_id', 2)
                             ->select('location_id','name')
+                            ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
         $dynamic_usertype = Usertype::where('is_active', true)
                             ->select('id','usertype_name')
+                            ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
         $user_data = $this->service->editUsers($request);
