@@ -281,7 +281,10 @@ class GramPanchayatDocumentController extends Controller
         
             $query = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
-                ->where('tbl_gram_panchayat_documents.document_pdf', $document_pdffile);
+                ->where('tbl_gram_panchayat_documents.document_pdf', $document_pdffile)
+                ->when($request->has('document_name'), function($query) use ($request) {
+                    $query->where('tbl_documenttype.document_name', 'like', '%' . $request->document_name . '%');
+                });
         
             $document = $query->first(); // Execute the query and get the first result
         
