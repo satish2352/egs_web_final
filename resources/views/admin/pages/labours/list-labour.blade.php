@@ -24,17 +24,15 @@
                         @if(session()->get('role_id')=='1')
                         <div class="row">
 
-                        <?php 
-                            dd($district_data);
-                            ?>
+                       
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    <select class="form-control" name="district_id" id="district_id">
+                                    {{-- <select class="form-control" name="district_id" id="district_id">
                                         <option value="">Select District</option>
                                         @foreach ($district_data as $district_for_data)    
                                         <option value="{{ $district_for_data['location_id'] }}">{{ $district_for_data['name'] }}</option>
                                         @endforeach
-                                    </select>
+                                    </select> --}}
                                     @if ($errors->has('district_id'))
                                         <span class="red-text"><?php echo $errors->first('district_id', ':message'); ?></span>
                                     @endif
