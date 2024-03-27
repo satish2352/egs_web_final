@@ -186,6 +186,7 @@ class GramPanchayatDocumentController extends Controller
                     'taluka_labour.name as taluka_name',
                     'users.user_village',
                     'village_labour.name as village_name',
+                    'tbl_gram_panchayat_documents.updated_at',
                 )->get();
                 foreach ($data_output as $document_data) {
                     $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
