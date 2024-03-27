@@ -279,51 +279,23 @@ class GramPanchayatDocumentController extends Controller
                     ->toArray();
             }
         
-            $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-            ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
-            // ->leftJoin('tbl_area as district_labour', 'users.user_district', '=', 'district_labour.location_id')
-            //     ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
-            //     ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
-                ->whereIn('tbl_gram_panchayat_documents.user_id',$data_user_output)
+            $query = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+                ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
+                ->where('tbl_gram_panchayat_documents.document_name', $document_pdffile)
                 ->when($request->has('document_name'), function($query) use ($request) {
                     $query->where('tbl_gram_panchayat_documents.document_name', 'like', '%' . $request->document_name . '%');
-                })
-               
-               
-                ->select(
-                    'tbl_gram_panchayat_documents.id',
-                    'tbl_gram_panchayat_documents.document_name',
-                    'tbl_documenttype.document_type_name',
-                    'tbl_gram_panchayat_documents.document_pdf',
-                    // 'users.user_district',
-                    // 'district_labour.name as district_name',
-                    // 'users.user_taluka',
-                    // 'taluka_labour.name as taluka_name',
-                    // 'users.user_village',
-                    // 'village_labour.name as village_name',
-                    'tbl_gram_panchayat_documents.updated_at',
-                )->get();
-                foreach ($data_output as $document_data) {
-                    $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
-                }
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-            // $query = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-            //     ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
-            //     ->where('tbl_gram_panchayat_documents.document_pdf', $document_pdffile)
-            //     ->when($request->has('document_name'), function($query) use ($request) {
-            //         $query->where('tbl_documenttype.document_name', 'like', '%' . $request->document_name . '%');
-            //     });
+                });
         
-            // $document = $query->first(); // Execute the query and get the first result
+            $document = $query->first(); // Execute the query and get the first result
+        // dd( $document);
+            if (!$document) {
+                return response()->json(['status' => 'false', 'message' => 'Document not found'], 404);
+            }
         
-            // if (!$document) {
-            //     return response()->json(['status' => 'false', 'message' => 'Document not found'], 404);
-            // }
-        
-            // // Construct absolute file path
-            // $file_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
+            // Construct absolute file path
+            $file_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
      
-            // return response()->json(['status' => 'true', 'message' => 'Document retrieved successfully', 'data' => $file_path], 200);
+            return response()->json(['status' => 'true', 'message' => 'Document retrieved successfully', 'data' => $file_path], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Document retrieval failed', 'error' => $e->getMessage()], 500);
         }
