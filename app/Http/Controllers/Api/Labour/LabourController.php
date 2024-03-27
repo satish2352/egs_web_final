@@ -57,6 +57,7 @@ class LabourController extends Controller
             'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
             'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
 
+         
             // 'family' => 'required|
             // ',
             // 'family.*.full_name' => 'required',
@@ -86,7 +87,9 @@ class LabourController extends Controller
 
         ];
 
-
+        if ($request->has('landline_number')) {
+            $all_data_validation['landline_number'] = ['required', 'regex:/^[0-9]{8,}$/'];
+        }
         // if(isset($request->landline_number)) {
         //     $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
         // }
@@ -118,6 +121,7 @@ class LabourController extends Controller
             $labour_data->skill_id = $request->skill_id;
             $labour_data->latitude = $request->latitude;
             $labour_data->longitude = $request->longitude;
+            $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : null;
             $labour_data->save();
 
             $last_insert_id = $labour_data->id;
