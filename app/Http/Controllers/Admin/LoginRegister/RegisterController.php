@@ -60,7 +60,7 @@ class RegisterController extends Controller {
                             ->toArray();
         $dynamic_usertype = Usertype::where('is_active', true)
                             ->select('id','usertype_name')
-                            ->orderBy('name', 'asc')
+                            // ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
     	return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state','dynamic_district','dynamic_usertype'));
