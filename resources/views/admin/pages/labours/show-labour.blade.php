@@ -144,14 +144,6 @@
                                             <label>{{ strip_tags($labour_detail['data_users_data']['longitude']) }}</label>
                                         </div>
                                     </div>
-                                    <div class="row ">
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Start Date :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($labour_detail['data_users_data']['start_date']) }}</label>
-                                        </div>
-                                    </div>
 
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">

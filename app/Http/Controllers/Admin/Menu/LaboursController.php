@@ -37,10 +37,12 @@ class LaboursController extends Controller {
 
         $district_data = TblArea::where('location_type', 2) // 4 represents cities
                     ->where('parent_id', '2')
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
 
         $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
                     ->where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
 
         $labour_type='1';            
@@ -57,10 +59,12 @@ class LaboursController extends Controller {
 
         $district_data = TblArea::where('location_type', 2) // 4 represents cities
                     ->where('parent_id', '2')
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
 
         $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
                     ->where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
                     
         $labour_type='2';            
@@ -78,10 +82,12 @@ class LaboursController extends Controller {
 
         $district_data = TblArea::where('location_type', 2) // 4 represents cities
                     ->where('parent_id', '2')
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
 
         $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
                     ->where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
 
         $labour_type='2'; 
@@ -138,6 +144,7 @@ class LaboursController extends Controller {
 
         $district = TblArea::where('location_type', 2) // 4 represents cities
                     ->where('parent_id', $stateId)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
               return response()->json(['district' => $district]);
 
@@ -149,6 +156,7 @@ class LaboursController extends Controller {
 
         $taluka = TblArea::where('location_type', 3) // 4 represents cities
                     ->where('parent_id', $districtId)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
               return response()->json(['taluka' => $taluka]);
 
@@ -160,6 +168,7 @@ class LaboursController extends Controller {
 
         $village = TblArea::where('location_type', 4) // 4 represents cities
                     ->where('parent_id', $talukaId)
+                    ->orderBy('name', 'asc')
                     ->get(['location_id', 'name']);
               return response()->json(['village' => $village]);
 
@@ -573,7 +582,7 @@ class LaboursController extends Controller {
 		$sess_user_role=session()->get('role_id');
 		$sess_user_working_dist=session()->get('working_dist');
 
-        $districtId = $request->input('districtId');
+       $districtId = $request->input('districtId');
         $talukaId = $request->input('talukaId');
         $villageId = $request->input('villageId');
         $IsApprovedId = $request->input('IsApprovedId');
@@ -594,7 +603,7 @@ class LaboursController extends Controller {
             $query_user = User::where('users.role_id','3')
                 ->select('id');
                 if ($request->filled('districtId')) {
-                    $query_user->where('users.user_taluka', $districtId);
+                    $query_user->where('users.user_district', $districtId);
                 }
                 if ($request->filled('talukaId')) {
                     $query_user->where('users.user_taluka', $talukaId);
@@ -606,12 +615,13 @@ class LaboursController extends Controller {
                 $data_user_output=$query_user->get();
 
 
-     	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+     	$query = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
 		->where('labour.is_approved', $IsApprovedIdNew)
+        ->whereIn('labour.user_id',$data_user_output)
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -632,7 +642,10 @@ class LaboursController extends Controller {
 			'users.f_name',
 			'users.m_name',
 			'users.l_name',
-          )->get();
+          );
+
+          $data_output = $query->get();
+
 		  }else if($sess_user_role=='2')
 		  {
             
@@ -644,8 +657,6 @@ class LaboursController extends Controller {
             if ($request->filled('villageId')) {
                 $query_user->where('users.user_village',$villageId);
             }
-                // ;
-                
                 
                 $data_user_output=$query_user->select('id')->get();
 
