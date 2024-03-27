@@ -279,23 +279,25 @@ class GramPanchayatDocumentController extends Controller
                     ->toArray();
             }
         
-            $query = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+            $document = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
                 ->where('tbl_gram_panchayat_documents.document_name', $document_pdffile)
                 ->when($request->has('document_name'), function($query) use ($request) {
                     $query->where('tbl_gram_panchayat_documents.document_name', 'like', '%' . $request->document_name . '%');
-                });
-        
-            $document = $query->first(); // Execute the query and get the first result
+                })
+                ->first();
+            // $document = $query->first(); // Execute the query and get the first result
         // dd( $document);
             if (!$document) {
                 return response()->json(['status' => 'false', 'message' => 'Document not found'], 404);
             }
-        
+            // foreach ($document as $document_data) {
+                $document->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
+            // }
             // Construct absolute file path
-            $file_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
+            // $file_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document->document_pdf;
      
-            return response()->json(['status' => 'true', 'message' => 'Document retrieved successfully', 'data' => $file_path], 200);
+            return response()->json(['status' => 'true', 'message' => 'Document retrieved successfully', 'data' => $document], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Document retrieval failed', 'error' => $e->getMessage()], 500);
         }
