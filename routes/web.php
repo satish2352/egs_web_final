@@ -65,6 +65,7 @@ Route::group(['middleware' => ['admin']], function () {
 
     Route::get('/list-approved-labours', ['as' => 'list-approved-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@listApprovedLabours']);
     Route::get('/list-disapproved-labours', ['as' => 'list-disapproved-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@listDisapprovedLabours']);
+    Route::get('/list-resubmitted-labours', ['as' => 'list-resubmitted-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@listResubmitedLabours']);
     Route::post('/update-labour-status', ['as' => 'update-labour-status', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@updateLabourStatus']);
     Route::get('/list-labours-filter', ['as' => 'list-labours-filter', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@getFilterLabours']);
 

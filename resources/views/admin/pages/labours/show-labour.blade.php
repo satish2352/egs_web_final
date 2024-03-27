@@ -255,6 +255,50 @@
                                     </div>
                                 </div>
                             </div>
+
+                            @if($labour_detail['data_users_data']['is_approved']=='1' && $labour_detail['data_users_data']['is_resubmitted']=='1')    
+                            <div class="row mt-4">
+                                <div class="col-12 grid-margin">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    @include('admin.layout.alert')
+                                                    <div class="table-responsive">
+                                                    <h5 class="d-flex justify-content-center mb-4">Rejection History Details</h5>
+                                                        <table id="order-listing" class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Sr. No.</th>
+                                                                    <th>Registartion Status</th>
+                                                                    <th>Not Aproved Reason</th>
+                                                                    <th>Remark</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <!-- <?php //dd($labour_detail['data_family_users']); ?> -->
+                                                            @foreach ($labour_detail['data_verification_history'] as $history_item)
+                                                                <tr>
+                                                                    <td>{{ $loop->iteration }}</td>
+                                                                    <td>{{ $history_item['status_name'] }}</td>
+                                                                    <td>{{ $history_item['reason_name'] }}</td>
+                                                                    <td>{{ $history_item['other_remark'] }}</td>
+                                                                </tr>
+                                                            @endforeach
+ 
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+ 
+ 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         @if($labour_detail['data_users_data']['is_approved']=='1' && session()->get('role_id')=='2')    
                             <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
                                         <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
