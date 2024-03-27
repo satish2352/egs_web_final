@@ -30,8 +30,20 @@ class LaboursController extends Controller {
 
     public function index()
     {
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+
+        $district_data = TblArea::where('location_type', 2) // 4 represents cities
+                    ->where('parent_id', '2')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
+                    ->where('parent_id', $sess_user_working_dist)
+                    ->get(['location_id', 'name']);
         $labours = $this->service->index();
-        return view('admin.pages.labours.list-labour',compact('labours'));
+        return view('admin.pages.labours.list-labour',compact('labours','district_data','taluka_data'));
     }
 
     public function listApprovedLabours()
@@ -523,26 +535,120 @@ class LaboursController extends Controller {
         }
     }
 
-    // public function showGramsevakDocuments(Request $request)
-    // {
-    //     $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
-    //                         ->where('id', '!=', 1)
-    //                         ->select('id','status_name')
-    //                         ->get()
-    //                         ->toArray();
-    //     $dynamic_reasons = Reasons::where('is_active', 1)
-    //                         ->select('id','reason_name')
-    //                         ->get()
-    //                         ->toArray();
+    public function getFilterLabours(Request $request)
+    {
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
 
-    //     try {
-    //         $labour_detail = $this->service->getById($request->show_id);
-    //         // dd($labour_detail);
-    //         return view('admin.pages.labours.show-gramsevak-docs', compact('labour_detail','dynamic_registrationstatus','dynamic_reasons'));
-    //     } catch (\Exception $e) {
-    //         return $e;
-    //     }
-    // }
+        $districtId = $request->input('districtId');
+        $talukaId = $request->input('talukaId');
+        $villageId = $request->input('villageId');
+
+            if($sess_user_role=='1')
+		{
+            $query_user = User::where('users.role_id','3')
+                ->select('id');
+                if ($request->filled('districtId')) {
+                    $query_user->where('users.user_taluka', $districtId);
+                }
+                if ($request->filled('talukaId')) {
+                    $query_user->where('users.user_taluka', $talukaId);
+                }
+                if ($request->filled('villageId')) {
+                    $query_user->where('users.user_village', $villageId);
+                }
+
+                $data_user_output=$query_user->get();
+
+
+     	$data_labours = Labour::leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+		->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+		->leftJoin('users', 'labour.user_id', '=', 'users.id')
+		->where('labour.is_approved', '1')
+          ->select(
+			'labour.id',
+			'labour.full_name',
+			'labour.date_of_birth',
+			'gender_labour.gender_name as gender_name',
+			'district_labour.name as district_id',
+			'taluka_labour.name as taluka_id',
+			'village_labour.name as village_id',
+			'labour.mobile_number',
+			'labour.landline_number',
+			'labour.mgnrega_card_id',
+			'labour.aadhar_image',
+			'labour.mgnrega_image', 
+			'labour.profile_image', 
+			'labour.voter_image', 
+			'labour.is_active',
+			'labour.is_approved',
+			'users.f_name',
+			'users.m_name',
+			'users.l_name',
+          )->get();
+		  }else if($sess_user_role=='2')
+		  {
+            
+
+            $query_user= User::where('users.role_id','3');
+            if ($request->filled('talukaId')) {
+                $query_user->where('users.user_taluka',$talukaId);
+            }
+            if ($request->filled('villageId')) {
+                $query_user->where('users.user_village',$villageId);
+            }
+                // ;
+                
+                
+                $data_user_output=$query_user->select('id')->get();
+
+                $query = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+                ->leftJoin('skills as skills_labour', 'labour.gender_id', '=', 'skills_labour.id')
+                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+				->leftJoin('users', 'labour.user_id', '=', 'users.id')
+				->where('labour.is_approved', '1')
+                ->whereIn('labour.user_id',$data_user_output)
+                ->where('registrationstatus.is_active', true)
+                ->select(
+                    'labour.id',
+                    'labour.full_name',
+                    'labour.date_of_birth',
+                    'gender_labour.gender_name as gender_name',
+                    'skills_labour.skills as skills',
+                    'district_labour.name as district_id',
+                    'taluka_labour.name as taluka_id',
+                    'village_labour.name as village_id',
+                    'labour.mobile_number',
+                    'labour.landline_number',
+                    'labour.mgnrega_card_id',
+                    'labour.latitude',
+                    'labour.longitude',
+                    'labour.profile_image',
+                    'registrationstatus.status_name',
+					'labour.is_approved',
+					'users.f_name',
+					'users.m_name',
+					'users.l_name',
+                );
+    
+               
+               $data_output = $query->get();
+
+            }
+                return response()->json(['labour_ajax_data' => $data_output]);
+
+            // } catch (\Exception $e) {
+            //     return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            // }
+
+    }
 
   
    
