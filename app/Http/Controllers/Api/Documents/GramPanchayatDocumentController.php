@@ -122,6 +122,11 @@ class GramPanchayatDocumentController extends Controller
         try {
             $user = Auth::user()->id;
 
+            $fromDate = date('Y-m-d', strtotime($request->input('from_date')));
+            $fromDate =  $fromDate.' 00:00:01';
+            $toDate = date('Y-m-d', strtotime($request->input('to_date')));
+            $toDate =  $toDate.' 23:59:59';
+
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             ->where('users.id', $user)
             ->first();
@@ -167,6 +172,9 @@ class GramPanchayatDocumentController extends Controller
                 ->when($request->get('user_village'), function($query) use ($request) {
                     $query->where('users.user_village', $request->user_village);
                 })  
+                ->when($request->get('from_date'), function($query) use ($fromDate, $toDate) {
+                    $query->whereBetween('tbl_gram_panchayat_documents.updated_at', [$fromDate, $toDate]);
+                })
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
