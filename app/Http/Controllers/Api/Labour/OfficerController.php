@@ -21,7 +21,6 @@ use Carbon\Carbon;
 class OfficerController extends Controller
 {
    
-
     public function getAllLabourList(Request $request){
     
         try {
@@ -295,11 +294,9 @@ class OfficerController extends Controller
     public function getApprovedLabourListOfficer(Request $request) {
         return $this->getLabourStatusListReceived($request, 2);
     }
-    
     public function getNotApprovedLabourListOfficer(Request $request) {
         return $this->getLabourStatusListReceived($request, 3);
     }
-
     public function getRejectedLabourListOfficer(Request $request) {
         return $this->getLabourStatusListReceived($request, 4);
     }
@@ -359,60 +356,6 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
         }
     }
-    // public function updateLabourStatusNotApproved(Request $request) {
-    //     try {
-    //         $user = Auth::user();
-            
-    //         $mgnrega_card_id = $request->input('mgnrega_card_id'); 
-       
-           
-    //         $validator = Validator::make($request->all(), [
-    //             'mgnrega_card_id' => 'required',
-    //             'reason_id' => 'required',
-    //             'is_approved' => 'required',
-    //         ]);
-    
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
-    //         }
-    
-    //         // Update labor entry
-    //         $updateData = [
-    //             'is_approved' => 3,
-    //             'reason_id' => $request->reason_id, 
-    //         ];
-    
-    //         // Include 'other_remark' in the update data if it's provided
-    //         if ($request->has('other_remark') && !empty($request->other_remark)) {
-    //             $updateData['other_remark'] = $request->other_remark;
-    //         }
-    //         $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
-    //             ->where('is_approved', 1)
-    //             ->update($updateData);
-    //         if ($updated) {
-    //             // Create a history record
-    //             $history = new HistoryModel();
-    //             $history->user_id = $user->id; 
-    //             $history->role_id = $user->role_id; 
-    //             $history->mgnrega_card_id = $request->mgnrega_card_id;
-    //             $history->is_approved = $request->is_approved;
-    //             $history->reason_id = $request->reason_id; 
-                
-    //             if ($request->has('other_remark')) {
-    //                 $history->other_remark = $request->other_remark;
-    //             }
-    
-    //             $history->save();
-    
-    //             return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
-    //         } else {
-    //             return response()->json(['status' => 'false', 'message' => 'No labor found with the provided MGNREGA card Id or status is not approved'], 200);
-    //         }
-    
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
     public function updateLabourStatusNotApproved(Request $request) {
         try {
             $user = Auth::user();
@@ -468,8 +411,6 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
         }
     }
-    
-
     public function countOfficerLabour(Request $request) {
         try {
             $user = Auth::user()->id;

@@ -24,7 +24,7 @@ class LabourAttendanceMarkController extends Controller
         $validator = Validator::make($request->all(), [
             'project_id' => 'required',
             'mgnrega_card_id' => 'required',
-            'attendance_day' => 'required', // Assuming 'attendance_day' should be a date
+            'attendance_day' => 'required', 
         ]);
     
         if ($validator->fails()) {

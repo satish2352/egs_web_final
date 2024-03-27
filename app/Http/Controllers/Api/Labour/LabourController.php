@@ -20,8 +20,7 @@ use Carbon\Carbon;
 
 class LabourController extends Controller
 {
-    public function add(Request $request )
-    {
+    public function add(Request $request ){
         $all_data_validation = [
             'full_name' => 'required',
             'gender_id' => 'required',
@@ -182,8 +181,7 @@ class LabourController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    public function updateParticularDataLabour(Request $request)
-    {
+    public function updateParticularDataLabour(Request $request){
         try {
             $validator = Validator::make($request->all(), [
                 // 'id' => 'required|exists:labours,id',
@@ -646,7 +644,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
         }
     }
-    
     public function getParticularLabourForUpdate(Request $request){
         try {
             $user = Auth::user()->id;
@@ -721,58 +718,10 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Labour details get failed', 'error' => $e->getMessage()], 500);
         }
     }
-
-//     public function updateLabourFirstForm(Request $request){
-//     try {
-//         $user = Auth::user();
-//         $validator = Validator::make($request->all(), [
-//             'full_name' => 'required',
-//             'gender_id' => 'required',
-//             'district_id' => 'required',
-//             'taluka_id' => 'required',
-//             'village_id' => 'required',
-//             'skill_id' => 'required',
-//             'mobile_number' => ['required', 'digits:10'],
-//             'mgnrega_card_id' => ['required'],
-//         ]);
-
-//         if ($validator->fails()) {
-//             return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
-//         }
-
-//         // Find the labour data to update
-//         $labour_data = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
-
-//         if (!$labour_data) {
-//             return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
-//         }
-
-//         // Update labour details
-//         $labour_data->user_id = $user->id;
-//         $labour_data->full_name = $request->full_name;
-//         $labour_data->gender_id = $request->gender_id;
-//         $labour_data->date_of_birth = $request->date_of_birth;
-//         $labour_data->skill_id = $request->skill_id;  
-//         $labour_data->district_id = $request->district_id;
-//         $labour_data->taluka_id = $request->taluka_id;
-//         $labour_data->village_id = $request->village_id;
-//         $labour_data->mobile_number = $request->mobile_number;
-//         $labour_data->landline_number = $request->landline_number;
-//         $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-           
-//         $labour_data->save();
-
-//         return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
-//     } catch (\Exception $e) {
-//         return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
-//     }
-//    }
-
-public function updateLabourFirstForm(Request $request){
+    public function updateLabourFirstForm(Request $request){
     try {
         $user = Auth::user();
         // $labour_id = $request->input('id');
-        // dd($mgnrega_card_id);
         $validator = Validator::make($request->all(), [
             'full_name' => 'required',
             'gender_id' => 'required',
@@ -790,7 +739,7 @@ public function updateLabourFirstForm(Request $request){
 
         // Find the labour data to update
         $labour_data = Labour::where('id', $request->id)->first();
-// dd($labour_data);
+
         if (!$labour_data) {
             return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
         }
@@ -831,7 +780,6 @@ public function updateLabourFirstForm(Request $request){
         $labour_data->is_approved = 1;
         $labour_data->is_resubmitted = true;
         $labour_data->reason_id = null;
-        
         // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
         if ($labour_data->is_approved != 2) {
             $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
@@ -843,118 +791,114 @@ public function updateLabourFirstForm(Request $request){
         return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
     }
    }
+    public function updateLabourSecondForm(Request $request){
+        try {
+            $user = Auth::user();
+            $validator = Validator::make($request->all(), [
+                'latitude' => ['required', 'between:-90,90'], // Latitude range
+                'longitude' => ['required', 'between:-180,180'], // Longitude range
+                'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+                'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+                'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+                'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+            ]);
 
-public function updateLabourSecondForm(Request $request)
-{
-    try {
-        $user = Auth::user();
-        $validator = Validator::make($request->all(), [
-            'latitude' => ['required', 'between:-90,90'], // Latitude range
-            'longitude' => ['required', 'between:-180,180'], // Longitude range
-            'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-            'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-        ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+            }
 
-        if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+            // Find the labour data to update
+            $labour_data = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+
+            if (!$labour_data) {
+                return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
+            }
+
+            // Delete existing family details for the labor
+            // LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
+
+            // Check if labour_id is greater than zero before deleting family details
+            if ($labour_data->id > 0) {
+                LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
+            }
+
+            $labour_data->user_id = $user->id;
+            $labour_data->latitude = $request->latitude;
+            $labour_data->longitude = $request->longitude;
+            $labour_data->is_approved = 1;
+            $labour_data->reason_id = null;
+
+            $labour_data->save();
+
+            $pathdelete = Config::get('DocumentConstant.USER_LABOUR_DELETE');
+            $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
+            $baseUrl = Config::get('env.FILE_VIEW');
+
+            // Upload and update images
+            if ($request->hasFile('profile_image')) {
+            if ($labour_data->profile_image) {
+                removeImage($pathdelete . $labour_data->profile_image);
+            }
+            $profileImageName = $labour_data->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+            uploadImage($request, 'profile_image', $path, $profileImageName);
+            $labour_data->profile_image = $profileImageName;
+            }
+
+            if ($request->hasFile('aadhar_image')) {
+            if ($labour_data->aadhar_image) {
+                removeImage($pathdelete . $labour_data->aadhar_image);
+            }
+            $aadharImageName = $labour_data->id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+            uploadImage($request, 'aadhar_image', $path, $aadharImageName);
+            $labour_data->aadhar_image = $aadharImageName;
+            }
+
+            if ($request->hasFile('mgnrega_image')) {
+            if ($labour_data->mgnrega_image) {
+                removeImage($pathdelete . $labour_data->mgnrega_image);
+            }
+            $mgnregaImageName = $labour_data->id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
+            uploadImage($request, 'mgnrega_image', $path, $mgnregaImageName);
+            $labour_data->mgnrega_image = $mgnregaImageName;
+            }
+
+            if ($request->hasFile('voter_image')) {
+            if ($labour_data->voter_image) {
+                removeImage($pathdelete . $labour_data->voter_image);
+            }
+            $voterImageName = $labour_data->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
+            uploadImage($request, 'voter_image', $path, $voterImageName);
+            $labour_data->voter_image = $voterImageName;
+            }
+            $labour_data->is_resubmitted = true;
+            $labour_data->save();
+
+            // $familyDetails = [];
+
+
+            $familyDetailNew = json_decode($request->family,true);
+                
+            if ($labour_data->id > 0) {
+            foreach ($familyDetailNew as $key => $familyMember) {
+                $familyDetail = new LabourFamilyDetails();
+                $familyDetail->labour_id = $labour_data->id;
+                $familyDetail->full_name = $familyMember['full_name'];
+                $familyDetail->gender_id = $familyMember['gender_id'];
+                // $familyDetail->gender_id = $familyMember['gender'];
+                $familyDetail->relationship_id = $familyMember['relationship_id'];
+                // $familyDetail->relationship_id = $familyMember['relation'];
+                $familyDetail->married_status_id = $familyMember['married_status_id'];
+                // $familyDetail->married_status_id = $familyMember['maritalStatus'];
+                $familyDetail->date_of_birth = $familyMember['date_of_birth'];           
+                $familyDetail->save();
+                $familyDetails[] = $familyDetail; // Collect family details
+            }
         }
 
-        // Find the labour data to update
-        $labour_data = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
-
-        if (!$labour_data) {
-            return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
-        }
-
-        // Delete existing family details for the labor
-        // LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
-
-         // Check if labour_id is greater than zero before deleting family details
-         if ($labour_data->id > 0) {
-            LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
-        }
-
-        $labour_data->user_id = $user->id;
-        $labour_data->latitude = $request->latitude;
-        $labour_data->longitude = $request->longitude;
-        $labour_data->is_approved = 1;
-        $labour_data->reason_id = null;
-
-        $labour_data->save();
-
-        $pathdelete = Config::get('DocumentConstant.USER_LABOUR_DELETE');
-        $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
-        $baseUrl = Config::get('env.FILE_VIEW');
-
-        // Upload and update images
-        if ($request->hasFile('profile_image')) {
-        if ($labour_data->profile_image) {
-            removeImage($pathdelete . $labour_data->profile_image);
-        }
-        $profileImageName = $labour_data->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
-        uploadImage($request, 'profile_image', $path, $profileImageName);
-        $labour_data->profile_image = $profileImageName;
-        }
-
-        if ($request->hasFile('aadhar_image')) {
-        if ($labour_data->aadhar_image) {
-            removeImage($pathdelete . $labour_data->aadhar_image);
-        }
-        $aadharImageName = $labour_data->id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-        uploadImage($request, 'aadhar_image', $path, $aadharImageName);
-        $labour_data->aadhar_image = $aadharImageName;
-        }
-
-        if ($request->hasFile('mgnrega_image')) {
-        if ($labour_data->mgnrega_image) {
-            removeImage($pathdelete . $labour_data->mgnrega_image);
-        }
-        $mgnregaImageName = $labour_data->id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
-        uploadImage($request, 'mgnrega_image', $path, $mgnregaImageName);
-        $labour_data->mgnrega_image = $mgnregaImageName;
-        }
-
-        if ($request->hasFile('voter_image')) {
-        if ($labour_data->voter_image) {
-            removeImage($pathdelete . $labour_data->voter_image);
-        }
-        $voterImageName = $labour_data->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
-        uploadImage($request, 'voter_image', $path, $voterImageName);
-        $labour_data->voter_image = $voterImageName;
-        }
-        $labour_data->is_resubmitted = true;
-        $labour_data->save();
-
-        // $familyDetails = [];
-
-
-        $familyDetailNew = json_decode($request->family,true);
-            
-        if ($labour_data->id > 0) {
-        foreach ($familyDetailNew as $key => $familyMember) {
-            $familyDetail = new LabourFamilyDetails();
-            $familyDetail->labour_id = $labour_data->id;
-            $familyDetail->full_name = $familyMember['full_name'];
-            $familyDetail->gender_id = $familyMember['gender_id'];
-            // $familyDetail->gender_id = $familyMember['gender'];
-            $familyDetail->relationship_id = $familyMember['relationship_id'];
-            // $familyDetail->relationship_id = $familyMember['relation'];
-            $familyDetail->married_status_id = $familyMember['married_status_id'];
-            // $familyDetail->married_status_id = $familyMember['maritalStatus'];
-            $familyDetail->date_of_birth = $familyMember['date_of_birth'];           
-            $familyDetail->save();
-            $familyDetails[] = $familyDetail; // Collect family details
+            return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
         }
     }
-
-        return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
-    } catch (\Exception $e) {
-        return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
-    }
-}
-
-
     
 }

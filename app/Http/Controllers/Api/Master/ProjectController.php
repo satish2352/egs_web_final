@@ -52,13 +52,12 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-
     public function filterDataProjectsLaboursMap(Request $request){
         try {
             $user = Auth::user()->id;
-            $userLatitude = $request->latitude; // Latitude of the user
-            $userLongitude = $request->longitude; // Longitude of the user
-            $distanceInKm = 5; // Distance in kilometers
+            $userLatitude = $request->latitude; 
+            $userLongitude = $request->longitude; 
+            $distanceInKm = 5; 
 
             $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
             $latN = $latLongArr['latN'];
@@ -121,12 +120,10 @@ class ProjectController extends Controller
                     'projects.longitude'
                 );
     
-            // Apply filters for labor data
             if ($request->has('mgnrega_card_id')) {
                 $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
             }
     
-            // Apply filters for project data
             if ($request->has('project_name')) {
                 $projectQuery->where('projects.project_name', 'LIKE', '%'.$request->input('project_name').'%');
             }
@@ -163,7 +160,6 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    
     // public function filterDataProjectsLaboursMap(Request $request){
     //     try {
     //         $user = Auth::user()->id;
@@ -254,9 +250,7 @@ class ProjectController extends Controller
     //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     //     }
     // }
-    
-    public function getAllProjectLatLong(Request $request)
-    {
+    public function getAllProjectLatLong(Request $request){
         try {
             $user = Auth::user()->id;
             $userLatitude = $request->latitude; // Latitude of the user
@@ -313,7 +307,6 @@ class ProjectController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-
     public function getLatitudeLongitude($latitude,$longitude, $distanceInKm){
         $d = 0.621371*$distanceInKm; // 15 km in miles
         $r = 3959; //earth's radius in miles

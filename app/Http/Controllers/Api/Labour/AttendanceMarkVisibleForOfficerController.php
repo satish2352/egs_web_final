@@ -33,7 +33,6 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         $user_working_tal=$data_output->user_taluka;
         $user_working_vil=$data_output->user_village;
 
-        // dd($user_working_dist);
         if($utype=='1')
         {
         $data_user_output = User::where('users.user_district', $user_working_dist)
@@ -54,17 +53,11 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             ->toArray();
         }         
         // dd($data_user_output);
-        // dd($user_working_dist);
             $data_output = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
             ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
             ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
             ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')  
             ->where('projects.District', $user_working_dist)
-                // ->whereDate('tbl_mark_attendance.updated_at', $date)
-                //   ->when($request->get('project_id'), function($query) use ($request) {
-                //     $query->where('tbl_mark_attendance.project_id',$request->project_id);
-                // }
-                // )  
                 ->select(
                     'projects.id',
                     'projects.project_name',
@@ -83,9 +76,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
         }
-    }
-
-   
+    }   
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;            
@@ -96,7 +87,6 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $toDate = date('Y-m-d', strtotime($request->input('to_date')));
             $toDate =  $toDate.' 23:59:59';
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
-            
             ->where('users.id', $user)
             ->first();
 
@@ -125,7 +115,6 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             ->toArray();
         }         
         // dd($data_user_output);
-        // dd($user_working_dist);
             $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
