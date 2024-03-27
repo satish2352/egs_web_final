@@ -40,6 +40,11 @@ class LabourServices
         return $data_labours;
     }
 
+    public function listResubmitedLabours() {
+        $data_labours = $this->repo->getResubmitedLaboursList();
+        return $data_labours;
+    }
+
     public function getLabourAttendanceList() {
         $data_labours = $this->repo->getLabourAttendanceList();
         // dd($data_users);

@@ -13,7 +13,8 @@ use App\Models\ {
     Labour,
     LabourAttendanceMark,
     Registrationstatus,
-    Reasons
+    Reasons,
+    HistoryModel
 };
 use Validator;
 use session;
@@ -92,6 +93,28 @@ class LaboursController extends Controller {
 
         $labour_type='2'; 
         $labours = $this->service->listDisapprovedLabours();
+        return view('admin.pages.labours.list-labour',compact('labours','district_data','taluka_data','labour_type'));
+    }
+
+    public function listResubmitedLabours()
+    {
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+
+        $district_data = TblArea::where('location_type', 2) // 4 represents cities
+                    ->where('parent_id', '2')
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
+                    ->where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+        $labour_type='2'; 
+        $labours = $this->service->listResubmitedLabours();
         return view('admin.pages.labours.list-labour',compact('labours','district_data','taluka_data','labour_type'));
     }
 
