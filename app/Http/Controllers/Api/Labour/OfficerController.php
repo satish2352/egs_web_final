@@ -502,9 +502,9 @@ class OfficerController extends Controller
                 ->get()
 				->toArray();
             }         
-            
+            // dd($data_user_output);
         
-            $counts = Labour::where('user_id', $user_working_dist)
+            $counts = Labour::where('user_id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
                 ->get();
