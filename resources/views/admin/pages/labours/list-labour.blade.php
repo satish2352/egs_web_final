@@ -251,7 +251,7 @@
                     // console.log(talukaId);
                     // $('#village_id').html('<option value="">Select Village</option>');
 
-                    if (talukaId !== '' || villageId !== '') {
+                    if (districtId !== '' || talukaId !== '' || villageId !== '') {
                         $.ajax({
                             url: '{{ route('list-labours-filter') }}',
                             type: 'GET',
