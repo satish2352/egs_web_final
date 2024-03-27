@@ -27,12 +27,12 @@
                        
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    {{-- <select class="form-control" name="district_id" id="district_id">
+                                    <select class="form-control" name="district_id" id="district_id">
                                         <option value="">Select District</option>
                                         @foreach ($district_data as $district_for_data)    
                                         <option value="{{ $district_for_data['location_id'] }}">{{ $district_for_data['name'] }}</option>
                                         @endforeach
-                                    </select> --}}
+                                    </select>
                                     @if ($errors->has('district_id'))
                                         <span class="red-text"><?php echo $errors->first('district_id', ':message'); ?></span>
                                     @endif
@@ -71,7 +71,7 @@
                           @elseif(session()->get('role_id')=='2')
                         <div class="row">
 
-
+                        
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                                     <select class="form-control" name="taluka_id" id="taluka_id">
@@ -112,7 +112,10 @@
                                     <div class="table-responsive">
                                         <table id="order-listing" class="table table-bordered">
                                             <thead>
+                                            <input type="hidden" class="form-control" name="is_approved_val" id="is_approved_val"
+                                                placeholder="" value="{{ $labour_type }}">
                                                 <tr>
+                                                
                                                     <th>Sr. No.</th>
                                                     <th>User Name</th>
                                                     <th>Labour Name</th>
@@ -125,14 +128,16 @@
                                             <tbody>
                                                 
                                                 @foreach ($labours as $item)
-                                              
+                                                
                                                     <tr>
+                                                    
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}</td>
                                                         <td>{{ $item->full_name }}</td>
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
                                                         <td>
+                                                        
                                                             @if ($item->is_approved=='1')
                                                                 Received For Approval
                                                             @elseif($item->is_approved=='2')
@@ -242,6 +247,7 @@
                     }
                     var talukaId = $('#taluka_id').val();
                     var villageId = $('#village_id').val();
+                    var IsApprovedId = $('#is_approved_val').val();
                     // console.log(talukaId);
                     // $('#village_id').html('<option value="">Select Village</option>');
 
@@ -253,6 +259,7 @@
                                 districtId: districtId,
                                 talukaId: talukaId,
                                 villageId: villageId,
+                                IsApprovedId: IsApprovedId,
                             },
                             // headers: {
                             //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -261,6 +268,7 @@
                                 console.log(response.labour_ajax_data);
                                 if (response.labour_ajax_data.length > 0) {
                                     $('#order-listing tbody').empty();
+                                    
                                     $.each(response.labour_ajax_data, function(index, labour_data) {
 
                                         var statusText = "";
@@ -274,7 +282,10 @@
                                         $('#order-listing tbody').append('<tr><td>' + index +'</td><td>' + labour_data.f_name +' '+ labour_data.m_name +' '+ labour_data.l_name + '</td><td>' + labour_data.full_name + '</td><td>' + labour_data.mobile_number + '</td><td>' + labour_data.mgnrega_card_id + '</td><td>' + statusText+ '</td><td class="d-flex"><a onClick="getData('+ labour_data.id +')" class="show-btn btn btn-sm btn-outline-primary m-1"><i class="fas fa-eye"></i></a></td></tr>');
                                     });
                                 }else{
-                                    alert("No Record Found");
+                                    $('#order-listing tbody').empty();
+                                    $('#order-listing tbody').append('<tr><td colspan="7" style="text-align:center;"><b>No Record Found</b></td></tr>');
+
+                                    // alert("No Record Found");
                                 }
 
                             }
