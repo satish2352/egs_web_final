@@ -59,13 +59,13 @@ class GramPanchayatDocumentController extends Controller
             $user = Auth::user()->id;
             $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 ->where('tbl_gram_panchayat_documents.user_id', $user)
-                ->when($request->has('documenttype'), function($query) use ($request) {
-                    $query->where('tbl_documenttype.documenttype', 'like', '%' . $request->documenttype . '%');
+                ->when($request->has('document_type_name'), function($query) use ($request) {
+                    $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
                 })
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
-                    'tbl_documenttype.documenttype',
+                    'tbl_documenttype.document_type_name',
                     'tbl_gram_panchayat_documents.document_pdf',
                 )->get();
                 foreach ($data_output as $document_data) {
@@ -247,19 +247,8 @@ class GramPanchayatDocumentController extends Controller
         $headers = array(
                         'Content-Type: application/pdf',
                       );
-
-        if (file_exists($file_path11)) {
-            // Download the file
             return response()->download(rtrim($file_path11,"\\"), 'filename.pdf', $headers);
-            // return response()->download($file_path11);
-        } else {
-            $response = [
-                "status" => "false",
-                "message" => "Document Download Failed",
-                "error" => "$file_path11"
-            ];
-            return response()->json($response);
-        }
+       
     }
 
 }
