@@ -45,7 +45,7 @@ public function login(Request $request){
         $user->update(['imei_no' => $imei_no]);
     }
 
-    if ($user->imei_no !== null && $user->imei_no !== $imei_no) {
+    if ($user->imei_no !== 'null' && $user->imei_no !== $imei_no) {
         return response()->json(['status' => 'False', 'error' => 'IMEI number mismatch'], 200);
        }
     
