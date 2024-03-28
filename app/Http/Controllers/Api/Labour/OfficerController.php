@@ -445,8 +445,9 @@ class OfficerController extends Controller
 				->toArray();
             }         
             // dd($data_user_output);
-        
-            $counts = Labour::where('user_id', $data_user_output)
+        // dd($user_working_dist);
+            $counts = Labour::leftJoin('users', 'labour.user_id', '=', 'users.id')
+                ->where('users.id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
                 ->get();

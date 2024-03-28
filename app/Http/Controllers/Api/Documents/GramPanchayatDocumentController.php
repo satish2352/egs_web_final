@@ -30,15 +30,19 @@ class GramPanchayatDocumentController extends Controller
         }
         try {
             $user = Auth::user();
+            date_default_timezone_set('Asia/Kolkata'); 
+            $currentDateTime = date('YmdHis');
+            // $currentDateTime = date('Ymd_His');
+            
             $document_data = new GramPanchayatDocuments();
             $document_data->user_id = $user->id; 
             $document_data->document_name = $request->document_name;
             $document_data->document_type_id = $request->document_type_id;
     
             $document_data->save();
-            $last_insert_id = $document_data->id;
-            $documentPdf = $last_insert_id . '_' . rand(100000, 999999) . '_document.pdf';
-    
+            $last_insert_id = $document_data->document_name;
+            // $documentPdf = $last_insert_id . '_' . rand(100000, 999999) . '_document.pdf';
+            $documentPdf = $last_insert_id . '_';
             $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
     
             uploadImage($request, 'document_pdf', $path, $documentPdf);
