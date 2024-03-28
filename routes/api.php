@@ -46,7 +46,7 @@ Route::group([
         // Route::post('/list-user-labours', [LabourController::class, 'getAllUserLabourList']);
         // Route::post('/particular-labour-details', [LabourController::class, 'getParticularLabour']);
         // Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
-        Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
+        // Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
         // Route::post('/list-send-approved-labour', [LabourController::class, 'getSendApprovedLabourList']);
         // Route::post('/list-approved-labour', [LabourController::class, 'getApprovedLabourList']);
         // Route::post('/list-not-approved-labour', [LabourController::class, 'getNotApprovedLabourList']);

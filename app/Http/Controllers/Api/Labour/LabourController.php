@@ -181,60 +181,60 @@ class LabourController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-    public function updateParticularDataLabour(Request $request){
-        try {
-            $validator = Validator::make($request->all(), [
-                // 'id' => 'required|exists:labours,id',
-                'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-                'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            ]);
+    // public function updateParticularDataLabour(Request $request){
+    //     try {
+    //         $validator = Validator::make($request->all(), [
+    //             // 'id' => 'required|exists:labours,id',
+    //             'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+    //             'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+    //             'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+    //             'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+    //         ]);
 
-            if ($validator->fails()) {
-                return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
-            }
+    //         if ($validator->fails()) {
+    //             return response()->json(['status' => 'error', 'message' => $validator->errors()], 400);
+    //         }
 
-            $labour_data = Labour::findOrFail($request->id);
+    //         $labour_data = Labour::findOrFail($request->id);
 
-            $imageAadhar = $request->id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-            $imagePancard = $request->id . '_' . rand(100000, 999999) . '_pan.' . $request->mgnrega_image->extension();
-            $imageProfile = $request->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
-            $imageVoter = $request->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
+    //         $imageAadhar = $request->id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+    //         $imagePancard = $request->id . '_' . rand(100000, 999999) . '_pan.' . $request->mgnrega_image->extension();
+    //         $imageProfile = $request->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+    //         $imageVoter = $request->id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
 
-            $baseUrl = Config::get('env.FILE_VIEW');
-            $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
+    //         $baseUrl = Config::get('env.FILE_VIEW');
+    //         $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
-            uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-            uploadImage($request, 'mgnrega_image', $path, $imagePancard);
-            uploadImage($request, 'profile_image', $path, $imageProfile);
-            uploadImage($request, 'voter_image', $path, $imageVoter);
+    //         uploadImage($request, 'aadhar_image', $path, $imageAadhar);
+    //         uploadImage($request, 'mgnrega_image', $path, $imagePancard);
+    //         uploadImage($request, 'profile_image', $path, $imageProfile);
+    //         uploadImage($request, 'voter_image', $path, $imageVoter);
 
-            // Update the image paths in the database
-            $labour_data->aadhar_image = $imageAadhar;
-            $labour_data->mgnrega_image = $imagePancard;
-            $labour_data->profile_image = $imageProfile;
-            $labour_data->voter_image = $imageVoter;
-            $labour_data->save();
+    //         // Update the image paths in the database
+    //         $labour_data->aadhar_image = $imageAadhar;
+    //         $labour_data->mgnrega_image = $imagePancard;
+    //         $labour_data->profile_image = $imageProfile;
+    //         $labour_data->voter_image = $imageVoter;
+    //         $labour_data->save();
 
-            // Include image paths in the response
-            // $labour_data->aadhar_image = $path . '/' . $imageAadhar;
-            // $labour_data->mgnrega_image = $path . '/' . $imagePancard;
-            // $labour_data->profile_image = $path . '/' . $imageProfile;
-            // $labour_data->voter_image = $path . '/' . $imageVoter;
+    //         // Include image paths in the response
+    //         // $labour_data->aadhar_image = $path . '/' . $imageAadhar;
+    //         // $labour_data->mgnrega_image = $path . '/' . $imagePancard;
+    //         // $labour_data->profile_image = $path . '/' . $imageProfile;
+    //         // $labour_data->voter_image = $path . '/' . $imageVoter;
 
-            $labour_data->aadhar_image = $baseUrl . $path . '/' . $imageAadhar;
-            $labour_data->mgnrega_image = $baseUrl . $path . '/' . $imagePancard;
-            $labour_data->profile_image = $baseUrl . $path . '/' . $imageProfile;
-            $labour_data->voter_image = $baseUrl . $path . '/' . $imageVoter;
+    //         $labour_data->aadhar_image = $baseUrl . $path . '/' . $imageAadhar;
+    //         $labour_data->mgnrega_image = $baseUrl . $path . '/' . $imagePancard;
+    //         $labour_data->profile_image = $baseUrl . $path . '/' . $imageProfile;
+    //         $labour_data->voter_image = $baseUrl . $path . '/' . $imageVoter;
 
             
 
-            return response()->json(['status' => 'success', 'message' => 'Labor updated successfully', 'data' => $labour_data], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json(['status' => 'success', 'message' => 'Labor updated successfully', 'data' => $labour_data], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    //     }
+    // }
     public function getAllLabourList(Request $request){
     
         try {
