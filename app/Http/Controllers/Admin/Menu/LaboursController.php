@@ -759,8 +759,6 @@ class LaboursController extends Controller {
        $districtId = $request->input('districtId');
         $talukaId = $request->input('talukaId');
         $villageId = $request->input('villageId');
-        // $FromDate = $request->input('FromDate');
-        // $ToDate = $request->input('ToDate');
 
         $fromDate = date('Y-m-d', strtotime($request->input('FromDate')));
         $fromDateNew =  $fromDate.' 00:00:01';

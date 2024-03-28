@@ -59,15 +59,6 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="row ">
-                                        <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>IMEI Number :</label>
-                                        </div>
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                            <label>{{ strip_tags($user_detail->imei_no) }}</label>
-                                        </div>
-                                    </div>
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Address :</label>

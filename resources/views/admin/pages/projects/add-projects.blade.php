@@ -190,10 +190,12 @@
                             </form>
                         </div>
                     </div>
+
+                    <div id="map"></div>
                 </div>
             </div>
         </div>
-
+        
         <script type="text/javascript">
             function submitRegister() {
                 document.getElementById("frm_register").submit();
