@@ -830,7 +830,7 @@ class LabourController extends Controller
             }
 
             // Find the labour data to update
-            $labour_data = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+            $labour_data = Labour::where('id', $request->id)->first();
 
             if (!$labour_data) {
                 return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
@@ -841,7 +841,7 @@ class LabourController extends Controller
 
             // Check if labour_id is greater than zero before deleting family details
             if ($labour_data->id > 0) {
-                LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
+                LabourFamilyDetails::where('labour_id', $request->id)->delete();
             }
 
             $labour_data->user_id = $user->id;
@@ -854,7 +854,6 @@ class LabourController extends Controller
 
             $pathdelete = Config::get('DocumentConstant.USER_LABOUR_DELETE');
             $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
-            $baseUrl = Config::get('env.FILE_VIEW');
 
             // Upload and update images
             if ($request->hasFile('profile_image')) {
