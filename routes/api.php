@@ -43,21 +43,21 @@ Route::group([
          //=============Start labour=================
         Route::post('/add-labour', [LabourController::class, 'add']);
         Route::post('/list-labour', [LabourController::class, 'getAllLabourList']);
-        Route::post('/list-user-labours', [LabourController::class, 'getAllUserLabourList']);
-        Route::post('/particular-labour-details', [LabourController::class, 'getParticularLabour']);
-        Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
+        // Route::post('/list-user-labours', [LabourController::class, 'getAllUserLabourList']);
+        // Route::post('/particular-labour-details', [LabourController::class, 'getParticularLabour']);
+        // Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
         Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
-        Route::post('/list-send-approved-labour', [LabourController::class, 'getSendApprovedLabourList']);
-        Route::post('/list-approved-labour', [LabourController::class, 'getApprovedLabourList']);
-        Route::post('/list-not-approved-labour', [LabourController::class, 'getNotApprovedLabourList']);
-        Route::post('/list-labour-rejected', [LabourController::class, 'getRejectedLabourList']);
+        // Route::post('/list-send-approved-labour', [LabourController::class, 'getSendApprovedLabourList']);
+        // Route::post('/list-approved-labour', [LabourController::class, 'getApprovedLabourList']);
+        // Route::post('/list-not-approved-labour', [LabourController::class, 'getNotApprovedLabourList']);
+        // Route::post('/list-labour-rejected', [LabourController::class, 'getRejectedLabourList']);
 
         Route::post('/update-labour-status-approved', [LabourController::class, 'updateLabourStatusApproved']);
         Route::post('/update-labour-status-not-approved', [LabourController::class, 'updateLabourStatusNotApproved']);
       
         Route::post('/update-labour-first-form', [LabourController::class, 'updateLabourFirstForm']);
         Route::post('/update-labour-second-form', [LabourController::class, 'updateLabourSecondForm']);
-        Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
+        // Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
        
         Route::post('/gramsevak-count-labour', [LabourController::class, 'countGramsevakLabour']);
         //=============Start ProjectController=================
