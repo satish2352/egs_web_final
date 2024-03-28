@@ -138,10 +138,6 @@ class LabourRepository
 				  ->where('labour.is_resubmitted', '0')
 				  ->where('labour.user_id',$sess_user_id)
 				  ->where('registrationstatus.is_active', true)
-				  // ->where('labour.is_approved', $is_approved)
-				  // ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
-				  //     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
-				  // })
 				  ->select(
 					  'labour.id',
 					  'labour.full_name',

@@ -163,17 +163,6 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="imei_no">IMEI No</label>&nbsp<span
-                                                class="red-text">*</span>
-                                            <input type="text" class="form-control" name="imei_no"
-                                                id="imei_no" placeholder="" value="{{ old('imei_no') }}">
-                                            @if ($errors->has('number'))
-                                                <span class="red-text"><?php echo $errors->first('imei_no', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
                                             <label for="aadhar_no">Aadhar No.</label>&nbsp<span
                                                 class="red-text">*</span>
                                             <input type="text" class="form-control" name="aadhar_no"
@@ -658,7 +647,6 @@
                     const m_name = $('#m_name').val();
                     const l_name = $('#l_name').val();
                     const number = $('#number').val();
-                    const imei_no = $('#imei_no').val();
                     const aadhar_no = $('#aadhar_no').val();
                     const address = $('#address').val();
                     const state = $('#state').val();
@@ -670,7 +658,7 @@
 
                     // Enable the submit button if all fields are valid
                     if (email && role_id && password && password_confirmation && f_name && m_name && l_name &&
-                        number && imei_no && aadhar_no && address && state && district && taluka && village && user_profile && pincode) {
+                        number && aadhar_no && address && state && district && taluka && village && user_profile && pincode) {
                         $('#submitButton').prop('disabled', false);
                     } else {
                         $('#submitButton').prop('disabled', true);
@@ -729,9 +717,6 @@
                             required: true,
                             number:true,
                         },
-                        imei_no: {
-                            required: true,
-                        },
                         aadhar_no: {
                             required: true,
                         },
@@ -783,9 +768,6 @@
                         },
                         number: {
                             required: "Please Enter the Number",
-                        },
-                        imei_no: {
-                            required: "Please Enter the IMEI No",
                         },
                         aadhar_no: {
                             required: "Please Enter the Aadhar No",

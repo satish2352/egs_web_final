@@ -9,7 +9,8 @@ use App\Models\ {
     Roles,
     Permissions,
     TblArea,
-    User
+    User,
+    Project
 };
 use Validator;
 use session;
@@ -31,19 +32,25 @@ class ProjectController extends Controller {
         return view('admin.pages.projects.projects-list',compact('projects'));
     }
 
-    // public function getProf()
-    // {
-    //     $register_user = $this->service->index();
-    //     return view('admin.layout.master',compact('register_user'));
-    // }
-
-
+    public function ProjectsForMap()
+    {
+        $data_projects = Project::where('projects.is_active', true)
+          ->select(
+              'projects.id',
+              'projects.project_name',
+              'projects.description',
+              'projects.start_date',
+              'projects.end_date',
+              'projects.latitude',
+              'projects.longitude',
+              'projects.is_active',
+          )->get();
+return $data_projects;
+          return response()->json(['projects' => $data_projects]);
+   
+    }
 
     public function addProjects(){
-        // $roles = Roles::where('is_active', true)
-        //                 ->select('id','role_name')
-        //                 ->get()
-        //                 ->toArray();
         $permissions = Permissions::where('is_active', true)
                             ->select('id','route_name','permission_name','url')
                             ->get()
@@ -56,9 +63,47 @@ class ProjectController extends Controller {
                             ->select('location_id','name')
                             ->get()
                             ->toArray();
+
+            // Map marker code is started from here     
+                            
+                        // Map marker code is ended here          
     	// return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
     	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_state','dynamic_district'));
     }
+
+    public function getLatitudeLongitude($latitude,$longitude){
+        // $d = 0.621371*$distanceInKm; // 15 km in miles
+        // $r = 3959; //earth's radius in miles
+
+        $latLongArr = array();
+        
+       
+
+        $latN = rad2deg(asin(sin(deg2rad($latitude))
+                + cos(deg2rad($latitude))* cos(deg2rad(0))));
+
+        $latS = rad2deg(asin(sin(deg2rad($latitude))
+                + cos(deg2rad($latitude)) * cos(deg2rad(180))));
+
+        $lonE = rad2deg(deg2rad($longitude) + atan2(sin(deg2rad(90))
+                * cos(deg2rad($latitude)),
+                - sin(deg2rad($latitude)) * sin(deg2rad($latN))));
+
+        $lonW = rad2deg(deg2rad($longitude) + atan2(sin(deg2rad(270))
+                * cos(deg2rad($latitude)),
+                - sin(deg2rad($latitude)) * sin(deg2rad($latN))));
+
+        $latLongArr = 
+        [
+            'pincodeLatitude' => $latitude,
+            'pincodeLongitude' => $longitude,
+            'latN' => $latN,
+            'latS' => $latS,
+            'lonE' => $lonE,
+            'lonW' => $lonW
+        ];
+        return $latLongArr;
+        }
 
     public function getCities(Request $request)
     {

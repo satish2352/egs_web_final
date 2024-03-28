@@ -51,6 +51,7 @@ Route::group(['middleware' => ['admin']], function () {
 
 
     Route::get('/list-projects', ['as' => 'list-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@index']);
+    Route::get('/projects', ['as' => 'projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@ProjectsForMap']);
     Route::post('/update-active-projects', ['as' => 'update-active-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@updateOne']);
     Route::get('/add-projects', ['as' => 'add-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@addProjects']);
     Route::post('/add-projects', ['as' => 'add-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@store']);

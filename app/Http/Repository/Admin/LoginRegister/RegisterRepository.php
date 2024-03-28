@@ -27,7 +27,6 @@ class RegisterRepository
 								'users.m_name',
 								'users.l_name',
 								'users.number',
-								'users.imei_no',
 								'users.aadhar_no',
 								'users.address',
 								'users.state',
@@ -98,7 +97,6 @@ class RegisterRepository
 		$user_data->m_name = $request['m_name'];
 		$user_data->l_name = $request['l_name'];
 		$user_data->number = $request['number'];
-		$user_data->imei_no = $request['imei_no'];
 		$user_data->aadhar_no = $request['aadhar_no'];
 		$user_data->address = $request['address'];
 		$user_data->state = $request['state'];
@@ -140,7 +138,6 @@ class RegisterRepository
 							'm_name' => $request['m_name'],
 							'l_name' => $request['l_name'],
 							'number' => $request['number'],
-							'imei_no' => $request['imei_no'],
 							'aadhar_no' => $request['aadhar_no'],
 							'address' => $request['address'],
 							'state' => $request['state'],
@@ -278,7 +275,6 @@ class RegisterRepository
 				'users.m_name',
 				'users.l_name',
 				'users.number',
-				'users.imei_no',
 				'users.aadhar_no',
 				'users.address',
 				'users.state',
@@ -312,7 +308,6 @@ class RegisterRepository
 							'users.m_name',
 							'users.l_name',
 							'users.number',
-							'users.imei_no',
 							'users.aadhar_no',
 							'users.address',
 							'users.state',
@@ -386,7 +381,7 @@ class RegisterRepository
 				->leftJoin('tbl_area as taluka_user', 'users.taluka', '=', 'taluka_user.location_id')
 				->leftJoin('tbl_area as village_user', 'users.village', '=', 'village_user.location_id')
 				->where('users.id', $id)
-				->select('users.f_name','users.m_name','users.l_name','users.email','users.number','users.imei_no','users.aadhar_no',
+				->select('users.f_name','users.m_name','users.l_name','users.email','users.number','users.aadhar_no',
 				'users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state',
 				'district_user.name as district','taluka_user.name as taluka','village_user.name as village')
 				->first();
