@@ -28,7 +28,7 @@ use App\Http\Controllers\Api\Labour\AttendanceMarkVisibleForOfficerController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/register', [AuthController::class, 'register']);
+// Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/list-masters', [AllMasterController::class, 'getAllMasters']);
 
