@@ -28,12 +28,12 @@ public function login(Request $request){
 
     $user = User::where('email', $email)->first();
     if (!$user) {
-        return response()->json(['status' => 'False','error' => 'User not found'], 200);
+        return response()->json(['status' => 'False','message' => 'User not found','error' => $e->getMessage()], 200);
     }
 
     // Check if the provided password matches the user's password
     if (!Hash::check($password, $user->password)) {
-        return response()->json(['status' => 'False','error' => 'Invalid password'], 200);
+        return response()->json(['status' => 'False','message' => 'Invalid password','error' => $e->getMessage()], 200);
     }
 
     // Attempt to authenticate the user with email and password
@@ -46,7 +46,7 @@ public function login(Request $request){
     }
 
     if ($user->imei_no !== 'null' && $user->imei_no !== $imei_no) {
-        return response()->json(['status' => 'False', 'error' => 'IMEI number mismatch'], 200);
+        return response()->json(['status' => 'False', 'message' => 'IMEI number mismatch','error' => $e->getMessage()], 200);
        }
     
     $token = JWTAuth::fromUser($user);
@@ -70,7 +70,7 @@ public function logout(Request $request)
     $token = $request->bearerToken();
 
     if (!$token) {
-        return response()->json(['status' => 'False', 'error' => 'Token not provided'], 200);
+        return response()->json(['status' => 'False', 'message' => 'Token not provided','error' => $e->getMessage()], 200);
     }
 
     try {
@@ -85,11 +85,11 @@ public function logout(Request $request)
 
     } catch (\Exception $e) {
         // If token invalidation or user update fails, return an error response
-        return response()->json(['status' => 'False', 'error' => 'Failed to logout'], 500);
+        return response()->json(['status' => 'False',  'error' => 'Failed to logout'], 500);
     }
 
     // Return a success response
-    return response()->json(['status' => 'True', 'message' => 'Successfully logged out']);
+    return response()->json(['status' => 'True', 'message' => 'Successfully logged out','error' => $e->getMessage()]);
 }
 
 // public function responseWithToken($token, $user)
