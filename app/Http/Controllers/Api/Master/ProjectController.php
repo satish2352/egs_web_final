@@ -14,42 +14,42 @@ use App\Models\ {
 class ProjectController extends Controller
 {
 
-    public function getAllProject(Request $request){
-        try {
-            $user = Auth::user()->id;
-            // dd($user);
-            $project = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
-            ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
-            ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
-            ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
-              ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-              ->where('projects.end_date', '>=',date('Y-m-d'))
-              ->where('project_users.user_id', $user)
-              ->where('projects.is_active', true)
-              ->when($request->has('project_name'), function($query) use ($request) {
-                $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
-            })             
-              ->select(
-                  'projects.id',
-                  'projects.project_name',
-                  'projects.description',
-                  'state_projects.name as state',
-                  'district_projects.name as district',
-                  'taluka_projects.name as taluka',
-                  'village_projects.name as village',
-				  'projects.start_date',
-				  'projects.latitude',
-				  'projects.longitude',
-                  'projects.start_date',
-                  'projects.end_date',
+    // public function getAllProject(Request $request){
+    //     try {
+    //         $user = Auth::user()->id;
+    //         // dd($user);
+    //         $project = ProjectUser::leftJoin('projects', 'project_users.project_id', '=', 'projects.id')
+    //         ->leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+    //         ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
+    //         ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
+    //           ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
+    //           ->where('projects.end_date', '>=',date('Y-m-d'))
+    //           ->where('project_users.user_id', $user)
+    //           ->where('projects.is_active', true)
+    //           ->when($request->has('project_name'), function($query) use ($request) {
+    //             $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
+    //         })             
+    //           ->select(
+    //               'projects.id',
+    //               'projects.project_name',
+    //               'projects.description',
+    //               'state_projects.name as state',
+    //               'district_projects.name as district',
+    //               'taluka_projects.name as taluka',
+    //               'village_projects.name as village',
+	// 			  'projects.start_date',
+	// 			  'projects.latitude',
+	// 			  'projects.longitude',
+    //               'projects.start_date',
+    //               'projects.end_date',
                 
-              )->get();
-            //   dd($project);
-            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-        }
-    }
+    //           )->get();
+    //         //   dd($project);
+    //         return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+    //     }
+    // }
     public function filterDataProjectsLaboursMap(Request $request){
         try {
             $user = Auth::user()->id;
@@ -94,7 +94,7 @@ class ProjectController extends Controller
                 ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
                 // ->where('project_users.user_id', $user)
                 ->where('projects.is_active', true)
-                ->when($request->has('latitude'), function($query) use ($request, $latN, $latS, $lonE, $lonW) {
+                ->when($request->has('latitude'), function($query) use ($latN, $latS, $lonE, $lonW) {
                     $query->where('projects.latitude', '<=', $latN)
                         ->where('projects.latitude', '>=', $latS)
                         ->where('projects.longitude', '<=', $lonE)
@@ -129,6 +129,30 @@ class ProjectController extends Controller
             // Fetch data
             $labourData = $labourQuery->get();
             $projectData = $projectQuery->get();
+
+            $labourData_array_final = [];
+            foreach ($labourData as $key => $value) {
+                $labourData_array = [];
+                $labourData_array['name'] = $value->full_name;
+                $labourData_array['latitude'] = $value->latitude;
+                $labourData_array['longitude'] = $value->longitude;
+                $labourData_array['id'] = $value->id;
+                $labourData_array['type'] = 'labour';
+                array_push($labourData_array_final, $labourData_array);
+            }
+
+            $projectData_array_final = [];
+            foreach ($projectData as $key => $value) {
+                $projectData_array = [];
+                $projectData_array['name'] = $value->project_name;
+                $projectData_array['latitude'] = $value->latitude;
+                $projectData_array['longitude'] = $value->longitude;
+                $projectData_array['id'] = $value->id;
+                $projectData_array['type'] = 'project';
+                array_push($labourData_array_final, $projectData_array);
+            }
+
+            $finalData = $labourData_array_final + $projectData_array_final;
             // Check if mgnrega_card_id filter applied and adjust response accordingly
             if ($request->has('mgnrega_card_id')) {
                 return response()->json([
@@ -150,8 +174,7 @@ class ProjectController extends Controller
                 return response()->json([
                     'status' => 'success', 
                     'message' => 'Filtered data retrieved successfully', 
-                    'labour_data' => $labourData,
-                    'project_data' => $projectData
+                    'map_data' => $finalData,
                 ], 200);
             }
         } catch (\Exception $e) {
@@ -255,11 +278,11 @@ class ProjectController extends Controller
             $userLongitude = $request->longitude; // Longitude of the user
             $distanceInKm = 5; // Distance in kilometers
             // dd($userLatitude);
-        $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
-        $latN = $latLongArr['latN'];
-        $latS = $latLongArr['latS'];
-        $lonE = $latLongArr['lonE'];
-        $lonW = $latLongArr['lonW'];
+            $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
+            $latN = $latLongArr['latN'];
+            $latS = $latLongArr['latS'];
+            $lonE = $latLongArr['lonE'];
+            $lonW = $latLongArr['lonW'];
 			
             // Haversine formula to calculate distance
             $project = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
@@ -269,19 +292,13 @@ class ProjectController extends Controller
                 // ->where('projects.user_id', $user)
                 ->where('projects.is_active', true)
                
-                // ->when($request->has('latitude'), function($query) use ($request) {
-                //     $query->where('projects.latitude', '<=', $latN)
-                //     ->where('projects.latitude', '>=', $latS)
-                //     ->where('projects.longitude', '<=', $lonE)
-                //     ->where('projects.longitude', '>=', $lonW);
-                // })  
-                ->when($request->has('latitude'), function($query) use ($request, $latN, $latS, $lonE, $lonW) {
+                ->when($request->has('latitude'), function($query) use ($latN, $latS, $lonE, $lonW) {
                     $query->where('projects.latitude', '<=', $latN)
                         ->where('projects.latitude', '>=', $latS)
                         ->where('projects.longitude', '<=', $lonE)
                         ->where('projects.longitude', '>=', $lonW);
                 })
-                
+                ->where('projects.end_date', '>=',date('Y-m-d'))
                 ->when($request->has('project_name'), function($query) use ($request) {
                     $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
                 })             

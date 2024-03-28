@@ -62,7 +62,7 @@ Route::group([
         Route::post('/gramsevak-count-labour', [LabourController::class, 'countGramsevakLabour']);
         //=============Start ProjectController=================
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterDataProjectsLaboursMap']);
-        Route::post('/list-project', [ProjectController::class, 'getAllProject']);
+        // Route::post('/list-project', [ProjectController::class, 'getAllProject']);
         Route::post('/project-list-lat-log', [ProjectController::class, 'getAllProjectLatLong']);
 
         // ============Start LabourAttendanceMarkController============
