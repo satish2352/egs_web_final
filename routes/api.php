@@ -59,6 +59,7 @@ Route::group([
         Route::post('/update-labour-second-form', [LabourController::class, 'updateLabourSecondForm']);
         Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
        
+        Route::post('/gramsevak-count-labour', [LabourController::class, 'countGramsevakLabour']);
         //=============Start ProjectController=================
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterDataProjectsLaboursMap']);
         Route::post('/list-project', [ProjectController::class, 'getAllProject']);

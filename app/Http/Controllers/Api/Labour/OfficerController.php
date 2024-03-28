@@ -481,45 +481,7 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
-    // public function countOfficerLabour(Request $request) {
-    //     try {
-    //         $user = Auth::id();
-        
-    //         $counts = Labour::where('user_id', $user)
-    //             ->selectRaw('is_approved, COUNT(*) as count')
-    //             ->groupBy('is_approved')
-    //             ->get();
-    
-    //         // Initialize counters
-    //         $sentForApprovalCount = 0;
-    //         $approvedCount = 0;
-    //         $notApprovedCount = 0;
-    
-    //         // Counting each status
-    //         foreach ($counts as $count) {
-    //             if ($count->is_approved == 1) {
-    //                 $sentForApprovalCount = $count->count;
-    //             } elseif ($count->is_approved == 2) {
-    //                 $approvedCount = $count->count;
-    //             } elseif ($count->is_approved == 3) {
-    //                 $notApprovedCount = $count->count;
-    //             }
-    //         }
-    
-    //         // Return the counts in the response
-    //         return response()->json([
-    //             'status' => 'true',
-    //             'message' => 'Counts retrieved successfully',
-    //             'sent_for_approval_count' => $sentForApprovalCount,
-    //             'approved_count' => $approvedCount,
-    //             'not_approved_count' => $notApprovedCount
-    //         ], 200);
-    
-    //     } catch (\Exception $e) {
-    //         // Return error if any exception occurs
-    //         return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
+ 
     
     
 }
