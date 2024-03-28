@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('m_name');
             $table->string('l_name');
             $table->string('number');
-            $table->string('imei_no')->default('null');
+            $table->string('device_id')->default('null');
             $table->string('aadhar_no');
             $table->string('address');
             $table->string('state');
