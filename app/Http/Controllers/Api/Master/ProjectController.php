@@ -23,6 +23,7 @@ class ProjectController extends Controller
             ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
             ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
               ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
+              ->where('projects.end_date', '>=',date('Y-m-d'))
               ->where('project_users.user_id', $user)
               ->where('projects.is_active', true)
               ->when($request->has('project_name'), function($query) use ($request) {
@@ -37,13 +38,10 @@ class ProjectController extends Controller
                   'taluka_projects.name as taluka',
                   'village_projects.name as village',
 				  'projects.start_date',
-				  'projects.end_date',
 				  'projects.latitude',
 				  'projects.longitude',
                   'projects.start_date',
                   'projects.end_date',
-                  'projects.latitude',
-                  'projects.longitude',
                 
               )->get();
             //   dd($project);
