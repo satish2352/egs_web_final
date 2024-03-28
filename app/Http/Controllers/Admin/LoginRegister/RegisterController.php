@@ -154,7 +154,6 @@ class RegisterController extends Controller {
             'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
             'l_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
             'number' =>  'required|regex:/^[0-9]{10}$/',
-            'imei_no' => 'required',
             'aadhar_no' => 'required',
             'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
             'state' => 'required',
@@ -190,7 +189,6 @@ class RegisterController extends Controller {
                         'number.required' => 'Please enter number.',
                         'number.regex' => 'Please enter only numbers with 10-digit.',
 
-                        'imei_no.required' =>'Please enter IMEI Number.',
                         'aadhar_no.required' =>'Please enter Aadhar Number.',
                         // 'designation.regex' => 'Please  enter text only.',
                         // 'designation.max'   => 'Please  enter designation length upto 255 character only.',

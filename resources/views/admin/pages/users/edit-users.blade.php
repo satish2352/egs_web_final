@@ -124,16 +124,6 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="imei_no">IMEI No</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="imei_no" id="imei_no"
-                                                placeholder="" value="{{ $user_data['data_users']['imei_no'] }}">
-                                            @if ($errors->has('imei_no'))
-                                                <span class="red-text"><?php echo $errors->first('imei_no', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
                                             <label for="aadhar_no">Aadhar No</label>&nbsp<span class="red-text">*</span>
                                             <input type="text" class="form-control mb-2" name="aadhar_no" id="aadhar_no"
                                                 placeholder="" value="{{ $user_data['data_users']['aadhar_no'] }}">
