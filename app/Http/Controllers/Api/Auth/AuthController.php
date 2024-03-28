@@ -46,7 +46,7 @@ public function login(Request $request){
     }
 
     if ($user->imei_no !== 'null' && $user->imei_no !== $imei_no) {
-        return response()->json(['status' => 'False', 'message' => 'IMEI number mismatch','error' => $e->getMessage()], 200);
+        return response()->json(['status' => 'False', 'message' => 'IMEI number mismatch'], 200);
        }
     
     $token = JWTAuth::fromUser($user);
