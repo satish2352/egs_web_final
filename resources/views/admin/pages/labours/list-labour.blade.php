@@ -67,7 +67,7 @@
                                         </button>
                                         </div>
                             </div>
-                          </div>
+                        </div>
                           @elseif(session()->get('role_id')=='2')
                         <div class="row">
 
@@ -102,9 +102,9 @@
                                         </button>
                                         </div>
                             </div>
-                          </div>
+                        </div>
                           @endif  
-<!-- </form> -->
+
 
                             <div class="row">
                                 <div class="col-12">
@@ -170,7 +170,6 @@
                 </div>
             </div>
         </div>
-
  
         <script>
             $(document).ready(function() {
