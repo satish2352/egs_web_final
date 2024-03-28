@@ -608,49 +608,78 @@ class LabourRepository
 
 	public function getLabourAttendanceList() {
 		$sess_user_id=session()->get('user_id');
-// dd($sess_user_id);
+		$date = date('Y-m-d'); 
+
+		$data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $sess_user_id)
+                ->first();
+
+		$user_working_dist=$data_output->user_district;
+		// dd($user_working_dist);
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
+
 		if($sess_user_id=='1')
 		{
      	
 		  $data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+			->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
-                ->select(
-                    'tbl_mark_attendance.id',
-                    'projects.project_name',
-                    'labour.full_name as full_name',
-                    'labour.date_of_birth',
-                    'labour.mobile_number',
-                    'labour.landline_number',
-                    'labour.mgnrega_card_id',
-                    'labour.latitude',
-                    'labour.longitude',
-                    'tbl_mark_attendance.attendance_day',
-                    'tbl_mark_attendance.created_at',
-                    'tbl_mark_attendance.attendance_day',
-                )->get();
+            ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
+            ->whereDate('tbl_mark_attendance.created_at', $date)
+			->select(
+				'tbl_mark_attendance.id',
+				'users.f_name',
+				'tbl_mark_attendance.project_id',
+				'projects.project_name',
+				'labour.full_name as full_name',
+				'labour.date_of_birth',
+				'labour.mobile_number',
+				'labour.landline_number',
+				'labour.mgnrega_card_id',
+				'users.user_taluka',
+				'taluka_labour.name as taluka_name',
+				'users.user_village',
+				'village_labour.name as village_name',
+				'labour.latitude',
+				'labour.longitude',
+				'labour.profile_image',
+				'tbl_mark_attendance.attendance_day',
+				'tbl_mark_attendance.created_at'
+
+			)->get();
 				// dd($data_labour_attendance);
 		  }else if($sess_user_id!='1')
 		  {
 			$data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+			->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
-			->leftJoin('project_users', 'project_users.project_id', '=', 'projects.id')
-                ->where('tbl_mark_attendance.user_id', $sess_user_id)
-                ->where('labour.user_id', $sess_user_id)
-                ->where('project_users.user_id', $sess_user_id)
-                ->select(
-                    'tbl_mark_attendance.id',
-                    'projects.project_name',
-                    'labour.full_name as full_name',
-                    'labour.date_of_birth',
-                    'labour.mobile_number',
-                    'labour.landline_number',
-                    'labour.mgnrega_card_id',
-                    'labour.latitude',
-                    'labour.longitude',
-                    'tbl_mark_attendance.attendance_day',
-					'tbl_mark_attendance.created_at',
-                    'tbl_mark_attendance.attendance_day',
-                )->get();
+            ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
+            ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
+			->where('projects.District', $user_working_dist)
+            ->whereDate('tbl_mark_attendance.created_at', $date)
+			->select(
+				'tbl_mark_attendance.id',
+				'users.f_name',
+				'tbl_mark_attendance.project_id',
+				'projects.project_name',
+				'labour.full_name as full_name',
+				'labour.date_of_birth',
+				'labour.mobile_number',
+				'labour.landline_number',
+				'labour.mgnrega_card_id',
+				'users.user_taluka',
+				'taluka_labour.name as taluka_name',
+				'users.user_village',
+				'village_labour.name as village_name',
+				'labour.latitude',
+				'labour.longitude',
+				'labour.profile_image',
+				'tbl_mark_attendance.attendance_day',
+				'tbl_mark_attendance.created_at'
+
+			)->get();
 
 			}	
 			// dd();	

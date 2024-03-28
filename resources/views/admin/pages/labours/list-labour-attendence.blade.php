@@ -19,6 +19,134 @@
                 <div class="col-12 grid-margin">
                     <div class="card">
                         <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label for="from_date">From Date</label>&nbsp<span
+                                        class="red-text">*</span>
+                                    <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD"
+                                        name="from_date" id="from_date" value="">
+                                    @if ($errors->has('from_date'))
+                                        <span class="red-text"><?php echo $errors->first('from_date', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                    <label for="to_date">To Date</label>&nbsp<span
+                                        class="red-text">*</span>
+                                    <input type="date" class="form-control mb-2" placeholder="YYYY-MM-DD"
+                                        name="to_date" id="to_date" value="">
+                                    @if ($errors->has('to_date'))
+                                        <span class="red-text"><?php echo $errors->first('to_date', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <div class="form-group">
+                                <label for="to_date">Project</label>&nbsp<span
+                                        class="red-text">*</span>
+                                    <select class="form-control" name="project_id" id="project_id">
+                                        <option value="">Select Project</option>
+                                        @foreach ($dynamic_projects as $projects_for_data)    
+                                        <option value="{{ $projects_for_data['id'] }}">{{ $projects_for_data['project_name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('project_id'))
+                                        <span class="red-text"><?php echo $errors->first('project_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        @if(session()->get('role_id')=='1')
+                        <div class="row">
+
+                       
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="district_id" id="district_id">
+                                        <option value="">Select District</option>
+                                        @foreach ($district_data as $district_for_data)    
+                                        <option value="{{ $district_for_data['location_id'] }}">{{ $district_for_data['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('district_id'))
+                                        <span class="red-text"><?php echo $errors->first('district_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="taluka_id" id="taluka_id">
+                                        <option value="">Select Taluka</option>
+                                    </select>
+                                    @if ($errors->has('taluka_id'))
+                                        <span class="red-text"><?php echo $errors->first('taluka_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                           
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="village_id" id="village_id">
+                                    <option value="">Select Village</option>
+                                    </select>
+                                    @if ($errors->has('village_id'))
+                                        <span class="red-text"><?php echo $errors->first('village_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                            <button type="submit" class="btn btn-sm btn-success" id="submitButton">
+                                            Search
+                                        </button>
+                                        </div>
+                            </div>
+                        </div>
+                          @elseif(session()->get('role_id')=='2')
+                        <div class="row">
+
+                        
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="taluka_id" id="taluka_id">
+                                        <option value="">Select Taluka</option>
+                                        @foreach ($taluka_data as $taluka_for_data)    
+                                        <option value="{{ $taluka_for_data['location_id'] }}">{{ $taluka_for_data['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('taluka_id'))
+                                        <span class="red-text"><?php echo $errors->first('taluka_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="village_id" id="village_id">
+                                    <option value="">Select Village</option>
+                                    </select>
+                                    @if ($errors->has('village_id'))
+                                        <span class="red-text"><?php echo $errors->first('village_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                            <button type="submit" class="btn btn-sm btn-success" id="submitButton">
+                                            Search
+                                        </button>
+                                        </div>
+                            </div>
+                        </div>
+                          @endif  
+
+
                             <div class="row">
                                 <div class="col-12">
                                     @include('admin.layout.alert')
@@ -27,8 +155,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sr. No.</th>
-                                                    <th>Labour Name</th>
                                                     <th>Project Name</th>
+                                                    <th>Labour Name</th>
                                                     <th>Mobile Number</th>
                                                     <th>Mgnrega ID</th>
                                                     <th>Attendance Type</th>
@@ -39,44 +167,14 @@
                                                 @foreach ($labours as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $item->project_name }}</td>
                                                         <td>{{ $item->full_name }}</td>
                                                         <td>{{ $item->project_name }}</td>
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
                                                         <td>{{ $item->attendance_day }}</td>
                                                         <td>{{ $item->created_at->format('Y-m-d') }}</td>
-                                                        <!-- <td>{{ $item->district_id }}</td> -->
-                                                        <!-- <td>{{ $item->village_name }}</td> -->
-
-
-                                                        <!-- <td>
-                                                            <label class="switch">
-                                                                <input data-id="{{ $item->id }}" type="checkbox"
-                                                                    {{ $item->is_active ? 'checked' : '' }}
-                                                                    class="active-btn btn btn-sm btn-outline-primary m-1"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="{{ $item->is_active ? 'Active' : 'Inactive' }}">
-                                                                <span class="slider round "></span>
-                                                            </label>
-
-                                                        </td> -->
-
-
-                                                        {{-- <td>@if ($item->is_active)
-                                                        <button type="button" class="btn btn-success btn-sm">Active</button>
-                                                        @else 
-                                                        <button type="button" class="btn btn-danger btn-sm">In Active</button>
                                                         
-                                                        @endif</td> --}}
-                                                        <!-- <td class="d-flex">
-                                                       
-
-                                                            <a data-id="{{ $item->id }}"
-                                                                class="show-btn btn btn-sm btn-outline-primary m-1"><i
-                                                                    class="fas fa-eye"></i></a>
-                                                           
-
-                                                        </td> -->
                                                     </tr>
                                                 @endforeach
 
@@ -92,21 +190,143 @@
                 </div>
             </div>
         </div>
-        <form method="POST" action="{{ url('/delete-users') }}" id="deleteform">
-            @csrf
-            <input type="hidden" name="delete_id" id="delete_id" value="">
-        </form>
+        
+
+
+        <script>
+            $(document).ready(function() {
+
+                $('#district_id').change(function(e) {
+                    e.preventDefault();
+                    var districtId = $('#district_id').val();
+
+                    if (districtId !== '') {
+                        $.ajax({
+                            url: '{{ route('taluka') }}',
+                            type: 'GET',
+                            data: {
+                                districtId: districtId
+                            },
+                            success: function(response) {
+                                if (response.taluka.length > 0) {
+                                    $('#taluka_id').empty();
+                                    $('#village_id').empty();
+                                    $('#taluka_id').html('<option value="">Select Taluka</option>');
+                                    $('#village_id').html('<option value="">Select Village</option>');
+                                    $.each(response.taluka, function(index, taluka) {
+                                        $('#taluka_id').append('<option value="' + taluka
+                                            .location_id +
+                                            '">' + taluka.name + '</option>');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            $(document).ready(function() {
+
+                $('#taluka_id').change(function(e) {
+                    e.preventDefault();
+                    var talukaId = $('#taluka_id').val();
+
+                    if (talukaId !== '') {
+                        $.ajax({
+                            url: '{{ route('village') }}',
+                            type: 'GET',
+                            data: {
+                                talukaId: talukaId
+                            },
+                            success: function(response) {
+                                if (response.village.length > 0) {
+                                    $('#village_id').empty();
+                                    $('#village_id').html('<option value="">Select Village</option>');
+                                    $.each(response.village, function(index, village) {
+                                        $('#village_id').append('<option value="' + village
+                                            .location_id +
+                                            '">' + village.name + '</option>');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+<script>
+            $(document).ready(function() {
+
+                $('#submitButton').click(function(e) {
+                    e.preventDefault();
+                    var districtId = $('#district_id').val()
+                    if(districtId==undefined){
+                        districtId="";
+                    }
+                    var talukaId = $('#taluka_id').val();
+                    var villageId = $('#village_id').val();
+                    var FromDate = $('#from_date').val();
+                    var ToDate = $('#to_date').val();
+                    var ProjectId = $('#project_id').val();
+
+                    // var IsApprovedId = $('#is_approved_val').val();
+                    // console.log(talukaId);
+                    // $('#village_id').html('<option value="">Select Village</option>');
+
+                    if (districtId !== '' || talukaId !== '' || villageId !== '' ||
+                        ProjectId !== '' || (FromDate !== '' && ToDate !== '')) {
+                        $.ajax({
+                            url: '{{ route('list-labours-attendance-filter') }}',
+                            type: 'GET',
+                            data: {
+                                districtId: districtId,
+                                talukaId: talukaId,
+                                villageId: villageId,
+                                FromDate: FromDate,
+                                ToDate: ToDate,
+                                ProjectId: ProjectId,
+                            },
+                            // headers: {
+                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            // },
+                            success: function(response) {
+                                if (response.labour_attendance_ajax_data.length > 0) {
+                                    $('#order-listing tbody').empty();
+                                    
+                                    $.each(response.labour_attendance_ajax_data, function(index, labour_attendance_data) {
+                                        console.log(labour_attendance_data.created_at);
+                                        var lid=index + parseInt(1);
+                                        $('#order-listing tbody').append('<tr><td>' + lid +'</td><td>' + labour_attendance_data.project_name + '</td><td>' + labour_attendance_data.full_name +'</td><td>' + labour_attendance_data.mobile_number + '</td><td>' + labour_attendance_data.mgnrega_card_id + '</td><td>' + labour_attendance_data.attendance_day+ '</td><td>' + labour_attendance_data.created_at + '</td></tr>');
+                                    });
+                                }else{
+                                    $('#order-listing tbody').empty();
+                                    $('#order-listing tbody').append('<tr><td colspan="7" style="text-align:center;"><b>No Record Found</b></td></tr>');
+
+                                    // alert("No Record Found");
+                                }
+
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+<script>
+
+    // $(document).ready(() => {
+        function getData(data){
+        $("#show_id").val(data);
+        $("#showform").submit();
+    }
+// });
+</script>
+
         <form method="POST" action="{{ url('/show-labours') }}" id="showform">
             @csrf
             <input type="hidden" name="show_id" id="show_id" value="">
-        </form>
-        {{-- <form method="GET" action="{{ url('/edit-users') }}" id="editform">
-            @csrf
-            <input type="hidden" name="edit_id" id="edit_id" value="">
-        </form> --}}
-        <form method="POST" action="{{ url('/update-active-labours') }}" id="activeform">
-            @csrf
-            <input type="hidden" name="active_id" id="active_id" value="">
         </form>
 
         <!-- content-wrapper ends -->
