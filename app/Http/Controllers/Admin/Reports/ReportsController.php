@@ -160,7 +160,7 @@ class ReportsController extends Controller
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
-		->where('labour.is_approved', $RegistrationStatusId)
+		// ->where('labour.is_approved', $RegistrationStatusId)
         
         ->when($request->get('districtId') || $request->get('talukaId') || $request->get('villageId'), function($query) use ($request, $data_user_output) {
             $query->whereIn('labour.user_id',$data_user_output);
@@ -168,6 +168,10 @@ class ReportsController extends Controller
         ->when($request->get('SkillId'), function($query) use ($request) {
             $query->where('labour.skill_id', $request->SkillId);
         })  
+
+        ->when($request->get('RegistrationStatusId'), function($query) use ($request) {
+            $query->where('labour.is_approved', $request->RegistrationStatusId);
+        }) 
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -215,7 +219,9 @@ class ReportsController extends Controller
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 				->leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->where('registrationstatus.is_active', true)
-                ->where('labour.is_approved', $RegistrationStatusId)
+                ->when($request->get('RegistrationStatusId'), function($query) use ($request) {
+                    $query->where('labour.is_approved', $request->RegistrationStatusId);
+                })
         
                 ->when($request->get('districtId') || $request->get('talukaId') || $request->get('villageId'), function($query) use ($request, $data_user_output) {
                     $query->whereIn('labour.user_id',$data_user_output);
@@ -265,7 +271,7 @@ class ReportsController extends Controller
 		$sess_user_working_dist=session()->get('working_dist');
 
      
-        $villageId = $request->input('villageId');
+        $ProjectId = $request->input('ProjectId');
         $SkillId = $request->input('SkillId');
         $RegistrationStatusId = $request->input('RegistrationStatusId');
 
@@ -291,9 +297,15 @@ class ReportsController extends Controller
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
-		->where('labour.is_approved', $RegistrationStatusId)
+        ->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id')
+		// ->where('labour.is_approved', $RegistrationStatusId)
+		->where('tbl_mark_attendance.project_id', $ProjectId)
+
+        ->when($request->get('RegistrationStatusId'), function($query) use ($request) {
+            $query->where('labour.is_approved', $request->RegistrationStatusId);
+        })
         
-        ->when($request->get('districtId') || $request->get('talukaId') || $request->get('villageId'), function($query) use ($request, $data_user_output) {
+        ->when($request->get('ProjectId'), function($query) use ($request, $data_user_output) {
             $query->whereIn('labour.user_id',$data_user_output);
         })
         ->when($request->get('SkillId'), function($query) use ($request) {

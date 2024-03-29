@@ -41,8 +41,7 @@ class ProjectRepository
 		// 					)->get();
 							// ->toArray();
 
-		$data_users = Project::leftJoin('tbl_area as state_project', 'projects.state', '=', 'state_project.location_id')
-		->leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
+		$data_users = Project::leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
 		->leftJoin('tbl_area as taluka_project', 'projects.taluka', '=', 'taluka_project.location_id')
 		->leftJoin('tbl_area as village_project', 'projects.village', '=', 'village_project.location_id')
         //   ->where('gender.is_active', true)
@@ -51,7 +50,6 @@ class ProjectRepository
               'projects.project_name',
               'projects.description',
             //   'labour.gender_name',
-              'state_project.name as state_name',
               'district_project.name as district_name',
               'taluka_project.name as taluka_name',
               'village_project.name as village_name',
@@ -109,7 +107,7 @@ class ProjectRepository
 		$data =array();
 		$project_data = new Project();
 		$project_data->project_name = $request['project_name'];
-		$project_data->state = $request['state'];
+		$project_data->state = '';
 		$project_data->district = $request['district'];
 		$project_data->taluka	 = $request['taluka'];
 		$project_data->village = $request['village'];
@@ -141,7 +139,7 @@ class ProjectRepository
 						->update([
 							// 'u_uname' => $request['u_uname'],
 							'project_name' => $request['project_name'],
-							'state' => $request['state'],
+							'state' => '',
 							'district' => $request['district'],
 							'taluka' => $request['taluka'],
 							'village' => $request['village'],
@@ -230,15 +228,13 @@ class ProjectRepository
 	public function getById($id)
 	{
 		try {
-			$data_users = Project::leftJoin('tbl_area as state_project', 'projects.state', '=', 'state_project.location_id')
-		->leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
+			$data_users = Project::leftJoin('tbl_area as district_project', 'projects.district', '=', 'district_project.location_id')
 		->leftJoin('tbl_area as taluka_project', 'projects.taluka', '=', 'taluka_project.location_id')
 		->leftJoin('tbl_area as village_project', 'projects.village', '=', 'village_project.location_id')
 				->where('projects.id', $id)
 				->select('projects.id',
 				'projects.project_name',
 				'projects.description',
-				'state_project.name as state_name',
 				'district_project.name as district_name',
 				'taluka_project.name as taluka_name',
 				'village_project.name as village_name',

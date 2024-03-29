@@ -162,9 +162,15 @@ return $data_projects;
     }
 
     public function editProjects(Request $request){
-        
+        $dynamic_district = TblArea::where('parent_id', 2)
+        ->select('location_id','name')
+        ->orderBy('name', 'asc')
+        ->get()
+        ->toArray();
+
+
         $project_data = $this->service->editProjects($request);
-        return view('admin.pages.projects.edit-projects',compact('project_data'));
+        return view('admin.pages.projects.edit-projects',compact('project_data','dynamic_district'));
     }
 
     public function update(Request $request){
@@ -172,7 +178,6 @@ return $data_projects;
         $rules = [
             // 'role_id' => 'required',
             'project_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            'state' => 'required',
             'district' => 'required',
             'taluka' => 'required',
             'village' => 'required',
@@ -188,7 +193,6 @@ return $data_projects;
                          'project_name.regex' => 'Please  enter text only.',
                         'project_name.max'   => 'Please  enter Project name length upto 255 character only.',
 
-                        'state.required' => 'Please select state.',
                         'district.required' =>'Please select District.',
                         'taluka.required' =>'Please select Taluka.',
                         'village.required' =>'Please select Village.',
@@ -243,7 +247,6 @@ return $data_projects;
 
             $rules = [
                 'project_name' => 'required|unique:projects|regex:/^[a-zA-Z\s]+$/u|max:255',
-                'state' => 'required',
                 'district' => 'required',
                 'taluka' => 'required',
                 'village' => 'required',
@@ -260,7 +263,6 @@ return $data_projects;
                 'project_name.max' => 'Please  enter text length upto 255 character only.',
                 'project_name.unique' => 'Title already exist.',
 
-                'state.required' => 'Please  enter state.',
                 'district.required' => 'Please  enter district.',
                 'taluka.required' => 'Please  enter taluka.',
                 'village.required' => 'Please  enter village.',
@@ -436,11 +438,17 @@ return $data_projects;
     }
     
     public function editUsersProfile(Request $request){
+        $dynamic_district = TblArea::where('parent_id', 2)
+        ->select('location_id','name')
+        ->orderBy('name', 'asc')
+        ->get()
+        ->toArray();
+
         $user_data = $this->service->getProfile($request);
         // $user_detail= session()->get('user_id');
         // $id = $user_data->id;
         // return view('admin.layout.master',compact('user_data'));
-        return view('admin.pages.users.edit-user-profile',compact('user_data'));
+        return view('admin.pages.users.edit-user-profile',compact('user_data','dynamic_district'));
     }
 
     public function updateProfile(Request $request){

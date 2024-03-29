@@ -134,7 +134,7 @@ class RegisterController extends Controller {
                             ->toArray();
         $dynamic_usertype = Usertype::where('is_active', true)
                             ->select('id','usertype_name')
-                            ->orderBy('name', 'asc')
+                            ->orderBy('usertype_name', 'asc')
                             ->get()
                             ->toArray();
         $user_data = $this->service->editUsers($request);
@@ -156,7 +156,6 @@ class RegisterController extends Controller {
             'number' =>  'required|regex:/^[0-9]{10}$/',
             'aadhar_no' => 'required',
             'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
-            'state' => 'required',
             'district' => 'required',
             'taluka' => 'required',
             'village' => 'required',
@@ -198,7 +197,6 @@ class RegisterController extends Controller {
                         'address.max'   => 'Please  enter address length upto 255 character only.',
 
 
-                        'state.required' => 'Please select state.',
                         'district.required' =>'Please select District.',
                         'taluka.required' =>'Please select Taluka.',
                         'village.required' =>'Please select Village.',

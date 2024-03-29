@@ -142,28 +142,23 @@
                                             @endif
                                         </div>
                                     </div>
+
                                     <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control mb-2" name="state" id="state" readonly>
-                                                <!-- <option value="">Select State</option> -->
-                                            </select>
-                                            @if ($errors->has('state'))
-                                                <span class="red-text"><?php echo $errors->first('state', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="district">District</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control mb-2" name="district" id="district">
-                                                <option value="">Select District</option>
-                                            </select>
-                                            @if ($errors->has('district'))
-                                                <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
+                                                <div class="form-group">
+                                                    <label for="district">User District</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="district" id="district">
+                                                        <option value="">Select District</option>
+                                                        @foreach ($dynamic_district as $district)
+                                                        <option value="{{ $district['location_id'] }}"
+                                                        @if ($district['location_id'] == $user_data['data_users']['district']) <?php echo 'selected'; ?> @endif>
+                                                        {{ $district['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('district'))
+                                                        <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="taluka">Taluka</label>&nbsp<span class="red-text">*</span>
@@ -529,12 +524,10 @@
         <script>
             $(document).ready(function() {
                 myFunction($("#role_id").val());
-                getStateDistrict('{{ $user_data['data_users']['state'] }}', '{{ $user_data['data_users']['district'] }}');
                 getDistrictTaluka('{{ $user_data['data_users']['district'] }}', '{{ $user_data['data_users']['taluka'] }}');
                 getWorkingDistrictTaluka('{{ $user_data['data_users']['user_district'] }}', '{{ $user_data['data_users']['user_taluka'] }}');
                 getTalukaVillage('{{ $user_data['data_users']['taluka'] }}', '{{ $user_data['data_users']['village'] }}');
                 getWorkingTalukaVillage('{{ $user_data['data_users']['user_taluka'] }}', '{{ $user_data['data_users']['user_village'] }}');
-                getState('{{ $user_data['data_users']['state'] }}');
 
                 $("#state").on('change', function() {
                     getStateDistrict($("#state").val(),'');
@@ -644,101 +637,120 @@
         });
         // Initialize the form validation
         var form = $("#regForm");
-        var validator = form.validate({
-            rules: {
-                // u_email: {
-                //     required: true,
-                // },
-                role_id: {
-                    required: true,
-                },
-                // u_password: {
-                //     required: true,
-                // },
-                // password_confirmation: {
-                //     required: true,
-                // },
-                f_name: {
-                    required: true,
-                },
-                m_name: {
-                    required: true,
-                },
-                l_name: {
-                    required: true,
-                },
-                number: {
-                    required: true,
-                },
-                designation: {
-                    required: true,
-                },
-                address: {
-                    required: true,
-                },
-                state: {
-                    required: true,
-                },
-                city: {
-                    required: true,
-                },
-                // user_profile: {
-                //     required: true,
-                // },
-                pincode: {
-                    required: true,
-                },
-            },
-            messages: {
-                // u_email: {
-                //     required: "Please Enter the Eamil",
-                // },
-                role_id: {
-                    required: "Please Select Role Name",
-                },
-                // u_password: {
-                //     required: "Please Enter the Password",
-                // },
-                // password_confirmation: {
-                //     required: "Please Enter the Confirmation Password",
-                // },
-                f_name: {
-                    required: "Please Enter the First Name",
-                },
-                m_name: {
-                    required: "Please Enter the Middle Name",
-                },
-                l_name: {
-                    required: "Please Enter the Last Name",
-                },
-                number: {
-                    required: "Please Enter the Number",
-                },
-                designation: {
-                    required: "Please Enter the Designation",
-                },
-                address: {
-                    required: "Please Enter the Address",
-                },
+        // Initialize the form validation
+                $("#frm_register").validate({
+                    rules: {
+                        email: {
+                            required: true,
+                        //     remote: {
+                        //     url: '{{ route('check-email-exists') }}',
+                        //     type: 'get',
+                        //     data: {
+                        //         email: function() {
+                        //             return $('#email').val();
+                        //         }
+                        //     }
+                        // },
+                            email:true,
+                        },
+                        role_id: {
+                            required: true,
+                        },
+                        password: {
+                            required: true,
+                        },
+                        password_confirmation: {
+                            required: true,
+                        },
+                        f_name: {
+                            required: true,
+                        },
+                        m_name: {
+                            required: true,
+                        },
+                        l_name: {
+                            required: true,
+                        },
+                        number: {
+                            required: true,
+                            number:true,
+                        },
+                        aadhar_no: {
+                            required: true,
+                            // aadharValidation: true,
+                        },
+                        address: {
+                            required: true,
+                        },
+                        district: {
+                            required: true,
+                        },
+                        taluka: {
+                            required: true,
+                        },
+                        village: {
+                            required: true,
+                        },
+                        user_profile: {
+                            required: true,
+                        },
+                        pincode: {
+                            required: true,
+                        },
 
-                state: {
-                    required: "Please Select State",
-                },
-                city: {
-                    required: "Please Select State",
-                },
-                // user_profile: {
-                //     required: "Upload Media File",
-                //     accept: "Only png, jpeg, and jpg image files are allowed.", // Update the error message for the accept rule
-                // },
-                pincode: {
-                    required: "Please Enter the Pincode",
-                },
-            },
-            submitHandler: function(form) {
-                form.submit();
-            }
-        });
+                    },
+                    messages: {
+                        email: {
+                            required: "Please Enter the Eamil",
+                            // remote: "This Email already exists."
+                        },
+                        role_id: {
+                            required: "Please Select Role Name",
+                        },
+                        password: {
+                            required: "Please Enter the Password",
+                        },
+                        password_confirmation: {
+                            required: "Please Enter the Confirmation Password",
+                        },
+                        f_name: {
+                            required: "Please Enter the First Name",
+                        },
+                        m_name: {
+                            required: "Please Enter the Middle Name",
+                        },
+                        l_name: {
+                            required: "Please Enter the Last Name",
+                        },
+                        number: {
+                            required: "Please Enter the Number",
+                        },
+                        aadhar_no: {
+                            required: "Please Enter the Aadhar No",
+                            // aadharValidation: "Please enter a valid Aadhaar number",
+                        },
+                        address: {
+                            required: "Please Enter the Address",
+                        },
+                        district: {
+                            required: "Please Select District",
+                        },
+                        taluka: {
+                            required: "Please Select Taluka",
+                        },
+                        village: {
+                            required: "Please Select Village",
+                        },
+                        user_profile: {
+                            required: "Upload Media File",
+                            accept: "Only png, jpeg, and jpg image files are allowed.", // Update the error message for the accept rule
+                        },
+                        pincode: {
+                            required: "Please Enter the Pincode",
+                        },
+                    },
+
+                });
 
         // Submit the form when the "Update" button is clicked
         $("#submitButton").click(function() {
