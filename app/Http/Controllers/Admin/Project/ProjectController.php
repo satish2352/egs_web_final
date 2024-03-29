@@ -55,8 +55,7 @@ return $data_projects;
                             ->select('id','route_name','permission_name','url')
                             ->get()
                             ->toArray();
-        $dynamic_state = TblArea::where('location_type', 1)
-                            ->select('location_id','name')
+        $dynamic_state = TblArea::select('location_id','name')
                             ->get()
                             ->toArray();
         $dynamic_district = TblArea::where('parent_id', 2)
@@ -109,8 +108,7 @@ return $data_projects;
     {
         $stateId = $request->input('stateId');
 
-        $city = TblArea::where('location_type', 2) // 4 represents cities
-                    ->where('parent_id', $stateId)
+        $city = TblArea::where('parent_id', $stateId)
                     ->get(['location_id', 'name']);
               return response()->json(['city' => $city]);
 
@@ -120,8 +118,7 @@ return $data_projects;
     {
         $stateId = $request->input('stateId');
 
-        $district = TblArea::where('location_type', 2) // 4 represents cities
-                    ->where('parent_id', $stateId)
+        $district = TblArea::where('parent_id', $stateId)
                     ->get(['location_id', 'name']);
               return response()->json(['district' => $district]);
 
@@ -131,8 +128,7 @@ return $data_projects;
     {
         $districtId = $request->input('districtId');
 
-        $taluka = TblArea::where('location_type', 3) // 4 represents cities
-                    ->where('parent_id', $districtId)
+        $taluka = TblArea::where('parent_id', $districtId)
                     ->get(['location_id', 'name']);
               return response()->json(['taluka' => $taluka]);
 
@@ -142,8 +138,7 @@ return $data_projects;
     {
         $talukaId = $request->input('talukaId');
 
-        $village = TblArea::where('location_type', 4) // 4 represents cities
-                    ->where('parent_id', $talukaId)
+        $village = TblArea::where('parent_id', $talukaId)
                     ->get(['location_id', 'name']);
               return response()->json(['village' => $village]);
 
@@ -152,9 +147,7 @@ return $data_projects;
     public function getState(Request $request)
     {
         $stateId = $request->input('stateId');
-        $state =  TblArea::where('location_type', 1)
-                            // ->where('parent_id', $stateId)
-                            ->select('location_id','name')
+        $state =  TblArea::select('location_id','name')
                             ->get()
                             ->toArray();
         return response()->json(['state' => $state]);
