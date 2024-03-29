@@ -119,20 +119,20 @@ class ProjectController extends Controller
                     'projects.longitude'
                 );
 
-                $gramsevakdocumentQuery = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
-                // ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-                // ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-                // ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-                // ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                ->where('tbl_gram_panchayat_documents.user_id', $user)
-                ->select(
-                    'tbl_gram_panchayat_documents.id',
-                    'tbl_gram_panchayat_documents.document_name',
-                    // 'tbl_documenttype.document_type_name',
-                    'tbl_gram_panchayat_documents.latitude',
-                    'tbl_gram_panchayat_documents.longitude',
-                    'tbl_gram_panchayat_documents.document_pdf',
-                );
+                // $gramsevakdocumentQuery = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
+                // // ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+                // // ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                // // ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                // // ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+                // ->where('tbl_gram_panchayat_documents.user_id', $user)
+                // ->select(
+                //     'tbl_gram_panchayat_documents.id',
+                //     'tbl_gram_panchayat_documents.document_name',
+                //     // 'tbl_documenttype.document_type_name',
+                //     'tbl_gram_panchayat_documents.latitude',
+                //     'tbl_gram_panchayat_documents.longitude',
+                //     'tbl_gram_panchayat_documents.document_pdf',
+                // );
     // dd($gramsevakdocumentQuery);
             if ($request->has('mgnrega_card_id')) {
                 $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
@@ -169,19 +169,19 @@ class ProjectController extends Controller
                 array_push($labourData_array_final, $projectData_array);
             }
 
-            $documentData_array_final = [];
-            foreach ($documentData as $key => $value) {
-                $documentData_array = [];
-                $documentData_array['document_name'] = $value->document_name;
-                $documentData_array['latitude'] = $value->latitude;
-                $documentData_array['longitude'] = $value->longitude;
-                $documentData_array['id'] = $value->id;
-                $documentData_array['type'] = 'document';
-                array_push($labourData_array_final, $documentData_array);
-            }
-            foreach ($documentData as $document_data) {
-                $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
-            }
+            // $documentData_array_final = [];
+            // foreach ($documentData as $key => $value) {
+            //     $documentData_array = [];
+            //     $documentData_array['document_name'] = $value->document_name;
+            //     $documentData_array['latitude'] = $value->latitude;
+            //     $documentData_array['longitude'] = $value->longitude;
+            //     $documentData_array['id'] = $value->id;
+            //     $documentData_array['type'] = 'document';
+            //     array_push($labourData_array_final, $documentData_array);
+            // }
+            // foreach ($documentData as $document_data) {
+            //     $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
+            // }
             $finalData = $labourData_array_final + $projectData_array_final ;
             // Check if mgnrega_card_id filter applied and adjust response accordingly
             if ($request->has('mgnrega_card_id')) {
