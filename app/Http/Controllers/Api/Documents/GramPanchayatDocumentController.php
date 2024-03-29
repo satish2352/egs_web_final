@@ -42,7 +42,7 @@ class GramPanchayatDocumentController extends Controller
             $document_data->save();
             $last_insert_id = $document_data->document_name;
             // $documentPdf = $last_insert_id . '_' . rand(100000, 999999) . '_document.pdf';
-            $documentPdf = $last_insert_id;
+            $documentPdf = $last_insert_id . '.pdf';
             $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
     
             uploadImage($request, 'document_pdf', $path, $documentPdf);
