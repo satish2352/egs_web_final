@@ -503,7 +503,7 @@ class LaboursController extends Controller {
 
         try {
             $labour_detail = $this->service->getById($request->show_id);
-            // dd($labour_detail);
+            dd($labour_detail);
             return view('admin.pages.labours.show-labour', compact('labour_detail','dynamic_registrationstatus','dynamic_reasons'));
         } catch (\Exception $e) {
             return $e;
