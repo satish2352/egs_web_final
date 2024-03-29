@@ -51,7 +51,7 @@ public function login(Request $request){
 
    
 
-    if ($user->device_id == 'null') {
+    if ($user->device_id == null ) {
         $user->update(['device_id' => $device_id]);
     }
 
