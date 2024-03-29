@@ -21,7 +21,9 @@ class GramPanchayatDocumentController extends Controller
         $all_data_validation = [
             'document_type_id' => 'required',  
             'document_name' => 'required', 
-            'document_pdf' => 'required|mimes:pdf|min:1|max:10240', // 10MB max size
+            'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
+            'latitude' => ['required', 'between:-90,90'], // Latitude range
+            'longitude' => ['required', 'between:-180,180'], // Longitude range
         ];       
         $validator = Validator::make($request->all(), $all_data_validation);
     
@@ -38,7 +40,8 @@ class GramPanchayatDocumentController extends Controller
             $document_data->user_id = $user->id; 
             $document_data->document_name = $request->document_name;
             $document_data->document_type_id = $request->document_type_id;
-    
+            $document_data->latitude = $request->latitude;
+            $document_data->longitude = $request->longitude;
             $document_data->save();
             $last_insert_id = $document_data->document_name;
             // $documentPdf = $last_insert_id . '_' . rand(100000, 999999) . '_document.pdf';

@@ -8,7 +8,8 @@ use App\Models\ {
 	Labour,
     Project,
     ProjectUser,
-    ProjectLabours
+    ProjectLabours,
+    GramPanchayatDocuments
 };
 
 class ProjectController extends Controller
@@ -117,6 +118,31 @@ class ProjectController extends Controller
                     'projects.latitude',
                     'projects.longitude'
                 );
+
+                // $gramsevakdocumentQuery = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
+                // ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+                // ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+                // ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+                // ->where('labour.user_id', $user)
+                // ->where('labour.is_approved', 2)
+                // ->select(
+                //     'labour.id',
+                //     'labour.full_name',
+                //     'labour.date_of_birth',
+                //     'gender_labour.gender_name as gender_name',
+                //     'district_labour.name as district_id',
+                //     'taluka_labour.name as taluka_id',
+                //     'village_labour.name as village_id',
+                //     'labour.mobile_number',
+                //     'labour.landline_number',
+                //     'labour.mgnrega_card_id',
+                //     'labour.latitude',
+                //     'labour.longitude',
+                //     'labour.profile_image',
+                //     'labour.aadhar_image',
+                //     'labour.mgnrega_image',
+                //     'labour.profile_image',
+                // );
     
             if ($request->has('mgnrega_card_id')) {
                 $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
@@ -139,6 +165,17 @@ class ProjectController extends Controller
                 $labourData_array['id'] = $value->id;
                 $labourData_array['type'] = 'labour';
                 array_push($labourData_array_final, $labourData_array);
+            }
+
+            $projectData_array_final = [];
+            foreach ($projectData as $key => $value) {
+                $projectData_array = [];
+                $projectData_array['name'] = $value->project_name;
+                $projectData_array['latitude'] = $value->latitude;
+                $projectData_array['longitude'] = $value->longitude;
+                $projectData_array['id'] = $value->id;
+                $projectData_array['type'] = 'project';
+                array_push($labourData_array_final, $projectData_array);
             }
 
             $projectData_array_final = [];
