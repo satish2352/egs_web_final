@@ -47,22 +47,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control" id="state" name="state" readonly>
-                                                <!-- <option>Select State</option> -->
-                                                @foreach ($dynamic_state as $state)
-                                                    @if ($state['location_id']=='2')
-                                                        <option value="{{ $state['location_id'] }}">
-                                                            {{ $state['name'] }}</option>
-                                                    @endif
-                                                       
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
+                                   
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="district">District</label>&nbsp<span class="red-text">*</span>
@@ -227,40 +212,7 @@
         
 
 
-        <script>
-            $(document).ready(function() {
-              
-                $('#state').change(function(e) {
-                    e.preventDefault();
-                    var stateId = $('#state').val();
-                    // console.log(stateId);
-                    $('#district').html('<option value="">Select District</option>');
-
-                    if (stateId !== '') {
-                        $.ajax({
-                            url: '{{ route('district') }}',
-                            type: 'GET',
-                            data: {
-                                stateId: stateId
-                            },
-                            // headers: {
-                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            // },
-                            success: function(response) {
-                                console.log(response);
-                                if (response.district.length > 0) {
-                                    $.each(response.district, function(index, district) {
-                                        $('#district').append('<option value="' + district
-                                            .location_id +
-                                            '">' + district.name + '</option>');
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
+     
 
         <script>
             $(document).ready(function() {
@@ -361,7 +313,6 @@
                     const description = $('#description').val();
                     const latitude = $('#latitude').val();
                     const longitude = $('#longitude').val();
-                    const state = $('#state').val();
                     const district = $('#district').val();
                     const taluka = $('#taluka').val();
                     const village = $('#village').val();
@@ -376,7 +327,7 @@
                     // console.log('village',village);
 
                     // Enable the submit button if all fields are valid
-                    if (project_name && description && latitude && longitude && state && district && taluka &&
+                    if (project_name && description && latitude && longitude && district && taluka &&
                     village) {
                         $('#submitButton').prop('disabled', false);
                     } else {
@@ -402,9 +353,6 @@
                 $("#regForm").validate({
                     rules: {
                         project_name: {
-                            required: true,
-                        },
-                        state: {
                             required: true,
                         },
                         district: {
@@ -437,9 +385,6 @@
                         project_name: {
                             required: "Please Enter the Eamil",
                             // remote: "This Email already exists."
-                        },
-                        state: {
-                            required: "Please Select Role Name",
                         },
                         district: {
                             required: "Please Enter the Password",

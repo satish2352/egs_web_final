@@ -29,7 +29,6 @@ class RegisterRepository
 								'users.number',
 								'users.aadhar_no',
 								'users.address',
-								'users.state',
 								'users.district',
 								'users.taluka',
 								'users.village',
@@ -99,7 +98,7 @@ class RegisterRepository
 		$user_data->number = $request['number'];
 		$user_data->aadhar_no = $request['aadhar_no'];
 		$user_data->address = $request['address'];
-		$user_data->state = $request['state'];
+		$user_data->state = '';
 		$user_data->district = $request['district'];
 		$user_data->taluka	 = $request['taluka'];
 		$user_data->village = $request['village'];
@@ -140,7 +139,6 @@ class RegisterRepository
 							'number' => $request['number'],
 							'aadhar_no' => $request['aadhar_no'],
 							'address' => $request['address'],
-							'state' => $request['state'],
 							'district' => $request['district'],
 							'taluka' => $request['taluka'],
 							'village' => $request['village'],
@@ -277,12 +275,12 @@ class RegisterRepository
 				'users.number',
 				'users.aadhar_no',
 				'users.address',
-				'users.state',
 				'users.district',
 				'users.taluka',
 				'users.village',
 				'users.pincode',
 				'users.user_type',
+				'users.state',
 				'users.user_district',
 				'users.user_taluka',
 				'users.user_village',
@@ -310,12 +308,12 @@ class RegisterRepository
 							'users.number',
 							'users.aadhar_no',
 							'users.address',
-							'users.state',
 							'users.district',
 							'users.taluka',
 							'users.village',
 							'users.pincode',
 							'users.user_type',
+							'users.state',
 							'users.user_district',
 							'users.user_taluka',
 							'users.user_village',
@@ -376,13 +374,12 @@ class RegisterRepository
 	{
 		try {
 			$user = User::leftJoin('roles', 'roles.id', '=', 'users.role_id')
-				->leftJoin('tbl_area as state_user', 'users.state', '=', 'state_user.location_id')
 				->leftJoin('tbl_area as district_user', 'users.district', '=', 'district_user.location_id')
 				->leftJoin('tbl_area as taluka_user', 'users.taluka', '=', 'taluka_user.location_id')
 				->leftJoin('tbl_area as village_user', 'users.village', '=', 'village_user.location_id')
 				->where('users.id', $id)
 				->select('users.f_name','users.m_name','users.l_name','users.email','users.number','users.aadhar_no',
-				'users.address','users.pincode','users.user_profile','roles.role_name','state_user.name as state',
+				'users.address','users.pincode','users.user_profile','roles.role_name',
 				'district_user.name as district','taluka_user.name as taluka','village_user.name as village')
 				->first();
 	
