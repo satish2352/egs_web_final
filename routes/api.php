@@ -3,10 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\Master\RoleController;
-use App\Http\Controllers\Api\Master\DistrictTalukaVillageController;
 use App\Http\Controllers\Api\Labour\LabourController;
-use App\Http\Controllers\Api\Master\MasterController;
 use App\Http\Controllers\Api\Master\ProjectController;
 use App\Http\Controllers\Api\Master\AllMasterController;
 use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
@@ -43,14 +40,6 @@ Route::group([
          //=============Start labour=================
         Route::post('/add-labour', [LabourController::class, 'add']);
         Route::post('/list-labour', [LabourController::class, 'getAllLabourList']);
-        // Route::post('/list-user-labours', [LabourController::class, 'getAllUserLabourList']);
-        // Route::post('/particular-labour-details', [LabourController::class, 'getParticularLabour']);
-        // Route::get('/filter-labour-list', [LabourController::class, 'filterLabourList']);
-        // Route::post('/update-labour/{id}', [LabourController::class, 'updateParticularDataLabour']);
-        // Route::post('/list-send-approved-labour', [LabourController::class, 'getSendApprovedLabourList']);
-        // Route::post('/list-approved-labour', [LabourController::class, 'getApprovedLabourList']);
-        // Route::post('/list-not-approved-labour', [LabourController::class, 'getNotApprovedLabourList']);
-        // Route::post('/list-labour-rejected', [LabourController::class, 'getRejectedLabourList']);
 
         Route::post('/update-labour-status-approved', [LabourController::class, 'updateLabourStatusApproved']);
         Route::post('/update-labour-status-not-approved', [LabourController::class, 'updateLabourStatusNotApproved']);
@@ -93,12 +82,6 @@ Route::group([
 
         Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
         Route::post('/project-list-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllProjectListForOfficer']);
-
-        Route::get('/states/{countryId}', [DistrictTalukaVillageController::class, 'getState']);
-        Route::get('/district', [DistrictTalukaVillageController::class, 'getDistrict']);
-        Route::get('/taluka/{districtId}', [DistrictTalukaVillageController::class, 'getTaluka']);
-        Route::get('/village/{talukaId}', [DistrictTalukaVillageController::class, 'getVillage']);
-
         
         Route::post('logout', [AuthController::class, 'logout']);
     });
