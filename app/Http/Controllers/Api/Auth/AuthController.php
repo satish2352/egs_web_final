@@ -27,7 +27,7 @@ public function login(Request $request){
     $device_id = $request->input('device_id');
 
 
-    
+    info("Device ID: " . $device_id);
 
     $user = User::where('email', $email)->first();
     if (!$user) {
