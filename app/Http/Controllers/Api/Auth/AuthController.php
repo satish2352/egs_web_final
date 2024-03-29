@@ -27,7 +27,7 @@ public function login(Request $request){
     $device_id = $request->input('device_id');
 
 
-    
+    info("Device ID: " . $device_id);
 
     $user = User::where('email', $email)->first();
     if (!$user) {
@@ -50,9 +50,15 @@ public function login(Request $request){
     }
 
    
+    info('is_null($user->device_id)');
+    info(is_null($user->device_id));
 
-    if ($user->device_id == 'null' ) {
-        $user->update(['device_id' => $device_id]);
+    info('$user->device_id');
+    info($user->device_id);
+
+    if ($user->device_id== 'null' || $user->device_id== null || $user->device_id == null || $user->device_id == '' ) {
+        $userNew = User::where(['device_id'=> $device_id, 'email' => $email])->update(['device_id' => $device_id]);
+        $userNew->save();
     }
 
     if ($user->device_id !== 'null' && $user->device_id != $device_id) {
