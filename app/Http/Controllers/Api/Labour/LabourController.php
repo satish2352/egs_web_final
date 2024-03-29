@@ -241,12 +241,14 @@ class LabourController extends Controller
             $data_output = [];
             $user = Auth::user()->id;
             
-            $is_approved = 2 ;
+            // $is_approved = 2 ;
 
             if($request->has('is_approved') && $request->is_approved == 'added') {  //1
                 $is_approved = 1 ;
             } elseif($request->has('is_approved') && $request->is_approved == 'not_approved') { //3
                 $is_approved = 3 ;
+            } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
+                $is_approved = 2 ;
             } 
             
             $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
