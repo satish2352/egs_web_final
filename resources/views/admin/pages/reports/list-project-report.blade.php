@@ -128,81 +128,17 @@
             </div>
         </div>
  
-        <script>
-            $(document).ready(function() {
+       
 
-                $('#district_id').change(function(e) {
-                    e.preventDefault();
-                    var districtId = $('#district_id').val();
 
-                    if (districtId !== '') {
-                        $.ajax({
-                            url: '{{ route('taluka') }}',
-                            type: 'GET',
-                            data: {
-                                districtId: districtId
-                            },
-                            success: function(response) {
-                                if (response.taluka.length > 0) {
-                                    $('#taluka_id').empty();
-                                    $('#village_id').empty();
-                                    $('#taluka_id').html('<option value="">Select Taluka</option>');
-                                    $('#village_id').html('<option value="">Select Village</option>');
-                                    $.each(response.taluka, function(index, taluka) {
-                                        $('#taluka_id').append('<option value="' + taluka
-                                            .location_id +
-                                            '">' + taluka.name + '</option>');
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-
-                $('#taluka_id').change(function(e) {
-                    e.preventDefault();
-                    var talukaId = $('#taluka_id').val();
-
-                    if (talukaId !== '') {
-                        $.ajax({
-                            url: '{{ route('village') }}',
-                            type: 'GET',
-                            data: {
-                                talukaId: talukaId
-                            },
-                            success: function(response) {
-                                if (response.village.length > 0) {
-                                    $('#village_id').empty();
-                                    $('#village_id').html('<option value="">Select Village</option>');
-                                    $.each(response.village, function(index, village) {
-                                        $('#village_id').append('<option value="' + village
-                                            .location_id +
-                                            '">' + village.name + '</option>');
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
 
 <script>
             $(document).ready(function() {
 
                 $('#submitButton').click(function(e) {
                     e.preventDefault();
-                    var districtId = $('#district_id').val()
-                    if(districtId==undefined){
-                        districtId="";
-                    }
-                    var talukaId = $('#taluka_id').val();
-                    var villageId = $('#village_id').val();
+                    
+                    var ProjectId = $('#project_id').val();
                     var RegistrationStatusId = $('#registration_status_id').val();
 
                     if($('#skillorunskill_id').val()=='skill')
@@ -216,14 +152,12 @@
                     // console.log(talukaId);
                     // $('#village_id').html('<option value="">Select Village</option>');
 
-                    if (districtId !== '' || talukaId !== '' || villageId !== '' || SkillId !== '' || RegistrationStatusId !== '') {
+                    if (ProjectId !== '' || SkillId !== '' || RegistrationStatusId !== '') {
                         $.ajax({
-                            url: '{{ route('list-labours-filter-reports') }}',
+                            url: '{{ route('list-project-wise-labour-reports') }}',
                             type: 'GET',
                             data: {
-                                districtId: districtId,
-                                talukaId: talukaId,
-                                villageId: villageId,
+                                ProjectId: ProjectId,
                                 SkillId: SkillId,
                                 IsApprovedId: IsApprovedId,
                                 RegistrationStatusId: RegistrationStatusId,
