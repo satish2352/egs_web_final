@@ -7,6 +7,7 @@ use Validator;
 use App\Models\ {
 	Labour,
     Project,
+    GramPanchayatDocuments
 };
 use Illuminate\Support\Facades\Config;
 class ProjectController extends Controller
