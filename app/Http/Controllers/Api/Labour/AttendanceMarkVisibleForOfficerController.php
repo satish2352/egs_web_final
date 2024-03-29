@@ -120,8 +120,8 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
             ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
             ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
-            ->where('tbl_mark_attendance.user_id', $data_user_output)
-                // ->where('projects.District', $user_working_dist)
+            // ->where('tbl_mark_attendance.user_id', $data_user_output)
+                ->where('projects.District', $user_working_dist)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
                 ->when($request->get('project_id'), function($query) use ($request) {
                     $query->leftJoin('tbl_mark_attendance as ma1', 'labour.mgnrega_card_id', '=', 'ma1.mgnrega_card_id');
