@@ -56,9 +56,8 @@ public function login(Request $request){
     info('$user->device_id');
     info($user->device_id);
 
-    if ($user->device_id== 'null' || $user->device_id== null || $user->device_id == null || $user->device_id == '' ) {
-        $userNew = User::where(['device_id'=> $device_id, 'email' => $email])->update(['device_id' => $device_id]);
-        $userNew->save();
+    if ($user->device_id== 'null') {
+        User::where('email', $email)->update(['device_id' => $device_id]);
     }
 
     if ($user->device_id != 'null' && $user->device_id != $device_id) {
