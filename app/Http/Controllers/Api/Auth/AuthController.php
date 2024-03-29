@@ -26,6 +26,9 @@ public function login(Request $request){
     $password = $request->input('password');
     $device_id = $request->input('device_id');
 
+
+    
+
     $user = User::where('email', $email)->first();
     if (!$user) {
         return response()->json(['status' => 'False','message' => 'User not found','error' => $e->getMessage()], 200);
@@ -36,15 +39,17 @@ public function login(Request $request){
         return response()->json(['status' => 'False','message' => 'Invalid password','error' => $e->getMessage()], 200);
     }
 
+    $userNew = User::where(['device_id'=> $device_id, 'email' => $email])->first();
+    if ($userNew) {
+        return response()->json(['status' => 'False','message' => 'This user is associated with another device please login with same','error' => $e->getMessage()], 200);
+    }
+
     // Attempt to authenticate the user with email and password
     if (!Auth::attempt(['email' => $email, 'password' => $password])) {
         return response()->json(['error' => 'Unauthorized'], 200);
     }
 
-    $userNew = User::where(['device_id'=> $device_id, 'email' => $email])->first();
-    if ($userNew) {
-        return response()->json(['status' => 'False','message' => 'This user is associated with another device please login with same','error' => $e->getMessage()], 200);
-    }
+   
 
     if ($user->device_id == 'null') {
         $user->update(['device_id' => $device_id]);
