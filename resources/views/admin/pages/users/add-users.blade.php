@@ -184,21 +184,6 @@
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control" id="state" name="state" readonly>
-                                                <!-- <option>Select State</option> -->
-                                                @foreach ($dynamic_state as $state)
-                                                    @if ($state['location_id']=='2')
-                                                        <option value="{{ $state['location_id'] }}">
-                                                            {{ $state['name'] }}</option>
-                                                    @endif
-                                                       
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
                                             <label for="district">District</label>&nbsp<span class="red-text">*</span>
                                             <select class="form-control" name="district" id="district">
                                                 <option value="">Select District</option>
@@ -400,40 +385,7 @@
         </script>
 
 
-        <script>
-            $(document).ready(function() {
-
-                $('#state').change(function(e) {
-                    e.preventDefault();
-                    var stateId = $('#state').val();
-                    // console.log(stateId);
-                    $('#district').html('<option value="">Select District</option>');
-
-                    if (stateId !== '') {
-                        $.ajax({
-                            url: '{{ route('district') }}',
-                            type: 'GET',
-                            data: {
-                                stateId: stateId
-                            },
-                            // headers: {
-                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            // },
-                            success: function(response) {
-                                console.log(response);
-                                if (response.district.length > 0) {
-                                    $.each(response.district, function(index, district) {
-                                        $('#district').append('<option value="' + district
-                                            .location_id +
-                                            '">' + district.name + '</option>');
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-        </script>
+   
 
         <script>
             $(document).ready(function() {
@@ -504,6 +456,7 @@
                 });
             });
         </script>
+        
         <!-- <script>
             $(document).ready(function() {
 
@@ -649,7 +602,6 @@
                     const number = $('#number').val();
                     const aadhar_no = $('#aadhar_no').val();
                     const address = $('#address').val();
-                    const state = $('#state').val();
                     const district = $('#district').val();
                     const taluka = $('#taluka').val();
                     const village = $('#village').val();
@@ -723,9 +675,6 @@
                         address: {
                             required: true,
                         },
-                        state: {
-                            required: true,
-                        },
                         district: {
                             required: true,
                         },
@@ -775,10 +724,6 @@
                         },
                         address: {
                             required: "Please Enter the Address",
-                        },
-
-                        state: {
-                            required: "Please Select State",
                         },
                         district: {
                             required: "Please Select District",

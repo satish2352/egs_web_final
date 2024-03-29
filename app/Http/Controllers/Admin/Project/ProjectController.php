@@ -55,8 +55,7 @@ return $data_projects;
                             ->select('id','route_name','permission_name','url')
                             ->get()
                             ->toArray();
-        $dynamic_state = TblArea::where('location_type', 1)
-                            ->select('location_id','name')
+        $dynamic_state = TblArea::select('location_id','name')
                             ->get()
                             ->toArray();
         $dynamic_district = TblArea::where('parent_id', 2)
@@ -109,8 +108,7 @@ return $data_projects;
     {
         $stateId = $request->input('stateId');
 
-        $city = TblArea::where('location_type', 2) // 4 represents cities
-                    ->where('parent_id', $stateId)
+        $city = TblArea::where('parent_id', $stateId)
                     ->get(['location_id', 'name']);
               return response()->json(['city' => $city]);
 
@@ -120,8 +118,7 @@ return $data_projects;
     {
         $stateId = $request->input('stateId');
 
-        $district = TblArea::where('location_type', 2) // 4 represents cities
-                    ->where('parent_id', $stateId)
+        $district = TblArea::where('parent_id', $stateId)
                     ->get(['location_id', 'name']);
               return response()->json(['district' => $district]);
 
@@ -131,8 +128,7 @@ return $data_projects;
     {
         $districtId = $request->input('districtId');
 
-        $taluka = TblArea::where('location_type', 3) // 4 represents cities
-                    ->where('parent_id', $districtId)
+        $taluka = TblArea::where('parent_id', $districtId)
                     ->get(['location_id', 'name']);
               return response()->json(['taluka' => $taluka]);
 
@@ -142,8 +138,7 @@ return $data_projects;
     {
         $talukaId = $request->input('talukaId');
 
-        $village = TblArea::where('location_type', 4) // 4 represents cities
-                    ->where('parent_id', $talukaId)
+        $village = TblArea::where('parent_id', $talukaId)
                     ->get(['location_id', 'name']);
               return response()->json(['village' => $village]);
 
@@ -152,9 +147,7 @@ return $data_projects;
     public function getState(Request $request)
     {
         $stateId = $request->input('stateId');
-        $state =  TblArea::where('location_type', 1)
-                            // ->where('parent_id', $stateId)
-                            ->select('location_id','name')
+        $state =  TblArea::select('location_id','name')
                             ->get()
                             ->toArray();
         return response()->json(['state' => $state]);
@@ -162,9 +155,15 @@ return $data_projects;
     }
 
     public function editProjects(Request $request){
-        
+        $dynamic_district = TblArea::where('parent_id', 2)
+        ->select('location_id','name')
+        ->orderBy('name', 'asc')
+        ->get()
+        ->toArray();
+
+
         $project_data = $this->service->editProjects($request);
-        return view('admin.pages.projects.edit-projects',compact('project_data'));
+        return view('admin.pages.projects.edit-projects',compact('project_data','dynamic_district'));
     }
 
     public function update(Request $request){
@@ -172,7 +171,6 @@ return $data_projects;
         $rules = [
             // 'role_id' => 'required',
             'project_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            'state' => 'required',
             'district' => 'required',
             'taluka' => 'required',
             'village' => 'required',
@@ -188,7 +186,6 @@ return $data_projects;
                          'project_name.regex' => 'Please  enter text only.',
                         'project_name.max'   => 'Please  enter Project name length upto 255 character only.',
 
-                        'state.required' => 'Please select state.',
                         'district.required' =>'Please select District.',
                         'taluka.required' =>'Please select Taluka.',
                         'village.required' =>'Please select Village.',
@@ -243,7 +240,6 @@ return $data_projects;
 
             $rules = [
                 'project_name' => 'required|unique:projects|regex:/^[a-zA-Z\s]+$/u|max:255',
-                'state' => 'required',
                 'district' => 'required',
                 'taluka' => 'required',
                 'village' => 'required',
@@ -260,7 +256,6 @@ return $data_projects;
                 'project_name.max' => 'Please  enter text length upto 255 character only.',
                 'project_name.unique' => 'Title already exist.',
 
-                'state.required' => 'Please  enter state.',
                 'district.required' => 'Please  enter district.',
                 'taluka.required' => 'Please  enter taluka.',
                 'village.required' => 'Please  enter village.',
@@ -436,11 +431,17 @@ return $data_projects;
     }
     
     public function editUsersProfile(Request $request){
+        $dynamic_district = TblArea::where('parent_id', 2)
+        ->select('location_id','name')
+        ->orderBy('name', 'asc')
+        ->get()
+        ->toArray();
+
         $user_data = $this->service->getProfile($request);
         // $user_detail= session()->get('user_id');
         // $id = $user_data->id;
         // return view('admin.layout.master',compact('user_data'));
-        return view('admin.pages.users.edit-user-profile',compact('user_data'));
+        return view('admin.pages.users.edit-user-profile',compact('user_data','dynamic_district'));
     }
 
     public function updateProfile(Request $request){

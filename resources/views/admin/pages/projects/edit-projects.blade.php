@@ -32,29 +32,25 @@
                                             @endif
                                         </div>
                                     </div> 
-                                   
+
                                     <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="state">State</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control mb-2" name="state" id="state" readonly>
-                                                <!-- <option value="">Select State</option> -->
-                                            </select>
-                                            @if ($errors->has('state'))
-                                                <span class="red-text"><?php echo $errors->first('state', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="district">District</label>&nbsp<span class="red-text">*</span>
-                                            <select class="form-control mb-2" name="district" id="district">
-                                                <option value="">Select District</option>
-                                            </select>
-                                            @if ($errors->has('district'))
-                                                <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
+                                                <div class="form-group">
+                                                    <label for="district">District</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="district" id="district">
+                                                        <option value="">Select District</option>
+                                                        @foreach ($dynamic_district as $district)
+                                                        <option value="{{ $district['location_id'] }}"
+                                                        @if ($district['location_id'] == $project_data['data_projects']['district']) <?php echo 'selected'; ?> @endif>
+                                                        {{ $district['name'] }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('district'))
+                                                        <span class="red-text"><?php echo $errors->first('district', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                    
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="taluka">Taluka</label>&nbsp<span class="red-text">*</span>

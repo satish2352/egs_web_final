@@ -28,7 +28,6 @@
                                                 <tr>
                                                     <th>Sr. No.</th>
                                                     <th>Project Name</th>
-                                                    <th>State</th>
                                                     <th>District</th>
                                                     <th>Taluka</th>
                                                     <th>Village</th>
@@ -41,7 +40,6 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->project_name }}</td>
-                                                        <td>{{ $item->state_name }}</td>
                                                         <td>{{ $item->district_name }}</td>
                                                         <td>{{ $item->taluka_name }}</td>
                                                         <td>{{ $item->village_name }}</td>
