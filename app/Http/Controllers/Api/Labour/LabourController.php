@@ -241,7 +241,7 @@ class LabourController extends Controller
             $data_output = [];
             $user = Auth::user()->id;
             
-            // $is_approved = 2 ;
+            $is_approved = '' ;
 
             if($request->has('is_approved') && $request->is_approved == 'added') {  //1
                 $is_approved = 1 ;

@@ -78,9 +78,22 @@ class ReportsController extends Controller
     public function getAllProjects()
     {
         try {
+            $projects_data = Project::where('is_active', 1) // 4 represents cities
+                        ->orderBy('project_name', 'asc')
+                        ->get(['id', 'project_name']);
+
+            $skills_data = Skills::where('is_active', 1) // 4 represents cities
+                        ->whereNot('id', '1')
+                        ->orderBy('skills', 'asc')
+                        ->get(['id', 'skills as skill_name']);
+
+            $registration_status_data = Registrationstatus::where('is_active', 1) // 4 represents cities
+                        ->orderBy('status_name', 'asc')
+                        ->get(['id', 'status_name']);
+
             // $getOutput = $this->service->getAllLabourLocation();
             // dd($getOutput);
-            return view('admin.pages.reports.list-project-report');
+            return view('admin.pages.reports.list-project-report', compact('projects_data','skills_data','registration_status_data'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -90,9 +103,23 @@ class ReportsController extends Controller
     public function getAllProjectLocation()
     {
         try {
+
+            $projects_data = Project::where('is_active', 1) // 4 represents cities
+                        ->orderBy('project_name', 'asc')
+                        ->get(['id', 'project_name']);
+
+            $skills_data = Skills::where('is_active', 1) // 4 represents cities
+                        ->whereNot('id', '1')
+                        ->orderBy('skills', 'asc')
+                        ->get(['id', 'skills as skill_name']);
+
+            $registration_status_data = Registrationstatus::where('is_active', 1) // 4 represents cities
+                        ->orderBy('status_name', 'asc')
+                        ->get(['id', 'status_name']);
+
             // $getOutput = $this->service->getAllLabourLocation();
             // dd($getOutput);
-            return view('admin.pages.reports.list-project-and-location-report');
+            return view('admin.pages.reports.list-project-and-location-report', compact('projects_data','skills_data','registration_status_data'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -110,19 +137,6 @@ class ReportsController extends Controller
         $villageId = $request->input('villageId');
         $SkillId = $request->input('SkillId');
         $RegistrationStatusId = $request->input('RegistrationStatusId');
-
-        // $IsApprovedId = $request->input('IsApprovedId');
-
-        // if($IsApprovedId=='1')
-        // {
-        //     $IsApprovedIdNew='1';
-        // }elseif($IsApprovedId=='2')
-        // {
-        //     $IsApprovedIdNew='2';
-        // }elseif($IsApprovedId=='3')
-        // {
-        //     $IsApprovedIdNew='3';
-        // }
 
             if($sess_user_role=='1')
 		{
