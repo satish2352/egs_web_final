@@ -19,12 +19,12 @@ public function login(Request $request){
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
-        // 'device_id'=>'required',
+        'device_id'=>'required',
     ]);
 
     $email = $request->input('email');
     $password = $request->input('password');
-    // $device_id = $request->input('device_id');
+    $device_id = $request->input('device_id');
 
     $user = User::where('email', $email)->first();
     if (!$user) {
