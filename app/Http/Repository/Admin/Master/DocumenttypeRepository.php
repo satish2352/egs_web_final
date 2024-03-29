@@ -21,7 +21,7 @@ class DocumenttypeRepository{
 	public function addAll($request){
         try {
             $documenttype_data = new Documenttype();
-            $documenttype_data->documenttype = $request['documenttype'];
+            $documenttype_data->document_type_name = $request['document_type_name'];
             $documenttype_data->save();       
                 
             return $documenttype_data;
@@ -60,7 +60,7 @@ class DocumenttypeRepository{
                 ];
             }
         // Store the previous image names
-            $documenttype_data->documenttype = $request['documenttype'];
+            $documenttype_data->document_type_name = $request['document_type_name'];
             // $documenttype_data->marathi_title = $request['marathi_title'];
             // $documenttype_data->url = $request['url'];
             $documenttype_data->save();        

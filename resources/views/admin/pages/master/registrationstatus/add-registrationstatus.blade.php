@@ -24,26 +24,15 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="registrationstatus">Registration Status</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="registrationstatus"
-                                                id="registrationstatus" value="{{ old('registrationstatus') }}"
+                                            <label for="status_name">Registration Status</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="status_name"
+                                                id="status_name" value="{{ old('status_name') }}"
                                                 placeholder="Enter the Title">
-                                            @if ($errors->has('registrationstatus'))
-                                                <span class="red-text"><?php echo $errors->first('registrationstatus', ':message'); ?></span>
+                                            @if ($errors->has('status_name'))
+                                                <span class="red-text"><?php echo $errors->first('status_name', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
-                                    <!-- <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="marathi_title">लिंग</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="marathi_title"
-                                                id="marathi_title" value="{{ old('marathi_title') }}"
-                                                placeholder="शीर्षक प्रविष्ट करा">
-                                            @if ($errors->has('marathi_title'))
-                                                <span class="red-text"><?php //echo $errors->first('marathi_title', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div> -->
                                     <div class="col-md-12 col-sm-12 text-center">
                                         <button type="submit" class="btn btn-sm btn-success" id="submitButton" disabled>
                                             Save &amp; Submit
@@ -63,12 +52,12 @@
             $(document).ready(function() {
                 // Function to check if all input fields are filled with valid data
                 function checkFormValidity() {
-                    const registrationstatus = $('#registrationstatus').val();
+                    const status_name = $('#status_name').val();
                     //const marathi_title = $('#marathi_title').val();
 
                     // Enable the submit button if all fields are valid
-                    // if (registrationstatus && marathi_title) 
-                    if (registrationstatus) {
+                    // if (status_name && marathi_title) 
+                    if (status_name) {
                         $('#submitButton').prop('disabled', false);
                     } else {
                         $('#submitButton').prop('disabled', true);

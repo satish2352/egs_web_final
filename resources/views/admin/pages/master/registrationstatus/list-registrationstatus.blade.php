@@ -42,7 +42,7 @@
                                                 @foreach ($registrationstatus_data as $item)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ strip_tags($item->registrationstatus) }}</td>
+                                                        <td>{{ strip_tags($item->status_name) }}</td>
                                                         <!-- <td>{{ strip_tags($item->marathi_title) }}</td> -->
                                                         <td>
                                                             <label class="switch">

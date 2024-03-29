@@ -105,7 +105,12 @@
                 </ul>
 
                 <ul class="navbar-nav navbar-nav-right">
+                {{ session()->get('f_name') }} {{ session()->get('m_name') }} {{ session()->get('l_name') }}
+                <br>
+                <b>{{ session()->get('role_id') }}</b>
                     <li class="nav-item nav-profile dropdown mr-0">
+
+                    
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
                             {{-- <img class="img-size" 
                             src="{{ Config::get('DocumentConstant.USER_PROFILE_VIEW') }}{{ $profile->user_profile }}"
