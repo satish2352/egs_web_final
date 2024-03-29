@@ -257,7 +257,10 @@ class LabourController extends Controller
                 ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
                 ->leftJoin('tbl_reason as reason_labour', 'labour.reason_id', '=', 'reason_labour.id')
                 ->where('labour.user_id', $user)
-                ->where('labour.is_approved', $is_approved)
+                ->when($request->has('is_approved'), function($query) use ($is_approved) {
+                    $query->where('labour.is_approved', $is_approved);
+                })
+
                 ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
                     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
                 })
