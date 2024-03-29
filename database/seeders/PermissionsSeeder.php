@@ -110,6 +110,14 @@ class PermissionsSeeder extends Seeder
                         'route_name' => 'Project Wise Users',
                         'url' => 'list-project-wise-users',
                         'permission_name' => 'Project Wise Users',
-                    ]);             
+                    ]);
+                Permissions::create(
+                    [
+                        'created_at' => \Carbon\Carbon::now(),
+                        'updated_at' => \Carbon\Carbon::now(),
+                        'route_name' => 'Labour Listing',
+                        'url' => 'list-gramsevak',
+                        'permission_name' => 'Labour Listing',
+                    ]);              
     }
 }
