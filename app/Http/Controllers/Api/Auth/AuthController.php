@@ -41,13 +41,13 @@ public function login(Request $request){
         return response()->json(['error' => 'Unauthorized'], 200);
     }
 
-    // if ($user->device_id == 'null') {
-    //     $user->update(['device_id' => $device_id]);
-    // }
+    if ($user->device_id == 'null') {
+        $user->update(['device_id' => $device_id]);
+    }
 
-    // if ($user->device_id != 'null' && $user->device_id != $device_id) {
-    //     return response()->json(['status' => 'False', 'message' => 'Device Id  mismatch'], 200);
-    // }
+    if ($user->device_id != 'null' && $user->device_id != $device_id) {
+        return response()->json(['status' => 'False', 'message' => 'Device Id  mismatch'], 200);
+    }
     
     $token = JWTAuth::fromUser($user);
 
