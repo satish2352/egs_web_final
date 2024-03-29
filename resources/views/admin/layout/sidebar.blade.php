@@ -168,7 +168,7 @@
             </li>
             @endif
 
-            @if (in_array('list-projects', $data_for_url))
+            @if (in_array('list-gramsevak', $data_for_url))
           <li class="{{request()->is('list-gramsevak*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>

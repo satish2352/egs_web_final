@@ -205,7 +205,7 @@ Route::get('/list-project-report', ['as' => 'list-project-report', 'uses' => 'Ap
 Route::get('/list-project-and-location-report', ['as' => 'list-project-and-location-report', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllProjectLocation']);
 
 Route::get('/list-labours-filter-reports', ['as' => 'list-labours-filter-reports', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getFilterLaboursReport']);
-Route::get('/list-project-report-reports', ['as' => 'list-project-report-reports', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getAllProjectsReport']);
+Route::get('/list-project-wise-labour-reports', ['as' => 'list-project-wise-labour-reports', 'uses' => 'App\Http\Controllers\Admin\Reports\ReportsController@getFilterProjectsReport']);
 
 // Route::get('/db-backup', ['as' => 'db-backup', 'uses' => 'App\Http\Controllers\DBBackup\DBBackupController@downloadBackup']);
 
