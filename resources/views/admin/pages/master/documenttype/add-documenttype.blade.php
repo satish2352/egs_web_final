@@ -24,12 +24,12 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="documenttype">Document Type</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="documenttype"
-                                                id="documenttype" value="{{ old('documenttype') }}"
+                                            <label for="document_type_name">Document Type</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" name="document_type_name"
+                                                id="document_type_name" value="{{ old('document_type_name') }}"
                                                 placeholder="Enter the Title">
-                                            @if ($errors->has('documenttype'))
-                                                <span class="red-text"><?php echo $errors->first('documenttype', ':message'); ?></span>
+                                            @if ($errors->has('document_type_name'))
+                                                <span class="red-text"><?php echo $errors->first('document_type_name', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
@@ -63,12 +63,12 @@
             $(document).ready(function() {
                 // Function to check if all input fields are filled with valid data
                 function checkFormValidity() {
-                    const documenttype = $('#documenttype').val();
+                    const document_type_name = $('#document_type_name').val();
                     //const marathi_title = $('#marathi_title').val();
 
                     // Enable the submit button if all fields are valid
-                    // if (documenttype && marathi_title) 
-                    if (documenttype) {
+                    // if (document_type_name && marathi_title) 
+                    if (document_type_name) {
                         $('#submitButton').prop('disabled', false);
                     } else {
                         $('#submitButton').prop('disabled', true);
@@ -81,7 +81,7 @@
                 // Initialize the form validation
                 $("#regForm").validate({
                     rules: {
-                        documenttype: {
+                        document_type_name: {
                             required: true,
                         },
                         // marathi_title: {
@@ -89,7 +89,7 @@
                         // },
                     },
                     messages: {
-                        documenttype: {
+                        document_type_name: {
                             required: "Please Enter the Title",
                         },
                         // marathi_title: {

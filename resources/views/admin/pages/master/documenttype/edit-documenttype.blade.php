@@ -25,26 +25,15 @@
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="documenttype">Document Type</label>&nbsp<span class="red-text">*</span>
-                                            <input class="form-control mb-2" name="documenttype" id="documenttype"
+                                            <label for="document_type_name">Document Type</label>&nbsp<span class="red-text">*</span>
+                                            <input class="form-control mb-2" name="document_type_name" id="document_type_name"
                                                 placeholder="Enter the Title"
-                                                value="@if (old('documenttype')) {{ old('documenttype') }}@else{{ $documenttype_data->documenttype }} @endif">
-                                            @if ($errors->has('documenttype'))
-                                                <span class="red-text"><?php echo $errors->first('documenttype', ':message'); ?></span>
+                                                value="@if (old('document_type_name')) {{ old('document_type_name') }}@else{{ $documenttype_data->document_type_name }} @endif">
+                                            @if ($errors->has('document_type_name'))
+                                                <span class="red-text"><?php echo $errors->first('document_type_name', ':message'); ?></span>
                                             @endif
                                         </div>
                                     </div>
-                                    <!-- <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="marathi_title">लिंग</label>&nbsp<span class="red-text">*</span>
-                                            <input class="form-control mb-2" name="marathi_title" id="marathi_title"
-                                                placeholder="शीर्षक प्रविष्ट करा"
-                                                value="@if (old('marathi_title')) {{ old('marathi_title') }}@else{{ $documenttype_data->marathi_title }} @endif">
-                                            @if ($errors->has('marathi_title'))
-                                                <span class="red-text"><?php //echo $errors->first('marathi_title', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div> -->
                                     <div class="col-md-12 col-sm-12 text-center">
                                         <button type="submit" class="btn btn-sm btn-success" id="submitButton">Save &amp;
                                             Update</button>
