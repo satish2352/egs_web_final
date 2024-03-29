@@ -967,6 +967,7 @@ class LabourRepository
 		// dd($id);
 		$data_labours = [];
 		try {
+			
 			$data_labours['data_users_data'] = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 			->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 			  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
@@ -995,6 +996,8 @@ class LabourRepository
 				'labour.is_resubmitted')
 				->first();
 
+
+
 				$data_labours['data_family_users'] = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('relation as relationship_labour', 'labour_family_details.relationship_id', '=', 'relationship_labour.id')
                 ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
@@ -1008,9 +1011,11 @@ class LabourRepository
 				->get()
 				->toArray();
 
+				$mgnrega_id=$data_labours['data_users_data']['mgnrega_card_id'];
+
 				$data_labours['data_verification_history'] = HistoryModel::leftJoin('registrationstatus as registrationstatus_labour', 'tbl_history.is_approved', '=', 'registrationstatus_labour.id')
                 ->leftJoin('tbl_reason as tbl_reason_labour', 'tbl_history.reason_id', '=', 'tbl_reason_labour.id')
-                ->where('tbl_history.labour_id', $id)
+                ->where('tbl_history.mgnrega_card_id', $mgnrega_id)
                 ->select('tbl_history.id',
                 'tbl_history.is_approved',
                 'tbl_history.reason_id',
