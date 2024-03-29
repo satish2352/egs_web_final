@@ -48,10 +48,6 @@ class RegisterController extends Controller {
                             ->select('id','route_name','permission_name','url')
                             ->get()
                             ->toArray();
-        $dynamic_state = TblArea::select('location_id','name')
-                            ->orderBy('name', 'asc')
-                            ->get()
-                            ->toArray();
         $dynamic_district = TblArea::where('parent_id', 2)
                             ->select('location_id','name')
                             ->orderBy('name', 'asc')
@@ -62,7 +58,7 @@ class RegisterController extends Controller {
                             // ->orderBy('name', 'asc')
                             ->get()
                             ->toArray();
-    	return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state','dynamic_district','dynamic_usertype'));
+    	return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_district','dynamic_usertype'));
     }
 
     public function getCities(Request $request)
