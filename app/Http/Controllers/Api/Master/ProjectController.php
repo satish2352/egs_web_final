@@ -156,14 +156,14 @@ class ProjectController extends Controller
             // Check if mgnrega_card_id filter applied and adjust response accordingly
             if ($request->has('mgnrega_card_id')) {
                 return response()->json([
-                    'status' => 'success', 
+                    'status' => 'true', 
                     'message' => 'Filtered labour data retrieved successfully', 
                     'labour_data' => $labourData
                 ], 200);
             }
             elseif ($request->has('project_name')) {
                 return response()->json([
-                    'status' => 'success', 
+                    'status' => 'true', 
                     'message' => 'Filtered project data retrieved successfully', 
                     'project_data' => $projectData
                 ], 200);
@@ -172,13 +172,13 @@ class ProjectController extends Controller
                 // Fetch project data only if no mgnrega_card_id filter applied
                 // $projectData = $projectQuery->get();
                 return response()->json([
-                    'status' => 'success', 
+                    'status' => 'true', 
                     'message' => 'Filtered data retrieved successfully', 
                     'map_data' => $finalData,
                 ], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Data get failed'], 500);
         }
     }
     // public function filterDataProjectsLaboursMap(Request $request){
