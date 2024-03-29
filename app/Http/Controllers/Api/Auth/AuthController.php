@@ -54,23 +54,6 @@ public function login(Request $request){
     }
 
    
-<<<<<<< HEAD
-    info('is_null($user->device_id)');
-    info(is_null($user->device_id));
-
-    info('$user->device_id');
-    info($user->device_id);
-
-    if ($user->device_id== 'null' || $user->device_id== null || $user->device_id == null || $user->device_id == '' ) {
-        $userNew = User::where(['device_id'=> $device_id, 'email' => $email])->update(['device_id' => $device_id]);
-        $userNew->save();
-    }
-
-    if ($user->device_id !== 'null' && $user->device_id != $device_id) {
-        return response()->json(['status' => 'False', 'message' => 'Device Id  mismatch'], 200);
-    }
-=======
->>>>>>> 580265d2c9b54906d343ce96c2aa851659246aa4
     
     $token = JWTAuth::fromUser($user);
 
