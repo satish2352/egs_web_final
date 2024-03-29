@@ -51,11 +51,11 @@ public function login(Request $request){
 
    
 
-    if ($user->device_id == null ) {
+    if ($user->device_id == 'null' ) {
         $user->update(['device_id' => $device_id]);
     }
 
-    if ($user->device_id != 'null' && $user->device_id != $device_id) {
+    if ($user->device_id !== 'null' && $user->device_id != $device_id) {
         return response()->json(['status' => 'False', 'message' => 'Device Id  mismatch'], 200);
     }
     
