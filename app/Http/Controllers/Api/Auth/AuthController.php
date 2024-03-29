@@ -51,8 +51,9 @@ public function login(Request $request){
 
    
 
-    if (is_null($user->device_id)) { //== null || $user->device_id == null || $user->device_id == '' ) {
+    if ($user->device_id== 'null' || $user->device_id== null || $user->device_id == null || $user->device_id == '' ) {
         $user->update(['device_id' => $device_id]);
+        $user->save();
     }
 
     if ($user->device_id != 'null' && $user->device_id != $device_id) {
@@ -62,7 +63,7 @@ public function login(Request $request){
     $token = JWTAuth::fromUser($user);
 
     $user->update(['remember_token' => $token]);
-
+    
     // Return response with token and user details
     return response()->json([
         'status' => 'True',
