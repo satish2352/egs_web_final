@@ -39,9 +39,8 @@ public function login(Request $request){
         return response()->json(['status' => 'False','message' => 'Invalid password','error' => $e->getMessage()], 200);
     }
 
-    $userNew = User::where(['device_id'=> $device_id, 'email' => $email])->first();
-    if ($userNew) {
-        return response()->json(['status' => 'False','message' => 'This user is associated with another device please login with same','error' => $e->getMessage()], 200);
+    if ($user->device_id != 'null' && $user->device_id != $device_id) {
+        return response()->json(['status' => 'False', 'message' => 'This user is associated with another device please login with same'], 200);
     }
 
     // Attempt to authenticate the user with email and password
@@ -49,7 +48,13 @@ public function login(Request $request){
         return response()->json(['error' => 'Unauthorized'], 200);
     }
 
+
+    if ($user->device_id== 'null') {
+        User::where('email', $email)->update(['device_id' => $device_id]);
+    }
+
    
+<<<<<<< HEAD
     info('is_null($user->device_id)');
     info(is_null($user->device_id));
 
@@ -64,6 +69,8 @@ public function login(Request $request){
     if ($user->device_id !== 'null' && $user->device_id != $device_id) {
         return response()->json(['status' => 'False', 'message' => 'Device Id  mismatch'], 200);
     }
+=======
+>>>>>>> 580265d2c9b54906d343ce96c2aa851659246aa4
     
     $token = JWTAuth::fromUser($user);
 
