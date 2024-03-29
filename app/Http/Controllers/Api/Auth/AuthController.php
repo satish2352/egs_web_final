@@ -41,6 +41,11 @@ public function login(Request $request){
         return response()->json(['error' => 'Unauthorized'], 200);
     }
 
+    $userNew = User::where(['device_id'=> $device_id, 'email' => $email])->first();
+    if ($userNew) {
+        return response()->json(['status' => 'False','message' => 'This user is associated with another device please login with same','error' => $e->getMessage()], 200);
+    }
+
     if ($user->device_id == 'null') {
         $user->update(['device_id' => $device_id]);
     }
