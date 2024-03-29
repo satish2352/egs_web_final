@@ -83,12 +83,16 @@ class RelationRepository{
             $relationdata = RelationModel::find($id);
             if ($relationdata) {
                 // Delete the images from the storage folder
-                Storage::delete([
-                    'public/images/citizen-action/maritalstatus-suggestion/'.$maritalstatus->english_image,
-                    'public/images/citizen-action/maritalstatus-suggestion/'.$maritalstatus->marathi_image
-                ]);
+                // Storage::delete([
+                //     'public/images/citizen-action/maritalstatus-suggestion/'.$maritalstatus->english_image,
+                //     'public/images/citizen-action/maritalstatus-suggestion/'.$maritalstatus->marathi_image
+                // ]);
 
                 // Delete the record from the database
+
+                // $is_deleted = $relationdata->is_active === 1 ? 0 : 1;
+                // $slide->is_deleted = $is_deleted;
+                // $slide->save();
                 
                 $relationdata->delete();
                 

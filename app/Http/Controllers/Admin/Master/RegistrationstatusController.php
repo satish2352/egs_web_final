@@ -31,15 +31,15 @@ class RegistrationstatusController extends Controller
 
     public function store(Request $request) {
         $rules = [
-            'registrationstatus' => 'required|unique:registrationstatus|regex:/^[a-zA-Z\s]+$/u|max:255',
-            // 'marathi_title' => 'required|unique:registrationstatus|max:255',
+            'status_name' => 'required|unique:registrationstatus|regex:/^[a-zA-Z\s]+$/u|max:255',
+            // 'marathi_title' => 'required|unique:status_name|max:255',
          ];
         $messages = [   
-            'registrationstatus'       =>  'Please enter title.',
-            'registrationstatus.regex' => 'Please  enter text only.',
-            'registrationstatus.unique' => 'Title already exist.',
+            'status_name'       =>  'Please enter title.',
+            'status_name.regex' => 'Please  enter text only.',
+            'status_name.unique' => 'Title already exist.',
             // 'marathi_title.unique' => 'शीर्षक आधीच अस्तित्वात आहे.',
-            'registrationstatus.max'   => 'Please  enter text length upto 255 character only.',
+            'status_name.max'   => 'Please  enter text length upto 255 character only.',
             // 'marathi_title.required'       =>'कृपया शीर्षक प्रविष्ट करा.',
             // 'marathi_title.unique'  =>  'तुमचा घटना शीर्षक आधीपासून अस्तित्वात आहे .',
             // 'marathi_title.max'   => 'कृपया केवळ २५५ वर्णांपर्यंत मजकूराची लांबी प्रविष्ट करा.',            

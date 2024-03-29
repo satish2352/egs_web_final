@@ -195,7 +195,30 @@
                 </div>
             </div>
         </div>
-        
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98&callback=initMap"></script>
+        <script>
+            
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 0, lng: 0}, // Default center
+                zoom: 2 // Default zoom
+            });
+
+            // Fetch project data from Laravel backend
+            fetch('{{ route('projects') }}')
+            .then(response => response.json())
+            .then(projects => {
+                projects.forEach(project => {
+                    var marker = new google.maps.Marker({
+                        position: {lat: parseFloat(project.latitude), lng: parseFloat(project.longitude)},
+                        map: map,
+                        title: project.project_name // Assuming you have a 'name' attribute in your Project model
+                    });
+                    console.log(marker);
+                });
+            });
+        }
+    </script>
         <script type="text/javascript">
             function submitRegister() {
                 document.getElementById("frm_register").submit();

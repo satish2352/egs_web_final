@@ -329,10 +329,10 @@
                                                     <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
                                                     <select class="form-control" name="reason_id" id="reason_id">
                                                         <option value="">Select Reason</option>
-                                                        @if($labour_detail['data_users_data']['reason_id']=='01')
-                                                        <option value="01" <?php echo 'selected'; ?>>Others</option>
+                                                        @if($labour_detail['data_users_data']['reason_id']=='1001')
+                                                        <option value="1001" <?php echo 'selected'; ?>>Others</option>
                                                         @else
-                                                        <option value="01">Others</option>
+                                                        <option value="1001">Others</option>
                                                         @endif
                                                             @foreach ($dynamic_reasons as $dynamic_reasons_data)
                                                             <option value="{{ $dynamic_reasons_data['id'] }}"
@@ -401,7 +401,7 @@
                                                     <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
                                                     <select class="form-control" name="reason_id" id="reason_id" disabled>
                                                         <option value="">Select Reason</option>
-                                                        @if($labour_detail['data_users_data']['reason_id']=='01')
+                                                        @if($labour_detail['data_users_data']['reason_id']=='1001')
                                                         <option value="0" <?php echo 'selected'; ?>>Others</option>
                                                         @else
                                                         <option value="0">Others</option>
@@ -421,7 +421,7 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        @if($labour_detail['data_users_data']['reason_id']='01')
+                                        @if($labour_detail['data_users_data']['reason_id']='1001')
                                             <div class="col-lg-6 col-md-6 col-sm-6" id="remark_div">
                                                 <div class="form-group">
                                                     <label for="other_remark">Remark</label>&nbsp<span
@@ -472,7 +472,7 @@
     $("#reason_id").on('change', function() {
         var reason_val=$(this).val();
         // alert(reason_val);
-        if(reason_val != '01')
+        if(reason_val != '1001')
         {
             $('#remark_div').hide();
         }else

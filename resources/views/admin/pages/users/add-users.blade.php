@@ -354,7 +354,7 @@
                                     </div>
 
                                     <div class="col-md-12 col-sm-12 text-center">
-                                        <button type="submit" class="btn btn-sm btn-success" id="submitButton" readonly>
+                                        <button type="submit" class="btn btn-sm btn-success" id="submitButton" disabled>
                                             Save &amp; Submit
                                         </button>
                                         {{-- <button type="reset" class="btn btn-sm btn-danger">Cancel</button> --}}
@@ -657,8 +657,7 @@
                     const pincode = $('#pincode').val();
 
                     // Enable the submit button if all fields are valid
-                    if (email && role_id && password && password_confirmation && f_name && m_name && l_name &&
-                        number && aadhar_no && address && state && district && taluka && village && user_profile && pincode) {
+                    if (email) {
                         $('#submitButton').prop('disabled', false);
                     } else {
                         $('#submitButton').prop('disabled', true);
@@ -680,13 +679,13 @@
                 }, "Please enter a valid email address.");
 
                 // Initialize the form validation
-                $("#regForm").validate({
+                $("#frm_register").validate({
                     rules: {
                         email: {
                             required: true,
                         //     remote: {
-                        //     url: '/web/check-email-exists',
-                        //     type: 'post',
+                        //     url: '{{ route('check-email-exists') }}',
+                        //     type: 'get',
                         //     data: {
                         //         email: function() {
                         //             return $('#email').val();
@@ -719,6 +718,7 @@
                         },
                         aadhar_no: {
                             required: true,
+                            // aadharValidation: true,
                         },
                         address: {
                             required: true,
@@ -771,6 +771,7 @@
                         },
                         aadhar_no: {
                             required: "Please Enter the Aadhar No",
+                            // aadharValidation: "Please enter a valid Aadhaar number",
                         },
                         address: {
                             required: "Please Enter the Address",
@@ -799,5 +800,30 @@
 
                 });
             });
+
+//             $(document).ready(function() {
+//             $.validator.addMethod("aadharValidation", function(value, element) {
+//     // Regular expression pattern for Aadhaar number validation
+//     var aadhaarPattern = /^\d{12}$/;
+
+//     // Check if the input matches the pattern
+//     if (!aadhaarPattern.test(value)) {
+//         return false;
+//     }
+
+//     // Aadhaar checksum validation algorithm
+//     var sum = 0;
+//     for (var i = 0; i < 11; i++) {
+//         sum += parseInt(value.charAt(i)) * (12 - i);
+//     }
+//     var remainder = sum % 11;
+//     if (remainder != 0) {
+//         return false;
+//     }
+
+//     // Aadhaar number is valid
+//     return true;
+// }, "Invalid Aadhaar number");
+//             });
         </script>
     @endsection

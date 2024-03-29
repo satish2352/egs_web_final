@@ -58,7 +58,7 @@ public function login(Request $request){
     $token = JWTAuth::fromUser($user);
 
     $user->update(['remember_token' => $token]);
-    
+
     // Return response with token and user details
     return response()->json([
         'status' => 'True',

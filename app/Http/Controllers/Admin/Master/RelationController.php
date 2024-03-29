@@ -135,8 +135,8 @@ class RelationController extends Controller
     public function show(Request $request)
     {
         try {
-            $maritalstatus_data = $this->service->getById($request->show_id);
-            return view('admin.pages.master.maritalstatus.show-maritalstatus', compact('maritalstatus_data'));
+            $relation_data = $this->service->getById($request->show_id);
+            return view('admin.pages.master.relation.show-relation', compact('relation_data'));
         } catch (\Exception $e) {
             return $e;
         }
@@ -159,7 +159,7 @@ class RelationController extends Controller
                 $msg = $maritalstatus_data['msg'];
                 $status = $maritalstatus_data['status'];
                 if ($status == 'success') {
-                    return redirect('list-maritalstatus')->with(compact('msg', 'status'));
+                    return redirect('list-relation')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()

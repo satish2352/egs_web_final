@@ -21,7 +21,7 @@ class RegistrationstatusRepository{
 	public function addAll($request){
         try {
             $registrationstatus_data = new Registrationstatus();
-            $registrationstatus_data->registrationstatus = $request['registrationstatus'];
+            $registrationstatus_data->status_name = $request['status_name'];
             $registrationstatus_data->save();       
                 
             return $registrationstatus_data;
