@@ -51,7 +51,11 @@ public function login(Request $request){
 
    
 
+<<<<<<< HEAD
     if ($user->device_id == 'null' ) {
+=======
+    if (is_null($user->device_id)) { //== null || $user->device_id == null || $user->device_id == '' ) {
+>>>>>>> f3a378b2d4815668a3d9aa66a44fc60d86757359
         $user->update(['device_id' => $device_id]);
     }
 
