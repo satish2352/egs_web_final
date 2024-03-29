@@ -138,6 +138,49 @@
                                     @endif
                                 </div>
                             </div>
+
+                            iv class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
+                                        <option value="">Select Skill</option>
+                                        <option value="skill">Skill</option>
+                                        <option value="unskill">Unskill</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skill_id" id="skill_id" disabled>
+
+                                        <option value="">Select Skill</option>
+                                       @foreach ($skills_data as $skills_for_data)    
+                                        <option value="{{ $skills_for_data['id'] }}">{{ $skills_for_data['skill_name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="registration_status_id" id="registration_status_id">
+
+                                        <option value="">Select Registration Status</option>
+                                       @foreach ($registration_status_data as $registration_status_for_data)    
+                                        <option value="{{ $registration_status_for_data['id'] }}">{{ $registration_status_for_data['status_name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('registration_status_id'))
+                                        <span class="red-text"><?php echo $errors->first('registration_status_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                             <button type="submit" class="btn btn-sm btn-success" id="submitButton">
