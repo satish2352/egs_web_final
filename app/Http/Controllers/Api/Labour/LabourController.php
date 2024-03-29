@@ -243,9 +243,9 @@ class LabourController extends Controller
             
             $is_approved = 2 ;
 
-            if($request->has('is_approved') == 'added') {  //1
+            if($request->has('is_approved') && $request->is_approved == 'added') {  //1
                 $is_approved = 1 ;
-            } elseif($request->has('is_approved') == 'not_approved') { //3
+            } elseif($request->has('is_approved') && $request->is_approved == 'not_approved') { //3
                 $is_approved = 3 ;
             } 
             
