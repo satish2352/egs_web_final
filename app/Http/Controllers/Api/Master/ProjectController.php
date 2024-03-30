@@ -222,21 +222,27 @@ class ProjectController extends Controller
             }
             $finalData = $labourData_array_final + $projectData_array_final + $documentData_array_final;
             // Check if mgnrega_card_id filter applied and adjust response accordingly
-            // if ($request->has('mgnrega_card_id')) {
-            //     return response()->json([
-            //         'status' => 'true', 
-            //         'message' => 'Filtered labour data retrieved successfully', 
-            //         'labour_data' => $labourData
-            //     ], 200);
-            // }
-            // elseif ($request->has('project_name')) {
-            //     return response()->json([
-            //         'status' => 'true', 
-            //         'message' => 'Filtered project data retrieved successfully', 
-            //         'project_data' => $projectData
-            //     ], 200);
-            // }
-            // else {
+            if ($request->has('mgnrega_card_id')) {
+                return response()->json([
+                    'status' => 'true', 
+                    'message' => 'Filtered labour data retrieved successfully', 
+                    'labour_data' => $labourData
+                ], 200);
+            }
+            elseif ($request->has('project_name')) {
+                return response()->json([
+                    'status' => 'true', 
+                    'message' => 'Filtered project data retrieved successfully', 
+                    'project_data' => $projectData
+                ], 200);
+            }  elseif ($request->has('latitude')) {
+                return response()->json([
+                    'status' => 'true', 
+                    'message' => 'Filtered project data retrieved successfully', 
+                    'project_data' => $projectData
+                ], 200);
+            }
+            else {
                 // Fetch project data only if no mgnrega_card_id filter applied
                 // $projectData = $projectQuery->get();
 
@@ -250,7 +256,7 @@ class ProjectController extends Controller
                     'project_data' => $projectData,
                     'labour_data' => $labourData
                 ], 200);
-            // }
+            }
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Data get failed'], 500);
         }
