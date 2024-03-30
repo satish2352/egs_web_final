@@ -38,16 +38,16 @@ class OfficerController extends Controller
             $data_user_output = User::select('id');
             if($utype=='1')
             {
-                $data_user_output = $data_user_outpu->where('users.user_district', $user_working_dist);
+                $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
             } else if($utype=='2')
             {
-                $data_user_output = $data_user_outpu->where('users.user_taluka', $user_working_tal);
+                $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
             } else if($utype=='3')
             {
-                $data_user_output = $data_user_outpu->where('users.user_village', $user_working_vil);
+                $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
             }
 
-            $data_user_output = $data_user_outpu->get()->toArray();
+            $data_user_output = $data_user_output->get()->toArray();  
            
             $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
@@ -152,16 +152,16 @@ class OfficerController extends Controller
             $data_user_output = User::select('id');
             if($utype=='1')
             {
-                $data_user_output = $data_user_outpu->where('users.user_district', $user_working_dist);
+                $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
             } else if($utype=='2')
             {
-                $data_user_output = $data_user_outpu->where('users.user_taluka', $user_working_tal);
+                $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
             } else if($utype=='3')
             {
-                $data_user_output = $data_user_outpu->where('users.user_village', $user_working_vil);
+                $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
             }
 
-            $data_user_output = $data_user_outpu->get()->toArray();    
+            $data_user_output = $data_user_output->get()->toArray();    
             
                 $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
