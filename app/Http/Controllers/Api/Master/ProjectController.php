@@ -93,7 +93,7 @@ class ProjectController extends Controller
                     'labour.aadhar_image',
                     'labour.mgnrega_image',
                     'labour.profile_image',
-                )->groupBy('labour.id');
+                )->distinct('labour.id');
     
             $projectQuery = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
                 ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
