@@ -285,7 +285,7 @@ class OfficerController extends Controller
         
            
             $validator = Validator::make($request->all(), [
-                'id' => 'required',
+                'labour_id' => 'required',
                 'reason_id' => 'required',
                 'is_approved' => 'required',
             ]);
