@@ -313,7 +313,7 @@ class OfficerController extends Controller
                 $history = new HistoryModel();
                 $history->user_id = $user->id; 
                 $history->roles_id = $user->role_id; 
-                $history->labour_id = $request->id;
+                $history->labour_id = $request->labour_id;
                 $history->is_approved = $request->is_approved;
                 $history->reason_id = $request->reason_id; 
                 
