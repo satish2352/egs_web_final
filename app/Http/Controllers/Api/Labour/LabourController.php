@@ -293,7 +293,7 @@ class LabourController extends Controller
                 $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'tbl_history.roles_id', '=', 'roles_labour.id')
                     ->leftJoin('users as users_labour', 'tbl_history.user_id', '=', 'users_labour.id')
                     ->leftJoin('tbl_reason', 'tbl_history.reason_id', '=', 'tbl_reason.id')
-                    ->leftJoin('labour', 'tbl_history.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+                    ->leftJoin('labour', 'tbl_history.labour_id', '=', 'labour.id')
                     ->select(
                         'tbl_history.id',
                         'roles_labour.role_name as role_name',
