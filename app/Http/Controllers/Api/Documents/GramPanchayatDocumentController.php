@@ -32,7 +32,7 @@ class GramPanchayatDocumentController extends Controller
         }
         try {
             $user = Auth::user();
-            date_default_timezone_set('Asia/Kolkata'); 
+            // date_default_timezone_set('Asia/Kolkata'); 
             $currentDateTime = date('YmdHis');
             // $currentDateTime = date('Ymd_His');
             

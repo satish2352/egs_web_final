@@ -302,7 +302,7 @@ class LabourController extends Controller
                         'tbl_history.other_remark',
                         'tbl_history.updated_at',
                     )
-                    ->where('tbl_history.mgnrega_card_id', $labourhistory['mgnrega_card_id'])
+                    ->where('tbl_history.labour_id', $labourhistory['labour_id'])
                     ->get();
             }
 
