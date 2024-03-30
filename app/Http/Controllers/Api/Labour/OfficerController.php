@@ -117,7 +117,7 @@ class OfficerController extends Controller
                     $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'tbl_history.roles_id', '=', 'roles_labour.id')
                         ->leftJoin('users as users_labour', 'tbl_history.user_id', '=', 'users_labour.id')
                         ->leftJoin('tbl_reason', 'tbl_history.reason_id', '=', 'tbl_reason.id')
-                        ->leftJoin('labour', 'tbl_history.labour_id', '=', 'labour.labour_id')
+                        ->leftJoin('labour', 'tbl_history.labour_id', '=', 'labour.id')
                         // ->where('tbl_history.labour_id', $labourhistory['labour_id'])
                         ->select(
                             'tbl_history.id',
