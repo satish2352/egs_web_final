@@ -127,7 +127,7 @@ class OfficerController extends Controller
                             'tbl_history.other_remark',
                             'tbl_history.updated_at',
                         )
-                        ->where('tbl_history.labour_id', $labourhistory['labour_id'])
+                        ->where('tbl_history.labour_id', $labourhistory['id'])
                         ->get();
                 }
 
