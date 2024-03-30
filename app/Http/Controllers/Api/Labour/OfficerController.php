@@ -113,23 +113,23 @@ class OfficerController extends Controller
                 }
 
                 // if (isset($data_labour['is_resubmitted']) && $data_labour['is_resubmitted']) {
-                // foreach ($data_labour as $labourhistory) {
-                //     $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'tbl_history.roles_id', '=', 'roles_labour.id')
-                //         ->leftJoin('users as users_labour', 'tbl_history.user_id', '=', 'users_labour.id')
-                //         ->leftJoin('tbl_reason', 'tbl_history.reason_id', '=', 'tbl_reason.id')
-                //         ->leftJoin('labour', 'tbl_history.labour_id', '=', 'labour.labour_id')
-                //         ->where('tbl_history.labour_id', $labourhistory['labour_id'])
-                //         ->select(
-                //             'tbl_history.id',
-                //             'roles_labour.role_name as role_name',
-                //             'users_labour.f_name as f_name',
-                //             'tbl_reason.reason_name as reason_name',
-                //             'tbl_history.other_remark',
-                //             'tbl_history.updated_at',
-                //         )
-                //         ->where('tbl_history.labour_id', $labourhistory['id'])
-                //         ->get();
-                // }
+                foreach ($data_labour as $labourhistory) {
+                    $labourhistory['history_details'] = HistoryModel::leftJoin('roles as roles_labour', 'tbl_history.roles_id', '=', 'roles_labour.id')
+                        ->leftJoin('users as users_labour', 'tbl_history.user_id', '=', 'users_labour.id')
+                        ->leftJoin('tbl_reason', 'tbl_history.reason_id', '=', 'tbl_reason.id')
+                        ->leftJoin('labour', 'tbl_history.labour_id', '=', 'labour.labour_id')
+                        // ->where('tbl_history.labour_id', $labourhistory['labour_id'])
+                        ->select(
+                            'tbl_history.id',
+                            'roles_labour.role_name as role_name',
+                            'users_labour.f_name as f_name',
+                            'tbl_reason.reason_name as reason_name',
+                            'tbl_history.other_remark',
+                            'tbl_history.updated_at',
+                        )
+                        ->where('tbl_history.labour_id', $labourhistory['labour_id'])
+                        ->get();
+                }
 
                     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
         } catch (\Exception $e) {
