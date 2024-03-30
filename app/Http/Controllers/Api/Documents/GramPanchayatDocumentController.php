@@ -74,6 +74,7 @@ class GramPanchayatDocumentController extends Controller
                     'tbl_gram_panchayat_documents.document_name',
                     'tbl_documenttype.document_type_name',
                     'tbl_gram_panchayat_documents.document_pdf',
+                    'tbl_gram_panchayat_documents.update_at',
                 )->get();
                 foreach ($data_output as $document_data) {
                     $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
