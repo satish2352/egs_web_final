@@ -254,7 +254,7 @@ class OfficerController extends Controller
             $user = Auth::user()->id;
                 // Validate the incoming request
             $validator = Validator::make($request->all(), [
-                'mgnrega_card_id' => 'required',
+                'labour_id' => 'required',
             ]);
     
             if ($validator->fails()) {
@@ -262,7 +262,7 @@ class OfficerController extends Controller
             }
             
            
-            $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
+            $updated = Labour::where('id', $request->labour_id)
                 ->where('is_approved', 1)
                 ->update(['is_approved' => 4]); 
                 
@@ -270,7 +270,7 @@ class OfficerController extends Controller
             if ($updated) {
                 return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
             } else {
-                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id'], 200);
+                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided Labour Id'], 200);
             }
     
         } catch (\Exception $e) {
@@ -325,7 +325,7 @@ class OfficerController extends Controller
     
                 return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
             } else {
-                return response()->json(['status' => 'false', 'message' => 'No labor found with the provided MGNREGA card Id or status is not approved'], 200);
+                return response()->json(['status' => 'false', 'message' => 'No labor found with the provided Labour Id or status is not approved'], 200);
             }
     
         } catch (\Exception $e) {
