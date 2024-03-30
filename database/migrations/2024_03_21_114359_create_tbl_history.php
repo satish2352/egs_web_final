@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('roles_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('mgnrega_card_id');
+            $table->unsignedBigInteger('labour_id');
             $table->unsignedBigInteger('is_approved');
             $table->unsignedBigInteger('reason_id');
             $table->string('other_remark')->default('null');
