@@ -55,9 +55,7 @@ return $data_projects;
                             ->select('id','route_name','permission_name','url')
                             ->get()
                             ->toArray();
-        $dynamic_state = TblArea::select('location_id','name')
-                            ->get()
-                            ->toArray();
+        
         $dynamic_district = TblArea::where('parent_id', 2)
                             ->select('location_id','name')
                             ->get()
@@ -67,7 +65,7 @@ return $data_projects;
                             
                         // Map marker code is ended here          
     	// return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
-    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_state','dynamic_district'));
+    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_district'));
     }
 
     public function getLatitudeLongitude($latitude,$longitude){
