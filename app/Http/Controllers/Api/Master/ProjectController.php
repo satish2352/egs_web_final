@@ -93,7 +93,7 @@ class ProjectController extends Controller
                     'labour.aadhar_image',
                     'labour.mgnrega_image',
                     'labour.profile_image',
-                );
+                )->groupBy('labour.id');
     
             $projectQuery = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
                 ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
@@ -125,7 +125,7 @@ class ProjectController extends Controller
                     'projects.end_date',
                     'projects.latitude',
                     'projects.longitude'
-                );
+                )->groupBy('projects.id');
 
                 $gramsevakdocumentQuery = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
                 ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
@@ -235,7 +235,7 @@ class ProjectController extends Controller
                     'message' => 'Filtered project data retrieved successfully', 
                     'project_data' => $projectData
                 ], 200);
-            }  elseif ($request->has('latitude')) {
+            }  elseif ($request->has('want_project_data')) {
                 return response()->json([
                     'status' => 'true', 
                     'message' => 'Filtered project data retrieved successfully', 
@@ -243,12 +243,6 @@ class ProjectController extends Controller
                 ], 200);
             }
             else {
-                // Fetch project data only if no mgnrega_card_id filter applied
-                // $projectData = $projectQuery->get();
-
-
-
-                
                 return response()->json([
                     'status' => 'true', 
                     'message' => 'Filtered data retrieved successfully', 
