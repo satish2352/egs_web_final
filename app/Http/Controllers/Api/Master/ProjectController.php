@@ -252,7 +252,8 @@ class ProjectController extends Controller
                 ], 200);
             }
         } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Data get failed'], 500);
+            
+            return response()->json(['status' => 'false', 'message' => 'Data get failed '.$e->getMessage()], 500);
         }
     }
     // public function filterDataProjectsLaboursMap(Request $request){
