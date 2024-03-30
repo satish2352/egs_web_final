@@ -147,6 +147,14 @@ class ProjectController extends Controller
                     'village_u.name as village_name',
                     'tbl_gram_panchayat_documents.document_pdf',
                 );
+    // dd($gramsevakdocumentQuery);
+            // if ($request->has('mgnrega_card_id')) {
+            //     $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
+            // }
+    
+            // if ($request->has('project_name')) {
+            //     $projectQuery->where('projects.project_name', 'LIKE', '%'.$request->input('project_name').'%');
+            // }
             
             // Fetch data
             $labourData = $labourQuery->get();
@@ -165,8 +173,7 @@ class ProjectController extends Controller
                 $labourData_array['taluka_name'] = $value->taluka_name;
                 $labourData_array['village_id'] = $value->village_id;
                 $labourData_array['village_name'] = $value->village_name;
-                $labourData_array['mobile_number'] = $value->mobile_number;   
-                $labourData_array['mgnrega_card_id'] = $value->mgnrega_card_id;               
+                $labourData_array['mobile_number'] = $value->mobile_number;                
                 $labourData_array['latitude'] = $value->latitude;
                 $labourData_array['longitude'] = $value->longitude;              
                 $labourData_array['type'] = 'labour';
@@ -210,9 +217,29 @@ class ProjectController extends Controller
                 $documentData_array['type'] = 'document';
                 array_push($labourData_array_final, $documentData_array);
             }
-          
+            foreach ($documentData as $document_data) {
+                $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
+            }
             $finalData = $labourData_array_final + $projectData_array_final + $documentData_array_final;
-           
+            // Check if mgnrega_card_id filter applied and adjust response accordingly
+            // if ($request->has('mgnrega_card_id')) {
+            //     return response()->json([
+            //         'status' => 'true', 
+            //         'message' => 'Filtered labour data retrieved successfully', 
+            //         'labour_data' => $labourData
+            //     ], 200);
+            // }
+            // elseif ($request->has('project_name')) {
+            //     return response()->json([
+            //         'status' => 'true', 
+            //         'message' => 'Filtered project data retrieved successfully', 
+            //         'project_data' => $projectData
+            //     ], 200);
+            // }
+            // else {
+                // Fetch project data only if no mgnrega_card_id filter applied
+                // $projectData = $projectQuery->get();
+
 
 
                 
@@ -405,12 +432,6 @@ class ProjectController extends Controller
         
     
     
-
-
-
-
-
-        
-    }
+}
 
 
