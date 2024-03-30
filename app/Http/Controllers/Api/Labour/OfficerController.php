@@ -281,7 +281,7 @@ class OfficerController extends Controller
         try {
             $user = Auth::user();
             
-            $labour_id = $request->input('id'); 
+            $labour_id = $request->input('labour_id'); 
         
            
             $validator = Validator::make($request->all(), [
