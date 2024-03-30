@@ -305,7 +305,7 @@ class OfficerController extends Controller
                 $updateData['other_remark'] = $request->other_remark ?: ''; // Set to empty string if not provided
             }
     
-            $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
+            $updated = Labour::where('id', $request->id)
                 ->where('is_approved', 1)
                 ->update($updateData);
             if ($updated) {
