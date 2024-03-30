@@ -161,7 +161,7 @@ class ProjectController extends Controller
                 $labourData_array = [];
                 $value->type = 'labour';
                 $labourData_array['id'] = $value->id;
-                $labourData_array['full_name'] = $value->full_name;
+                $labourData_array['name'] = $value->full_name;
                 $labourData_array['gender_name'] = $value->gender_name;
                 $labourData_array['district_id'] = $value->district_id;
                 $labourData_array['district_name'] = $value->district_name;
@@ -182,7 +182,7 @@ class ProjectController extends Controller
                 $projectData_array = [];
                 $value->type = 'project';
                 $projectData_array['id'] = $value->id;
-                $projectData_array['project_name'] = $value->project_name;
+                $projectData_array['name'] = $value->project_name;
                 $projectData_array['start_date'] = $value->start_date;
                 $projectData_array['end_date'] = $value->end_date;
                 $projectData_array['District'] = $value->District;
