@@ -125,7 +125,7 @@ class ProjectController extends Controller
                     'projects.end_date',
                     'projects.latitude',
                     'projects.longitude'
-                )->groupBy('projects.id');
+                )->distinct('projects.id');
 
                 $gramsevakdocumentQuery = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
                 ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
