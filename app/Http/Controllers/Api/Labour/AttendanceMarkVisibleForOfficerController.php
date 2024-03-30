@@ -65,7 +65,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'projects.end_date',
                     'projects.latitude',
                     'projects.longitude'
-                )->get();
+                )->distinct('project.id')->get();
                 // dd($data_output);
                     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
