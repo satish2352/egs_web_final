@@ -281,11 +281,11 @@ class OfficerController extends Controller
         try {
             $user = Auth::user();
             
-            $mgnrega_card_id = $request->input('mgnrega_card_id'); 
+            $labour_id = $request->input('id'); 
         
            
             $validator = Validator::make($request->all(), [
-                // 'mgnrega_card_id' => 'required',
+                'id' => 'required',
                 'reason_id' => 'required',
                 'is_approved' => 'required',
             ]);
@@ -305,7 +305,7 @@ class OfficerController extends Controller
                 $updateData['other_remark'] = $request->other_remark ?: ''; // Set to empty string if not provided
             }
     
-            $updated = Labour::where('id', $request->id)
+            $updated = Labour::where('id', $request->labour_id)
                 ->where('is_approved', 1)
                 ->update($updateData);
             if ($updated) {
