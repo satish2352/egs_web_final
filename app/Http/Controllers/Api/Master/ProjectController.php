@@ -70,12 +70,9 @@ class ProjectController extends Controller
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
                 ->where('labour.user_id', $user)
                 ->where('labour.is_approved', 2)
-                ->when($request->has('type') && $request->type == 'labour', function($query) use ($request) {
+                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
                     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
                 })
-                // ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
-                //     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
-                // })
                 ->select(
                     'labour.id',
                     'labour.full_name',
@@ -159,9 +156,8 @@ class ProjectController extends Controller
             $labourData_array_final = [];
             foreach ($labourData as $key => $value) {
                 $labourData_array = [];
-                $value->type = 'labour';
                 $labourData_array['id'] = $value->id;
-                $labourData_array['name'] = $value->full_name;
+                $labourData_array['full_name'] = $value->full_name;
                 $labourData_array['gender_name'] = $value->gender_name;
                 $labourData_array['district_id'] = $value->district_id;
                 $labourData_array['district_name'] = $value->district_name;
@@ -180,9 +176,8 @@ class ProjectController extends Controller
             $projectData_array_final = [];
             foreach ($projectData as $key => $value) {
                 $projectData_array = [];
-                $value->type = 'project';
                 $projectData_array['id'] = $value->id;
-                $projectData_array['name'] = $value->project_name;
+                $projectData_array['project_name'] = $value->project_name;
                 $projectData_array['start_date'] = $value->start_date;
                 $projectData_array['end_date'] = $value->end_date;
                 $projectData_array['District'] = $value->District;
@@ -201,7 +196,6 @@ class ProjectController extends Controller
             $documentData_array_final = [];
             foreach ($documentData as $key => $value) {
                 $documentData_array = [];
-                $value->type = 'document';
                 $documentData_array['id'] = $value->id;
                 $documentData_array['document_name'] = $value->document_name;
                 $documentData_array['latitude'] = $value->latitude;
@@ -226,17 +220,14 @@ class ProjectController extends Controller
                     'status' => 'true', 
                     'message' => 'Filtered data retrieved successfully', 
                     'map_data' => $finalData,
-                    'project_data' => $projectData,
-                    'labour_data' => $labourData
+                    // 'project_data' => $projectData,
+                    // 'labour_data' => $labourData
                 ], 200);
             // }
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Data get failed'], 500);
         }
     }
-
-   
-    
     // public function filterDataProjectsLaboursMap(Request $request){
     //     try {
     //         $user = Auth::user()->id;
