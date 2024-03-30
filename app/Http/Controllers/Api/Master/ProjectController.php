@@ -247,8 +247,8 @@ class ProjectController extends Controller
                     'status' => 'true', 
                     'message' => 'Filtered data retrieved successfully', 
                     'map_data' => $finalData,
-                    // 'project_data' => $projectData,
-                    // 'labour_data' => $labourData
+                    'project_data' => $projectData,
+                    'labour_data' => $labourData
                 ], 200);
             // }
         } catch (\Exception $e) {
