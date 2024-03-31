@@ -58,6 +58,9 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/edit-projects/{edit_id}', ['as' => 'edit-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@editProjects']);
     Route::post('/update-projects', ['as' => 'update-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@update']);
     Route::post('/show-projects', ['as' => 'show-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@show']);
+    Route::post('/delete-projects', ['as' => 'delete-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@delete']);
+
+
 
     Route::get('/list-labours', ['as' => 'list-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@index']);
     Route::post('/update-active-labours', ['as' => 'update-active-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@updateOne']);

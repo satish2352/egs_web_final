@@ -406,7 +406,7 @@ return $data_projects;
                 $msg = $delete['msg'];
                 $status = $delete['status'];
                 if ($status == 'success') {
-                    return redirect('list-users')->with(compact('msg', 'status'));
+                    return redirect('list-projects')->with(compact('msg', 'status'));
                 } else {
                     return redirect()->back()
                         ->withInput()
