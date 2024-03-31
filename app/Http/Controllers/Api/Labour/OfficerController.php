@@ -356,9 +356,11 @@ info($data_output);
             } else if($utype=='3') {
                 $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
             }
-info('$data_user_output');
-info($data_user_output);
+
             $data_user_output = $data_user_output->get()->toArray();  
+
+            info('$data_user_output');
+info($data_user_output);
 
             $counts = Labour::leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->whereIn('users.id', $data_user_output)
