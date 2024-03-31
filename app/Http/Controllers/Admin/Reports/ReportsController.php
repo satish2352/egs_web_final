@@ -36,13 +36,11 @@ class ReportsController extends Controller
             $sess_user_role=session()->get('role_id');
             $sess_user_working_dist=session()->get('working_dist');
 
-            $district_data = TblArea::where('location_type', 2) // 4 represents cities
-                        ->where('parent_id', '2')
+            $district_data = TblArea::where('parent_id', '2')
                         ->orderBy('name', 'asc')
                         ->get(['location_id', 'name']);
 
-            $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
-                        ->where('parent_id', $sess_user_working_dist)
+            $taluka_data=TblArea::where('parent_id', $sess_user_working_dist)
                         ->orderBy('name', 'asc')
                         ->get(['location_id', 'name']);
 
