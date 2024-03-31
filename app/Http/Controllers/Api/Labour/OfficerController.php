@@ -336,13 +336,11 @@ class OfficerController extends Controller
     public function countOfficerLabour(Request $request) {
         try {
             $user = Auth::user()->id;
-info('$user');
-info($user);
+
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                 ->where('users.id', $user)
                 ->first();
-info('$data_output');
-info($data_output);
+
             $utype=$data_output->user_type;
             $user_working_dist=$data_output->user_district;
             $user_working_tal=$data_output->user_taluka;
@@ -359,17 +357,12 @@ info($data_output);
 
             $data_user_output = $data_user_output->get()->toArray();  
 
-            info('$data_user_output');
-info($data_user_output);
-
             $counts = Labour::leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->whereIn('users.id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
                 ->get();
 
-               info('$counts');
-               info($counts);
     
             // Initialize counters
             $sentForApprovalCount = 0;
