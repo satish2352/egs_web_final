@@ -469,7 +469,7 @@ class LabourRepository
 		->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
-		->where('labour.is_approved', '1')
+		->where('labour.is_approved', '3')
 		->where('labour.is_resubmitted', '1')
           ->select(
 			'labour.id',
@@ -535,7 +535,7 @@ class LabourRepository
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 				->leftJoin('users', 'labour.user_id', '=', 'users.id')
-				->where('labour.is_approved', '1')
+				->where('labour.is_approved', '3')
 				->where('labour.is_resubmitted', '1')
                 ->whereIn('labour.user_id',$data_user_output)
                 ->where('registrationstatus.is_active', true)
@@ -571,7 +571,7 @@ class LabourRepository
 				  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 				  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 				  ->leftJoin('users', 'labour.user_id', '=', 'users.id')
-				  ->where('labour.is_approved', '1')
+				  ->where('labour.is_approved', '3')
 				  ->where('labour.is_resubmitted', '1')
 				  ->where('labour.user_id',$sess_user_id)
 				  ->where('registrationstatus.is_active', true)
@@ -1185,12 +1185,30 @@ class LabourRepository
 	public function updateLabourStatus($request)
 	{
 		// dd($request);
-		$user_data = Labour::where('id',$request['edit_id']) 
+		if($request['is_approved']=='2')
+		{
+			$user_data = Labour::where('id',$request['edit_id']) 
+						->update([
+							'is_approved' => $request['is_approved'],
+							'is_resubmitted' => '0',
+						]);
+		}else if($request['is_approved']=='3' && $request['other_remark']!='')		
+		{
+			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
 							'is_approved' => $request['is_approved'],
 							'reason_id' => $request['reason_id'],
 							'other_remark' => $request['other_remark']
 						]);
+		}
+		else if($request['is_approved']=='3' && $request['other_remark']=='')		
+		{
+			$user_data = Labour::where('id',$request['edit_id']) 
+						->update([
+							'is_approved' => $request['is_approved'],
+							'reason_id' => $request['reason_id']
+						]);
+		}			
 		
 		// $this->updateRolesPermissions($request, $request->edit_id);
 		return $request->edit_id;

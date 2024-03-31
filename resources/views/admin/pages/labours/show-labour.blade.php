@@ -256,7 +256,7 @@
                                 </div>
                             </div>
 
-                            @if($labour_detail['data_users_data']['is_approved']=='1' && $labour_detail['data_users_data']['is_resubmitted']=='1')    
+                            @if($labour_detail['data_users_data']['is_approved']=='3' && $labour_detail['data_users_data']['is_resubmitted']=='1')    
                             <div class="row mt-4">
                                 <div class="col-12 grid-margin">
                                     <div class="card">
@@ -299,7 +299,74 @@
                             </div>
                         @endif
 
-                        @if($labour_detail['data_users_data']['is_approved']=='1' && session()->get('role_id')=='2')    
+
+                        @if(($labour_detail['data_users_data']['is_approved']=='3' && session()->get('role_id')=='2' && $labour_detail['data_users_data']['is_resubmitted']=='1'))
+                        <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
+                                        <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
+                                        <form class="forms-sample" id="frm_register" name="frm_register" method="post" role="form"
+                                        action="{{ route('update-labour-status') }}" enctype="multipart/form-data">
+                                        <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
+                                        <input type="hidden" name="edit_id" id="edit_id" value="{{ $labour_detail['data_users_data']['id'] }}" />
+                                        <div class="row">
+                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="is_approved">Registartion Status</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="is_approved" id="is_approved">
+                                                        <option value="">Select Status</option>
+
+                                                        @foreach ($dynamic_registrationstatus as $registration_status_data)
+                                                    <option value="{{ $registration_status_data['id'] }}">
+                                                        {{ $registration_status_data['status_name'] }}</option>
+                                                @endforeach    
+                                                    </select>
+                                                    @if ($errors->has('is_approved'))
+                                                        <span class="red-text"><?php echo $errors->first('is_approved', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-3 col-sm-3" id="reason_div">
+                                                <div class="form-group">
+                                                    <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
+                                                    <select class="form-control" name="reason_id" id="reason_id">
+                                                        <option value="">Select Reason</option>
+                                                       
+                                                        <option value="1001">Others</option>
+                                                            @foreach ($dynamic_reasons as $dynamic_reasons_data)
+                                                            <option value="{{ $dynamic_reasons_data['id'] }}">{{ $dynamic_reasons_data['reason_name'] }}</option>
+                                                            @endforeach  
+                                                             
+
+                                                    </select>
+                                                    @if ($errors->has('reason_id'))
+                                                        <span class="red-text"><?php echo $errors->first('reason_id', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6" id="remark_div">
+                                                <div class="form-group">
+                                                    <label for="other_remark">Remark</label>&nbsp<span
+                                                        class="red-text">*</span>
+                                                    <textarea class="form-control other_remark" name="other_remark" id="other_remark"
+                                                        placeholder="Enter the other_remark" name="other_remark"></textarea>
+                                                    @if ($errors->has('other_remark'))
+                                                        <span class="red-text"><?php echo $errors->first('other_remark', ':message'); ?></span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 col-sm-12 text-center">
+                                        <button type="submit" class="btn btn-sm btn-success" id="submitButton" disabled>
+                                            Save &amp; Submit
+                                        </button>
+                                        <span><a href="{{ route('list-projects') }}"
+                                                class="btn btn-sm btn-primary ">Back</a></span>
+                                    </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+
+                        @elseif(($labour_detail['data_users_data']['is_approved']=='1' && session()->get('role_id')=='2'))    
                             <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
                                         <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
                                         <form class="forms-sample" id="frm_register" name="frm_register" method="post" role="form"
@@ -368,8 +435,8 @@
                                     </div>
                                         </div>
                                     </form>
-                                    </div>
-                                    @elseif($labour_detail['data_users_data']['is_approved']=='3' && session()->get('role_id')=='1' || session()->get('role_id')=='2'
+                                </div>
+                        @elseif($labour_detail['data_users_data']['is_approved']=='3' && $labour_detail['data_users_data']['is_resubmitted']=='0' && session()->get('role_id')=='1' || session()->get('role_id')=='2'
                                     || session()->get('role_id')=='3')    
                                     <div class="col-lg-12 col-md-12 col-sm-12 mt-4" style="border: 1px solid #040479;padding: 2%;">
                                         <h5 class="d-flex justify-content-center mb-4">Labour Verification</h5>
