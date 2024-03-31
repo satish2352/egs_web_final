@@ -337,7 +337,7 @@ class OfficerController extends Controller
         try {
             $user = Auth::user()->id;
 info('$user');
-info($user->id);
+info($user);
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                 ->where('users.id', $user)
                 ->first();
