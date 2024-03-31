@@ -273,7 +273,7 @@ class ReportsController extends Controller
      
         $ProjectId = $request->input('ProjectId');
         $SkillId = $request->input('SkillId');
-        $RegistrationStatusId = $request->input('RegistrationStatusId');
+        // $RegistrationStatusId = $request->input('RegistrationStatusId');
 
             if($sess_user_role=='1')
 		{
@@ -298,16 +298,16 @@ class ReportsController extends Controller
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
         ->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id')
-		// ->where('labour.is_approved', $RegistrationStatusId)
+        ->join('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
 		->where('tbl_mark_attendance.project_id', $ProjectId)
 
-        ->when($request->get('RegistrationStatusId'), function($query) use ($request) {
-            $query->where('labour.is_approved', $request->RegistrationStatusId);
-        })
+        // ->when($request->get('RegistrationStatusId'), function($query) use ($request) {
+        //     $query->where('labour.is_approved', $request->RegistrationStatusId);
+        // })
         
-        ->when($request->get('ProjectId'), function($query) use ($request, $data_user_output) {
-            $query->whereIn('labour.user_id',$data_user_output);
-        })
+        // ->when($request->get('ProjectId'), function($query) use ($request, $data_user_output) {
+        //     $query->whereIn('labour.user_id',$data_user_output);
+        // })
         ->when($request->get('SkillId'), function($query) use ($request) {
             $query->where('labour.skill_id', $request->SkillId);
         })  
@@ -332,8 +332,12 @@ class ReportsController extends Controller
 			'users.f_name',
 			'users.m_name',
 			'users.l_name',
+			'projects.project_name as pro_name',
+			'tbl_mark_attendance.created_at',
           );
 
+//           $sql = $query->toSql();
+// return $sql;
           $data_output = $query->get();
 
 		  }else if($sess_user_role=='2')
@@ -357,12 +361,17 @@ class ReportsController extends Controller
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 				->leftJoin('users', 'labour.user_id', '=', 'users.id')
+                ->leftJoin('tbl_mark_attendance', 'labour.mgnrega_card_id', '=', 'tbl_mark_attendance.mgnrega_card_id')
+                ->join('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
+                ->where('tbl_mark_attendance.project_id', $ProjectId)
                 ->where('registrationstatus.is_active', true)
-                ->where('labour.is_approved', $RegistrationStatusId)
+                ->whereIn('tbl_mark_attendance.user_id',$data_user_output)
+
+                // ->where('labour.is_approved', $RegistrationStatusId)
         
-                ->when($request->get('districtId') || $request->get('talukaId') || $request->get('villageId'), function($query) use ($request, $data_user_output) {
-                    $query->whereIn('labour.user_id',$data_user_output);
-                })
+                // ->when($request->get('districtId') || $request->get('talukaId') || $request->get('villageId'), function($query) use ($request, $data_user_output) {
+                //     $query->whereIn('labour.user_id',$data_user_output);
+                // })
                 ->when($request->get('SkillId'), function($query) use ($request) {
                     $query->where('labour.skill_id', $request->SkillId);
                 })  
@@ -386,8 +395,12 @@ class ReportsController extends Controller
 					'users.f_name',
 					'users.m_name',
 					'users.l_name',
+                    'projects.project_name as pro_name',
+                    // 'tbl_mark_attendance.created_at',
+                    
                 );
-    
+                // $sql = $query->toSql();
+                // return $sql;
                
                $data_output = $query->get();
 

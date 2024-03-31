@@ -169,7 +169,7 @@
             /* font-family: titillium -webkit-body; */
         }
     </style>
-<?php //$data_for_url = session('data_for_url'); ?>
+<?php $data_for_url = session('data_for_url'); ?>
     <div class="main-panel">
         <div class="content-wrapper mt-6">
             <div class="page-header">
@@ -183,12 +183,13 @@
                     </ol>
                 </nav>
             </div>
+
             <div class="row">
-              {{-- @if (isset($status) && $return_data['status'] == 'success')
+              @if (isset($status) && $return_data['status'] == 'success')
                 <div class="alert alert-success" role="alert">
                     {{ $return_data['msg'] }}
                 </div>
-                @endif --}}
+                @endif
                 <div class="col-12 grid-margin">
                     <div class="card">
                         <div class="card-body">
@@ -196,138 +197,38 @@
                                 <div class="col-md-12">
                                     <div class="row ">
 
-                                        <div class="grey-bg container-fluid">
-                                            <section id="minimal-statistics">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-xl-4 col-sm-6 col-12">
-                                                        <div class="card">
-                                                            <div class="card-content dashboard_Card2">
-                                                                <div class="card-body">
-                                                                    <div class="media d-flex">
-                                                                        <div class="align-self-center icon_color">
-                                                                            <i class="homeIcon2 fas fa-newspaper primary font-large-2 float-left"></i>
-                                                                        </div>
-                                                                        <div class="media-body text-right">
-                                                                            <h3>11</h3>
-                                                                            {{-- <h3>{{$return_data['coursesOffered']}}</h3> --}}
-                                                                            <span>Users</span>
-                                                                        </div>
-                                                                    </div>
+                                        @forelse($return_data as $key => $dashboard)
+                                            @if (in_array($dashboard['url'], $data_for_url))
+                                                <div class="col-xl-3 col-lg-6">
+                                                    <a href="{{ url($dashboard['url']) }}">
+                                                        <div class="card"
+                                                            style="background-color:#{{ str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) . str_pad(dechex(mt_rand(0, 255)), 2, '0', STR_PAD_LEFT) }}">
+                                                            <div class="card-statistic-3 p-4">
+                                                                <div class="card-icon card-icon-large"></div>
+                                                                <div class="mb-4">
+                                                                    <h6 class="mb-0 dash_card_title">
+                                                                        {{ mb_substr($dashboard['permission_name'], 0, 18)}}</h6>
                                                                 </div>
+                                                                <div class="row align-items-center mb-2 d-flex">
+                                                                    <div class="col-8">
+                                                                        <h2 class="d-flex align-items-center mb-0 dash_count">
+                                                                            {{ $dashboard['count'] }}
+                                                                        </h2>
+                                                                    </div>
+                                                                    {{-- <div class="col-4 text-right">
+                                                                    <span>12.5% <i class="fa fa-arrow-up"></i></span>
+                                                                </div> --}}
+                                                                </div>
+                                                               
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                   
-                                                    <div class="col-xl-4 col-sm-6 col-12">
-                                                        <div class="card">
-                                                            <div class="card-content dashboard_Card3">
-                                                                <div class="card-body">
-                                                                    <div class="media d-flex">
-                                                                        <div class="align-self-center icon_color">
-                                                                            <i class="homeIcon3 fas fa-address-card primary font-large-2 float-left"></i>
-                                                                        </div>
-                                                                        <div class="media-body text-right">
-                                                                            <h3>11</h3>
-                                                                            {{-- <h3>{{$return_data['gallary']}}</h3> --}}
-                                                                            <span>Projects</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-6 col-12">
-                                                        <div class="card">
-                                                            <div class="card-content dashboard_Card4">
-                                                                <div class="card-body">
-                                                                    <div class="media d-flex">
-                                                                        <div class="align-self-center icon_color">
-                                                                            <i class="homeIcon4 fa fa-bars primary font-large-2 float-left"></i>
-                                                                        </div>
-                                                                        <div class="media-body text-right">
-                                                                            <h3>11</h3>
-                                                                            {{-- <h3>{{$return_data['galleryCategory']}}</h3> --}}
-                                                                            <span>Labours</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-6 col-12">
-                                                        <div class="card">
-                                                            <div class="card-content dashboard_Card5">
-                                                                <div class="card-body">
-                                                                    <div class="media d-flex">
-                                                                        <div class="align-self-center icon_color">
-                                                                            <i class="homeIcon5 fa fa-bars primary font-large-2 float-left"></i>
-                                                                        </div>
-                                                                        <div class="media-body text-right">
-                                                                            <h3>11</h3>
-                                                                            {{-- <h3>{{$return_data['galleryMain']}}</h3> --}}
-                                                                            <span>District </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-6 col-12">
-                                                        <div class="card">
-                                                            <div class="card-content dashboard_Card6">
-                                                                <div class="card-body">
-                                                                    <div class="media d-flex">
-                                                                        <div class="align-self-center icon_color">
-                                                                            <i class="homeIcon6 fas fa-newspaper primary font-large-2 float-left"></i>
-                                                                        </div>
-                                                                        <div class="media-body text-right">
-                                                                            <h3>11</h3>
-                                                                            {{-- <h3>{{$return_data['upcomingCourses']}}</h3> --}}
-                                                                            <span>Taluka</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4 col-sm-6 col-12">
-                                                        <div class="card">
-                                                            <div class="card-content dashboard_Card7">
-                                                                <div class="card-body">
-                                                                    <div class="media d-flex">
-                                                                        <div class="align-self-center icon_color">
-                                                                            <i class="homeIcon7 fas fa-address-card primary font-large-2 float-left"></i>
-                                                                        </div>
-                                                                        <div class="media-body text-right">
-                                                                            <h3>11</h3>
-                                                                            {{-- <h3>{{$return_data['testimonial']}}</h3> --}}
-                                                                            <span>Village</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    </a>
+                                                </div>
+                                            @endif
+                                        @empty
+                                            <h4>No Data Found For Dashboard</h4>
+                                        @endforelse
 
-                                                    <div class="col-xl-4 col-sm-6 col-12">
-                                                        <div class="card">
-                                                            <div class="card-content dashboard_Card8">
-                                                                <div class="card-body">
-                                                                    <div class="media d-flex">
-                                                                        <div class="align-self-center icon_color">
-                                                                            <i class="homeIcon8 fa fa-bars primary font-large-2 float-left"></i>
-                                                                        </div>
-                                                                        <div class="media-body text-right">
-                                                                            <h3>11</h3>
-                                                                            {{-- <h3>{{$return_data['applicationForm']}}</h3> --}}
-                                                                            <span>Skills</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                   
                                     </div>
                                 </div>
 
@@ -337,4 +238,7 @@
                     </div>
                 </div>
             </div>
+
+            
+           
         @endsection
