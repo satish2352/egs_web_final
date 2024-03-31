@@ -258,7 +258,7 @@ class LabourController extends Controller
                 'labour.other_remark',
                 'registrationstatus.status_name'
 
-                )->get();
+                )->distinct('labour.id')->get();
 
                 foreach ($data_output as $labour) {
                     // Append image paths to the output data
