@@ -235,9 +235,8 @@ class OfficerController extends Controller
             
            
             $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('is_resubmitted', 0)
                 ->where('is_approved', 1)
-                ->update(['is_approved' => 2]); 
+                ->update(['is_approved' => 2,'is_resubmitted'=> 0]); 
                 
     
             if ($updated) {
