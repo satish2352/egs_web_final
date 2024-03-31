@@ -1015,7 +1015,7 @@ class LabourRepository
 
 				$data_labours['data_verification_history'] = HistoryModel::leftJoin('registrationstatus as registrationstatus_labour', 'tbl_history.is_approved', '=', 'registrationstatus_labour.id')
                 ->leftJoin('tbl_reason as tbl_reason_labour', 'tbl_history.reason_id', '=', 'tbl_reason_labour.id')
-                ->where('tbl_history.mgnrega_card_id', $mgnrega_id)
+                ->where('tbl_history.labour_id', $id)
                 ->select('tbl_history.id',
                 'tbl_history.is_approved',
                 'tbl_history.reason_id',
