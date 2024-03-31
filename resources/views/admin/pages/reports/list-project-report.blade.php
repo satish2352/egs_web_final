@@ -28,8 +28,14 @@
                                 <div class="form-group">
                                     <select class="form-control" name="project_id" id="project_id">
                                         <option value="">Select Project</option>
-                                        @foreach ($projects_data as $project_for_data)    
-                                        <option value="{{ $project_for_data['location_id'] }}">{{ $project_for_data['project_name'] }}</option>
+                                        <?php  $cnt=1;?>
+                                        @foreach ($projects_data as $project_for_data) 
+                                        @if($cnt=='1')   
+                                        <option value="{{ $project_for_data['id'] }}" selected>{{ $project_for_data['project_name'] }}</option>
+                                        @else
+                                        <option value="{{ $project_for_data['id'] }}">{{ $project_for_data['project_name'] }}</option>
+                                        @endif
+                                        <?php $cnt++; ?>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('project_id'))
@@ -104,6 +110,7 @@
                                                 placeholder="" value="">
                                                     <th>Sr. No.</th>
                                                     <th>User Name</th>
+                                                    <th>Project Name</th>
                                                     <th>Labour Name</th>
                                                     <th>Mobile Number</th>
                                                     <th>Mgnrega ID</th>
@@ -112,7 +119,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td> 
+                                                      <td></td> 
+                                                      <td></td> 
+                                                      <td></td> 
+                                                      <td></td> 
+                                                      
+                                                    </tr>
+
                                                 
 
                                             </tbody>
@@ -139,7 +157,7 @@
                     e.preventDefault();
                     
                     var ProjectId = $('#project_id').val();
-                    var RegistrationStatusId = $('#registration_status_id').val();
+                    // var RegistrationStatusId = $('#registration_status_id').val();
 
                     if($('#skillorunskill_id').val()=='skill')
                     {
@@ -152,7 +170,9 @@
                     // console.log(talukaId);
                     // $('#village_id').html('<option value="">Select Village</option>');
 
-                    if (ProjectId !== '' || SkillId !== '' || RegistrationStatusId !== '') {
+                    
+
+                    if (ProjectId !== '' || SkillId !== '') {
                         $.ajax({
                             url: '{{ route('list-project-wise-labour-reports') }}',
                             type: 'GET',
@@ -160,17 +180,16 @@
                                 ProjectId: ProjectId,
                                 SkillId: SkillId,
                                 IsApprovedId: IsApprovedId,
-                                RegistrationStatusId: RegistrationStatusId,
                             },
-                            // headers: {
-                            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            // },
                             success: function(response) {
-                                console.log(response.labour_ajax_data);
                                 if (response.labour_ajax_data.length > 0) {
-                                    $('#order-listing tbody').empty();
+                                    // $('#order-listing tbody').empty();
+                                    var table = $('#order-listing').DataTable();
+                                    table.clear().draw(); // Clear existing data
+
                                     
                                     $.each(response.labour_ajax_data, function(index, labour_data) {
+                                        // console.log(index);
                                         index++;
                                         var statusText = "";
                                         if (labour_data.is_approved == '1') {
@@ -180,7 +199,14 @@
                                         } else if (labour_data.is_approved == '3') {
                                             statusText = "Send For Correction";
                                         }
-                                        $('#order-listing tbody').append('<tr><td>' + index +'</td><td>' + labour_data.f_name +' '+ labour_data.m_name +' '+ labour_data.l_name + '</td><td>' + labour_data.full_name + '</td><td>' + labour_data.mobile_number + '</td><td>' + labour_data.mgnrega_card_id + '</td><td>' + statusText+ '</td><td class="d-flex"><a onClick="getData('+ labour_data.id +')" class="show-btn btn btn-sm btn-outline-primary m-1"><i class="fas fa-eye"></i></a></td></tr>');
+                                            table.row.add([ index,
+                                            labour_data.f_name + ' ' + labour_data.m_name + ' ' + labour_data.l_name,
+                                            labour_data.pro_name,
+                                            labour_data.full_name,
+                                            labour_data.mobile_number,
+                                            labour_data.mgnrega_card_id,
+                                            statusText,
+                                            '<a onClick="getData(' + labour_data.id + ')" class="show-btn btn btn-sm btn-outline-primary m-1"><i class="fas fa-eye"></i></a>']).draw(false);
                                     });
                                 }else{
                                     $('#order-listing tbody').empty();

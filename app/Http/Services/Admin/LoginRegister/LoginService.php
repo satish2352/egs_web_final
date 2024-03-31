@@ -30,6 +30,7 @@ class LoginService
                 $request->session()->put('f_name',$response['user_details']['f_name']);
                 $request->session()->put('m_name',$response['user_details']['m_name']);
                 $request->session()->put('l_name',$response['user_details']['l_name']);
+                $request->session()->put('role_name',$response['user_details']['role_name']);
                 $request->session()->put('permissions',$response['user_permission']);
                 // $request->session()->put('user_agent',$request->userAgent());
                 // $request->session()->put('ip_of_user',$request->ip());

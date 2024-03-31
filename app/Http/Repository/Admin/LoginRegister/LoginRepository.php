@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\ {
     User,
     RolesPermissions,
-    Permissions
+    Permissions,
+    Roles
 };
 use App\dbmodel\Applicant;
 use App\SuperAdmin;
@@ -24,12 +25,14 @@ class LoginRepository
         // dd('hi');
         // get school description
         $data = [];
-        $data['user_details'] = User::where( [
-                                        'email' => $request['email'],
-                                        'is_active' =>true
+        $data['user_details'] = User::leftJoin('roles as user_roles', 'users.role_id', '=', 'user_roles.id')
+                                        ->where( [
+                                        'users.email' => $request['email'],
+                                        'users.is_active' =>true
                                         ])
-                                        ->select('*')
+                                        ->select('users.*','user_roles.id','user_roles.role_name')
                                         ->first();
+                                       
         if($data['user_details']) {
             if($data['user_details']->role_id != '1') {
                 $roles_permissions = RolesPermissions::join('permissions', function($join) {
