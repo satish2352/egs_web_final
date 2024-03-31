@@ -115,9 +115,9 @@ class PermissionsSeeder extends Seeder
                     [
                         'created_at' => \Carbon\Carbon::now(),
                         'updated_at' => \Carbon\Carbon::now(),
-                        'route_name' => 'Labour Listing',
+                        'route_name' => 'Gramsevak Listing',
                         'url' => 'list-gramsevak',
-                        'permission_name' => 'Labour Listing',
+                        'permission_name' => 'Gramsevak Listing',
                     ]);              
     }
 }
