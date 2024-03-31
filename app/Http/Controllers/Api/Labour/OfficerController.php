@@ -346,27 +346,17 @@ class OfficerController extends Controller
             $user_working_tal=$data_output->user_taluka;
             $user_working_vil=$data_output->user_village;
 
-            if($utype=='1')
-            {
-            $data_user_output = User::where('users.user_district', $user_working_dist)
-            ->select('id')
-                ->get()
-				->toArray();
-            }else if($utype=='2')
-            {
-                $data_user_output = User::where('users.user_taluka', $user_working_tal)
-                ->select('id')
-                ->get()
-				->toArray();
-            }else if($utype=='3')
-            {
-                $data_user_output = User::where('users.user_village', $user_working_vil)
-                ->select('id')
-                ->get()
-				->toArray();
-            }         
-            // dd($data_user_output);
-        // dd($user_working_dist);
+            $data_user_output = User::select('id');
+            if($utype=='1') {
+                $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
+            } else if($utype=='2') {
+                $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
+            } else if($utype=='3') {
+                $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
+            }
+
+            $data_user_output = $data_user_output->get()->toArray();  
+
             $counts = Labour::leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->where('users.id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
