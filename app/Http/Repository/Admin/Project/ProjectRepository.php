@@ -211,12 +211,13 @@ class ProjectRepository
 	public function delete($id)
     {
         try {
-            $user = User::find($id);
-            if ($user) {
+            $project = Project::find($id);
+			// dd($project);
+            if ($project) {
               
-                $user->delete();
+                $project->delete();
                
-                return $user;
+                return $project;
             } else {
                 return null;
             }

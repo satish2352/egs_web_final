@@ -96,7 +96,7 @@
                 </div>
             </div>
         </div>
-        <form method="POST" action="{{ url('/delete-users') }}" id="deleteform">
+        <form method="POST" action="{{ url('/delete-projects') }}" id="deleteform">
             @csrf
             <input type="hidden" name="delete_id" id="delete_id" value="">
         </form>
