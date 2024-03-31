@@ -30,7 +30,7 @@ class LoginRepository
                                         'users.email' => $request['email'],
                                         'users.is_active' =>true
                                         ])
-                                        ->select('users.*','user_roles.id','user_roles.role_name')
+                                        ->select('users.*','user_roles.id as rid','user_roles.role_name')
                                         ->first();
                                        
         if($data['user_details']) {
