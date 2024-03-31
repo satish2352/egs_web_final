@@ -549,7 +549,7 @@ class LabourController extends Controller
             $labour_data->voter_image = $voterImageName;
             }
             $labour_data->is_resubmitted = true;
-            $labour_data->is_approved = 3;
+            // $labour_data->is_approved = 3;
             $labour_data->save();
 
             // $familyDetails = [];
