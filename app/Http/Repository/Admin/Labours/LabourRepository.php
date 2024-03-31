@@ -14,7 +14,8 @@ use App\Models\{
 	LabourAttendanceMark,
 	LabourFamilyDetails,
 	GramPanchayatDocuments,
-	HistoryModel
+	HistoryModel,
+	Skills
 };
 use Illuminate\Support\Facades\Mail;
 
@@ -969,6 +970,7 @@ class LabourRepository
 			->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
 			  ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
 			  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+			  ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
 				->where('labour.id', $id)
 				->select('labour.id',
 				'labour.full_name',
@@ -990,7 +992,8 @@ class LabourRepository
 				'labour.is_approved',
 				'labour.reason_id',
 				'labour.other_remark',
-				'labour.is_resubmitted')
+				'labour.is_resubmitted',
+				'skills_labour.skills as skill_name',)
 				->first();
 
 

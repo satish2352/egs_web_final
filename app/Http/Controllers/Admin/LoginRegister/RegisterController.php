@@ -41,6 +41,7 @@ class RegisterController extends Controller {
 
     public function addUsers(){
         $roles = Roles::where('is_active', true)
+                        ->whereNot('id', 1)
                         ->select('id','role_name')
                         ->get()
                         ->toArray();
