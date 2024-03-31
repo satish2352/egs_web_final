@@ -176,7 +176,7 @@
             @endif
 
             @if (in_array('list-gramsevak', $data_for_url))
-          <li class="{{request()->is('list-gramsevak*')
+            <li class="{{request()->is('list-gramsevak*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>
                 <a class="nav-link" href="{{ route('list-gramsevak') }}">
@@ -185,17 +185,6 @@
                 </a>
             </li>
             @endif
-
-            <!-- @if (in_array('list-project-wise-users', $data_for_url))
-            <li class="{{request()->is('list-project-wise-users*')
-                ? 'nav-item active' : 'nav-item' }}">
-                <?php //$currenturl = Request::url(); ?>
-                <a class="nav-link" href="{{ route('list-project-wise-users') }}">
-                    <i class="fas fa-user menu-icon"></i>
-                    <span class="menu-title">Project Users Management</span>
-                </a>
-            </li>
-            @endif -->
 
             <li class="{{request()->is('list-role*') 
                 ? 'nav-item active' : 'nav-item' }}">
