@@ -546,21 +546,6 @@ class LaboursController extends Controller {
 // dd($request);
         $rules = [
             'is_approved' => 'required',
-            // 'u_uname' => 'required',
-            // 'password' => 'required',
-            // 'role_id' => 'required',
-            // 'f_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            // 'm_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            // 'l_name' => 'required|regex:/^[a-zA-Z\s]+$/u|max:255',
-            // 'number' =>  'required|regex:/^[0-9]{10}$/',
-            // 'imei_no' => 'required',
-            // 'aadhar_no' => 'required',
-            // 'address' => ['required','regex:/^(?![0-9\s]+$)[A-Za-z0-9\s\.,#\-\(\)\[\]\{\}]+$/','max:255'],
-            // 'state' => 'required',
-            // 'district' => 'required',
-            // 'taluka' => 'required',
-            // 'village' => 'required',
-            // 'pincode' => 'required|regex:/^[0-9]{6}$/',
          ];       
 
         $messages = [   
@@ -583,6 +568,35 @@ class LaboursController extends Controller {
 
                 if($register_user)
                 {
+
+                    $sess_user_id=session()->get('user_id');
+                    $sess_user_type=session()->get('user_type');
+                    $sess_user_role=session()->get('role_id');
+
+                if($request->is_approved=='3' && $request['other_remark']!='')
+                {    
+                    // Create a history record
+                $history = new HistoryModel();
+                $history->user_id = $sess_user_id; 
+                $history->roles_id = $sess_user_role; 
+                $history->labour_id = $request->edit_id;
+                $history->is_approved = $request->is_approved;
+                $history->reason_id = $request->reason_id; 
+                $history->other_remark = $request->other_remark; 
+                $history->save();
+                }else if($request->is_approved=='3' && $request['other_remark']=='')
+                {    
+                    // Create a history record
+                $history = new HistoryModel();
+                $history->user_id = $sess_user_id; 
+                $history->roles_id = $sess_user_role; 
+                $history->labour_id = $request->edit_id;
+                $history->is_approved = $request->is_approved;
+                $history->reason_id = $request->reason_id; 
+                $history->save();
+                }
+    
+                
                 
                     $msg = $register_user['msg'];
                     $status = $register_user['status'];
