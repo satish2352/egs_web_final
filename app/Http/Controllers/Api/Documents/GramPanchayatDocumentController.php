@@ -60,86 +60,57 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Document Uploaded failed', 'error' => $e->getMessage()], 500);
         }
     }
-    public function getAllDocuments(Request $request){
-    
-        try {
-            $data_output = [];
-
-            $user = Auth::user()->id;
-            $is_approved = '' ;
-
-            if($request->has('is_approved') && $request->is_approved == 'added') {  //1
-                $is_approved = 1 ;
-            } elseif($request->has('is_approved') && $request->is_approved == 'not_approved') { //3
-                $is_approved = 3 ;
-            } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
-                $is_approved = 2 ;
-            } 
-            
-            $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-            ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
-            ->leftJoin('tbl_area as district_u', 'users.user_district', '=', 'district_u.location_id')
-            ->leftJoin('tbl_area as taluka_u', 'users.user_taluka', '=', 'taluka_u.location_id')
-            ->leftJoin('tbl_area as village_u', 'users.user_village', '=', 'village_u.location_id')
-                ->where('tbl_gram_panchayat_documents.user_id', $user)
-                ->when($request->has('document_type_name'), function($query) use ($request) {
-                    $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
-                })
-                ->when($request->has('document_name'), function($query) use ($request) {
-                    $query->where('labour.document_name', 'like', '%' . $request->document_name . '%');
-                })
-                ->when($request->has('is_approved'), function($query) use ($is_approved) {
-                    $query->where('labour.is_approved', $is_approved);
-                });
-                if ($request->has('district_id')) {
-                    $data_output->where('district_u.location_id', $request->input('district_id'));
-                }
-                if ($request->has('taluka_id')) {
-                    $data_output->where('taluka_u.location_id', $request->input('taluka_id'));
-                }
-                if ($request->has('village_id')) {
-                    $data_output->where('village_u.location_id', $request->input('village_id'));
-                }
-                $data_output = $data_output->select(
-                    'tbl_gram_panchayat_documents.id',
-                    'tbl_gram_panchayat_documents.document_name',
-                    'tbl_documenttype.document_type_name',
-                    'tbl_gram_panchayat_documents.document_pdf',
-                    'users.user_district',
-                    'district_u.name as district_name',
-                    'users.user_taluka',
-                    'taluka_u.name as taluka_name',
-                    'users.user_village',
-                    'village_u.name as village_name',
-                    'tbl_gram_panchayat_documents.updated_at',
-                )->get();
-                foreach ($data_output as $document_data) {
-                    $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
-                }
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
-        }
-    }
-
-
-    
-
-
     // public function getAllDocuments(Request $request){
     
     //     try {
+    //         $data_output = [];
+
     //         $user = Auth::user()->id;
+    //         $is_approved = '' ;
+
+    //         if($request->has('is_approved') && $request->is_approved == 'added') {  //1
+    //             $is_approved = 1 ;
+    //         } elseif($request->has('is_approved') && $request->is_approved == 'not_approved') { //3
+    //             $is_approved = 3 ;
+    //         } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
+    //             $is_approved = 2 ;
+    //         } 
+            
     //         $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+    //         ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
+    //         ->leftJoin('tbl_area as district_u', 'users.user_district', '=', 'district_u.location_id')
+    //         ->leftJoin('tbl_area as taluka_u', 'users.user_taluka', '=', 'taluka_u.location_id')
+    //         ->leftJoin('tbl_area as village_u', 'users.user_village', '=', 'village_u.location_id')
     //             ->where('tbl_gram_panchayat_documents.user_id', $user)
     //             ->when($request->has('document_type_name'), function($query) use ($request) {
     //                 $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
     //             })
-    //             ->select(
+    //             ->when($request->has('document_name'), function($query) use ($request) {
+    //                 $query->where('labour.document_name', 'like', '%' . $request->document_name . '%');
+    //             })
+    //             ->when($request->has('is_approved'), function($query) use ($is_approved) {
+    //                 $query->where('labour.is_approved', $is_approved);
+    //             });
+    //             if ($request->has('district_id')) {
+    //                 $data_output->where('district_u.location_id', $request->input('district_id'));
+    //             }
+    //             if ($request->has('taluka_id')) {
+    //                 $data_output->where('taluka_u.location_id', $request->input('taluka_id'));
+    //             }
+    //             if ($request->has('village_id')) {
+    //                 $data_output->where('village_u.location_id', $request->input('village_id'));
+    //             }
+    //             $data_output = $data_output->select(
     //                 'tbl_gram_panchayat_documents.id',
     //                 'tbl_gram_panchayat_documents.document_name',
     //                 'tbl_documenttype.document_type_name',
     //                 'tbl_gram_panchayat_documents.document_pdf',
+    //                 'users.user_district',
+    //                 'district_u.name as district_name',
+    //                 'users.user_taluka',
+    //                 'taluka_u.name as taluka_name',
+    //                 'users.user_village',
+    //                 'village_u.name as village_name',
     //                 'tbl_gram_panchayat_documents.updated_at',
     //             )->get();
     //             foreach ($data_output as $document_data) {
@@ -150,6 +121,35 @@ class GramPanchayatDocumentController extends Controller
     //         return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
     //     }
     // }
+
+
+    
+
+
+    public function getAllDocuments(Request $request){
+    
+        try {
+            $user = Auth::user()->id;
+            $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
+                ->where('tbl_gram_panchayat_documents.user_id', $user)
+                ->when($request->has('document_type_name'), function($query) use ($request) {
+                    $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
+                })
+                ->select(
+                    'tbl_gram_panchayat_documents.id',
+                    'tbl_gram_panchayat_documents.document_name',
+                    'tbl_documenttype.document_type_name',
+                    'tbl_gram_panchayat_documents.document_pdf',
+                    'tbl_gram_panchayat_documents.updated_at',
+                )->get();
+                foreach ($data_output as $document_data) {
+                    $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
+                }
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
+        }
+    }
     public function updateDocuments(Request $request)
     {
         try {
