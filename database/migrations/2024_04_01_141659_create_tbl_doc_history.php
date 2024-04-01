@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('roles_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('grampanchayat_document_id');
+            $table->unsignedBigInteger('gram_document_id');
             $table->unsignedBigInteger('is_approved');
             $table->unsignedBigInteger('reason_doc_id');
             $table->string('other_remark')->nullable();
