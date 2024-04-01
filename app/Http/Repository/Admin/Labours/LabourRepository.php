@@ -602,6 +602,9 @@ class LabourRepository
 
 	public function getLabourAttendanceList() {
 		$sess_user_id=session()->get('user_id');
+
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
 		$date = date('Y-m-d'); 
 
 		$data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
@@ -614,7 +617,7 @@ class LabourRepository
             $user_working_tal=$data_output->user_taluka;
             $user_working_vil=$data_output->user_village;
 
-		if($user_type=='1')
+		if($sess_user_role=='1')
 		{
      	
 		  $data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
@@ -645,7 +648,7 @@ class LabourRepository
 
 			)->get();
 				// dd($data_labour_attendance);
-		  }else if($user_type=='2')
+		  }else if($sess_user_role=='2')
 		  {
 			$data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
 			->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
@@ -676,7 +679,7 @@ class LabourRepository
 
 			)->get();
 
-			}else if($user_type=='3')
+			}else if($sess_user_role=='3')
 			{
 			  $data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
 			  ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
