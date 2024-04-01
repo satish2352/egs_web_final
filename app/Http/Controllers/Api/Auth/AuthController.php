@@ -31,12 +31,12 @@ public function login(Request $request){
 
     $user = User::where('email', $email)->first();
     if (!$user) {
-        return response()->json(['status' => 'False','message' => 'User not found','error' => $e->getMessage()], 200);
+        return response()->json(['status' => 'False','message' => 'User not found'], 200);
     }
 
     // Check if the provided password matches the user's password
     if (!Hash::check($password, $user->password)) {
-        return response()->json(['status' => 'False','message' => 'Invalid password','error' => $e->getMessage()], 200);
+        return response()->json(['status' => 'False','message' => 'Invalid password'], 200);
     }
 
     if ($user->device_id != 'null' && $user->device_id != $device_id) {
