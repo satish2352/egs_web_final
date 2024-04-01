@@ -90,7 +90,7 @@ class GramPanchayatDocumentController extends Controller
                     $query->where('tbl_gram_panchayat_documents.id',$request->gram_document_id);
                 })
                 ->when($request->has('is_approved'), function($query) use ($is_approved) {
-                    $query->where('labour.is_approved', $is_approved);
+                    $query->where('tbl_gram_panchayat_documents.is_approved', $is_approved);
                 });
                 if ($request->has('district_id')) {
                     $data_output->where('district_u.location_id', $request->input('district_id'));
