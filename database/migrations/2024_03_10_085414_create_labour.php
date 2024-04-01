@@ -19,7 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('taluka_id');
             $table->unsignedBigInteger('village_id');
             $table->unsignedBigInteger('skill_id');
-            $table->string('user_type')->default('null');
+            // $table->string('user_type')->default('null');
+            $table->string('landline_number')->nullable();
             $table->string('full_name');
             $table->string('date_of_birth');
             $table->string('mobile_number');
