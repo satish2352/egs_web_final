@@ -73,7 +73,6 @@ Route::group([
         Route::post('/received-doc-list-for-app-notapp', [OfficerGramDocAppNotAppController::class, 'getReceivedDocumentListForAppNotApp']);
         Route::post('/update-officer-document-status-approved', [OfficerGramDocAppNotAppController::class, 'updateDocumentStatusApproved']);
         Route::post('/update-officer-document-status-not-approved', [OfficerGramDocAppNotAppController::class, 'updateDocumentStatusNotApproved']);
-        // Route::post('/particular-document-details', [OfficerGramDocAppNotAppController::class, 'getParticularDocumentDetails']);
 
         
         //    =================Start OfficerController===============
