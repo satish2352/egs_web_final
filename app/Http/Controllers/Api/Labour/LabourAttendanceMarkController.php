@@ -157,38 +157,82 @@ class LabourAttendanceMarkController extends Controller
     }
     
 
-    public function updateAttendanceMark(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'project_id' => 'required',
-                'mgnrega_card_id' => 'required',
-                'attendance_day' => 'required',
+    // public function updateAttendanceMark(Request $request)
+    // {
+    //     try {
+    //         $validator = Validator::make($request->all(), [
+    //             'project_id' => 'required',
+    //             'labour_id' => 'required',
+    //             'attendance_day' => 'required',
             
-            ]);
-            // Check if validation fails
-            if ($validator->fails()) {
-                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
-            }
-            // Find the attendance mark data
-            $attendance_mark_data = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->first();
+    //         ]);
+    //         // Check if validation fails
+    //         if ($validator->fails()) {
+    //             return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+    //         }
+    //         // Find the attendance mark data
+    //         $attendance_mark_data = LabourAttendanceMark::where('id', $request->labour_id)
+    //             ->first();
 
-            // Check if attendance mark data exists
-            if (!$attendance_mark_data) {
-                return response()->json(['status' => 'error', 'message' => 'Attendance mark data not found'], 200);
-            }
-            $attendance_mark_data->project_id = $request->project_id;
-            $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
-            $attendance_mark_data->attendance_day = $request->attendance_day;
+    //         // Check if attendance mark data exists
+    //         if (!$attendance_mark_data) {
+    //             return response()->json(['status' => 'error', 'message' => 'Attendance mark data not found'], 200);
+    //         }
+    //         $attendance_mark_data->project_id = $request->project_id;
+    //         $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
+    //         $attendance_mark_data->attendance_day = $request->attendance_day;
 
-            // Save the updated record
-            $attendance_mark_data->save();
+    //         // Save the updated record
+    //         $attendance_mark_data->save();
 
-            return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $attendance_mark_data], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
+    //         return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $attendance_mark_data], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
+    //     }
+    // }
+
+ 
+public function updateAttendanceMark(Request $request)
+{
+    try {
+        $validator = Validator::make($request->all(), [
+            'project_id' => 'required',
+            'labour_id' => 'required',
+            'attendance_day' => 'required',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
         }
+
+        // Find the attendance mark data by ID
+        $attendance_mark_data = LabourAttendanceMark::find($request->labour_id);
+
+        // Check if attendance mark data exists
+        if (!$attendance_mark_data) {
+            return response()->json(['status' => 'error', 'message' => 'Attendance mark data not found'], 200);
+        }
+
+        // Check if the attendance day matches the current date
+        $current_date = Carbon::now()->toDateString();
+        if ($request->attendance_day != $current_date) {
+            return response()->json(['status' => 'error', 'message' => 'Attendance mark date does not match current date'], 200);
+        }
+
+        // Update the fields
+        $attendance_mark_data->project_id = $request->project_id;
+        $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
+        $attendance_mark_data->attendance_day = $request->attendance_day;
+
+        // Save the updated record
+        $attendance_mark_data->save();
+
+        return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $attendance_mark_data], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
     }
+}
+
 
 }
