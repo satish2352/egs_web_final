@@ -583,12 +583,24 @@ class LabourController extends Controller
     public function countGramsevakLabour(Request $request) {
         try {
             $user = Auth::user();
-        
+
+            $fromDate = date('Y-m-d').' 00:00:01';
+            $toDate =  date('Y-m-d').' 23:59:59';
+
+            // dd(date('Y'));
             $counts = Labour::where('user_id', $user->id)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
                 ->get();
-    
+
+            $todayCount = Labour::where('user_id', $user->id)
+            ->whereDate('updated_at', [$fromDate, $toDate])
+            ->count();
+
+            $currentYearCount = Labour::where('user_id', $user->id)
+            ->whereYear('updated_at', date('Y'))
+            ->count();
+
             // Initialize counters
             $sentForApprovalCount = 0;
             $approvedCount = 0;
@@ -609,6 +621,8 @@ class LabourController extends Controller
             return response()->json([
                 'status' => 'true',
                 'message' => 'Counts retrieved successfully',
+                'today_count' => $todayCount,
+                'current_year_count' => $currentYearCount,
                 'sent_for_approval_count' => $sentForApprovalCount,
                 'approved_count' => $approvedCount,
                 'not_approved_count' => $notApprovedCount
@@ -619,4 +633,9 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }  
+
+
+
+   
+    
 }
