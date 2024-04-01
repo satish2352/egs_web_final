@@ -116,7 +116,7 @@ class LabourController extends Controller
             $labour_data->skill_id = $request->skill_id;
             $labour_data->latitude = $request->latitude;
             $labour_data->longitude = $request->longitude;
-            $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : null;
+            $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : "null";
             $labour_data->save();
 
             $last_insert_id = $labour_data->id;
@@ -635,35 +635,35 @@ class LabourController extends Controller
         }
     }  
 
-
- public function mgnregaCardId(Request $request){
+    public function mgnregaCardIdAlreadyExist(Request $request) {
         try {
-            $user = Auth::user()->id;
-                // Validate the incoming request
             $validator = Validator::make($request->all(), [
-                'mgnrega_card_id' => 'required',
+                'labour_id' => 'required',
+                'mgnrega_card_id' => 'required'
             ]);
     
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
-            
-           
-            $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('is_approved', 1)
-                ->update(['is_approved' => 2,'is_resubmitted'=> 0]); 
-                
     
-            if ($updated) {
-                return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
+            $labour = Labour::where('id', $request->labour_id)->where('is_approved', 2)->first();
+            
+            if (!$labour) {
+                return response()->json(['status' => 'error', 'message' => 'Labour not found or not approved'], 200);
+            }
+    
+            // Assuming you have a field named mgnrega_card_id in your Labour model
+            if ($labour->mgnrega_card_id === $request->mgnrega_card_id) {
+                return response()->json(['status' => 'true', 'message' => 'MGNREGA card ID already exists for this labour'], 200);
             } else {
-                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id'], 200);
+                return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID does not exist for this labour'], 200);
             }
     
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
         }
     }
+    
 
    
     

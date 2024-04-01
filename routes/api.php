@@ -49,6 +49,8 @@ Route::group([
         // Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
        
         Route::post('/gramsevak-count-labour', [LabourController::class, 'countGramsevakLabour']);
+        Route::post('/mgnregacardid-alreadyexist', [LabourController::class, 'mgnregaCardIdAlreadyExist']);
+        
         //=============Start ProjectController=================
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterDataProjectsLaboursMap']);
         // Route::post('/list-project', [ProjectController::class, 'getAllProject']);
