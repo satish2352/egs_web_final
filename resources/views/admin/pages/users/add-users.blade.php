@@ -630,6 +630,34 @@
                     return this.optional(element) || emailRegex.test(value);
                 }, "Please enter a valid email address.");
 
+
+                $(document).ready(function() {
+            $.validator.addMethod("aadharValidation", function(value, element) {
+                console.log('ffffffffffffffffff',value);
+    // Regular expression pattern for Aadhaar number validation
+    var aadhaarPattern = /^\d{12}$/;
+
+    console.log(aadhaarPattern.test(value));
+    // Check if the input matches the pattern
+    if (!aadhaarPattern.test(value)) {
+        return false;
+    }
+console.log('fdfdfdfdfdffd');
+    // Aadhaar checksum validation algorithm
+    var sum = 0;
+    for (var i = 0; i < 11; i++) {
+        sum += parseInt(value.charAt(i)) * (12 - i);
+    }
+    var remainder = sum % 11;
+    if (remainder != 0) {
+        return false;
+    }
+
+    // Aadhaar number is valid
+    return true;
+}, "Invalid Aadhaar number");
+            });
+
                 // Initialize the form validation
                 $("#frm_register").validate({
                     rules: {
@@ -670,7 +698,7 @@
                         },
                         aadhar_no: {
                             required: true,
-                            // aadharValidation: true,
+                            aadharValidation: true,
                         },
                         address: {
                             required: true,
@@ -720,7 +748,7 @@
                         },
                         aadhar_no: {
                             required: "Please Enter the Aadhar No",
-                            // aadharValidation: "Please enter a valid Aadhaar number",
+                            aadharValidation: "Please enter a valid Aadhaar number",
                         },
                         address: {
                             required: "Please Enter the Address",
@@ -746,29 +774,6 @@
                 });
             });
 
-//             $(document).ready(function() {
-//             $.validator.addMethod("aadharValidation", function(value, element) {
-//     // Regular expression pattern for Aadhaar number validation
-//     var aadhaarPattern = /^\d{12}$/;
-
-//     // Check if the input matches the pattern
-//     if (!aadhaarPattern.test(value)) {
-//         return false;
-//     }
-
-//     // Aadhaar checksum validation algorithm
-//     var sum = 0;
-//     for (var i = 0; i < 11; i++) {
-//         sum += parseInt(value.charAt(i)) * (12 - i);
-//     }
-//     var remainder = sum % 11;
-//     if (remainder != 0) {
-//         return false;
-//     }
-
-//     // Aadhaar number is valid
-//     return true;
-// }, "Invalid Aadhaar number");
-//             });
+          
         </script>
     @endsection

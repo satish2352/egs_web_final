@@ -46,21 +46,6 @@
 
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
-                                    <select class="form-control" name="registration_status_id" id="registration_status_id">
-
-                                        <option value="">Select Registration Status</option>
-                                       @foreach ($registration_status_data as $registration_status_for_data)    
-                                        <option value="{{ $registration_status_for_data['id'] }}">{{ $registration_status_for_data['status_name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if ($errors->has('registration_status_id'))
-                                        <span class="red-text"><?php echo $errors->first('registration_status_id', ':message'); ?></span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-3 col-sm-3">
-                                <div class="form-group">
                                     <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
                                         <option value="">Select Skill</option>
                                         <option value="skill">Skill</option>
@@ -157,7 +142,6 @@
                     e.preventDefault();
                     
                     var ProjectId = $('#project_id').val();
-                    // var RegistrationStatusId = $('#registration_status_id').val();
 
                     if($('#skillorunskill_id').val()=='skill')
                     {

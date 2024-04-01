@@ -27,7 +27,7 @@
                           </p>                      </div>
                   </div>
               </li>
-              <!-- @if (in_array('dashboard', $data_for_url)) -->
+              @if (in_array('dashboard', $data_for_url))
               <li
               class="{{request()->is('dashboard*')
                     ? 'nav-item active' : 'nav-item' }}">
@@ -37,10 +37,10 @@
                       <span class="menu-title">Dashboard</span>
                   </a>
               </li>    
-              <!-- @endif -->
-              <!-- @if (in_array('list-role', $data_for_url) || in_array('list-maritalstatus', $data_for_url) || in_array('list-relation', $data_for_url) ||
+              @endif
+              @if (in_array('list-role', $data_for_url) || in_array('list-maritalstatus', $data_for_url) || in_array('list-relation', $data_for_url) ||
                       in_array('list-gender', $data_for_url) || in_array('list-skills', $data_for_url) || in_array('list-registrationstatus', $data_for_url)
-                      || in_array('list-documenttype', $data_for_url)) -->
+                      || in_array('list-documenttype', $data_for_url))
                   <li class="{{request()->is('list-role*')
                     ? 'nav-item active' : 'nav-item' }}">
                       <a class="{{request()->is('list-role*')
@@ -96,7 +96,7 @@
                           </ul>
                       </div>
                   </li>
-             <!-- @endif -->
+             @endif
 
             <li class="nav-item">
                 <a class="{{request()->is('list-role*')
@@ -174,6 +174,15 @@
                 </a>
             </li>
             @endif
+
+            <li class="{{request()->is('list-gramsevak*')
+                ? 'nav-item active' : 'nav-item' }}">
+                <?php $currenturl = Request::url(); ?>
+                <a class="nav-link" href="{{ route('list-gramsevak') }}">
+                    <i class="fas fa-file-alt fa-lg menu-icon"></i>
+                    <span class="menu-title">Gramsevak Management</span>
+                </a>
+            </li>
 
             @if (in_array('list-gramsevak', $data_for_url))
             <li class="{{request()->is('list-gramsevak*')

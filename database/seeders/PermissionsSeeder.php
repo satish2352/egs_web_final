@@ -18,6 +18,13 @@ class PermissionsSeeder extends Seeder
                 [
                     'created_at' => \Carbon\Carbon::now(),
                     'updated_at' => \Carbon\Carbon::now(),
+                    'route_name' => 'Dashboard',
+                    'url' => 'dashboard',
+                    'permission_name' => 'Dashboard',
+                ]);Permissions::create(
+                [
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now(),
                     'route_name' => 'Gender',
                     'url' => 'list-gender',
                     'permission_name' => 'Gender',
