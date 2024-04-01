@@ -177,7 +177,7 @@ class OfficerGramDocAppNotAppController extends Controller
                     $history->roles_id = $user->role_id; 
                     $history->gram_document_id = $request->gram_document_id;
                     $history->is_approved = $request->is_approved;
-                    $history->reason_id = $request->reason_id; 
+                    $history->reason_doc_id = $request->reason_doc_id; 
                     
                     if ($request->has('other_remark')) {
                         $history->other_remark = $request->other_remark ?: 'null'; // Set to empty string if not provided
