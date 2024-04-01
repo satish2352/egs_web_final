@@ -104,6 +104,14 @@
                                     </div>
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>Skills :</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <label>{{ strip_tags($labour_detail['data_users_data']['skill_name']) }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>District :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
@@ -420,7 +428,7 @@
                                                     <label for="other_remark">Remark</label>&nbsp<span
                                                         class="red-text">*</span>
                                                     <textarea class="form-control other_remark" name="other_remark" id="other_remark"
-                                                        placeholder="Enter the other_remark" name="other_remark">{{ $labour_detail['data_users_data']['other_remark'] }}</textarea>
+                                                        placeholder="Enter the other_remark" name="other_remark"></textarea>
                                                     @if ($errors->has('other_remark'))
                                                         <span class="red-text"><?php echo $errors->first('other_remark', ':message'); ?></span>
                                                     @endif
@@ -469,9 +477,9 @@
                                                     <select class="form-control" name="reason_id" id="reason_id" disabled>
                                                         <option value="">Select Reason</option>
                                                         @if($labour_detail['data_users_data']['reason_id']=='1001')
-                                                        <option value="0" <?php echo 'selected'; ?>>Others</option>
+                                                        <option value="1001" <?php echo 'selected'; ?>>Others</option>
                                                         @else
-                                                        <option value="0">Others</option>
+                                                        <option value="1001">Others</option>
                                                         @endif
                                                             @foreach ($dynamic_reasons as $dynamic_reasons_data)
                                                             <option value="{{ $dynamic_reasons_data['id'] }}"
@@ -488,7 +496,7 @@
                                                 </div>
                                             </div>
                                         @endif
-                                        @if($labour_detail['data_users_data']['reason_id']='1001')
+                                        @if($labour_detail['data_users_data']['reason_id']=='1001')
                                             <div class="col-lg-6 col-md-6 col-sm-6" id="remark_div">
                                                 <div class="form-group">
                                                     <label for="other_remark">Remark</label>&nbsp<span

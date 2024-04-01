@@ -36,13 +36,11 @@ class ReportsController extends Controller
             $sess_user_role=session()->get('role_id');
             $sess_user_working_dist=session()->get('working_dist');
 
-            $district_data = TblArea::where('location_type', 2) // 4 represents cities
-                        ->where('parent_id', '2')
+            $district_data = TblArea::where('parent_id', '2')
                         ->orderBy('name', 'asc')
                         ->get(['location_id', 'name']);
 
-            $taluka_data=TblArea::where('location_type', 3) // 4 represents cities
-                        ->where('parent_id', $sess_user_working_dist)
+            $taluka_data=TblArea::where('parent_id', $sess_user_working_dist)
                         ->orderBy('name', 'asc')
                         ->get(['location_id', 'name']);
 
@@ -78,10 +76,47 @@ class ReportsController extends Controller
     public function getAllProjects()
     {
         try {
-            $projects_data = Project::where('is_active', 1) // 4 represents cities
+            $sess_user_id=session()->get('user_id');
+            $sess_user_type=session()->get('user_type');
+            $sess_user_role=session()->get('role_id');
+
+            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $sess_user_id)
+                ->first();
+
+            $utype=$data_output->user_type;
+            $user_working_dist=$data_output->user_district;
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
+
+			$data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                ->where('users.id', $sess_user_id)
+                ->first();
+
+                if($utype=='1')
+            {
+                $projects_data = Project::where('is_active', 1)
+                        ->where('projects.district',$user_working_dist)
                         ->orderBy('project_name', 'asc')
                         ->get(['id', 'project_name']);
-
+            }else if($utype=='2')
+            {
+                $projects_data = Project::where('is_active', 1)
+                        ->where('projects.taluka',$user_working_tal)
+                        ->orderBy('project_name', 'asc')
+                        ->get(['id', 'project_name']);
+            }else if($utype=='3')
+            {
+                $projects_data = Project::where('is_active', 1)
+                        ->where('projects.village',$user_working_vil)
+                        ->orderBy('project_name', 'asc')
+                        ->get(['id', 'project_name']);
+            }else
+            {
+                $projects_data = Project::where('is_active', 1)
+                        ->orderBy('project_name', 'asc')
+                        ->get(['id', 'project_name']);
+            } 
             $skills_data = Skills::where('is_active', 1) // 4 represents cities
                         ->whereNot('id', '1')
                         ->orderBy('skills', 'asc')

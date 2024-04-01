@@ -91,18 +91,16 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         $user_working_vil=$data_output->user_village;
 
         $data_user_output = User::select('id');
-        if($utype=='1')
-        {
+        if($utype=='1') {
             $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
-        } else if($utype=='2')
-        {
+        } else if($utype=='2') {
             $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
-        } else if($utype=='3')
-        {
+        } else if($utype=='3') {
             $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
         }
 
-        $data_user_output = $data_user_output->get()->toArray();       
+        $data_user_output = $data_user_output->get()->toArray();  
+
         // dd($data_user_output);
             $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
@@ -147,7 +145,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'tbl_mark_attendance.attendance_day',
                     'tbl_mark_attendance.updated_at'
 
-                )->get();
+                )->distinct('tbl_mark_attendance.id')->get();
     
                 foreach ($data_output as $labour) {
                     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
