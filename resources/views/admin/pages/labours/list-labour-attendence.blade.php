@@ -101,14 +101,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3">
-                                <div class="form-group">
-                            <button type="submit" class="btn btn-sm btn-success" id="submitButton">
-                                            Search
-                                        </button>
-                                        </div>
-                            </div>
-                        </div>
+                            
                           @elseif(session()->get('role_id')=='2')
                         <div class="row">
 
@@ -136,7 +129,9 @@
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-3">
+                           
+                          @endif  
+                          <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                             <button type="submit" class="btn btn-sm btn-success" id="submitButton">
                                             Search
@@ -144,8 +139,6 @@
                                         </div>
                             </div>
                         </div>
-                          @endif  
-
 
                             <div class="row">
                                 <div class="col-12">
