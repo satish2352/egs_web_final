@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('grampanchayat_document_id');
             $table->unsignedBigInteger('is_approved');
-            $table->unsignedBigInteger('doc_reason_id');
+            $table->unsignedBigInteger('reason_doc_id');
             $table->string('other_remark')->nullable();
             $table->string('is_deleted')->default(false);
             $table->boolean('is_active')->default(true);
