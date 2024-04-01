@@ -608,7 +608,7 @@ class LabourController extends Controller
             $approvedCount = 0;
             $notApprovedCount = 0;
     
-            /
+            
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {
                     $sentForApprovalCount = $count->count;
