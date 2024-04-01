@@ -11,17 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tbl_gram_panchayat_documents', function (Blueprint $table) {
+        Schema::create('tbl_doc_history', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('roles_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('document_type_id');
-            $table->string('document_name');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('document_pdf')->default('null');
-            $table->boolean('is_approved')->default(true);
-            $table->boolean('is_resubmitted')->default(false);
-            $table->unsignedBigInteger('reason_doc_id')->nullable();
+            $table->unsignedBigInteger('grampanchayat_document_id');
+            $table->unsignedBigInteger('is_approved');
+            $table->unsignedBigInteger('doc_reason_id');
             $table->string('other_remark')->nullable();
             $table->string('is_deleted')->default(false);
             $table->boolean('is_active')->default(true);
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tbl_gram_panchayat_documents');
+        Schema::dropIfExists('tbl_doc_history');
     }
 };

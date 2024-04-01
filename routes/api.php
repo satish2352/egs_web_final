@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Master\ProjectController;
 use App\Http\Controllers\Api\Master\AllMasterController;
 use App\Http\Controllers\Api\Labour\LabourAttendanceMarkController;
 use App\Http\Controllers\Api\Documents\GramPanchayatDocumentController;
+use App\Http\Controllers\Api\Documents\OfficerGramDocAppNotAppController;
 use App\Http\Controllers\Api\Labour\OfficerController;
 
 use App\Http\Controllers\Api\Labour\AttendanceMarkVisibleForOfficerController;
@@ -69,7 +70,11 @@ Route::group([
         Route::post('/download-document', [GramPanchayatDocumentController::class, 'getDownloadDocument']);
         Route::post('/list-document-officer', [GramPanchayatDocumentController::class, 'getAllDocumentsOfficer']);
         Route::post('/count-gramsevak-document', [GramPanchayatDocumentController::class, 'countGramsevakLabourDocument']);
-        
+        Route::post('/received-doc-list-for-app-notapp', [OfficerGramDocAppNotAppController::class, 'getReceivedDocumentListForAppNotApp']);
+        Route::post('/update-officer-document-status-approved', [OfficerGramDocAppNotAppController::class, 'updateDocumentStatusApproved']);
+        Route::post('/update-officer-document-status-not-approved', [OfficerGramDocAppNotAppController::class, 'updateDocumentStatusNotApproved']);
+        // Route::post('/particular-document-details', [OfficerGramDocAppNotAppController::class, 'getParticularDocumentDetails']);
+
         
         //    =================Start OfficerController===============
         Route::post('/list-labour-received-to-officer-for-approval', [OfficerController::class, 'getSendApprovedLabourListOfficer']);
