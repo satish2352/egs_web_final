@@ -618,5 +618,5 @@ class LabourController extends Controller
             // Return error if any exception occurs
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
-    }
+    }  
 }

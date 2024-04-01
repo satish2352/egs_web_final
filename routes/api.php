@@ -66,6 +66,8 @@ Route::group([
         Route::post('/update-document', [GramPanchayatDocumentController::class, 'updateDocuments']);
         Route::post('/download-document', [GramPanchayatDocumentController::class, 'getDownloadDocument']);
         Route::post('/list-document-officer', [GramPanchayatDocumentController::class, 'getAllDocumentsOfficer']);
+        Route::post('/count-gramsevak-document', [GramPanchayatDocumentController::class, 'countGramsevakLabourDocument']);
+        
         
         //    =================Start OfficerController===============
         Route::post('/list-labour-received-to-officer-for-approval', [OfficerController::class, 'getSendApprovedLabourListOfficer']);

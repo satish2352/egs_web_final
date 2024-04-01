@@ -251,11 +251,25 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Document retrieval failed', 'error' => $e->getMessage()], 500);
         }
     }
+    public function countGramsevakLabourDocument(Request $request) {
+        try {
+            $user = Auth::user();
     
-    //$headers = array(
-        //             'Content-Type: application/pdf',
-        //           );
-      
-        //           return response()->download(rtrim($filePath,"\\"), 'filename.pdf', $headers);
+            $documentCount = GramPanchayatDocuments::where('user_id', $user->id)
+                ->count();
     
+            return response()->json([
+                'status' => 'true',
+                'message' => 'Counts retrieved successfully',
+                'document_count' => $documentCount,
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'false',
+                'message' => 'Error occurred',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
