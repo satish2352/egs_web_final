@@ -849,20 +849,6 @@ class LaboursController extends Controller {
 
             if($sess_user_role=='1')
 		{
-            // $query_user = User::where('users.role_id','3')
-            //     ->select('id');
-            //     if ($request->filled('districtId')) {
-            //         $query_user->where('users.user_district', $districtId);
-            //     }
-            //     if ($request->filled('talukaId')) {
-            //         $query_user->where('users.user_taluka', $talukaId);
-            //     }
-            //     if ($request->filled('villageId')) {
-            //         $query_user->where('users.user_village', $villageId);
-            //     }
-
-            //     $data_user_output=$query_user->get();
-
 
                 $query = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
                 ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
@@ -953,7 +939,53 @@ class LaboursController extends Controller {
                
                $data_output = $query->get();
 
-            }
+            } else if($sess_user_role=='3')
+            {
+  
+                  $query = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+                  ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
+                  ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
+                  ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
+                  ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
+                  ->where('tbl_mark_attendance.user_id', $sess_user_id)
+                  ->when($request->get('ProjectId'), function($query) use ($request) {
+                      $query->where('tbl_mark_attendance.project_id', $request->ProjectId);
+                  })
+                  ->when($request->get('talukaId'), function($query) use ($request) {
+                      $query->where('users.user_taluka', $request->talukaId);
+                  })  
+                  ->when($request->get('villageId'), function($query) use ($request) {
+                      $query->where('users.user_village', $request->villageId);
+                  })
+                  ->when($request->filled('FromDate'), function($query) use ($fromDateNew, $toDateNew) {
+                      $query->whereBetween('tbl_mark_attendance.created_at', [$fromDateNew, $toDateNew]);
+                  })
+                  ->select(
+                      'tbl_mark_attendance.id',
+                      'users.f_name',
+                      'tbl_mark_attendance.project_id',
+                      'projects.project_name',
+                      'labour.full_name as full_name',
+                      'labour.date_of_birth',
+                      'labour.mobile_number',
+                      'labour.landline_number',
+                      'labour.mgnrega_card_id',
+                      'users.user_taluka',
+                      'taluka_labour.name as taluka_name',
+                      'users.user_village',
+                      'village_labour.name as village_name',
+                      'labour.latitude',
+                      'labour.longitude',
+                      'labour.profile_image',
+                      'tbl_mark_attendance.attendance_day',
+                      'tbl_mark_attendance.created_at'
+      
+                  );
+      
+                 
+                 $data_output = $query->get();
+  
+              }
                 return response()->json(['labour_attendance_ajax_data' => $data_output]);
 
             // } catch (\Exception $e) {
