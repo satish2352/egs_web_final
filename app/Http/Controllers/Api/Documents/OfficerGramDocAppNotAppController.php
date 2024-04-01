@@ -60,7 +60,7 @@ class OfficerGramDocAppNotAppController extends Controller
                     $is_approved = 2 ;
                 } 
 
-                    $data_output = GramPanchayatDocuments::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+                    $data_output = GramPanchayatDocuments::leftJoin('registrationstatus', 'tbl_gram_panchayat_documents.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
                 ->leftJoin('tbl_area as district_u', 'users.user_district', '=', 'district_u.location_id')
