@@ -116,7 +116,9 @@ class LabourController extends Controller
             $labour_data->skill_id = $request->skill_id;
             $labour_data->latitude = $request->latitude;
             $labour_data->longitude = $request->longitude;
-            $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : 'null';
+            // $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : 'null';
+            $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : '';
+
             $labour_data->save();
 
             $last_insert_id = $labour_data->id;
