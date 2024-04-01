@@ -169,7 +169,6 @@
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->project_name }}</td>
                                                         <td>{{ $item->full_name }}</td>
-                                                        <td>{{ $item->project_name }}</td>
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
                                                         <td>{{ $item->attendance_day }}</td>

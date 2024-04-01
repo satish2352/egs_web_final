@@ -609,11 +609,12 @@ class LabourRepository
                 ->first();
 
 		$user_working_dist=$data_output->user_district;
+		$user_type=$data_output->user_type;
 		// dd($user_working_dist);
             $user_working_tal=$data_output->user_taluka;
             $user_working_vil=$data_output->user_village;
 
-		if($sess_user_id=='1')
+		if($user_type=='1')
 		{
      	
 		  $data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
@@ -644,7 +645,7 @@ class LabourRepository
 
 			)->get();
 				// dd($data_labour_attendance);
-		  }else if($sess_user_id!='1')
+		  }else if($user_type=='2')
 		  {
 			$data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
 			->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
@@ -675,7 +676,39 @@ class LabourRepository
 
 			)->get();
 
-			}	
+			}else if($user_type=='3')
+			{
+			  $data_labour_attendance = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+			  ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
+			  ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
+			  ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
+			  ->leftJoin('tbl_area as village_labour', 'users.user_village', '=', 'village_labour.location_id')
+			  ->where('projects.village', $user_working_vil)
+			  ->whereDate('tbl_mark_attendance.created_at', $date)
+			  ->whereDate('tbl_mark_attendance.user_id', $sess_user_id)
+			  ->select(
+				  'tbl_mark_attendance.id',
+				  'users.f_name',
+				  'tbl_mark_attendance.project_id',
+				  'projects.project_name',
+				  'labour.full_name as full_name',
+				  'labour.date_of_birth',
+				  'labour.mobile_number',
+				  'labour.landline_number',
+				  'labour.mgnrega_card_id',
+				  'users.user_taluka',
+				  'taluka_labour.name as taluka_name',
+				  'users.user_village',
+				  'village_labour.name as village_name',
+				  'labour.latitude',
+				  'labour.longitude',
+				  'labour.profile_image',
+				  'tbl_mark_attendance.attendance_day',
+				  'tbl_mark_attendance.created_at'
+  
+			  )->get();
+  
+			  }		
 			// dd();	
 		return $data_labour_attendance;
 	}
