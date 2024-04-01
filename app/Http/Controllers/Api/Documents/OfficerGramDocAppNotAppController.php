@@ -8,7 +8,8 @@ use Validator;
 use App\Models\ {
     User,
 	Documenttype,
-    GramPanchayatDocuments
+    GramPanchayatDocuments,
+    HistoryDocumentModel
 };
 use Illuminate\Support\Facades\Config;
 use Storage;
@@ -171,7 +172,7 @@ class OfficerGramDocAppNotAppController extends Controller
                     ->update($updateData);
                 if ($updated) {
                     // Create a history record
-                    $history = new HistoryModel();
+                    $history = new HistoryDocumentModel();
                     $history->user_id = $user->id; 
                     $history->roles_id = $user->role_id; 
                     $history->gram_document_id = $request->gram_document_id;
