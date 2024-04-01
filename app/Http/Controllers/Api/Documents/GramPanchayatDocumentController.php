@@ -111,6 +111,7 @@ class GramPanchayatDocumentController extends Controller
                     'taluka_u.name as taluka_name',
                     'users.user_village',
                     'village_u.name as village_name',
+                    'tbl_gram_panchayat_documents.is_approved',
                     'tbl_gram_panchayat_documents.updated_at',
                 )->get();
                 foreach ($data_output as $document_data) {
