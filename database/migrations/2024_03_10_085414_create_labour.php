@@ -19,12 +19,11 @@ return new class extends Migration
             $table->unsignedBigInteger('taluka_id');
             $table->unsignedBigInteger('village_id');
             $table->unsignedBigInteger('skill_id');
-            // $table->string('user_type')->default('null');
-            $table->string('landline_number')->nullable();
+            $table->string('user_type')->default('null');
             $table->string('full_name');
             $table->string('date_of_birth');
             $table->string('mobile_number');
-            $table->string('landline_number')->default('null');
+            $table->string('landline_number')->nullable();
             $table->string('mgnrega_card_id');
             $table->string('latitude');
             $table->string('longitude');
