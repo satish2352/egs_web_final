@@ -147,7 +147,7 @@ class OfficerGramDocAppNotAppController extends Controller
             
                 $validator = Validator::make($request->all(), [
                     'gram_document_id' => 'required',
-                    'doc_reason_id' => 'required',
+                    'reason_doc_id' => 'required',
                     'is_approved' => 'required',
                 ]);
         
@@ -158,7 +158,7 @@ class OfficerGramDocAppNotAppController extends Controller
                 // Update labor entry
                 $updateData = [
                     'is_approved' => 3,
-                    'doc_reason_id' => $request->doc_reason_id, 
+                    'reason_doc_id' => $request->reason_doc_id, 
                 ];
         
                 // Include 'other_remark' in the update data if it's provided
