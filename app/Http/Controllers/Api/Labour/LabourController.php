@@ -587,7 +587,7 @@ class LabourController extends Controller
             $fromDate = date('Y-m-d').' 00:00:01';
             $toDate =  date('Y-m-d').' 23:59:59';
 
-            // dd(date('Y'));
+          
             $counts = Labour::where('user_id', $user->id)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
@@ -595,18 +595,20 @@ class LabourController extends Controller
 
             $todayCount = Labour::where('user_id', $user->id)
             ->whereDate('updated_at', [$fromDate, $toDate])
+            ->where('is_approved', 2)
             ->count();
 
             $currentYearCount = Labour::where('user_id', $user->id)
             ->whereYear('updated_at', date('Y'))
+            ->where('is_approved', 2)
             ->count();
 
-            // Initialize counters
+            
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
     
-            // Counting each status
+            /
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {
                     $sentForApprovalCount = $count->count;
@@ -629,12 +631,39 @@ class LabourController extends Controller
             ], 200);
     
         } catch (\Exception $e) {
-            // Return error if any exception occurs
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }  
 
 
+ public function mgnregaCardId(Request $request){
+        try {
+            $user = Auth::user()->id;
+                // Validate the incoming request
+            $validator = Validator::make($request->all(), [
+                'mgnrega_card_id' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
+            }
+            
+           
+            $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
+                ->where('is_approved', 1)
+                ->update(['is_approved' => 2,'is_resubmitted'=> 0]); 
+                
+    
+            if ($updated) {
+                return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
+            } else {
+                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id'], 200);
+            }
+    
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
+        }
+    }
 
    
     
