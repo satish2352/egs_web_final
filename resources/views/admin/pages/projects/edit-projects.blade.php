@@ -62,6 +62,8 @@
                                             @endif
                                         </div>
                                     </div>
+
+
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="village">Village</label>&nbsp<span class="red-text">*</span>
@@ -188,34 +190,7 @@ function getState(stateId) {
                     });
                 }
             }
-            function getStateDistrict(stateId, district_id) {
-
-                $('#district').html('<option value="">Select District</option>');
-                if (stateId !== '') {
-                    $.ajax({
-                        url: '{{ route('district') }}',
-                        type: 'GET',
-                        data: {
-                            stateId: stateId
-                        },
-
-                        success: function(response) {
-                            if (response.district.length > 0) {
-                                $.each(response.district, function(index, district) {
-                                    $('#district').append('<option value="' + district
-                                        .location_id +
-                                        '" selected>' + district.name + '</option>');
-                                });
-                                if (district_id != null) {
-                                    $('#district').val(district_id);
-                                } else {
-                                    $('#district').val("");
-                                }
-                            }
-                        }
-                    });
-                }
-            }
+          
 
 function getDistrictTaluka(districtId, taluka_id) {
 
@@ -310,7 +285,7 @@ if (talukaId !== '') {
             $(document).ready(function() {
                 myFunction($("#role_id").val());
                 
-                getStateDistrict('{{ $project_data['data_projects']['state'] }}', '{{ $project_data['data_projects']['district'] }}');
+                // getStateDistrict('{{ $project_data['data_projects']['state'] }}', '{{ $project_data['data_projects']['district'] }}');
                 getDistrictTaluka('{{ $project_data['data_projects']['district'] }}', '{{ $project_data['data_projects']['taluka'] }}');
                 getTalukaVillage('{{ $project_data['data_projects']['taluka'] }}', '{{ $project_data['data_projects']['village'] }}');
                 getState('{{ $project_data['data_projects']['state'] }}');

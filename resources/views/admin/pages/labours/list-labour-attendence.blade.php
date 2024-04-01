@@ -257,7 +257,7 @@
             });
         </script>
 
-<script>
+        <script>
             $(document).ready(function() {
 
                 $('#submitButton').click(function(e) {

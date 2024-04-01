@@ -139,7 +139,7 @@
                                 </div>
                             </div>
 
-                            iv class="col-lg-3 col-md-3 col-sm-3">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                                     <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
                                         <option value="">Select Skill</option>
