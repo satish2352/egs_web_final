@@ -103,8 +103,25 @@ class OfficerGramDocAppNotAppController extends Controller
                         'registrationstatus.status_name',
                         'tbl_gram_panchayat_documents.updated_at',
                     )->get();
+
                     foreach ($data_output as $document_data) {
                         $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
+                    }
+                    foreach ($data_output as &$documenthistory) {
+                        $documenthistory['history_details'] = HistoryDocumentModel::leftJoin('roles', 'tbl_doc_history.roles_id', '=', 'roles.id')
+                            ->leftJoin('users', 'tbl_doc_history.user_id', '=', 'users.id')
+                            ->leftJoin('tbl_doc_reason', 'tbl_doc_history.reason_doc_id', '=', 'tbl_doc_reason.id')
+                            ->leftJoin('tbl_gram_panchayat_documents', 'tbl_doc_history.gram_document_id', '=', 'tbl_gram_panchayat_documents.id')
+                            ->select(
+                                'tbl_doc_history.id',
+                                'roles.role_name as role_name',
+                                'users.f_name as f_name',
+                                'tbl_doc_reason.reason_name as reason_name',
+                                'tbl_doc_history.other_remark',
+                                'tbl_doc_history.updated_at',
+                            )
+                            ->where('tbl_doc_history.labour_id', $documenthistory['id'])
+                            ->get();
                     }
                 return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
             } catch (\Exception $e) {

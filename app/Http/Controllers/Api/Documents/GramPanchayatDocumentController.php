@@ -8,7 +8,8 @@ use Validator;
 use App\Models\ {
     User,
 	Documenttype,
-    GramPanchayatDocuments
+    GramPanchayatDocuments,
+    HistoryDocumentModel
 };
 use Illuminate\Support\Facades\Config;
 use Storage;
@@ -118,35 +119,29 @@ class GramPanchayatDocumentController extends Controller
                 foreach ($data_output as $document_data) {
                     $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
                 }
+
+                foreach ($data_output as &$documenthistory) {
+                    $documenthistory['history_details'] = HistoryDocumentModel::leftJoin('roles', 'tbl_doc_history.roles_id', '=', 'roles.id')
+                        ->leftJoin('users', 'tbl_doc_history.user_id', '=', 'users.id')
+                        ->leftJoin('tbl_doc_reason', 'tbl_doc_history.reason_doc_id', '=', 'tbl_doc_reason.id')
+                        ->leftJoin('tbl_gram_panchayat_documents', 'tbl_doc_history.gram_document_id', '=', 'tbl_gram_panchayat_documents.id')
+                        ->select(
+                            'tbl_doc_history.id',
+                            'roles.role_name as role_name',
+                            'users.f_name as f_name',
+                            'tbl_doc_reason.reason_name as reason_name',
+                            'tbl_doc_history.other_remark',
+                            'tbl_doc_history.updated_at',
+                        )
+                        ->where('tbl_doc_history.labour_id', $documenthistory['id'])
+                        ->get();
+                }
             return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
         }
     }
-    // public function getAllDocuments(Request $request){
-    
-    //     try {
-    //         $user = Auth::user()->id;
-    //         $data_output = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-    //             ->where('tbl_gram_panchayat_documents.user_id', $user)
-    //             ->when($request->has('document_type_name'), function($query) use ($request) {
-    //                 $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
-    //             })
-    //             ->select(
-    //                 'tbl_gram_panchayat_documents.id',
-    //                 'tbl_gram_panchayat_documents.document_name',
-    //                 'tbl_documenttype.document_type_name',
-    //                 'tbl_gram_panchayat_documents.document_pdf',
-    //                 'tbl_gram_panchayat_documents.updated_at',
-    //             )->get();
-    //             foreach ($data_output as $document_data) {
-    //                 $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
-    //             }
-    //         return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
+   
     public function updateDocuments(Request $request)
     {
         try {
@@ -162,7 +157,9 @@ class GramPanchayatDocumentController extends Controller
             $document_data = GramPanchayatDocuments::where('id', $request->id)
             ->first();
     
-            // Delete old document PDF if it exists
+            $last_insert_id = $document_data->document_name;
+            $documentPdf = $last_insert_id;
+           
             if (!empty($document_data->document_pdf)) {
                 $old_pdf_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_DELETE') . $document_data->document_pdf;
                 if (file_exists_view($old_pdf_path)) {
@@ -170,15 +167,13 @@ class GramPanchayatDocumentController extends Controller
                 }
             }
     
-            // Upload the new document PDF
             $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
-            $new_pdf_name = $request->id . '_' . rand(100000, 999999) . '.' . $request->document_pdf->extension();
-            uploadImage($request, 'document_pdf', $path, $new_pdf_name);
+            uploadImage($request, 'document_pdf', $path, $documentPdf);
     
             // Update document information in the database
             $document_data->document_type_id = $request->document_type_id;
             $document_data->document_name = $request->document_name;
-            $document_data->document_pdf = $new_pdf_name;
+            $document_data->document_pdf =  $documentPdf;
             $document_data->save();
     
             return response()->json(['status' => 'true', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
@@ -186,6 +181,7 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Document updated fail', 'error' => $e->getMessage()], 500);
         }
     }
+    
     public function getAllDocumentsOfficer(Request $request){
         try {
             $user = Auth::user()->id;
