@@ -218,7 +218,7 @@ class GramPanchayatDocumentController extends Controller
     
             // Update document information in the database
             // $document_data->document_type_id = $request->document_type_id;
-            $document_data->document_name = $request->document_name;
+            // $document_data->document_name = $request->document_name;
             $document_data->latitude = $request->latitude;
             $document_data->longitude = $request->longitude;
             $document_data->document_pdf =  $documentPdf;
