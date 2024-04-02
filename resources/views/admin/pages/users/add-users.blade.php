@@ -698,7 +698,7 @@ console.log('fdfdfdfdfdffd');
                         },
                         aadhar_no: {
                             required: true,
-                            aadharValidation: true,
+                           
                         },
                         address: {
                             required: true,
@@ -748,7 +748,7 @@ console.log('fdfdfdfdfdffd');
                         },
                         aadhar_no: {
                             required: "Please Enter the Aadhar No",
-                            aadharValidation: "Please enter a valid Aadhaar number",
+                          
                         },
                         address: {
                             required: "Please Enter the Address",
