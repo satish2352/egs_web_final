@@ -79,7 +79,9 @@ class GramPanchayatDocumentController extends Controller
             } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
                 $is_approved = 2 ;
             } 
-            
+            elseif($request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') { //3
+                $is_resubmitted = 1 ;
+            } 
             $data_output = GramPanchayatDocuments::leftJoin('registrationstatus', 'tbl_gram_panchayat_documents.is_approved', '=', 'registrationstatus.id')
             ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
             ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
@@ -145,10 +147,51 @@ class GramPanchayatDocumentController extends Controller
         }
     }
    
+    // public function updateDocuments(Request $request)
+    // {
+    //     try {
+    //         $validator = Validator::make($request->all(), [
+    //             'document_type_id' => 'required',
+    //             'document_name' => 'required',             
+    //             'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
+    //         ]);
+    
+    //         if ($validator->fails()) {
+    //             return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+    //         }          
+    //         $document_data = GramPanchayatDocuments::where('id', $request->id)
+    //         ->first();
+    
+    //         // $last_insert_id = $document_data->document_name;
+    //         // $documentPdf = $last_insert_id;
+           
+    //         if (!empty($document_data->document_pdf)) {
+    //             $old_pdf_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_DELETE') . $document_data->document_pdf;
+    //             if (file_exists_view($old_pdf_path)) {
+    //                 removeImage($old_pdf_path);
+    //             }
+    //         }
+           
+
+    //         $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
+    //         uploadImage($request, 'document_pdf', $path, $documentPdf);
+    
+    //         // Update document information in the database
+    //         $document_data->document_type_id = $request->document_type_id;
+    //         $document_data->document_name = $request->document_name;
+    //         $document_data->document_pdf =  $documentPdf;
+    //         $document_data->save();
+    
+    //         return response()->json(['status' => 'true', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'false', 'message' => 'Document updated fail', 'error' => $e->getMessage()], 500);
+    //     }
+    // }
     public function updateDocuments(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
+                'id' => 'required', 
                 'document_type_id' => 'required',
                 'document_name' => 'required',             
                 'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
@@ -157,20 +200,20 @@ class GramPanchayatDocumentController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
             }          
-            $document_data = GramPanchayatDocuments::where('id', $request->id)
-            ->first();
+            
+            
+            $document_data = GramPanchayatDocuments::findOrFail($request->id);
     
-            $last_insert_id = $document_data->document_name;
-            $documentPdf = $last_insert_id;
-           
+            
             if (!empty($document_data->document_pdf)) {
                 $old_pdf_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_DELETE') . $document_data->document_pdf;
                 if (file_exists_view($old_pdf_path)) {
                     removeImage($old_pdf_path);
                 }
             }
-    
+           
             $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
+            $documentPdf = $request->document_name; 
             uploadImage($request, 'document_pdf', $path, $documentPdf);
     
             // Update document information in the database
@@ -185,6 +228,7 @@ class GramPanchayatDocumentController extends Controller
         }
     }
     
+
     public function getAllDocumentsOfficer(Request $request){
         try {
             $user = Auth::user()->id;
