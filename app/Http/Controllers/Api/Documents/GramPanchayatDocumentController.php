@@ -193,7 +193,7 @@ class GramPanchayatDocumentController extends Controller
             $validator = Validator::make($request->all(), [
                 'id' => 'required', 
                 // 'document_type_id' => 'required',
-                'document_name' => 'required',             
+                // 'document_name' => 'required',             
                 'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
             ]);
     
