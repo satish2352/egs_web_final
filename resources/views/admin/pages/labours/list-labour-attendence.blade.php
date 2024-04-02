@@ -165,7 +165,13 @@
                                                         <td>{{ $item->full_name }}</td>
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
-                                                        <td>{{ $item->attendance_day }}</td>
+                                                        <td>
+                                                            @if($item->attendance_day=="half_day")
+                                                                Half Day
+                                                            @else
+                                                                Full Day
+                                                            @endif
+                                                        {{ $item->attendance_day }}</td>
                                                         <td>{{ $item->created_at->format('Y-m-d') }}</td>
                                                         
                                                     </tr>
