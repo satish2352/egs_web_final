@@ -9,7 +9,7 @@ use App\Models\ {
     User,
 	Documenttype,
     GramPanchayatDocuments,
-    HistoryDocumentModel
+    HistoryDocumentModel,
 };
 use Illuminate\Support\Facades\Config;
 use Storage;
@@ -120,7 +120,7 @@ class OfficerGramDocAppNotAppController extends Controller
                                 'tbl_doc_history.other_remark',
                                 'tbl_doc_history.updated_at',
                             )
-                            ->where('tbl_doc_history.labour_id', $documenthistory['id'])
+                            ->where('tbl_doc_history.gram_document_id', $documenthistory['id'])
                             ->get();
                     }
                 return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
