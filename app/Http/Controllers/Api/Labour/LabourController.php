@@ -648,14 +648,17 @@ class LabourController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
     
-            $labour = Labour::where('id', $request->labour_id)->where('is_approved', 2)->first();
-            
+            $labour = Labour::where('id', $request->labour_id)->first();
+
             if (!$labour) {
-                return response()->json(['status' => 'error', 'message' => 'Labour not found or not approved'], 200);
+                return response()->json(['status' => 'error', 'message' => 'Labour not found'], 200);
+            }
+
+            if ($labour->is_approved !== 2) {
+                return response()->json(['status' => 'error', 'message' => 'Labour not approved'], 200);
             }
     
-            // Assuming you have a field named mgnrega_card_id in your Labour model
-            if ($labour->mgnrega_card_id === $request->mgnrega_card_id) {
+            if ($labour->mgnrega_card_id == $request->mgnrega_card_id) {
                 return response()->json(['status' => 'true', 'message' => 'MGNREGA card ID already exists for this labour'], 200);
             } else {
                 return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID does not exist for this labour'], 200);

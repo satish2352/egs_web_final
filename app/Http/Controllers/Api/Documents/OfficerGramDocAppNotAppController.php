@@ -67,7 +67,7 @@ class OfficerGramDocAppNotAppController extends Controller
                 ->leftJoin('tbl_area as district_u', 'users.user_district', '=', 'district_u.location_id')
                 ->leftJoin('tbl_area as taluka_u', 'users.user_taluka', '=', 'taluka_u.location_id')
                 ->leftJoin('tbl_area as village_u', 'users.user_village', '=', 'village_u.location_id')
-                    ->where('tbl_gram_panchayat_documents.user_id', $data_user_output)
+                    ->whereIn('tbl_gram_panchayat_documents.user_id', $data_user_output)
                     ->when($request->has('document_type_name'), function($query) use ($request) {
                         $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
                     })
