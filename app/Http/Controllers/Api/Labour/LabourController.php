@@ -612,14 +612,13 @@ class LabourController extends Controller
             ->groupBy('is_approved')
             ->get();
 
-            $sentForApprovalCountDocument = 0;
-            $approvedCountDocument = 0;
-            $notApprovedCountDocument = 0;
-            
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
-    
+
+            $sentForApprovalCountDocument = 0;
+            $approvedCountDocument = 0;
+            $notApprovedCountDocument = 0;
             
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {

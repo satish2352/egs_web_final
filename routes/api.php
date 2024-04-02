@@ -87,7 +87,7 @@ Route::group([
         Route::post('/update-officer-labour-status-not-approved', [OfficerController::class, 'updateLabourStatusNotApproved']);
         Route::post('/update-officer-labour-status-rejected', [OfficerController::class, 'updateLabourStatusRejected']);
 
-        Route::post('/officer-count-labour', [OfficerController::class, 'countOfficerLabour']);
+        Route::post('/officer-reports-count', [OfficerController::class, 'officerReportsCount']);
         Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
 
         Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
