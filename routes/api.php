@@ -49,7 +49,7 @@ Route::group([
         Route::post('/update-labour-second-form', [LabourController::class, 'updateLabourSecondForm']);
         // Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
        
-        Route::post('/gramsevak-reports-count', [LabourController::class, 'gramsevakReportscount']);
+        Route::post('/gramsevak-count-labour', [LabourController::class, 'gramsevakReportscount']);
         Route::post('/mgnregacardid-alreadyexist', [LabourController::class, 'mgnregaCardIdAlreadyExist']);
         
         //=============Start ProjectController=================
@@ -87,7 +87,7 @@ Route::group([
         Route::post('/update-officer-labour-status-not-approved', [OfficerController::class, 'updateLabourStatusNotApproved']);
         Route::post('/update-officer-labour-status-rejected', [OfficerController::class, 'updateLabourStatusRejected']);
 
-        Route::post('/officer-reports-count', [OfficerController::class, 'officerReportsCount']);
+        Route::post('/officer-count-labour', [OfficerController::class, 'officerReportsCount']);
         Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
 
         Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
