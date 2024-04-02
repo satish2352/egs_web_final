@@ -1,8 +1,15 @@
 @extends('admin.layout.master')
 @section('content')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
+        .text-center {
+            text-align: center;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+        }
         .password-toggle {
             cursor: pointer;
             position: absolute;
@@ -15,7 +22,9 @@
             /* display: none; */
         }
     </style>
-    <div class="main-panel">
+</head>
+<body>
+<div class="main-panel">
         <div class="content-wrapper mt-6">
             <div class="page-header">
                 <h3 class="page-title">
@@ -176,44 +185,111 @@
                         </div>
                     </div>
 
-                    <div id="map"></div>
+    </div>
                 </div>
+<div id="map"></div>
+
             </div>
-        </div>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98&callback=initMap"></script>
-        <script>
-            
-        function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 0, lng: 0}, // Default center
-                zoom: 2 // Default zoom
+
+<script>
+    let map, activeInfoWindow, markers = [];
+
+    /* ----------------------------- Initialize Map ----------------------------- */
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: {lat: 19.984001081936558, lng: 73.7814192693961},
+            zoom: 15
+        });
+
+        map.addListener("click", function (event) {
+            mapClicked(event);
+        });
+
+        initMarkers();
+    }
+
+    /* --------------------------- Initialize Markers --------------------------- */
+    function initMarkers() {
+        const initialMarkers = <?php echo json_encode($initialMarkers); ?>;
+// console.log('initialMarkers',initialMarkers);
+        for (let index = 0; index < initialMarkers.length; index++) {
+            const markerData = initialMarkers[index];
+            const marker = new google.maps.Marker({
+                position: markerData.position,
+                label: {
+            text: markerData.label.text,
+            color: markerData.label.color,
+            fontSize: markerData.label.fontSize || '20px', // Default font size if not provided
+            fontFamily: markerData.label.fontFamily || 'Arial', // Default font family if not provided
+            fontWeight: markerData.label.fontWeight || 'bold', // Default font weight if not provided
+            fontStyle: markerData.label.fontStyle || 'normal' // Default font style if not provided
+        },
+                // label: markerData.label,
+                draggable: markerData.draggable,
+                map: map,
+                icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 15, // Adjust size as needed
+            fillColor: 'green', // Adjust color as needed
+            fillOpacity: 10, // Adjust opacity as needed
+            strokeWeight: 0// No border
+        }
+
+            });
+            markers.push(marker);
+
+            const infowindow = new google.maps.InfoWindow({
+                content: `<b>${markerData.position.lat}, ${markerData.position.lng}</b>`
+            });
+            marker.addListener("click", (event) => {
+                if (activeInfoWindow) {
+                    activeInfoWindow.close();
+                }
+
+                infowindow.open({
+                    anchor: marker,
+                    shouldFocus: false,
+                    map: map
+                });
+                activeInfoWindow = infowindow;
+                markerClicked(marker, index);
             });
 
-            // Fetch project data from Laravel backend
-            fetch('{{ route('projects') }}')
-            .then(response => response.json())
-            .then(projects => {
-                projects.forEach(project => {
-                    var marker = new google.maps.Marker({
-                        position: {lat: parseFloat(project.latitude), lng: parseFloat(project.longitude)},
-                        map: map,
-                        title: project.project_name // Assuming you have a 'name' attribute in your Project model
-                    });
-                    console.log(marker);
-                });
+            marker.addListener("dragend", (event) => {
+                markerDragEnd(event, index);
             });
         }
-    </script>
-        <script type="text/javascript">
+    }
+
+    /* ------------------------- Handle Map Click Event ------------------------- */
+    function mapClicked(event) {
+        console.log(map);
+        console.log(event.latLng.lat(), event.latLng.lng());
+    }
+
+    /* ------------------------ Handle Marker Click Event ----------------------- */
+    function markerClicked(marker, index) {
+        console.log(map);
+        console.log(marker.position.lat());
+        console.log(marker.position.lng());
+    }
+
+    /* ----------------------- Handle Marker DragEnd Event ---------------------- */
+    function markerDragEnd(event, index) {
+        console.log(map);
+        console.log(event.latLng.lat());
+        console.log(event.latLng.lng());
+    }
+</script>
+
+<!-- Load the Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIEHb7JkyL1mwS8R24pSdVO4p2Yi_8v98&callback=initMap" async defer></script>
+</body>
+<script type="text/javascript">
             function submitRegister() {
                 document.getElementById("frm_register").submit();
             }
         </script>
-        
-
-
-     
-
         <script>
             $(document).ready(function() {
 
@@ -249,7 +325,7 @@
             });
         </script>
 
-        <script>
+<script>
             $(document).ready(function() {
 
                 $('#taluka').change(function(e) {
@@ -283,28 +359,6 @@
                 });
             });
         </script>
-        <!-- <script>
-            function myFunction(role_id) {
-                // alert(role_id);
-                $("#data_for_role").empty();
-                $.ajax({
-                    url: "{{ route('list-role-wise-permission') }}",
-                    method: "POST",
-                    data: {
-                        "role_id": role_id
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(data) {
-                        $("#data_for_role").empty();
-                        $("#data_for_role").append(data);
-                    },
-                    error: function(data) {}
-                });
-            }
-        </script> -->
-
         <script>
             $(document).ready(function() {
                 // Function to check if all input fields are filled with valid data
@@ -416,3 +470,4 @@
             });
         </script>
     @endsection
+
