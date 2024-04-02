@@ -22,7 +22,7 @@ class OfficerGramDocAppNotAppController extends Controller
             try {
                 $user = Auth::user()->id;
                 $is_approved = '' ;
-
+                $is_resubmitted = ''; 
                 $fromDate = date('Y-m-d', strtotime($request->input('from_date')));
                 $fromDate =  $fromDate.' 00:00:01';
                 $toDate = date('Y-m-d', strtotime($request->input('to_date')));

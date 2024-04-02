@@ -10,7 +10,8 @@ use App\Models\ {
 	Labour,
     User,
     LabourFamilyDetails,
-    HistoryModel
+    HistoryModel,
+    GramPanchayatDocuments
 };
 use Illuminate\Support\Facades\Config;
 use Storage;
@@ -582,7 +583,7 @@ class LabourController extends Controller
         }
     }
     
-    public function countGramsevakLabour(Request $request) {
+    public function gramsevakReportscount(Request $request) {
         try {
             $user = Auth::user();
 
@@ -605,6 +606,15 @@ class LabourController extends Controller
             ->where('is_approved', 2)
             ->count();
 
+
+            $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
+            ->selectRaw('is_approved, COUNT(*) as count')
+            ->groupBy('is_approved')
+            ->get();
+
+            $sentForApprovalCountDocument = 0;
+            $approvedCountDocument = 0;
+            $notApprovedCountDocument = 0;
             
             $sentForApprovalCount = 0;
             $approvedCount = 0;
@@ -620,6 +630,18 @@ class LabourController extends Controller
                     $notApprovedCount = $count->count;
                 }
             }
+
+            foreach ($countsDocument as $countdoc) {
+               if ($countdoc->is_approved == 1) {
+                    $sentForApprovalCountDocument = $countdoc->count;
+                }
+                elseif ($countdoc->is_approved == 2) {
+                    $approvedCountDocument = $countdoc->count;
+                }
+                elseif ($countdoc->is_approved == 3) {
+                    $notApprovedCountDocument = $countdoc->count;
+                }
+            }
     
             // Return the counts in the response
             return response()->json([
@@ -629,7 +651,10 @@ class LabourController extends Controller
                 'current_year_count' => $currentYearCount,
                 'sent_for_approval_count' => $sentForApprovalCount,
                 'approved_count' => $approvedCount,
-                'not_approved_count' => $notApprovedCount
+                'not_approved_count' => $notApprovedCount,
+                'sent_for_approval_document_count' => $sentForApprovalCountDocument,
+                'approved_document_count' => $approvedCountDocument,
+                'not_approved_document_count' => $notApprovedCountDocument
             ], 200);
     
         } catch (\Exception $e) {
