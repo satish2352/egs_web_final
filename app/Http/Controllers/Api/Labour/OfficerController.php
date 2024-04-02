@@ -10,7 +10,8 @@ use App\Models\ {
 	Labour,
     User,
     LabourFamilyDetails,
-    HistoryModel
+    HistoryModel,
+    GramPanchayatDocuments
 };
 use Illuminate\Support\Facades\Config;
 use Storage;
