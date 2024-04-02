@@ -222,6 +222,9 @@ class GramPanchayatDocumentController extends Controller
             $document_data->latitude = $request->latitude;
             $document_data->longitude = $request->longitude;
             $document_data->document_pdf =  $documentPdf;
+            $document_data->is_approved = 1;
+            $document_data->is_resubmitted = true;
+            $document_data->reason_doc_id = null;
             $document_data->save();
     
             return response()->json(['status' => 'true', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
