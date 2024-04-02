@@ -51,6 +51,8 @@ return $data_projects;
     }
 
     public function addProjects(){
+        $sess_user_id=session()->get('user_id');
+
         $permissions = Permissions::where('is_active', true)
                             ->select('id','route_name','permission_name','url')
                             ->get()
@@ -61,11 +63,66 @@ return $data_projects;
                             ->get()
                             ->toArray();
 
+        $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                            ->where('users.id', $sess_user_id)
+                            ->first();
+
+            $user_working_dist=$data_output->user_district;
+            // $user_working_tal=$data_output->user_taluka;
+            // $user_working_vil=$data_output->user_village;
+            $dynamic_projects = Project::where('is_active', 1)
+                            // ->where('projects.district',$user_working_dist)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name','latitude','longitude']);
+            
+            foreach ($dynamic_projects as $pro_data) {
+            // dd($pro_data);          
+
+                $lat = floatval($pro_data['latitude']);
+                $lng = floatval($pro_data['longitude']);
+
+                $initialMarkers[] = [
+                    'position' => [
+                        'lat' => $lat,
+                        'lng' => $lng
+                    ],
+                    'label' => ['color' => 'red', 'text' => $pro_data['project_name']], // Assuming 'P' + id is the label
+                    'draggable' => true // You can change this value based on your requirement
+                ];
+            }
+            // dd($initialMarkers);          
+
+                            // $initialMarkers = [
+                            //     [
+                            //         'position' => [
+                            //             'lat' => 28.625485,
+                            //             'lng' => 79.821091
+                            //         ],
+                            //         'label' => [ 'color' => 'white', 'text' => 'P1' ],
+                            //         'draggable' => true
+                            //     ],
+                            //     [
+                            //         'position' => [
+                            //             'lat' => 28.625293,
+                            //             'lng' => 79.817926
+                            //         ],
+                            //         'label' => [ 'color' => 'white', 'text' => 'P2' ],
+                            //         'draggable' => false
+                            //     ],
+                            //     [
+                            //         'position' => [
+                            //             'lat' => 28.625182,
+                            //             'lng' => 79.81464
+                            //         ],
+                            //         'label' => [ 'color' => 'white', 'text' => 'P3' ],
+                            //         'draggable' => true
+                            //     ]
+                            // ];
             // Map marker code is started from here     
                             
                         // Map marker code is ended here          
     	// return view('admin.pages.users.add-users',compact('roles','permissions','dynamic_state'));
-    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_district'));
+    	return view('admin.pages.projects.add-projects',compact('permissions','dynamic_district','initialMarkers'));
     }
 
     public function getLatitudeLongitude($latitude,$longitude){
