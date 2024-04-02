@@ -60,7 +60,10 @@ class OfficerGramDocAppNotAppController extends Controller
                 } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
                     $is_approved = 2 ;
                 } 
-
+                elseif($request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted' && $request->has('is_approved') && $request->is_approved == 'resend') { 
+                    $is_resubmitted = 1 ;
+                    $is_approved = 1 ;
+                } 
                     $data_output = GramPanchayatDocuments::leftJoin('registrationstatus', 'tbl_gram_panchayat_documents.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
@@ -76,6 +79,9 @@ class OfficerGramDocAppNotAppController extends Controller
                     })
                     ->when($request->has('is_approved'), function($query) use ($is_approved) {
                         $query->where('tbl_gram_panchayat_documents.is_approved', $is_approved);
+                    })
+                    ->when($request->has('is_resubmitted'), function($query) use ($is_resubmitted) {
+                        $query->where('tbl_gram_panchayat_documents.is_resubmitted', $is_resubmitted);
                     })
                     ->when($request->get('from_date'), function($query) use ($fromDate, $toDate) {
                         $query->whereBetween('tbl_gram_panchayat_documents.updated_at', [$fromDate, $toDate]);
@@ -212,5 +218,68 @@ class OfficerGramDocAppNotAppController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
             }
         }
+
+        public function countOfficerDocument(Request $request) {
+            try {
+                $user = Auth::user()->id;
+    
+                $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                    ->where('users.id', $user)
+                    ->first();
+    
+                $utype=$data_output->user_type;
+                $user_working_dist=$data_output->user_district;
+                $user_working_tal=$data_output->user_taluka;
+                $user_working_vil=$data_output->user_village;
+    
+                $data_user_output = User::select('id');
+                if($utype=='1') {
+                    $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
+                } else if($utype=='2') {
+                    $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
+                } else if($utype=='3') {
+                    $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
+                }
+    
+                $data_user_output = $data_user_output->get()->toArray();  
+    
+                $counts = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
+                    ->whereIn('users.id', $data_user_output)
+                    ->selectRaw('is_approved, COUNT(*) as count')
+                    ->groupBy('is_approved')
+                    ->get();
+    
+        
+                // Initialize counters
+                $sentForApprovalCount = 0;
+                $approvedCount = 0;
+                $notApprovedCount = 0;
+        
+                // Counting each status
+                foreach ($counts as $count) {
+                    if ($count->is_approved == 1) {
+                        $sentForApprovalCount = $count->count;
+                    } elseif ($count->is_approved == 2) {
+                        $approvedCount = $count->count;
+                    } elseif ($count->is_approved == 3) {
+                        $notApprovedCount = $count->count;
+                    }
+                }
+        
+                // Return the counts in the response
+                return response()->json([
+                    'status' => 'true',
+                    'message' => 'Counts retrieved successfully',
+                    'sent_for_approval_count' => $sentForApprovalCount,
+                    'approved_count' => $approvedCount,
+                    'not_approved_count' => $notApprovedCount
+                ], 200);
+        
+            } catch (\Exception $e) {
+                // Return error if any exception occurs
+                return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
+            }
+        }
+     
 
 }
