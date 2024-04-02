@@ -363,19 +363,19 @@ class OfficerController extends Controller
                 ->groupBy('is_approved')
                 ->get();
 
-            $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
-            ->selectRaw('is_approved, COUNT(*) as count')
-            ->groupBy('is_approved')
-            ->get();
+            // $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
+            // ->selectRaw('is_approved, COUNT(*) as count')
+            // ->groupBy('is_approved')
+            // ->get();
 
             // Initialize counters
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
     
-            $sentForApprovalCountDocument = 0;
-            $approvedCountDocument = 0;
-            $notApprovedCountDocument = 0;
+            // $sentForApprovalCountDocument = 0;
+            // $approvedCountDocument = 0;
+            // $notApprovedCountDocument = 0;
             // Counting each status
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {
@@ -386,17 +386,17 @@ class OfficerController extends Controller
                     $notApprovedCount = $count->count;
                 }
             }
-            foreach ($countsDocument as $countdoc) {
-                if ($countdoc->is_approved == 1) {
-                     $sentForApprovalCountDocument = $countdoc->count;
-                 }
-                 elseif ($countdoc->is_approved == 2) {
-                     $approvedCountDocument = $countdoc->count;
-                 }
-                 elseif ($countdoc->is_approved == 3) {
-                     $notApprovedCountDocument = $countdoc->count;
-                 }
-             }
+            // foreach ($countsDocument as $countdoc) {
+            //     if ($countdoc->is_approved == 1) {
+            //          $sentForApprovalCountDocument = $countdoc->count;
+            //      }
+            //      elseif ($countdoc->is_approved == 2) {
+            //          $approvedCountDocument = $countdoc->count;
+            //      }
+            //      elseif ($countdoc->is_approved == 3) {
+            //          $notApprovedCountDocument = $countdoc->count;
+            //      }
+            //  }
             // Return the counts in the response
             return response()->json([
                 'status' => 'true',
@@ -404,9 +404,9 @@ class OfficerController extends Controller
                 'sent_for_approval_count' => $sentForApprovalCount,
                 'approved_count' => $approvedCount,
                 'not_approved_count' => $notApprovedCount,
-                'sent_for_approval_document_count' => $sentForApprovalCountDocument,
-                'approved_document_count' => $approvedCountDocument,
-                'not_approved_document_count' => $notApprovedCountDocument
+                // 'sent_for_approval_document_count' => $sentForApprovalCountDocument,
+                // 'approved_document_count' => $approvedCountDocument,
+                // 'not_approved_document_count' => $notApprovedCountDocument
             ], 200);
     
         } catch (\Exception $e) {
