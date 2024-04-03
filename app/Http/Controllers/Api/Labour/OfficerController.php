@@ -407,7 +407,7 @@ class OfficerController extends Controller
             }
     
             foreach ($countsDocument as $countdoc) {
-                if ($countdoc->is_approved == 1 && $countdoc->is_resubmitted == 0) {
+                if ($countdoc->is_resubmitted == 0 && $countdoc->is_approved == 1) {
                     $sentForApprovalCountDocument = $countdoc->count;
                 } elseif ($countdoc->is_approved == 2) {
                     $approvedCountDocument = $countdoc->count;
