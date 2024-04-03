@@ -627,22 +627,13 @@ class LabourController extends Controller
             ->where('is_approved', 1)
             ->count();
 
-            // $resubmittedCount = GramPanchayatDocuments::where('user_id', $user->id)
-            // ->selectRaw('is_approved, COUNT(*) as count')
-            // ->selectRaw('is_resubmitted, COUNT(*) as count')
-            // // ->where('is_approved', 1)
-            // // ->where('is_resubmitted', 1)
-            // ->count();
-
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
            
-
             $sentForApprovalCountDocument = 0;
             $approvedCountDocument = 0;
             $notApprovedCountDocument = 0;
-         
             
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {
@@ -664,9 +655,6 @@ class LabourController extends Controller
                 elseif ($countdoc->is_approved == 3) {
                     $notApprovedCountDocument = $countdoc->count;
                 }
-                // elseif ($count->is_approved == 1 && $count->is_resubmitted == 1) {
-                //     $resubmittedCountDocument = $count->count;
-                // }
             }
     
             // Return the counts in the response

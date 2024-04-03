@@ -78,11 +78,11 @@ Route::group([
         
         
         //    =================Start OfficerController===============
-        Route::post('/list-labour-received-to-officer-for-approval', [OfficerController::class, 'getSendApprovedLabourListOfficer']);
-        Route::post('/list-labour-approved-by-officer', [OfficerController::class, 'getApprovedLabourListOfficer']);
-        Route::post('/list-labour-not-approved-by-officer', [OfficerController::class, 'getNotApprovedLabourListOfficer']);
-        Route::post('/list-labour-resubmitted-to-officer', [OfficerController::class, 'getReSendLabourListOfficer']);
-        Route::post('/list-labour-rejected-by-officer', [OfficerController::class, 'getRejectedLabourListOfficer']);
+        Route::post('/list-labour-received-to-officer-for-approval', [OfficerController::class, 'getLabourStatusListReceived']);
+        // Route::post('/list-labour-approved-by-officer', [OfficerController::class, 'getApprovedLabourListOfficer']);
+        // Route::post('/list-labour-not-approved-by-officer', [OfficerController::class, 'getNotApprovedLabourListOfficer']);
+        // Route::post('/list-labour-resubmitted-to-officer', [OfficerController::class, 'getReSendLabourListOfficer']);
+        // Route::post('/list-labour-rejected-by-officer', [OfficerController::class, 'getRejectedLabourListOfficer']);
 
         Route::post('/update-officer-labour-status-approved', [OfficerController::class, 'updateLabourStatusApproved']);
         Route::post('/update-officer-labour-status-not-approved', [OfficerController::class, 'updateLabourStatusNotApproved']);

@@ -137,9 +137,15 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
         }
     }    
-    public function getLabourStatusListReceived(Request $request, $is_approved){
+    public function getLabourStatusListReceived(Request $request){
         try {
             $user = Auth::user()->id;
+            $is_approved = '' ;
+            $is_resubmitted = ''; 
+            // $fromDate = date('Y-m-d', strtotime($request->input('from_date')));
+            // $fromDate =  $fromDate.' 00:00:01';
+            // $toDate = date('Y-m-d', strtotime($request->input('to_date')));
+            // $toDate =  $toDate.' 23:59:59';
 
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                 ->where('users.id', $user)
@@ -164,19 +170,51 @@ class OfficerController extends Controller
 
             $data_user_output = $data_user_output->get()->toArray();    
             
-                $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+            if($request->has('is_approved') && $request->is_approved == 'added' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') {  //1
+                $is_approved = 1 ;
+                $is_resubmitted = 0 ;
+            } elseif($request->has('is_approved') && $request->is_approved == 'not_approved') { //3
+                $is_approved = 3 ;
+            } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
+                $is_approved = 2 ;
+            } 
+            elseif($request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted' && $request->has('is_approved') && $request->is_approved == 'resend') { 
+                $is_resubmitted = 1 ;
+                $is_approved = 1 ;
+            } 
+                $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+                ->leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                ->whereIn('labour.user_id',$data_user_output)
-                ->where('registrationstatus.is_active', true)
-                ->where('labour.is_approved', $is_approved)
-                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
-                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+                ->whereIn('labour.user_id', $data_user_output)
+                ->when($request->has('document_type_name'), function($query) use ($request) {
+                    $query->where('tbl_documenttype.document_type_name', 'like', '%' . $request->document_type_name . '%');
                 })
-                ->select(
+                ->when($request->has('gram_document_id'), function($query) use ($request) {
+                    $query->where('labour.id',$request->gram_document_id);
+                })
+                ->when($request->has('is_approved'), function($query) use ($is_approved) {
+                    $query->where('labour.is_approved', $is_approved);
+                })
+                ->when($request->has('is_resubmitted'), function($query) use ($is_resubmitted) {
+                    $query->where('labour.is_resubmitted', $is_resubmitted);
+                });
+                // ->when($request->get('from_date'), function($query) use ($fromDate, $toDate) {
+                //     $query->whereBetween('labour.updated_at', [$fromDate, $toDate]);
+                // });
+                if ($request->has('district_id')) {
+                    $data_output->where('district_labour.location_id', $request->input('district_id'));
+                }
+                if ($request->has('taluka_id')) {
+                    $data_output->where('taluka_labour.location_id', $request->input('taluka_id'));
+                }
+                if ($request->has('village_id')) {
+                    $data_output->where('village_labour.location_id', $request->input('village_id'));
+                }
+                $data_output = $data_output->select(
                     'labour.id',
                     'labour.full_name',
                     'labour.date_of_birth',
@@ -197,31 +235,120 @@ class OfficerController extends Controller
                     'labour.longitude',
                     'labour.profile_image',
                     'registrationstatus.status_name',
-                )
-                    ->get()
-					->toArray();
-                   
-                    foreach ($data_labour as &$labour) { 
-                        $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
-                    }
-    
-                    return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
+                )->get();
+
+                foreach ($data_output as &$labour) { 
+                    $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
+                }
+               
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //     try {
+    //         $user = Auth::user()->id;
+
+    //         $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+    //             ->where('users.id', $user)
+    //             ->first();
+
+    //         $utype=$data_output->user_type;
+    //         $user_working_dist=$data_output->user_district;
+    //         $user_working_tal=$data_output->user_taluka;
+    //         $user_working_vil=$data_output->user_village;
+
+    //         $data_user_output = User::select('id');
+    //         if($utype=='1')
+    //         {
+    //             $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
+    //         } else if($utype=='2')
+    //         {
+    //             $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
+    //         } else if($utype=='3')
+    //         {
+    //             $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
+    //         }
+
+    //         $data_user_output = $data_user_output->get()->toArray();    
+            
+    //             $data_labour = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+    //             ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
+    //             ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
+    //             ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
+    //             ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
+    //             ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
+    //             ->whereIn('labour.user_id',$data_user_output)
+    //             ->where('registrationstatus.is_active', true)
+    //             ->where('labour.is_approved', $is_approved)
+    //             ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
+    //                 $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+    //             })
+    //             ->select(
+    //                 'labour.id',
+    //                 'labour.full_name',
+    //                 'labour.date_of_birth',
+    //                 'labour.gender_id',
+    //                 'gender_labour.gender_name as gender_name',
+    //                 'labour.skill_id',
+    //                 'skills_labour.skills as skills',
+    //                 'labour.district_id',
+    //                 'district_labour.name as district_name',
+    //                 'labour.taluka_id',
+    //                 'taluka_labour.name as taluka_name',
+    //                 'labour.village_id',
+    //                 'village_labour.name as village_name',
+    //                 'labour.mobile_number',
+    //                 'labour.landline_number',
+    //                 'labour.mgnrega_card_id',
+    //                 'labour.latitude',
+    //                 'labour.longitude',
+    //                 'labour.profile_image',
+    //                 'registrationstatus.status_name',
+    //             )
+    //                 ->get()
+	// 				->toArray();
+                   
+    //                 foreach ($data_labour as &$labour) { 
+    //                     $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
+    //                 }
+    
+    //                 return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_labour], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'false', 'message' => 'Failed to retrieve labour list','error' => $e->getMessage()], 500);
+    //     }
     }
-    public function getSendApprovedLabourListOfficer(Request $request) {
-        return $this->getLabourStatusListReceived($request, 1);
-    }
-    public function getApprovedLabourListOfficer(Request $request) {
-        return $this->getLabourStatusListReceived($request, 2);
-    }
-    public function getNotApprovedLabourListOfficer(Request $request) {
-        return $this->getLabourStatusListReceived($request, 3);
-    }
-    public function getReSendLabourListOfficer(Request $request) {
-        return $this->getLabourStatusListReceived($request, 1, ['is_resubmitted' => 1]);
-    }
+
+
+
+
+    // public function getSendApprovedLabourListOfficer(Request $request) {
+    //     return $this->getLabourStatusListReceived($request, 1);
+    // }
+    // public function getApprovedLabourListOfficer(Request $request) {
+    //     return $this->getLabourStatusListReceived($request, 2);
+    // }
+    // public function getNotApprovedLabourListOfficer(Request $request) {
+    //     return $this->getLabourStatusListReceived($request, 3);
+    // }
+    // public function getReSendLabourListOfficer(Request $request) {
+    //     return $this->getLabourStatusListReceived($request, 1, ['is_resubmitted' => 1]);
+    // }
 
     // public function getRejectedLabourListOfficer(Request $request) {
     //     return $this->getLabourStatusListReceived($request, 4);
