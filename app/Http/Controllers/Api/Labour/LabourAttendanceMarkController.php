@@ -222,7 +222,7 @@ class LabourAttendanceMarkController extends Controller
         // Check if the time is before 1pm
         $currentTime = date('H:i:s');
         // dd($currentTime);
-        if ($currentTime > '16:00:00') {
+        if ($currentTime > '13:00:00') {
             return response()->json(['status' => 'error', 'message' => 'Attendance can only be updated before 1pm'], 400);
         }
 
