@@ -43,9 +43,6 @@ class GramPanchayatDocumentController extends Controller
             $document_data->document_type_id = $request->document_type_id;
             $document_data->latitude = $request->latitude;
             $document_data->longitude = $request->longitude;
-            $document_data->is_approved = 1;
-            $document_data->is_resubmitted = true;
-            $document_data->reason_doc_id = null;
             $document_data->save();
             $last_insert_id = $document_data->document_name;
             // $documentPdf = $last_insert_id . '_' . rand(100000, 999999) . '_document.pdf';

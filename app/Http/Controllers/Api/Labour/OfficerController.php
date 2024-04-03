@@ -369,6 +369,11 @@ class OfficerController extends Controller
             ->groupBy('is_approved')
             ->get();
 
+            $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
+            ->where('is_approved', 1)
+            ->where('is_resubmitted', 1)
+            ->count();
+
             // Initialize counters
             $sentForApprovalCount = 0;
             $approvedCount = 0;
@@ -377,6 +382,7 @@ class OfficerController extends Controller
             $sentForApprovalCountDocument = 0;
             $approvedCountDocument = 0;
             $notApprovedCountDocument = 0;
+            $resubmittedCountDocument = 0;
             // Counting each status
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {
@@ -397,6 +403,9 @@ class OfficerController extends Controller
                  elseif ($countdoc->is_approved == 3) {
                      $notApprovedCountDocument = $countdoc->count;
                  }
+                 elseif ($count->is_approved == 1 && $count->is_resubmitted == 1) {
+                    $resubmittedCountDocument = $count->count;
+                }
              }
             // Return the counts in the response
             return response()->json([
@@ -407,7 +416,8 @@ class OfficerController extends Controller
                 'not_approved_count' => $notApprovedCount,
                 'sent_for_approval_document_count' => $sentForApprovalCountDocument,
                 'approved_document_count' => $approvedCountDocument,
-                'not_approved_document_count' => $notApprovedCountDocument
+                'not_approved_document_count' => $notApprovedCountDocument,
+                'resubmitted_document_count' => $resubmittedCountDocument
             ], 200);
     
         } catch (\Exception $e) {
