@@ -341,55 +341,60 @@ class OfficerController extends Controller
     public function officerReportsCount(Request $request) {
         try {
             $user = Auth::user()->id;
-
+    
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                 ->where('users.id', $user)
                 ->first();
-
-            $utype=$data_output->user_type;
-            $user_working_dist=$data_output->user_district;
-            $user_working_tal=$data_output->user_taluka;
-            $user_working_vil=$data_output->user_village;
-
+    
+            $utype = $data_output->user_type;
+            $user_working_dist = $data_output->user_district;
+            $user_working_tal = $data_output->user_taluka;
+            $user_working_vil = $data_output->user_village;
+    
             $data_user_output = User::select('id');
-            if($utype=='1') {
-                $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
-            } else if($utype=='2') {
-                $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
-            } else if($utype=='3') {
-                $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
+            if ($utype == '1') {
+                $data_user_output->where('users.user_district', $user_working_dist);
+            } else if ($utype == '2') {
+                $data_user_output->where('users.user_taluka', $user_working_tal);
+            } else if ($utype == '3') {
+                $data_user_output->where('users.user_village', $user_working_vil);
             }
-
-            $data_user_output = $data_user_output->get()->toArray();  
-
+    
+            $data_user_output = $data_user_output->get()->pluck('id');  
+    
             $counts = Labour::leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->whereIn('users.id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
                 ->where('is_resubmitted', 0)
                 ->get();
+                
 
-            $countsDocument = GramPanchayatDocuments::where('user_id', $data_user_output)
-            ->selectRaw('is_approved, COUNT(*) as count')
-            ->groupBy('is_approved')
-            ->get();
-
-            $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
-            ->selectRaw('is_approved, COUNT(*) as count')
-            ->selectRaw('is_resubmitted, COUNT(*) as count')
-            ->groupBy('is_approved')
-            ->groupBy('is_resubmitted')
-            ->count();
-            // dd($resubmittedCount);
+            $countsDocument = GramPanchayatDocuments::whereIn('user_id', $data_user_output)
+                ->selectRaw('is_approved, COUNT(*) as count')
+                ->groupBy('is_approved')
+                ->get();
+    
+                $resubmittedCountLabour = Labour::whereIn('user_id', $data_user_output)
+                ->where('is_resubmitted', 1)
+                ->where('is_approved', 1)
+                ->count();
+                
+            $resubmittedCountDocument = GramPanchayatDocuments::whereIn('user_id', $data_user_output)
+                ->where('is_resubmitted', 1)
+                ->where('is_approved', 1)
+                ->count();
+    
             // Initialize counters
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
-    
+            $resubmittedCountLabour=0;
+
             $sentForApprovalCountDocument = 0;
             $approvedCountDocument = 0;
             $notApprovedCountDocument = 0;
-            $resubmittedCountDocument = 0;
+    
             // Counting each status
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {
@@ -400,24 +405,17 @@ class OfficerController extends Controller
                     $notApprovedCount = $count->count;
                 }
             }
+    
             foreach ($countsDocument as $countdoc) {
-                if ($countdoc->is_approved == 1 && $count->is_approved == 0) {
-                     $sentForApprovalCountDocument = $countdoc->count;
-                 }
-                 elseif ($countdoc->is_approved == 2) {
-                     $approvedCountDocument = $countdoc->count;
-                 }
-                 elseif ($countdoc->is_approved == 3) {
-                     $notApprovedCountDocument = $countdoc->count;
-                 }
-                
-             }
-             foreach ($resubmittedCount as $countdocresend) {
-              if ($countdocresend->is_approved == 1 && $countdocresend->is_resubmitted == 1) {
-                    $resubmittedCountDocument = $countdocresend->count;
+                if ($countdoc->is_approved == 1) {
+                    $sentForApprovalCountDocument = $countdoc->count;
+                } elseif ($countdoc->is_approved == 2) {
+                    $approvedCountDocument = $countdoc->count;
+                } elseif ($countdoc->is_approved == 3) {
+                    $notApprovedCountDocument = $countdoc->count;
                 }
-             }
-
+            }
+    
             // Return the counts in the response
             return response()->json([
                 'status' => 'true',
@@ -425,6 +423,7 @@ class OfficerController extends Controller
                 'sent_for_approval_count' => $sentForApprovalCount,
                 'approved_count' => $approvedCount,
                 'not_approved_count' => $notApprovedCount,
+                'resubmitted_labour_count' => $resubmittedCountLabour,
                 'sent_for_approval_document_count' => $sentForApprovalCountDocument,
                 'approved_document_count' => $approvedCountDocument,
                 'not_approved_document_count' => $notApprovedCountDocument,
@@ -436,6 +435,117 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
+    
+
+//     public function officerReportsCount(Request $request) {
+//         try {
+//             $user = Auth::user()->id;
+
+//             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+//                 ->where('users.id', $user)
+//                 ->first();
+
+//             $utype=$data_output->user_type;
+//             $user_working_dist=$data_output->user_district;
+//             $user_working_tal=$data_output->user_taluka;
+//             $user_working_vil=$data_output->user_village;
+
+//             $data_user_output = User::select('id');
+//             if($utype=='1') {
+//                 $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
+//             } else if($utype=='2') {
+//                 $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
+//             } else if($utype=='3') {
+//                 $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
+//             }
+
+//             $data_user_output = $data_user_output->get()->toArray();  
+
+//             $counts = Labour::leftJoin('users', 'labour.user_id', '=', 'users.id')
+//                 ->whereIn('users.id', $data_user_output)
+//                 ->selectRaw('is_approved, COUNT(*) as count')
+//                 ->groupBy('is_approved')
+//                 ->where('is_resubmitted', 0)
+//                 ->get();
+
+//             $countsDocument = GramPanchayatDocuments::where('user_id', $data_user_output)
+//             ->selectRaw('is_approved, COUNT(*) as count')
+//             ->groupBy('is_approved')
+//             ->get();
+
+//             // $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
+//             // ->selectRaw('is_approved, COUNT(*) as count')
+//             // ->selectRaw('is_resubmitted, COUNT(*) as count')
+//             // ->groupBy('is_approved')
+//             // ->groupBy('is_resubmitted')
+//             // ->count();
+
+
+
+//             $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
+//             ->selectRaw('is_approved, COUNT(*) as count')
+//             ->selectRaw('is_resubmitted, COUNT(*) as count')
+//             ->groupBy('is_approved')
+//             ->groupBy('is_resubmitted')
+//             ->count();
+//             // $resubmittedCountDocument = $resubmittedCount;
+// // dd($resubmittedCount);
+//             // dd($resubmittedCount);
+//             // Initialize counters
+//             $sentForApprovalCount = 0;
+//             $approvedCount = 0;
+//             $notApprovedCount = 0;
+    
+//             $sentForApprovalCountDocument = 0;
+//             $approvedCountDocument = 0;
+//             $notApprovedCountDocument = 0;
+//             $resubmittedCountDocument = 0;
+//             // Counting each status
+//             foreach ($counts as $count) {
+//                 if ($count->is_approved == 1) {
+//                     $sentForApprovalCount = $count->count;
+//                 } elseif ($count->is_approved == 2) {
+//                     $approvedCount = $count->count;
+//                 } elseif ($count->is_approved == 3) {
+//                     $notApprovedCount = $count->count;
+//                 }
+//             }
+//             foreach ($countsDocument as $countdoc) {
+//                 if ($countdoc->is_approved == 1 && $count->is_approved == 0) {
+//                      $sentForApprovalCountDocument = $countdoc->count;
+//                  }
+//                  elseif ($countdoc->is_approved == 2) {
+//                      $approvedCountDocument = $countdoc->count;
+//                  }
+//                  elseif ($countdoc->is_approved == 3) {
+//                      $notApprovedCountDocument = $countdoc->count;
+//                  }
+//              }
+
+//              foreach ($resubmittedCount as $countdocresend) {
+//               if ($countdocresend->is_approved == 1 && $countdocresend->is_resubmitted == 1) {
+//                     $resubmittedCountDocument = $countdocresend->count;
+//                 }
+//              }
+
+//             // Return the counts in the response
+//             return response()->json([
+//                 'status' => 'true',
+//                 'message' => 'Counts retrieved successfully',
+//                 'sent_for_approval_count' => $sentForApprovalCount,
+//                 'approved_count' => $approvedCount,
+//                 'not_approved_count' => $notApprovedCount,
+//                 'sent_for_approval_document_count' => $sentForApprovalCountDocument,
+//                 'approved_document_count' => $approvedCountDocument,
+//                 'not_approved_document_count' => $notApprovedCountDocument,
+//                 'resubmitted_document_count' => $resubmittedCountDocument
+//             ], 200);
+    
+//         } catch (\Exception $e) {
+//             // Return error if any exception occurs
+//             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
+//         }
+//     }
  
     
     

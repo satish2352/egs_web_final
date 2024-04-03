@@ -616,12 +616,15 @@ class LabourController extends Controller
             // ->groupBy('is_approved')
             // ->get();
 
-            $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
-            ->selectRaw('is_approved, COUNT(*) as count')
-            ->selectRaw('is_resubmitted, COUNT(*) as count')
-            ->groupBy('is_approved')
-            ->groupBy('is_resubmitted')
-            ->get();
+            $resubmittedCountLabour = Labour::whereIn('user_id', $user->id)
+            ->where('is_resubmitted', 1)
+            ->where('is_approved', 1)
+            ->count();
+
+            $resubmittedCountDocument = GramPanchayatDocuments::whereIn('user_id', $user->id)
+            ->where('is_resubmitted', 1)
+            ->where('is_approved', 1)
+            ->count();
 
             // $resubmittedCount = GramPanchayatDocuments::where('user_id', $user->id)
             // ->selectRaw('is_approved, COUNT(*) as count')
@@ -633,6 +636,7 @@ class LabourController extends Controller
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
+            $resubmittedCountLabour=0;
 
             $sentForApprovalCountDocument = 0;
             $approvedCountDocument = 0;
@@ -659,9 +663,9 @@ class LabourController extends Controller
                 elseif ($countdoc->is_approved == 3) {
                     $notApprovedCountDocument = $countdoc->count;
                 }
-                elseif ($count->is_approved == 1 && $count->is_resubmitted == 1) {
-                    $resubmittedCountDocument = $count->count;
-                }
+                // elseif ($count->is_approved == 1 && $count->is_resubmitted == 1) {
+                //     $resubmittedCountDocument = $count->count;
+                // }
             }
     
             // Return the counts in the response
@@ -673,6 +677,7 @@ class LabourController extends Controller
                 'sent_for_approval_count' => $sentForApprovalCount,
                 'approved_count' => $approvedCount,
                 'not_approved_count' => $notApprovedCount,
+                'resubmitted_labour_count' => $resubmittedCountLabour,
                 'sent_for_approval_document_count' => $sentForApprovalCountDocument,
                 'approved_document_count' => $approvedCountDocument,
                 'not_approved_document_count' => $notApprovedCountDocument,
