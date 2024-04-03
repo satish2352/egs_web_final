@@ -219,9 +219,13 @@ class OfficerController extends Controller
     public function getNotApprovedLabourListOfficer(Request $request) {
         return $this->getLabourStatusListReceived($request, 3);
     }
-    public function getRejectedLabourListOfficer(Request $request) {
-        return $this->getLabourStatusListReceived($request, 4);
+    public function getReSendLabourListOfficer(Request $request) {
+        return $this->getLabourStatusListReceived($request, 1 ,['is_resubmitted' => 1]);
     }
+
+    // public function getRejectedLabourListOfficer(Request $request) {
+    //     return $this->getLabourStatusListReceived($request, 4);
+    // }
     public function updateLabourStatusApproved(Request $request){
         try {
             $user = Auth::user()->id;
@@ -367,15 +371,16 @@ class OfficerController extends Controller
 
             $countsDocument = GramPanchayatDocuments::where('user_id', $data_user_output)
             ->selectRaw('is_approved, COUNT(*) as count')
+            ->selectRaw('is_resubmitted, COUNT(*) as count')
             ->groupBy('is_approved')
             ->get();
 
-            $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
-            ->selectRaw('is_approved, COUNT(*) as count')
-            ->selectRaw('is_resubmitted, COUNT(*) as count')
+            // $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
+            // ->selectRaw('is_approved, COUNT(*) as count')
+            // ->selectRaw('is_resubmitted, COUNT(*) as count')
             // ->where('is_approved', 1)
             // ->where('is_resubmitted', 1)
-            ->count();
+            // ->count();
 
             // Initialize counters
             $sentForApprovalCount = 0;

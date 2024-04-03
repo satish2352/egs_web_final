@@ -193,8 +193,9 @@ class LabourController extends Controller
             
             $is_approved = '' ;
 
-            if($request->has('is_approved') && $request->is_approved == 'added') {  //1
+            if($request->has('is_approved') && $request->is_approved == 'added' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') {  //1
                 $is_approved = 1 ;
+                $is_resubmitted = 0 ;
             } elseif($request->has('is_approved') && $request->is_approved == 'not_approved') { //3
                 $is_approved = 3 ;
             } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
@@ -213,7 +214,9 @@ class LabourController extends Controller
                 ->when($request->has('is_approved'), function($query) use ($is_approved) {
                     $query->where('labour.is_approved', $is_approved);
                 })
-
+                ->when($request->has('is_resubmitted'), function($query) use ($is_resubmitted) {
+                    $query->where('labour.is_resubmitted', $is_resubmitted);
+                })
                 ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
                     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
                 })
@@ -613,12 +616,17 @@ class LabourController extends Controller
             ->groupBy('is_approved')
             ->get();
 
-            $resubmittedCount = GramPanchayatDocuments::where('user_id', $user->id)
+            $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
             ->selectRaw('is_approved, COUNT(*) as count')
             ->selectRaw('is_resubmitted, COUNT(*) as count')
-            // ->where('is_approved', 1)
-            // ->where('is_resubmitted', 1)
-            ->count();
+            ->groupBy('is_approved')
+            ->get();
+            // $resubmittedCount = GramPanchayatDocuments::where('user_id', $user->id)
+            // ->selectRaw('is_approved, COUNT(*) as count')
+            // ->selectRaw('is_resubmitted, COUNT(*) as count')
+            // // ->where('is_approved', 1)
+            // // ->where('is_resubmitted', 1)
+            // ->count();
 
             $sentForApprovalCount = 0;
             $approvedCount = 0;
