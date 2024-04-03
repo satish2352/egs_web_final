@@ -601,13 +601,14 @@ class LabourController extends Controller
                 ->where('is_resubmitted', 0)
                 ->groupBy('is_approved')
                 ->get();
-    
+
             $todayCount = Labour::where('user_id', $user->id)
-                ->whereDate('updated_at', [$fromDate, $toDate])
+                ->where('updated_at', '>=', $fromDate)
+                ->where('updated_at', '<=', $toDate)
                 ->where('is_approved', 2)
                 ->get()
                 ->count();
-    
+   
             $currentYearCount = Labour::where('user_id', $user->id)
                 ->whereYear('updated_at', date('Y'))
                 ->where('is_approved', 2)

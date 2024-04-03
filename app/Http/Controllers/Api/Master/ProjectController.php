@@ -133,6 +133,7 @@ class ProjectController extends Controller
                 ->leftJoin('tbl_area as taluka_u', 'users.user_taluka', '=', 'taluka_u.location_id')
                 ->leftJoin('tbl_area as village_u', 'users.user_village', '=', 'village_u.location_id')
                 ->where('tbl_gram_panchayat_documents.user_id', $user)
+                ->where('tbl_gram_panchayat_documents.is_approved', 2)
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',

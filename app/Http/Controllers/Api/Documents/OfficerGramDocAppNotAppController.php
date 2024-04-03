@@ -28,15 +28,21 @@ class OfficerGramDocAppNotAppController extends Controller
                 $toDate = date('Y-m-d', strtotime($request->input('to_date')));
                 $toDate =  $toDate.' 23:59:59';
 
+
+
+
                 $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                     ->where('users.id', $user)
                     ->first();
+
+                    
+
 
                 $utype=$data_output->user_type;
                 $user_working_dist=$data_output->user_district;
                 $user_working_tal=$data_output->user_taluka;
                 $user_working_vil=$data_output->user_village;
-
+               
                 $data_user_output = User::select('id');
                 if($utype=='1')
                 {
@@ -51,8 +57,6 @@ class OfficerGramDocAppNotAppController extends Controller
 
                 $data_user_output = $data_user_output->get()->toArray();    
                 
-
-
                 if($request->has('is_approved') && $request->is_approved == 'added' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') {  //1
                     $is_approved = 1 ;
                     $is_resubmitted = 0 ;
@@ -101,6 +105,7 @@ class OfficerGramDocAppNotAppController extends Controller
                         'tbl_gram_panchayat_documents.document_name',
                         'tbl_documenttype.document_type_name',
                         'tbl_gram_panchayat_documents.document_pdf',
+                         User::raw("CONCAT(users.f_name, IFNULL(CONCAT(' ', users.m_name), ''),' ', users.l_name) AS gramsevak_full_name"),
                         'users.user_district',
                         'district_u.name as district_name',
                         'users.user_taluka',
@@ -130,6 +135,7 @@ class OfficerGramDocAppNotAppController extends Controller
                             ->where('tbl_doc_history.gram_document_id', $documenthistory['id'])
                             ->get();
                     }
+                 
                 return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
             } catch (\Exception $e) {
                 return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
