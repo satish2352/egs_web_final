@@ -412,8 +412,8 @@ class OfficerController extends Controller
                  elseif ($countdoc->is_approved == 3) {
                      $notApprovedCountDocument = $countdoc->count;
                  }
-                 elseif ($count->is_approved == 1 && $count->is_resubmitted == 1) {
-                    $resubmittedCountDocument = $count->count;
+                 elseif ($countdoc->is_approved == 1 && $countdoc->is_resubmitted == 1) {
+                    $resubmittedCountDocument = $countdoc->count;
                 }
              }
             // Return the counts in the response
