@@ -379,7 +379,7 @@ class OfficerController extends Controller
                 ->where('is_resubmitted', 1)
                 ->where('is_approved', 1)
                 ->count();
-                
+
             $resubmittedCountDocument = GramPanchayatDocuments::whereIn('user_id', $data_user_output)
                 ->where('is_resubmitted', 1)
                 ->where('is_approved', 1)
@@ -407,7 +407,7 @@ class OfficerController extends Controller
             }
     
             foreach ($countsDocument as $countdoc) {
-                if ($countdoc->is_approved == 1) {
+                if ($countdoc->is_approved == 1 && $countdoc->is_resubmitted == 0) {
                     $sentForApprovalCountDocument = $countdoc->count;
                 } elseif ($countdoc->is_approved == 2) {
                     $approvedCountDocument = $countdoc->count;
