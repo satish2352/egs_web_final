@@ -49,7 +49,7 @@ class LabourController extends Controller
             'village_id' => 'required',
             'skill_id' => 'required',
             'mobile_number' => ['required', 'digits:10'],
-            'mgnrega_card_id' => ['required'],// 'unique:labour'],
+            'mgnrega_card_id' => ['required','unique:labour'],
             'latitude' => ['required', 'between:-90,90'], // Latitude range
             'longitude' => ['required', 'between:-180,180'], // Longitude range
             'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
