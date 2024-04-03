@@ -406,7 +406,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
         }
     }
-   
     public function updateLabourFirstForm(Request $request){
     try {
         $user = Auth::user();
@@ -684,99 +683,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
-    
-    // public function gramsevakReportscount(Request $request) {
-    //     try {
-    //         $user = Auth::user();
-
-    //         $fromDate = date('Y-m-d').' 00:00:01';
-    //         $toDate =  date('Y-m-d').' 23:59:59';
-
-          
-    //         $counts = Labour::where('user_id', $user->id)
-    //             ->selectRaw('is_approved, COUNT(*) as count')
-    //             ->where('is_resubmitted', 0)
-    //             ->groupBy('is_approved')
-    //             ->get();
-
-    //         $todayCount = Labour::where('user_id', $user->id)
-    //         ->whereDate('updated_at', [$fromDate, $toDate])
-    //         ->where('is_approved', 2)
-    //         ->count();
-
-    //         $currentYearCount = Labour::where('user_id', $user->id)
-    //         ->whereYear('updated_at', date('Y'))
-    //         ->where('is_approved', 2)
-    //         ->count();
-
-
-    //         $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
-    //         ->selectRaw('is_approved, COUNT(*) as count')
-    //         ->where('is_resubmitted', 0)
-    //         ->groupBy('is_approved')
-    //         ->get();
-
-    //         $resubmittedCountLabour = Labour::whereIn('user_id', $user->id)
-    //         ->where('is_resubmitted', 1)
-    //         ->where('is_approved', 1)
-    //         ->count();
-
-    //         $resubmittedCountDocument = GramPanchayatDocuments::whereIn('user_id', $user->id)
-    //         ->where('is_resubmitted', 1)
-    //         ->where('is_approved', 1)
-    //         ->count();
-
-    //         $sentForApprovalCount = 0;
-    //         $approvedCount = 0;
-    //         $notApprovedCount = 0;
-           
-    //         $sentForApprovalCountDocument = 0;
-    //         $approvedCountDocument = 0;
-    //         $notApprovedCountDocument = 0;
-            
-    //         foreach ($counts as $count) {
-    //             if ($count->is_approved == 1) {
-    //                 $sentForApprovalCount = $count->count;
-    //             } elseif ($count->is_approved == 2) {
-    //                 $approvedCount = $count->count;
-    //             } elseif ($count->is_approved == 3) {
-    //                 $notApprovedCount = $count->count;
-    //             }
-    //         }
-
-    //         foreach ($countsDocument as $countdoc) {
-    //            if ($countdoc->is_approved == 1 && $countdoc->is_resubmitted == 0) {
-    //                 $sentForApprovalCountDocument = $countdoc->count;
-    //             }
-    //             elseif ($countdoc->is_approved == 2) {
-    //                 $approvedCountDocument = $countdoc->count;
-    //             }
-    //             elseif ($countdoc->is_approved == 3) {
-    //                 $notApprovedCountDocument = $countdoc->count;
-    //             }
-    //         }
-    
-    //         // Return the counts in the response
-    //         return response()->json([
-    //             'status' => 'true',
-    //             'message' => 'Counts retrieved successfully',
-    //             'today_count' => $todayCount,
-    //             'current_year_count' => $currentYearCount,
-    //             'sent_for_approval_count' => $sentForApprovalCount,
-    //             'approved_count' => $approvedCount,
-    //             'not_approved_count' => $notApprovedCount,
-    //             'resubmitted_labour_count' => $resubmittedCountLabour,
-    //             'sent_for_approval_document_count' => $sentForApprovalCountDocument,
-    //             'approved_document_count' => $approvedCountDocument,
-    //             'not_approved_document_count' => $notApprovedCountDocument,
-    //             'resubmitted_document_count' => $resubmittedCountDocument
-    //         ], 200);
-    
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
-    //     }
-    // }  
-
     public function mgnregaCardIdAlreadyExist(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -808,8 +714,5 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
         }
     }
-    
-
-   
     
 }
