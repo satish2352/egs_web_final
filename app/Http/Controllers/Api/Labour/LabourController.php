@@ -594,6 +594,7 @@ class LabourController extends Controller
             $counts = Labour::where('user_id', $user->id)
                 ->selectRaw('is_approved, COUNT(*) as count')
                 ->groupBy('is_approved')
+                ->where('is_resubmitted', 0)
                 ->get();
 
             $todayCount = Labour::where('user_id', $user->id)
