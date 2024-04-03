@@ -196,12 +196,10 @@ class LabourController extends Controller
             if($request->has('is_approved') && $request->is_approved == 'added' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') {  //1
                 $is_approved = 1 ;
                 $is_resubmitted = 0 ;
-            } elseif($request->has('is_approved') && $request->is_approved == 'not_approved' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') { //3
+            } elseif($request->has('is_approved') && $request->is_approved == 'not_approved') { //3
                 $is_approved = 3 ;
-                $is_resubmitted = 0 ;
-            } elseif($request->has('is_approved') && $request->is_approved == 'approved' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') { //3
+            } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
                 $is_approved = 2 ;
-                $is_resubmitted = 0 ;
             } 
             elseif($request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted' && $request->has('is_approved') && $request->is_approved == 'resend') { 
                 $is_resubmitted = 1 ;
