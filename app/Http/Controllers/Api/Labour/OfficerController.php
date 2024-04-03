@@ -365,13 +365,14 @@ class OfficerController extends Controller
             $counts = Labour::leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->whereIn('users.id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
-                ->groupBy('is_approved')
-                // ->where('is_resubmitted', 0)
+                ->where('is_resubmitted', '0')
+                ->groupBy('is_approved')              
                 ->get();
-                
+               
 
             $countsDocument = GramPanchayatDocuments::whereIn('user_id', $data_user_output)
                 ->selectRaw('is_approved, COUNT(*) as count')
+                ->where('is_resubmitted', '0')
                 ->groupBy('is_approved')
                 ->get();
     
@@ -389,7 +390,7 @@ class OfficerController extends Controller
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
-            $resubmittedCountLabour=0;
+            
 
             $sentForApprovalCountDocument = 0;
             $approvedCountDocument = 0;

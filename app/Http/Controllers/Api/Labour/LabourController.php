@@ -596,8 +596,8 @@ class LabourController extends Controller
           
             $counts = Labour::where('user_id', $user->id)
                 ->selectRaw('is_approved, COUNT(*) as count')
-                ->groupBy('is_approved')
                 ->where('is_resubmitted', 0)
+                ->groupBy('is_approved')
                 ->get();
 
             $todayCount = Labour::where('user_id', $user->id)
@@ -611,10 +611,11 @@ class LabourController extends Controller
             ->count();
 
 
-            // $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
-            // ->selectRaw('is_approved, COUNT(*) as count')
-            // ->groupBy('is_approved')
-            // ->get();
+            $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
+            ->selectRaw('is_approved, COUNT(*) as count')
+            ->where('is_resubmitted', 0)
+            ->groupBy('is_approved')
+            ->get();
 
             $resubmittedCountLabour = Labour::whereIn('user_id', $user->id)
             ->where('is_resubmitted', 1)
@@ -636,12 +637,12 @@ class LabourController extends Controller
             $sentForApprovalCount = 0;
             $approvedCount = 0;
             $notApprovedCount = 0;
-            $resubmittedCountLabour=0;
+           
 
             $sentForApprovalCountDocument = 0;
             $approvedCountDocument = 0;
             $notApprovedCountDocument = 0;
-            $resubmittedCountDocument = 0;
+         
             
             foreach ($counts as $count) {
                 if ($count->is_approved == 1) {
