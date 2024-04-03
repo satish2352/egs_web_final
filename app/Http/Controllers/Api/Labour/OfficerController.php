@@ -220,7 +220,7 @@ class OfficerController extends Controller
         return $this->getLabourStatusListReceived($request, 3);
     }
     public function getReSendLabourListOfficer(Request $request) {
-        return $this->getLabourStatusListReceived($request, 1 ,['is_resubmitted' => 1]);
+        return $this->getLabourStatusListReceived($request, 1, ['is_resubmitted' => 1]);
     }
 
     // public function getRejectedLabourListOfficer(Request $request) {
@@ -371,18 +371,16 @@ class OfficerController extends Controller
 
             $countsDocument = GramPanchayatDocuments::where('user_id', $data_user_output)
             ->selectRaw('is_approved, COUNT(*) as count')
+            ->groupBy('is_approved')
+            ->get();
+
+            $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
+            ->selectRaw('is_approved, COUNT(*) as count')
             ->selectRaw('is_resubmitted, COUNT(*) as count')
             ->groupBy('is_approved')
             ->groupBy('is_resubmitted')
-            ->get();
-
-            // $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
-            // ->selectRaw('is_approved, COUNT(*) as count')
-            // ->selectRaw('is_resubmitted, COUNT(*) as count')
-            // ->where('is_approved', 1)
-            // ->where('is_resubmitted', 1)
-            // ->count();
-
+            ->count();
+            // dd($resubmittedCount);
             // Initialize counters
             $sentForApprovalCount = 0;
             $approvedCount = 0;
@@ -412,10 +410,14 @@ class OfficerController extends Controller
                  elseif ($countdoc->is_approved == 3) {
                      $notApprovedCountDocument = $countdoc->count;
                  }
-                 elseif ($countdoc->is_approved == 1 && $countdoc->is_resubmitted == 1) {
-                    $resubmittedCountDocument = $countdoc->count;
+                
+             }
+             foreach ($resubmittedCount as $countdocresend) {
+              if ($countdocresend->is_approved == 1 && $countdocresend->is_resubmitted == 1) {
+                    $resubmittedCountDocument = $countdocresend->count;
                 }
              }
+
             // Return the counts in the response
             return response()->json([
                 'status' => 'true',
