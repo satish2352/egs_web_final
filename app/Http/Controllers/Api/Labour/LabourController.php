@@ -611,16 +611,18 @@ class LabourController extends Controller
             ->count();
 
 
-            $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
-            ->selectRaw('is_approved, COUNT(*) as count')
-            ->groupBy('is_approved')
-            ->get();
+            // $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
+            // ->selectRaw('is_approved, COUNT(*) as count')
+            // ->groupBy('is_approved')
+            // ->get();
 
             $countsDocument = GramPanchayatDocuments::where('user_id', $user->id)
             ->selectRaw('is_approved, COUNT(*) as count')
             ->selectRaw('is_resubmitted, COUNT(*) as count')
             ->groupBy('is_approved')
+            ->groupBy('is_resubmitted')
             ->get();
+
             // $resubmittedCount = GramPanchayatDocuments::where('user_id', $user->id)
             // ->selectRaw('is_approved, COUNT(*) as count')
             // ->selectRaw('is_resubmitted, COUNT(*) as count')

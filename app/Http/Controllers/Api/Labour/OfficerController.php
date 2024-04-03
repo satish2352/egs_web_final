@@ -373,6 +373,7 @@ class OfficerController extends Controller
             ->selectRaw('is_approved, COUNT(*) as count')
             ->selectRaw('is_resubmitted, COUNT(*) as count')
             ->groupBy('is_approved')
+            ->groupBy('is_resubmitted')
             ->get();
 
             // $resubmittedCount = GramPanchayatDocuments::where('user_id', $data_user_output)
