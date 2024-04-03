@@ -614,8 +614,10 @@ class LabourController extends Controller
             ->get();
 
             $resubmittedCount = GramPanchayatDocuments::where('user_id', $user->id)
-            ->where('is_approved', 1)
-            ->where('is_resubmitted', 1)
+            ->selectRaw('is_approved, COUNT(*) as count')
+            ->selectRaw('is_resubmitted, COUNT(*) as count')
+            // ->where('is_approved', 1)
+            // ->where('is_resubmitted', 1)
             ->count();
 
             $sentForApprovalCount = 0;
@@ -638,7 +640,7 @@ class LabourController extends Controller
             }
 
             foreach ($countsDocument as $countdoc) {
-               if ($countdoc->is_approved == 1) {
+               if ($countdoc->is_approved == 1 && $count->is_approved == 0) {
                     $sentForApprovalCountDocument = $countdoc->count;
                 }
                 elseif ($countdoc->is_approved == 2) {
