@@ -192,7 +192,8 @@ class LabourController extends Controller
             $user = Auth::user()->id;
             
             $is_approved = '' ;
-
+            $is_resubmitted = ''; 
+            
             if($request->has('is_approved') && $request->is_approved == 'added' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') {  //1
                 $is_approved = 1 ;
                 $is_resubmitted = 0 ;
