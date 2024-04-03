@@ -201,7 +201,10 @@ class LabourController extends Controller
             } elseif($request->has('is_approved') && $request->is_approved == 'approved') { //3
                 $is_approved = 2 ;
             } 
-            
+            elseif($request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted' && $request->has('is_approved') && $request->is_approved == 'resend') { 
+                $is_resubmitted = 1 ;
+                $is_approved = 1 ;
+            } 
             $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
