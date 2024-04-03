@@ -410,8 +410,10 @@ class GramPanchayatDocumentController extends Controller
             $user = Auth::user();
     
             $documentCount = GramPanchayatDocuments::where('user_id', $user->id)
-                ->count();
-    
+            ->where('is_approved', 2)
+            ->get()
+            ->count();
+           
             return response()->json([
                 'status' => 'true',
                 'message' => 'Counts retrieved successfully',

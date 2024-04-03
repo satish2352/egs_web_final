@@ -70,12 +70,7 @@
                                             {{ $item->document_pdf }}
                                         </a>
                                         </div>
-
-                                        <div class="col-lg-8 col-md-8 col-sm-8">
-                                        <a href="{{ Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') }}{{ $item->document_pdf }}" download target="_blank">
-                                            {{ $item->document_pdf }}
-                                        </a>
-                                        </div>
+                                       
                                     </div>
                                     @endforeach
 
