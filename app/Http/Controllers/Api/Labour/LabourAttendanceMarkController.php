@@ -259,8 +259,14 @@ class LabourAttendanceMarkController extends Controller
         $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
                                         ->whereBetween('updated_at', [$fromDate, $toDate])
                                         ->first();
+        $firstHalfWorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+        ->whereBetween('updated_at', [$fromDate, $toDate])
+        ->first();
 
-                                      
+        $secondHalfWorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+        ->where('updated_at', '>',  date('Y-m-d').' 13:00:00')
+        ->get()->toArray();
+        
     if($firstHalfWorkAttendance) {
         if(date('Y-m-d H:i:s') >  date('Y-m-d').' 13:00:00') {
             if ($existingEntry && $existingEntry->attendance_day == 'full_day' && (count($secondHalfWorkAttendance)<=0)) {
