@@ -32,12 +32,17 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
-            return response()->json([
-                'error' => [
-                    'message' => 'Authentication required. Please provide valid credentials or authentication token.',
-                    'code' => Response::HTTP_UNAUTHORIZED, // Use constant for status code
-                ]
-            ], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['status' => 'false',
+             'message' => 'Authentication required. Please provide valid credentials or authentication token.', 
+             'code' => Response::HTTP_UNAUTHORIZED, // Use constant for status code
+        ],
+            //     [
+            //     'error' => [
+            //         'message' => 'Authentication required. Please provide valid credentials or authentication token.',
+            //         'code' => Response::HTTP_UNAUTHORIZED, // Use constant for status code
+            //     ]
+            // ],
+             Response::HTTP_UNAUTHORIZED);
         }
 
         return redirect()->guest(route('login')); // Redirect to login page for web requests
