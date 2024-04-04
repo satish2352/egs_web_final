@@ -63,6 +63,7 @@ class AuthController extends Controller
             'status' => 'True',
             'message' => 'Login successfully',
             'data' => $user,
+            'token' => $token,
             // 'access_token' => $token,
             'token_type' => 'bearer',
             // 'expires_in' => auth()->factory()->getTTL() * 60 * 24 * 365 * 10, // 10 years

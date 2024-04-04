@@ -203,88 +203,113 @@ class LabourAttendanceMarkController extends Controller
         }
     }
 
-    // public function updateAttendanceMark(Request $request)
-    // {
-    //     try {
-    //         $validator = Validator::make($request->all(), [
-    //             'project_id' => 'required',
-    //             'labour_id' => 'required',
-    //             'attendance_day' => 'required',
+    public function updateAttendanceMark(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'project_id' => 'required',
+                'labour_id' => 'required',
+                'attendance_day' => 'required',
             
-    //         ]);
-    //         // Check if validation fails
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
-    //         }
-    //         // Find the attendance mark data
-    //         $attendance_mark_data = LabourAttendanceMark::where('id', $request->labour_id)
-    //             ->first();
+            ]);
+            // Check if validation fails
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+            }
+            // Find the attendance mark data
+            $attendance_mark_data = LabourAttendanceMark::where('id', $request->labour_id)
+                ->first();
 
-    //         // Check if attendance mark data exists
-    //         if (!$attendance_mark_data) {
-    //             return response()->json(['status' => 'error', 'message' => 'Attendance mark data not found'], 200);
-    //         }
-    //         $attendance_mark_data->project_id = $request->project_id;
-    //         $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
-    //         $attendance_mark_data->attendance_day = $request->attendance_day;
+            // Check if attendance mark data exists
+            if (!$attendance_mark_data) {
+                return response()->json(['status' => 'error', 'message' => 'Attendance mark data not found'], 200);
+            }
+            $attendance_mark_data->project_id = $request->project_id;
+            $attendance_mark_data->mgnrega_card_id = $request->mgnrega_card_id;
+            $attendance_mark_data->attendance_day = $request->attendance_day;
 
-    //         // Save the updated record
-    //         $attendance_mark_data->save();
+            // Save the updated record
+            $attendance_mark_data->save();
 
-    //         return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $attendance_mark_data], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
+            return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $attendance_mark_data], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
+        }
+    }
 
  
-    public function updateAttendanceMark(Request $request)
-{
-    try {
-        $validator = Validator::make($request->all(), [
-            'project_id' => 'required',
-            'mgnrega_card_id' => 'required',
-            'attendance_day' => 'required',
-        ]);
+//     public function updateAttendanceMark(Request $request)
+// {
+//     try {
 
-        // Check if validation fails
-        if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
-        }
+//         $user = Auth::user()->id;
+//         $validator = Validator::make($request->all(), [
+//             'project_id' => 'required',
+//             'mgnrega_card_id' => 'required',
+//             'attendance_day' => 'required',
+//         ]);
 
-        $fromDate = date('Y-m-d') . ' 00:00:01';
-        $toDate = date('Y-m-d') . ' 23:59:59';
+//         // Check if validation fails
+//         if ($validator->fails()) {
+//             return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+//         }
+//         $fromDate = date('Y-m-d').' 00:00:01';
+//         $toDate =  date('Y-m-d').' 23:59:59';
 
-        // Fetch existing entry for the labour
-        $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
-            ->whereBetween('updated_at', [$fromDate, $toDate])
-            ->first();
+//         $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+//                                         ->whereBetween('updated_at', [$fromDate, $toDate])
+//                                         ->first();
 
-        // Check if entry exists
-        if (!$existingEntry) {
-            return response()->json(['status' => 'error', 'message' => 'No attendance record found for the specified labour in day'], 404);
-        }
+//                                         if ($existingEntry && $existingEntry->attendance_day == 'full_day') {
+//                                             // Update first half to half_day
+//                                             $existingEntry->attendance_day = 'half_day';
+//                                             $existingEntry->save();
+                                
 
-      
-        $currentTime = date('H:i:s');
-        dd($currentTime);
-        if ($currentTime > '13:00:00') {
-            return response()->json(['status' => 'error', 'message' => 'Attendance can only be updated before 1pm'], 400);
-        }
+//                                             $newEntry = new LabourAttendanceMark();
+                                            
+//                                             $newEntry->user_id = $user;
+//                                             $newEntry->project_id = $request->project_id;
+//                                             $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
+//                                             $newEntry->attendance_day = 'half_day'; 
+//                                             $newEntry->save();
 
-        // Update the fields
-        $existingEntry->project_id = $request->project_id;
-        $existingEntry->attendance_day = $request->attendance_day;
 
-        // Save the updated record
-        $existingEntry->save();
+//                                             // Check if second half entry exists, if not, add new entry for second half
+//                                             // $secondHalfWorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+//                                             //     ->where('updated_at', '>', date('Y-m-d').' 13:00:00')
+//                                             //     ->first();
+                                
+//                                             // if (!$secondHalfWorkAttendance) {
+//                                             //     $newEntry = new LabourAttendanceMark();
+//                                             //     $newEntry->project_id = $request->project_id;
+//                                             //     $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
+//                                             //     $newEntry->attendance_day = 'half_day'; // Second half
+//                                             //     $newEntry->save();
+//                                             // }
+//                                         } else {
+//                                             // // If full_day attendance not marked, check for second half and update it
+//                                             // $secondHalfWorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+//                                             //     ->where('updated_at', '>', date('Y-m-d').' 13:00:00')
+//                                             //     ->first();
+                                
+//                                             // if ($secondHalfWorkAttendance) {
+//                                             //     // Update second half to half_day
+//                                             //     $secondHalfWorkAttendance->attendance_day = 'half_day';
+//                                             //     $secondHalfWorkAttendance->save();
+//                                             // }
+//                                         }
+                                
+           
 
-        return response()->json(['status' => 'success', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
 
-    } catch (\Exception $e) {
-        return response()->json(['status' => 'error', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
-    }
-}
+        
+//         return response()->json(['status' => 'success', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
+
+//     } catch (\Exception $e) {
+//         return response()->json(['status' => 'error', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
+//     }
+// }
 
     
 
