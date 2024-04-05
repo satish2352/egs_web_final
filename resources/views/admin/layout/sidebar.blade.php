@@ -140,6 +140,7 @@
                 </div>
             </li>                    
             
+            @if (in_array('list-labour-attendance', $data_for_url))
             <li class="{{request()->is('list-labour-attendance*')
                 ? 'nav-item active' : 'nav-item' }}">
                 <?php $currenturl = Request::url(); ?>
@@ -148,7 +149,7 @@
                     <span class="menu-title">Labour Attendance</span>
                 </a>
             </li>
-
+            @endif    
 
 
 
@@ -175,15 +176,7 @@
             </li>
             @endif
 
-            <!-- <li class="{{request()->is('list-gramsevak*')
-                ? 'nav-item active' : 'nav-item' }}">
-                <?php //$currenturl = Request::url(); ?>
-                <a class="nav-link" href="{{ route('list-gramsevak') }}">
-                    <i class="fas fa-file-alt fa-lg menu-icon"></i>
-                    <span class="menu-title">Gramsevak Management</span>
-                </a>
-            </li> -->
-
+           
             @if (in_array('list-gramsevak', $data_for_url))
             <li class="{{request()->is('list-gramsevak*')
                 ? 'nav-item active' : 'nav-item' }}">
@@ -194,6 +187,15 @@
                 </a>
             </li>
             @endif
+
+            <li class="{{request()->is('list-grampanchayat-doc*')
+                ? 'nav-item active' : 'nav-item' }}">
+                <?php $currenturl = Request::url(); ?>
+                <a class="nav-link" href="{{ route('list-grampanchayat-doc') }}">
+                    <i class="fas fa-file-alt fa-lg menu-icon"></i>
+                    <span class="menu-title">Document Management</span>
+                </a>
+            </li>
 
             <li class="{{request()->is('list-role*') 
                 ? 'nav-item active' : 'nav-item' }}">

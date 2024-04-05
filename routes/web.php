@@ -62,7 +62,6 @@ Route::group(['middleware' => ['admin']], function () {
     Route::post('/delete-projects', ['as' => 'delete-projects', 'uses' => 'App\Http\Controllers\Admin\Project\ProjectController@delete']);
 
 
-
     Route::get('/list-labours', ['as' => 'list-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@index']);
     Route::post('/update-active-labours', ['as' => 'update-active-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@updateOne']);
     Route::post('/show-labours', ['as' => 'show-labours', 'uses' => 'App\Http\Controllers\Admin\Menu\LaboursController@show']);
@@ -80,6 +79,8 @@ Route::group(['middleware' => ['admin']], function () {
     Route::get('/list-gramsevak', ['as' => 'list-gramsevak', 'uses' => 'App\Http\Controllers\Admin\Gramsevak\GramsevakController@index']);
     Route::post('/show-gramsevak-doc', ['as' => 'show-gramsevak-doc', 'uses' => 'App\Http\Controllers\Admin\Gramsevak\GramsevakController@showGramsevakDocuments']);
     Route::get('/update-gram-document-status', ['as' => 'update-gram-document-status', 'uses' => 'App\Http\Controllers\Admin\Gramsevak\GramsevakController@updateGramDocumentStatus']);
+    Route::get('/list-grampanchayat-doc', ['as' => 'list-grampanchayat-doc', 'uses' => 'App\Http\Controllers\Admin\Gramsevak\GramsevakController@ListGrampanchayatDocuments']);
+
 
     Route::get('/get-location-wise-project', ['as' => 'get-location-wise-project', 'uses' => 'App\Http\Controllers\Admin\Reports\LaboursController@getLocationWiseProjects']);
 

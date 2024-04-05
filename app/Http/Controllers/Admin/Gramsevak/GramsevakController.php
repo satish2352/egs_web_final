@@ -16,7 +16,9 @@ use App\Models\ {
     Reasons,
     HistoryModel,
     Project,
-    HistoryDocumentModel
+    HistoryDocumentModel,
+    GramPanchayatDocuments,
+    DocumentReasons
 };
 use Validator;
 use session;
@@ -191,6 +193,27 @@ class GramsevakController extends Controller {
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
 
+    }
+
+    public function ListGrampanchayatDocuments()
+    {
+        try {
+
+            $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+            ->where('id', '!=', 1)
+            ->select('id','status_name')
+            ->get()
+            ->toArray();
+
+            $dynamic_reasons = DocumentReasons::where('is_active', 1)
+            ->select('id','reason_name')
+            ->get()
+            ->toArray();
+            $data_gram_doc_details = $this->service->ListGrampanchayatDocuments();
+            return view('admin.pages.gramsevak.list-grampanchayat-doc', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 
 
