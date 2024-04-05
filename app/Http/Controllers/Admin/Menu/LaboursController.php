@@ -560,9 +560,6 @@ class LaboursController extends Controller {
     // }
     
     public function updateLabourStatus(Request $request){
-        // $user_data = $this->service->editUsers($request);
-        // return view('admin.pages.users.users-list',compact('user_data'));
-// dd($request);
         $rules = [
             'is_approved' => 'required',
          ];       
@@ -583,7 +580,6 @@ class LaboursController extends Controller {
                     ->withErrors($validation);
             } else {
                 $register_user = $this->service->updateLabourStatus($request);
-                // dd($register_user);
 
                 if($register_user)
                 {
@@ -594,7 +590,6 @@ class LaboursController extends Controller {
 
                 if($request->is_approved=='3' && $request['other_remark']!='')
                 {    
-                    // Create a history record
                 $history = new HistoryModel();
                 $history->user_id = $sess_user_id; 
                 $history->roles_id = $sess_user_role; 

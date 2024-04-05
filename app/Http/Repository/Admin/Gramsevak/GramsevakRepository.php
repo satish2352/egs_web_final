@@ -49,19 +49,25 @@ class GramsevakRepository
 				->leftJoin('tbl_area as taluka_user', 'users.user_taluka', '=', 'taluka_user.location_id')
 				->leftJoin('tbl_area as village_user', 'users.user_village', '=', 'village_user.location_id')
 				->where('users.id', $id)
-				->select('users.f_name','users.m_name','users.l_name','users.email','users.number','users.aadhar_no',
+				->select('users.id','users.f_name','users.m_name','users.l_name','users.email','users.number','users.aadhar_no',
 				'users.address','users.pincode','users.user_profile','roles.role_name',
 				'district_user.name as district','taluka_user.name as taluka','village_user.name as village')
 				->first();
 
 			$data_gram_doc['user_doc_data'] = GramPanchayatDocuments::leftJoin('documenttype', 'documenttype.id', '=', 'tbl_gram_panchayat_documents.document_type_id')
 			->where('tbl_gram_panchayat_documents.user_id', $id)
-				->select('tbl_gram_panchayat_documents.user_id',
+				->select('tbl_gram_panchayat_documents.id',
+				'tbl_gram_panchayat_documents.user_id',
 				'tbl_gram_panchayat_documents.document_type_id',
 				'tbl_gram_panchayat_documents.document_name',
 				'tbl_gram_panchayat_documents.document_pdf',
 				'tbl_gram_panchayat_documents.is_active',
-				'documenttype.document_type_name')
+				'documenttype.document_type_name',
+				'tbl_gram_panchayat_documents.is_approved',
+				'tbl_gram_panchayat_documents.is_resubmitted',
+				'tbl_gram_panchayat_documents.reason_id',
+				'tbl_gram_panchayat_documents.other_remark',
+				)
 				->get();
 					
 
@@ -77,6 +83,38 @@ class GramsevakRepository
 				'status' => 'error'
 			];
 		}
+	}
+
+	public function updateGramDocumentStatus($request)
+	{
+		// dd($request);
+		if($request['is_approved']=='2')
+		{
+			$user_data = GramPanchayatDocuments::where('id',$request['edit_id']) 
+						->update([
+							'is_approved' => $request['is_approved'],
+							'is_resubmitted' => '0',
+						]);
+		}else if($request['is_approved']=='3' && $request['other_remark']!='')		
+		{
+			$user_data = GramPanchayatDocuments::where('id',$request['edit_id']) 
+						->update([
+							'is_approved' => $request['is_approved'],
+							'reason_id' => $request['reason_id'],
+							'other_remark' => $request['other_remark']
+						]);
+		}
+		else if($request['is_approved']=='3' && $request['other_remark']=='')		
+		{
+			$user_data = GramPanchayatDocuments::where('id',$request['edit_id']) 
+						->update([
+							'is_approved' => $request['is_approved'],
+							'reason_id' => $request['reason_id']
+						]);
+		}			
+		// dd($user_data);
+		// $this->updateRolesPermissions($request, $request->edit_id);
+		return $request->edit_id;
 	}
 
 }
