@@ -139,7 +139,7 @@ class GramsevakController extends Controller {
                 $history->roles_id = $sess_user_role; 
                 $history->gram_document_id = $request->edit_id;
                 $history->is_approved = $request->is_approved;
-                $history->reason_doc_id = $request->reason_id; 
+                $history->reason_doc_id = $request->reason_doc_id; 
                 $history->other_remark = $request->other_remark; 
                 $history->save();
                 }else if($request->is_approved=='3' && $request['other_remark']=='')
@@ -150,7 +150,7 @@ class GramsevakController extends Controller {
                 $history->roles_id = $sess_user_role; 
                 $history->gram_document_id = $request->edit_id;
                 $history->is_approved = $request->is_approved;
-                $history->reason_doc_id = $request->reason_id; 
+                $history->reason_doc_id = $request->reason_doc_id; 
                 $history->save();
                 }
     
@@ -170,7 +170,7 @@ class GramsevakController extends Controller {
                         //     'documenttype.document_type_name',
                         //     'tbl_gram_panchayat_documents.is_approved',
                         //     'tbl_gram_panchayat_documents.is_resubmitted',
-                        //     'tbl_gram_panchayat_documents.reason_id',
+                        //     'tbl_gram_panchayat_documents.reason_doc_id',
                         //     'tbl_gram_panchayat_documents.other_remark',
                         //     )
                         //     ->get();

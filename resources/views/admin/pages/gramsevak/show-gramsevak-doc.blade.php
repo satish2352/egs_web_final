@@ -106,7 +106,7 @@
                                                                                         @endforeach    
                                                                                     </select>
                                                                                 </td>
-                                                                                <td><select class="form-control reason_id" name="reason_id" id="reason_id" disabled>
+                                                                                <td><select class="form-control reason_doc_id" name="reason_doc_id" id="reason_doc_id" disabled>
                                                                                     <option value="">Select Reason</option>
                                                                                     <option value="1001">Others</option>
                                                                                         @foreach ($dynamic_reasons as $dynamic_reasons_data)
@@ -142,10 +142,10 @@
                                                                                         @endforeach    
                                                                                     </select>
                                                                                 </td>
-                                                                                <td><select class="form-control" name="reason_id" id="reason_id" disabled>
+                                                                                <td><select class="form-control" name="reason_doc_id" id="reason_doc_id" disabled>
                                                                                     <option value="">Select Reason</option>
 
-                                                                                    @if($item->reason_id=='1001')
+                                                                                    @if($item->reason_doc_id=='1001')
                                                                                         <option value="1001" <?php echo 'selected'; ?>>Others</option>
                                                                                         @else
                                                                                         <option value="1001">Others</option>
@@ -153,12 +153,12 @@
                                                                                     <!-- <option value="1001">Others</option> -->
                                                                                         @foreach ($dynamic_reasons as $dynamic_reasons_data)
                                                                                         <option value="{{ $dynamic_reasons_data['id'] }}"
-                                                                                        @if ($dynamic_reasons_data['id'] == $item->reason_id) <?php echo 'selected'; ?> @endif>{{ $dynamic_reasons_data['reason_name'] }}</option>
+                                                                                        @if ($dynamic_reasons_data['id'] == $item->reason_doc_id) <?php echo 'selected'; ?> @endif>{{ $dynamic_reasons_data['reason_name'] }}</option>
                                                                                         @endforeach  
                                                                                     </select>
                                                                                 </td>
                                                                                 <td>
-                                                                                @if($item->reason_id=='1001')
+                                                                                @if($item->reason_doc_id=='1001')
                                                                                      <textarea class="form-control other_remark" name="other_remark" id="other_remark"
                                                                                     placeholder="Enter the Remark" name="other_remark" disabled>{{$item->other_remark}}</textarea>
                                                                                 @else
@@ -223,9 +223,9 @@
             $(document).on("change", ".is_approved", function () {
                 var IsApprovedVal=$(this).val();
                 var closestTr = $(this).closest("tr");
-                var ReasonVal=closestTr.find('select[name="reason_id"]').val();
+                var ReasonVal=closestTr.find('select[name="reason_doc_id"]').val();
 
-                var ReasonSelectBox = closestTr.find('select[name="reason_id"]');
+                var ReasonSelectBox = closestTr.find('select[name="reason_doc_id"]');
                 var Remarktextarea = closestTr.find('textarea[name="other_remark"]');
                 
                 if ($(this).val() != '3') {
@@ -251,11 +251,11 @@
 
 <script>
         $(document).ready(function() {
-            $(document).on("change", ".reason_id", function () {
+            $(document).on("change", ".reason_doc_id", function () {
                 var ReasonVal=$(this).val();
                 var closestTr = $(this).closest("tr");
 
-                // var ReasonSelectBox = closestTr.find('select[name="reason_id"]');
+                // var ReasonSelectBox = closestTr.find('select[name="reason_doc_id"]');
                 var Remarktextarea = closestTr.find('textarea[name="other_remark"]');
                 
                 if ($(this).val() != '1001') {
@@ -278,7 +278,7 @@
 
                     var closestTr = $(this).closest("tr");
                     var is_approved= closestTr.find('select[name="is_approved"]').val();
-                    var reason_id = closestTr.find('select[name="reason_id"]').val();
+                    var reason_doc_id = closestTr.find('select[name="reason_doc_id"]').val();
                     var other_remark = closestTr.find('textarea[name="other_remark"]').val();
                     var token_val = $('.tok').val();
                     var show_id = $('#show_id').val();
@@ -290,7 +290,7 @@
                             type: 'GET',
                             data: {
                                 is_approved: is_approved,
-                                reason_id: reason_id,
+                                reason_doc_id: reason_doc_id,
                                 other_remark: other_remark,
                                 edit_id: edit_id,
                                 show_id: show_id,

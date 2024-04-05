@@ -52,7 +52,7 @@ return $data_projects;
 
     public function addProjects(){
         $sess_user_id=session()->get('user_id');
-
+        $initialMarkers =[];
         $permissions = Permissions::where('is_active', true)
                             ->select('id','route_name','permission_name','url')
                             ->get()

@@ -65,7 +65,7 @@ class GramsevakRepository
 				'documenttype.document_type_name',
 				'tbl_gram_panchayat_documents.is_approved',
 				'tbl_gram_panchayat_documents.is_resubmitted',
-				'tbl_gram_panchayat_documents.reason_id',
+				'tbl_gram_panchayat_documents.reason_doc_id',
 				'tbl_gram_panchayat_documents.other_remark',
 				)
 				->get();
@@ -100,7 +100,7 @@ class GramsevakRepository
 			$user_data = GramPanchayatDocuments::where('id',$request['edit_id']) 
 						->update([
 							'is_approved' => $request['is_approved'],
-							'reason_id' => $request['reason_id'],
+							'reason_doc_id' => $request['reason_doc_id'],
 							'other_remark' => $request['other_remark']
 						]);
 		}
@@ -109,7 +109,7 @@ class GramsevakRepository
 			$user_data = GramPanchayatDocuments::where('id',$request['edit_id']) 
 						->update([
 							'is_approved' => $request['is_approved'],
-							'reason_id' => $request['reason_id']
+							'reason_doc_id' => $request['reason_doc_id']
 						]);
 		}			
 		// dd($user_data);
