@@ -512,5 +512,39 @@ class RegisterController extends Controller {
                 ->with(['msg' => $e->getMessage(), 'status' => 'error']);
         }
     }
+
+    public function checkEmailExists(Request $request) {
+        $userEmail = $request->input('email');
+        $user = User::where('email', $userEmail)->first();
+      
+        if ($user) {
+          return response()->json([
+            'success' => false,
+            'message' => 'This Email already exists.',
+          ]);
+        } else {
+          return response()->json([
+            'success' => true,
+            'message' => 'This Email does not exist.',
+          ]);
+        }
+    }
+
+    public function checkAadharExists(Request $request) {
+        $userEmail = $request->input('aadhar_no');
+        $user = User::where('aadhar_no', $userEmail)->first();
+      
+        if ($user) {
+          return response()->json([
+            'success' => false,
+            'message' => 'This Aadhar already exists.',
+          ]);
+        } else {
+          return response()->json([
+            'success' => true,
+            'message' => 'This Aadhar does not exist.',
+          ]);
+        }
+    }
   
 }
