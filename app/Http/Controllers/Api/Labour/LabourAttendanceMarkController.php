@@ -241,7 +241,6 @@ class LabourAttendanceMarkController extends Controller
     public function updateAttendanceMark(Request $request)
 {
     try {
-
         $user = Auth::user()->id;
         $validator = Validator::make($request->all(), [
             'project_id' => 'required',
@@ -259,47 +258,37 @@ class LabourAttendanceMarkController extends Controller
         $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
                                         ->whereBetween('updated_at', [$fromDate, $toDate])
                                         ->first();
-        $firstHalfWorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
-        ->whereBetween('updated_at', [$fromDate, $toDate])
-        ->first();
 
-        $secondHalfWorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
-        ->where('updated_at', '>',  date('Y-m-d').' 13:00:00')
-        ->get()->toArray();
+        // $WorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
+        // ->whereBetween('updated_at', [$fromDate, $toDate])
+        // ->first();
         
-    if($firstHalfWorkAttendance) {
-        if(date('Y-m-d H:i:s') >  date('Y-m-d').' 13:00:00') {
-            if ($existingEntry && $existingEntry->attendance_day == 'full_day' && (count($secondHalfWorkAttendance)<=0)) {
-                // Update first half to half_day
-                $existingEntry->attendance_day = 'half_day';
-                $existingEntry->save();
-    
+        if($WorkAttendance) {
+            if(date('Y-m-d H:i:s') >  date('Y-m-d').' 13:00:00') {
+                    if ($existingEntry && $existingEntry->attendance_day == 'full_day') {
+                       
+                        $existingEntry->attendance_day = 'half_day';
+                        $existingEntry->save();
 
-                $newEntry = new LabourAttendanceMark();
-                
-                $newEntry->user_id = $user;
-                $newEntry->project_id = $request->project_id;
-                $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
-                $newEntry->attendance_day = 'half_day'; 
-                $newEntry->save();
-          } elseif((count($secondHalfWorkAttendance)>=1) && ($secondHalfWorkAttendance[0]['project_id'] == $request->project_id) ) {
-                                            return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
-                                        
-                                        }else {
-                                            $labour_data = new LabourAttendanceMark();
-                                            $labour_data->user_id = $user->id; // Assign the user ID
-                                            $labour_data->project_id = $request->project_id;
-                                            $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-                                            $labour_data->attendance_day = $request->attendance_day;
-                                            $labour_data->save();
-                                            
-                                        }
+                        $newEntry = new LabourAttendanceMark();
+                        
+                        $newEntry->user_id = $user;
+                        $newEntry->project_id = $request->project_id;
+                        $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
+                        $newEntry->attendance_day = 'half_day'; 
+                        $newEntry->save();
+                       
+                    } elseif(($existingEntry && $existingEntry->attendance_day == 'full_day' && $existingEntry->project_id == $request->project_id) ) {
+                    
+                    $existingEntry->attendance_day = 'half_day';
+                    $existingEntry->save();
+                                                
+                    }
+            }
 
-                                    }
-        
-                                }
+        }
        
-                                    return response()->json(['status' => 'success', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
+        return response()->json(['status' => 'success', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
 
     } catch (\Exception $e) {
         return response()->json(['status' => 'error', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
