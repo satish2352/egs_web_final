@@ -37,17 +37,6 @@
                                 <div class="row">
                                     <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
 
-                                    {{--        <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="u_uname">User Name</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control" name="u_uname" id="u_uname"
-                                                placeholder="" value="{{ old('u_uname') }}">
-                                            @if ($errors->has('u_uname'))
-                                                <span class="red-text"><?php echo $errors->first('u_uname', ':message'); ?></span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    --}}
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
                                             <label for="email">Email ID</label>&nbsp<span class="red-text">*</span>
@@ -642,7 +631,6 @@
     if (!aadhaarPattern.test(value)) {
         return false;
     }
-console.log('fdfdfdfdfdffd');
     // Aadhaar checksum validation algorithm
     var sum = 0;
     for (var i = 0; i < 11; i++) {
@@ -663,15 +651,15 @@ console.log('fdfdfdfdfdffd');
                     rules: {
                         email: {
                             required: true,
-                        //     remote: {
-                        //     url: '{{ route('check-email-exists') }}',
-                        //     type: 'get',
-                        //     data: {
-                        //         email: function() {
-                        //             return $('#email').val();
-                        //         }
-                        //     }
-                        // },
+                            remote: {
+                            url: '{{ route('check-email-exists') }}',
+                            type: 'get',
+                            data: {
+                                email: function() {
+                                    return $('#email').val();
+                                }
+                            }
+                        },
                             email:true,
                         },
                         role_id: {
@@ -698,7 +686,7 @@ console.log('fdfdfdfdfdffd');
                         },
                         aadhar_no: {
                             required: true,
-                           
+                            pattern: /^\d{4}\s\d{4}\s\d{4}$/,
                         },
                         address: {
                             required: true,
@@ -723,7 +711,7 @@ console.log('fdfdfdfdfdffd');
                     messages: {
                         email: {
                             required: "Please Enter the Eamil",
-                            // remote: "This Email already exists."
+                            remote: "This Email already exists.",
                         },
                         role_id: {
                             required: "Please Select Role Name",
@@ -748,7 +736,7 @@ console.log('fdfdfdfdfdffd');
                         },
                         aadhar_no: {
                             required: "Please Enter the Aadhar No",
-                          
+                          pattern: "Please enter a valid Aadhar number (e.g., 1234 5678 9101)", // Custom error message for Aadhar card number validation
                         },
                         address: {
                             required: "Please Enter the Address",

@@ -38,5 +38,10 @@ class GramsevakServices
         }
     }
 
+    public function updateGramDocumentStatus($request) {
+        $user_register_id = $this->repo->updateGramDocumentStatus($request);
+        return ['status'=>'success','msg'=>'Data Updated Successful.'];
+    }
+
 
 }
