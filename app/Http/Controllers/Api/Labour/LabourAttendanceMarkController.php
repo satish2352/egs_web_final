@@ -258,36 +258,47 @@ class LabourAttendanceMarkController extends Controller
         $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
                                         ->whereBetween('updated_at', [$fromDate, $toDate])
                                         ->first();
-
-        // $WorkAttendance = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
-        // ->whereBetween('updated_at', [$fromDate, $toDate])
-        // ->first();
         
-        if($WorkAttendance) {
-            if(date('Y-m-d H:i:s') >  date('Y-m-d').' 13:00:00') {
-                    if ($existingEntry && $existingEntry->attendance_day == 'full_day') {
-                       
-                        $existingEntry->attendance_day = 'half_day';
-                        $existingEntry->save();
-
-                        $newEntry = new LabourAttendanceMark();
-                        
-                        $newEntry->user_id = $user;
-                        $newEntry->project_id = $request->project_id;
-                        $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
-                        $newEntry->attendance_day = 'half_day'; 
-                        $newEntry->save();
-                       
-                    } elseif(($existingEntry && $existingEntry->attendance_day == 'full_day' && $existingEntry->project_id == $request->project_id) ) {
-                    
+        if ($existingEntry) {
+            if (date('H:i:s') < '13:00:00') {
+                if($existingEntry->project_id == $request->project_id){
                     $existingEntry->attendance_day = 'half_day';
                     $existingEntry->save();
-                                                
-                    }
+                }
+                else{
+                    $existingEntry->project_id = $request->project_id;
+                    $existingEntry->mgnrega_card_id = $request->mgnrega_card_id;
+                    $existingEntry->attendance_day = $request->attendance_day;
+                } 
+
+
+            }
+            elseif(date('H:i:s') > '13:00:00'){
+                dd('hiii');
+            if($existingEntry && $existingEntry->attendance_day == 'full_day' && $existingEntry->project_id == $request->project_id){
+                $existingEntry->attendance_day = 'half_day';
+                $existingEntry->save();
+            }
+            elseif($existingEntry && $existingEntry->attendance_day == 'full_day'){
+
+                $existingEntry->attendance_day = 'half_day';
+                $existingEntry->save();
+
+                $newEntry = new LabourAttendanceMark();
+                
+                $newEntry->user_id = $user;
+                $newEntry->project_id = $request->project_id;
+                $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
+                $newEntry->attendance_day = 'half_day'; 
+                $newEntry->save();
             }
 
         }
-       
+        }
+        else {
+            return response()->json(['status' => 'success', 'message' => 'Attendance not found', 'data' => $existingEntry], 200);
+        }
+
         return response()->json(['status' => 'success', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
 
     } catch (\Exception $e) {
