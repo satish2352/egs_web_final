@@ -43,5 +43,13 @@ class GramsevakServices
         return ['status'=>'success','msg'=>'Data Updated Successful.'];
     }
 
+    public function ListGrampanchayatDocuments(){
+        try {
+            return $this->repo->ListGrampanchayatDocuments();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
 
 }
