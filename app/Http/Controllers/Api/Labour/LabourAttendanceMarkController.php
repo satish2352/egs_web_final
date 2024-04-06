@@ -189,8 +189,8 @@ class LabourAttendanceMarkController extends Controller
                     'tbl_mark_attendance.updated_at'
 
                 )
-                ->paginate($pageSize, ['*'], 'pageNo', $pageNo);
-                // ->get();
+                // ->paginate($pageSize, ['*'], 'pageNo', $pageNo);
+                ->get();
     
                 foreach ($data_output as $labour) {
                    

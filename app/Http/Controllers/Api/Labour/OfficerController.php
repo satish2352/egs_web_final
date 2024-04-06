@@ -22,7 +22,6 @@ use Carbon\Carbon;
 class OfficerController extends Controller
 {
    
-   
     public function getParticularLabourOfficer(Request $request){
         try {
             $user = Auth::user()->id;
@@ -455,4 +454,7 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
+
+    
+
 }
