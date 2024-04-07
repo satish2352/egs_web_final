@@ -46,7 +46,7 @@ class ProjectController extends Controller
                ->leftJoin('tbl_area as district_projects', 'projects.District', '=', 'district_projects.location_id')  
                ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
               ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-              ->where('projects.end_date', '>=',date('Y-m-d'))
+            //   ->where('projects.end_date', '>=',date('Y-m-d'))
               ->where('projects.District', $data_user_output)
               ->where('projects.is_active', true)
               ->when($request->has('project_name'), function($query) use ($request) {
