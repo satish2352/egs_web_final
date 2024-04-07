@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Config;
 class ProjectController extends Controller
 {
 
-    public function getAllProject(Request $request){
+    public function getAllProjectForOfficer(Request $request){
         try {
             $user = Auth::user()->id;
             
