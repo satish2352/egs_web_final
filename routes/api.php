@@ -48,7 +48,8 @@ Route::group([
         Route::post('/update-labour-first-form', [LabourController::class, 'updateLabourFirstForm']);
         Route::post('/update-labour-second-form', [LabourController::class, 'updateLabourSecondForm']);
         // Route::post('/particular-labour-details-for-update', [LabourController::class, 'getParticularLabourForUpdate']);
-       
+        Route::post('/autosugg-mgnrega-card-id', [LabourController::class, 'autoSuggMgnregaCardId']);
+        
         Route::post('/gramsevak-reports-count', [LabourController::class, 'gramsevakReportscount']);
         Route::post('/mgnregacardid-alreadyexist', [LabourController::class, 'mgnregaCardIdAlreadyExist']);
         

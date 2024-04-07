@@ -684,44 +684,80 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
+    // public function mgnregaCardIdAlreadyExist(Request $request) {
+    //     try {
+    //         $validator = Validator::make($request->all(), [
+    //             'labour_id' => 'required',
+    //             'mgnrega_card_id' => 'required'
+    //         ]);
+    
+    //         if ($validator->fails()) {
+    //             return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
+    //         }
+    
+    //         $labour = Labour::where('id', $request->labour_id)->first();
+
+    //         if (!$labour) {
+    //             return response()->json(['status' => 'error', 'message' => 'Labour not found'], 200);
+    //         }
+
+    //         if ($labour->is_approved !== 2) {
+    //             return response()->json(['status' => 'error', 'message' => 'Labour not approved'], 200);
+    //         }
+    
+    //         if ($labour->mgnrega_card_id == $request->mgnrega_card_id) {
+    //             return response()->json(['status' => 'true', 'message' => 'MGNREGA card ID already exists for this labour'], 200);
+    //         } else {
+    //             return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID does not exist for this labour'], 200);
+    //         }
+    
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
+    //     }
+    // }
     public function mgnregaCardIdAlreadyExist(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'labour_id' => 'required',
                 'mgnrega_card_id' => 'required'
             ]);
     
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
+               // $labour = Labour::where('id', $request->labour_id)->first();
     
-            $labour = Labour::where('id', $request->labour_id)->first();
-
-            if (!$labour) {
-                return response()->json(['status' => 'error', 'message' => 'Labour not found'], 200);
-            }
-
-            if ($labour->is_approved !== 2) {
-                return response()->json(['status' => 'error', 'message' => 'Labour not approved'], 200);
+            // if (!$labour) {
+            //     return response()->json(['status' => 'error', 'message' => 'Labour not found'], 200);
+            // }
+    
+    
+            $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
+                                    ->where('is_approved', 2)
+                                    ->first();
+    
+            if ($existingLabour) {
+                return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID already exists for another labour'], 200);
             }
     
-            if ($labour->mgnrega_card_id == $request->mgnrega_card_id) {
-                return response()->json(['status' => 'true', 'message' => 'MGNREGA card ID already exists for this labour'], 200);
-            } else {
-                return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID does not exist for this labour'], 200);
-            }
+            return response()->json(['status' => 'true', 'message' => 'MGNREGA card ID does not exist for any labour'], 200);
     
         } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
         }
     }
-
-    public function autoSuggMgnregaCardId(Request $request){
+    public function autoSuggMgnregaCardId(Request $request)
+    {
         try {
-            $user = Auth::user()->id;
+        $user = Auth::user()->id;
+        $mgnrega_card_id = $request->input('mgnrega_card_id');
 
-            // dd($data_user_output);
-            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+        if (!$mgnrega_card_id) {
+            return response()->json(['error' => 'MGNREGA card ID is required'], 400);
+        }
+
+        // $suggestions = Labour::where('mgnrega_card_id', 'like', "%$mgnrega_card_id%")->get();
+
+                $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
@@ -730,16 +766,10 @@ class LabourController extends Controller
                 ->leftJoin('tbl_reason as reason_labour', 'labour.reason_id', '=', 'reason_labour.id')
                 ->where('labour.user_id', $user)
                 ->where('labour.is_approved', 2)
-                ->when($request->has('is_resubmitted'), function($query) use ($is_resubmitted) {
-                    $query->where('labour.is_resubmitted', $is_resubmitted);
-                })
                 ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
                     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
                 });
               
-
-         
-
             $data_output = $data_output->select(
                 'labour.id',
                 'labour.full_name',
@@ -775,10 +805,9 @@ class LabourController extends Controller
                 }
           
             //   dd($project);
-            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
+            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     } 
-    
 }
