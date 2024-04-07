@@ -27,7 +27,7 @@ class ProjectController extends Controller
         $user_working_tal=$data_output->user_taluka;
         $user_working_vil=$data_output->user_village;
 
-        $data_user_output = User::select('id');
+        $data_user_output = User::select('user_district');
 
         if($utype=='1')
         {
@@ -46,9 +46,9 @@ class ProjectController extends Controller
                ->leftJoin('tbl_area as district_projects', 'projects.District', '=', 'district_projects.location_id')  
                ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
               ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-            //   ->where('projects.end_date', '>=',date('Y-m-d'))
+              ->where('projects.end_date', '>=',date('Y-m-d'))
               ->where('projects.District', $data_user_output)
-              ->where('projects.is_active', true)
+            //   ->where('projects.is_active', true)
               ->when($request->has('project_name'), function($query) use ($request) {
                 $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
             })             
