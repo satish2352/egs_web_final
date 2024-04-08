@@ -189,7 +189,7 @@ class OfficerGramDocAppNotAppController extends Controller
                 // Update labor entry
                 $updateData = [
                     'is_approved' => 3,
-                    // 'is_resubmitted'=> 1,
+                    'is_resubmitted' => 0,
                     'reason_doc_id' => $request->reason_doc_id, 
                 ];
         
