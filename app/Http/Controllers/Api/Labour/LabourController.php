@@ -515,7 +515,7 @@ class LabourController extends Controller
             $labour_data->longitude = $request->longitude;
             $labour_data->is_approved = 1;
             $labour_data->reason_id = null;
-            // $labour_data->other_remark = null;
+            $labour_data->other_remark = 'null';
 
             $labour_data->save();
 

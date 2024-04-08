@@ -71,7 +71,9 @@ class LabourAttendanceMarkController extends Controller
                                                 ->get()->toArray();
 
                 if($firstHalfWorkAttendance) {
+                    
                     if(date('Y-m-d H:i:s') >  date('Y-m-d').' 13:00:00') {
+                        
                         if($request->attendance_day =='half_day' && (count($secondHalfWorkAttendance)<=0) ) {
 
                             if($firstHalfWorkAttendance->project_id == $request->project_id) {
@@ -95,7 +97,11 @@ class LabourAttendanceMarkController extends Controller
                             return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                         }
                     }
-
+                    elseif($request->attendance_day =='half_day' || $request->attendance_day =='full_day'  && $firstHalfWorkAttendance->project_id == $request->project_id) {
+                        return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because half/full day alreay present for today'], 200);
+                    
+                    }
+                   
                 } elseif((count($secondHalfWorkAttendance)>=1) && ($secondHalfWorkAttendance[0]['project_id'] == $request->project_id) ) {
                     return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                 
@@ -224,6 +230,7 @@ class LabourAttendanceMarkController extends Controller
                                             ->whereBetween('updated_at', [$fromDate, $toDate])
                                             ->first();
             
+                                            // dd(date('H:i:s'));
             if ($existingEntry) {
                 if (date('H:i:s') < '13:00:00') {
                     
