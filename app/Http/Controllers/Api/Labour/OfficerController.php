@@ -324,6 +324,7 @@ class OfficerController extends Controller
             // Update labor entry
             $updateData = [
                 'is_approved' => 3,
+                'is_resubmitted' => 0,
                 'reason_id' => $request->reason_id, 
             ];
     
