@@ -650,7 +650,7 @@ class LabourController extends Controller
                     $sentForApprovalCount = $count->count;
                 } elseif ($count->is_approved == 2) {
                     $approvedCount = $count->count;
-                } elseif ($count->is_approved == 3 && $count->is_resubmitted == 0) {
+                } elseif ($count->is_approved == 3) {
                     $notApprovedCount = $count->count;
                 }
             }
@@ -662,7 +662,7 @@ class LabourController extends Controller
                 elseif ($countdoc->is_approved == 2) {
                     $approvedCountDocument = $countdoc->count;
                 }
-                elseif ($countdoc->is_approved == 3 && $countdoc->is_resubmitted == 0) {
+                elseif ($countdoc->is_approved == 3) {
                     $notApprovedCountDocument = $countdoc->count;
                 }
             }
