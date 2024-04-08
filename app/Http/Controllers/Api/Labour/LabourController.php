@@ -522,7 +522,7 @@ class LabourController extends Controller
             $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
 
             // Upload and update images
-            if ($request->hasFile('profile_image')) {
+            if ($request->file('profile_image') !== null && $request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
             if ($labour_data->profile_image) {
                 removeImage($pathdelete . $labour_data->profile_image);
             }
@@ -531,7 +531,8 @@ class LabourController extends Controller
             $labour_data->profile_image = $profileImageName;
             }
 
-            if ($request->hasFile('aadhar_image')) {
+            // if ($request->hasFile('aadhar_image')) {
+            if ($request->file('aadhar_image') !== null && $request->hasFile('aadhar_image') && $request->file('aadhar_image')->isValid()) {
             if ($labour_data->aadhar_image) {
                 removeImage($pathdelete . $labour_data->aadhar_image);
             }
@@ -540,7 +541,8 @@ class LabourController extends Controller
             $labour_data->aadhar_image = $aadharImageName;
             }
 
-            if ($request->hasFile('mgnrega_image')) {
+            // if ($request->hasFile('mgnrega_image')) {
+            if ($request->file('mgnrega_image') !== null && $request->hasFile('mgnrega_image') && $request->file('mgnrega_image')->isValid()) {
             if ($labour_data->mgnrega_image) {
                 removeImage($pathdelete . $labour_data->mgnrega_image);
             }
@@ -549,7 +551,8 @@ class LabourController extends Controller
             $labour_data->mgnrega_image = $mgnregaImageName;
             }
 
-            if ($request->hasFile('voter_image')) {
+            // if ($request->hasFile('voter_image')) {
+                if ($request->file('voter_image') !== null && $request->hasFile('voter_image') && $request->file('voter_image')->isValid()) {    
             if ($labour_data->voter_image) {
                 removeImage($pathdelete . $labour_data->voter_image);
             }
@@ -805,9 +808,33 @@ class LabourController extends Controller
                 }
           
             //   dd($project);
-            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Data not found', 'error' => $e->getMessage()], 500);
         }
-    } 
+    }
+    public function labourSyncReason(Request $request)
+    {
+        try {
+            $request->validate([
+                'mng_id' => 'required|unique:labours|mng_id',
+            ]);
+
+            $existingLabour = Labour::where('mng_id', $request->mng_id)->first();
+
+            if ($existingLabour) {
+                $existingLabour->update(['sync_reason' => 'Management ID already exists']);
+                return response()->json(['status' => 'error', 'message' => 'Management ID already exists'], 400);
+            } else {
+                // logic to sync data goes here
+
+                
+                $data_output = []; // Example data array
+                return response()->json(['status' => 'true', 'message' => 'Data synced successfully', 'data' => $data_output], 200);
+            }
+        } catch (\Exception $e) {
+            // If an exception occurs, return error response
+            return response()->json(['status' => 'false', 'message' => 'Data not found', 'error' => $e->getMessage()], 500);
+        }
+    }
 }

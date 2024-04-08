@@ -238,26 +238,26 @@ class LabourAttendanceMarkController extends Controller
                         $existingEntry->save();
                     } 
                 }
-                elseif(date('H:i:s') > '13:00:00'){
-                
-                if($existingEntry->project_id == $request->project_id){
-                    $existingEntry->attendance_day = $request->attendance_day;
-                    $existingEntry->save();
-                }
-                elseif($existingEntry && $existingEntry->attendance_day == 'full_day'){
-                    $existingEntry->attendance_day = 'half_day';
-                    $existingEntry->save();
+                elseif(date('H:i:s') > '13:00:00')
+                {
+                    if($existingEntry->project_id == $request->project_id){
+                        $existingEntry->attendance_day = $request->attendance_day;
+                        $existingEntry->save();
+                    }
+                    elseif($existingEntry && $existingEntry->attendance_day == 'full_day'){
+                        $existingEntry->attendance_day = 'half_day';
+                        $existingEntry->save();
 
-                    $newEntry = new LabourAttendanceMark();
-                    
-                    $newEntry->user_id = $user;
-                    $newEntry->project_id = $request->project_id;
-                    $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
-                    $newEntry->attendance_day = 'half_day'; 
-                    $newEntry->save();
-                }
+                        $newEntry = new LabourAttendanceMark();
+                        
+                        $newEntry->user_id = $user;
+                        $newEntry->project_id = $request->project_id;
+                        $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
+                        $newEntry->attendance_day = 'half_day'; 
+                        $newEntry->save();
+                    }
 
-            }
+                }
             }
             else {
                 return response()->json(['status' => 'success', 'message' => 'Attendance not found', 'data' => $existingEntry], 200);

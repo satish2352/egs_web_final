@@ -95,6 +95,8 @@ Route::group([
         Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
         Route::post('/project-list-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllProjectListForOfficer']);
         
+        Route::post('/new-list-area', [AllMasterController::class, 'getTblAreaNewData']);
+        
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });

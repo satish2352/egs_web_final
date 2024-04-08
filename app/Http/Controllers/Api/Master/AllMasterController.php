@@ -12,7 +12,8 @@ use App\Models\ {
     Documenttype,
     Registrationstatus,
     Reasons,
-    DocumentReasons
+    DocumentReasons,
+    TblArea
 };
 
 class AllMasterController extends Controller
@@ -35,6 +36,19 @@ public function getAllMasters(){
         return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
     }
 }
+
+public function getTblAreaNewData(Request $request)
+{
+    try {
+        // $user = Auth::user()->id;
+        $data_output = TblArea::where('is_new', 1)->get();
+  
+        return response()->json(['status' => 'true', 'message' => 'All new data retrieved successfully', 'data' => $data_output], 200);
+    } catch (\Exception $e) {
+        return response()->json(['status' => 'false', 'message' => 'Data not found', 'error' => $e->getMessage()], 500);
+    }
+}
+
 
 }
 
