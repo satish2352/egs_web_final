@@ -419,11 +419,11 @@ class OfficerController extends Controller
     
             // Counting each status
             foreach ($counts as $count) {
-                if ($count->is_approved == 1) {
+                if ($count->is_approved == 1 && $count->is_resubmitted == 0) {
                     $sentForApprovalCount = $count->count;
                 } elseif ($count->is_approved == 2) {
                     $approvedCount = $count->count;
-                } elseif ($count->is_approved == 3) {
+                } elseif ($count->is_approved == 3 && $count->is_resubmitted == 0) {
                     $notApprovedCount = $count->count;
                 }
             }
@@ -433,7 +433,7 @@ class OfficerController extends Controller
                     $sentForApprovalCountDocument = $countdoc->count;
                 } elseif ($countdoc->is_approved == 2) {
                     $approvedCountDocument = $countdoc->count;
-                } elseif ($countdoc->is_approved == 3) {
+                } elseif ($countdoc->is_approved == 3 && $countdoc->is_resubmitted == 0) {
                     $notApprovedCountDocument = $countdoc->count;
                 }
             }
