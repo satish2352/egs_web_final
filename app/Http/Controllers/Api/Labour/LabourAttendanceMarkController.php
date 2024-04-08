@@ -167,8 +167,8 @@ class LabourAttendanceMarkController extends Controller
             $user = Auth::user()->id;
 
         
-            $pageNo = $request->has('pageNo');
-            $pageSize = $request->has('pageSize');
+            // $pageNo = $request->has('pageNo');
+            // $pageSize = $request->has('pageSize');
 
         //  dd( $pageSize);
             $date = date('Y-m-d');     
@@ -195,9 +195,10 @@ class LabourAttendanceMarkController extends Controller
                     'tbl_mark_attendance.updated_at'
 
                 )
-                // ->paginate($pageSize, ['*'], 'pageNo', $pageNo);
                 ->get();
     
+                // ->paginate($pageSize, ['*'], 'pageNo', $pageNo);
+                
                 foreach ($data_output as $labour) {
                    
                     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
