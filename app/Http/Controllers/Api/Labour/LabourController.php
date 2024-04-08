@@ -468,6 +468,7 @@ class LabourController extends Controller
         $labour_data->is_approved = 1;
         $labour_data->is_resubmitted = true;
         $labour_data->reason_id = null;
+        $labour_data->other_remark = 'null';
         // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
         if ($labour_data->is_approved != 2) {
             $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
