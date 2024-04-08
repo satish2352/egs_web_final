@@ -41,7 +41,7 @@ public function getTblAreaNewData(Request $request)
 {
     try {
         // $user = Auth::user()->id;
-        $data_output = TblArea::where('is_new', 1)->get();
+        $data_output = TblArea::where(['is_active'=> '1','is_new'=> 1])->orderBy('id', 'asc')->get();
   
         return response()->json(['status' => 'true', 'message' => 'All new data retrieved successfully', 'data' => $data_output], 200);
     } catch (\Exception $e) {
