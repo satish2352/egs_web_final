@@ -184,7 +184,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-   
     public function getAllLabourList(Request $request){
     
         try {
@@ -193,6 +192,11 @@ class LabourController extends Controller
             
             $is_approved = '' ;
             $is_resubmitted = ''; 
+
+            $page = isset($request["start"]) ? $request["start"] : 1;
+            $rowperpage = isset($request["length"])? $request["length"] : 10; // Rows display per pa]e
+
+            $start = ($page - 1) * $rowperpage;
             
             if($request->has('is_approved') && $request->is_approved == 'added' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') {  //1
                 $is_approved = 1 ;
@@ -206,7 +210,7 @@ class LabourController extends Controller
                 $is_resubmitted = 1 ;
                 $is_approved = 1 ;
             } 
-            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+            $basic_query_object = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
@@ -231,16 +235,17 @@ class LabourController extends Controller
                 });
 
             if ($request->has('district_id')) {
-                $data_output->where('district_labour.location_id', $request->input('district_id'));
+                $basic_query_object->where('district_labour.location_id', $request->input('district_id'));
             }
             if ($request->has('taluka_id')) {
-                $data_output->where('taluka_labour.location_id', $request->input('taluka_id'));
+                $basic_query_object->where('taluka_labour.location_id', $request->input('taluka_id'));
             }
             if ($request->has('village_id')) {
-                $data_output->where('village_labour.location_id', $request->input('village_id'));
+                $basic_query_object->where('village_labour.location_id', $request->input('village_id'));
             }
 
-            $data_output = $data_output->select(
+            $totalRecords = $basic_query_object->select('labour.id')->get()->count();
+            $data_output = $basic_query_object->select(
                 'labour.id',
                 'labour.full_name',
                 'labour.date_of_birth',
@@ -267,8 +272,11 @@ class LabourController extends Controller
                 'labour.voter_image',
                 'labour.other_remark',
                 'registrationstatus.status_name'
-
-                )->distinct('labour.id')->get();
+                )->skip($start)
+                ->take($rowperpage)
+                ->distinct('labour.id')
+                ->orderBy('id', 'desc')
+                ->get();
 
                 foreach ($data_output as $labour) {
                     // Append image paths to the output data
@@ -316,7 +324,13 @@ class LabourController extends Controller
                     ->get();
             }
 
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+            if(sizeof($data_output)>=1) {
+                $totalPages = ceil($totalRecords/$rowperpage);
+            } else {
+                $totalPages = 1;
+            }
+
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', "totalRecords" => $totalRecords, "totalPages"=>$totalPages, 'data' => $data_output], 200);
                 } catch (\Exception $e) {
                     return response()->json(['status' => 'false', 'message' => 'Data get failed', 'error' => $e->getMessage()], 500);
                 }
@@ -326,159 +340,79 @@ class LabourController extends Controller
         //     return response()->json(['status' => 'false', 'message' => 'Labour List get failed', 'message' => $e->getMessage()], 500);
         // }
     }
-   
-    public function updateLabourStatusApproved(Request $request){
-    
-        try {
-            $user = Auth::user()->id;
-    
-            // Validate the incoming request
-            $validator = Validator::make($request->all(), [
-                'mgnrega_card_id' => 'required',
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
-            }
-            
-            $updated = Labour::where('user_id', $user)
-                ->where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('is_approved', 1)
-                ->update(['is_approved' => 2]); 
-                
-    
-            if ($updated) {
-                return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
-            } else {
-                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id'], 200);
-            }
-    
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
-        }
-    }
-    public function updateLabourStatusNotApproved(Request $request) {
+    public function updateLabourFirstForm(Request $request){
         try {
             $user = Auth::user();
-    
-            // Validate the incoming request
+            // $labour_id = $request->input('id');
             $validator = Validator::make($request->all(), [
-                'mgnrega_card_id' => 'required',
-                'reason_id' => 'required',
-                // 'other_remark' => 'required',
-                'is_approved' => 'required',
-                
+                'full_name' => 'required',
+                'gender_id' => 'required',
+                'district_id' => 'required',
+                'taluka_id' => 'required',
+                'village_id' => 'required',
+                'skill_id' => 'required',
+                'mobile_number' => ['required', 'digits:10'],
+                // 'mgnrega_card_id' => ['required'],
             ]);
-    
+
             if ($validator->fails()) {
-                return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
+                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
             }
-    
-            // Update labor entry
-            $updated = Labour::where('user_id', $user->id)
-                ->where('mgnrega_card_id', $request->mgnrega_card_id)
-                ->where('is_approved', 1)
-                ->update([
-                    'is_approved' => 3,
-                    'reason_id' => $request->reason_id, 
-                    'other_remark' => $request->other_remark, 
-                ]);
-    
-            if ($updated) {
-                // Create a history record
-                $history = new HistoryModel();
-                $history->user_id = $user->id; 
-                $history->roles_id = $user->role_id; 
-                $history->labour_id = $request->labour_id;
-                $history->is_approved = $request->is_approved;
-                $history->reason_id = $request->reason_id; 
-                $history->other_remark = $request->other_remark; 
-                
-    
-                $history->save();
-    
-                return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
-            } else {
-                return response()->json(['status' => 'false', 'message' => 'No labor found with the provided MGNREGA card Id or status is not approved'], 200);
+
+            // Find the labour data to update
+            $labour_data = Labour::where('id', $request->id)->first();
+
+            if (!$labour_data) {
+                return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
             }
-    
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
-        }
-    }
-    public function updateLabourFirstForm(Request $request){
-    try {
-        $user = Auth::user();
-        // $labour_id = $request->input('id');
-        $validator = Validator::make($request->all(), [
-            'full_name' => 'required',
-            'gender_id' => 'required',
-            'district_id' => 'required',
-            'taluka_id' => 'required',
-            'village_id' => 'required',
-            'skill_id' => 'required',
-            'mobile_number' => ['required', 'digits:10'],
-            // 'mgnrega_card_id' => ['required'],
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
-        }
+            // Check if the mgnrega_card_id can be updated based on is_approved
+            if ($labour_data->is_approved == 2) {
+                return response()->json(['status' => 'error', 'message' => 'Cannot update mgnrega card id when labour is approved'], 200);
+            }
 
-        // Find the labour data to update
-        $labour_data = Labour::where('id', $request->id)->first();
+            // Check if the provided mgnrega_card_id already exists in the database
+            $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
+            // if ($existingLabour && $existingLabour->id !== $labour_data->id ) {
+            //     return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists'], 200);
+            // }
 
-        if (!$labour_data) {
-            return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
-        }
-
-         // Check if the mgnrega_card_id can be updated based on is_approved
-        if ($labour_data->is_approved == 2) {
-            return response()->json(['status' => 'error', 'message' => 'Cannot update mgnrega card id when labour is approved'], 200);
-        }
-
-        // Check if the provided mgnrega_card_id already exists in the database
-        $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
-        // if ($existingLabour && $existingLabour->id !== $labour_data->id ) {
-        //     return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists'], 200);
-        // }
-
-        if ($existingLabour) {
-            if ($existingLabour->is_approved == 2) {
-                // If is_approved is 2, do not update the MGNREGA card ID
-                return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists and is not approved for update'], 200);
-            } else {
-                // If is_approved is 1 or 3, update the MGNREGA card ID
-                if ($existingLabour->id !== $labour_data->id) {
-                    return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists'], 200);
+            if ($existingLabour) {
+                if ($existingLabour->is_approved == 2) {
+                    // If is_approved is 2, do not update the MGNREGA card ID
+                    return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists and is not approved for update'], 200);
+                } else {
+                    // If is_approved is 1 or 3, update the MGNREGA card ID
+                    if ($existingLabour->id !== $labour_data->id) {
+                        return response()->json(['status' => 'error', 'message' => 'MGNREGA card ID already exists'], 200);
+                    }
                 }
             }
-        }
-        // Update labour details
-        $labour_data->user_id = $user->id;
-        $labour_data->full_name = $request->full_name;
-        $labour_data->gender_id = $request->gender_id;
-        $labour_data->date_of_birth = $request->date_of_birth;
-        $labour_data->skill_id = $request->skill_id;  
-        $labour_data->district_id = $request->district_id;
-        $labour_data->taluka_id = $request->taluka_id;
-        $labour_data->village_id = $request->village_id;
-        $labour_data->mobile_number = $request->mobile_number;
-        $labour_data->landline_number = $request->landline_number;
-        $labour_data->is_approved = 1;
-        $labour_data->is_resubmitted = true;
-        $labour_data->reason_id = null;
-        $labour_data->other_remark = 'null';
-        // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        if ($labour_data->is_approved != 2) {
-            $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-        }
-        $labour_data->save();
+            // Update labour details
+            $labour_data->user_id = $user->id;
+            $labour_data->full_name = $request->full_name;
+            $labour_data->gender_id = $request->gender_id;
+            $labour_data->date_of_birth = $request->date_of_birth;
+            $labour_data->skill_id = $request->skill_id;  
+            $labour_data->district_id = $request->district_id;
+            $labour_data->taluka_id = $request->taluka_id;
+            $labour_data->village_id = $request->village_id;
+            $labour_data->mobile_number = $request->mobile_number;
+            $labour_data->landline_number = $request->landline_number;
+            $labour_data->is_approved = 1;
+            $labour_data->is_resubmitted = true;
+            $labour_data->reason_id = null;
+            $labour_data->other_remark = 'null';
+            // $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+            if ($labour_data->is_approved != 2) {
+                $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+            }
+            $labour_data->save();
 
-        return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
-    } catch (\Exception $e) {
-        return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
-    }
+            return response()->json(['status' => 'true', 'message' => 'Labour updated successfully', 'data' => $labour_data], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
+        }
    }
     public function updateLabourSecondForm(Request $request){
         try {

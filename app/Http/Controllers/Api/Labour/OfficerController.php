@@ -149,6 +149,11 @@ class OfficerController extends Controller
             // $toDate = date('Y-m-d', strtotime($request->input('to_date')));
             // $toDate =  $toDate.' 23:59:59';
 
+            $page = isset($request["start"]) ? $request["start"] : 1;
+            $rowperpage = isset($request["length"])? $request["length"] : 10; // Rows display per pa]e
+
+            $start = ($page - 1) * $rowperpage;
+
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                 ->where('users.id', $user)
                 ->first();
@@ -184,7 +189,7 @@ class OfficerController extends Controller
                 $is_resubmitted = 1 ;
                 $is_approved = 1 ;
             } 
-                $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+                $basic_query_object = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
@@ -208,15 +213,18 @@ class OfficerController extends Controller
                 //     $query->whereBetween('labour.updated_at', [$fromDate, $toDate]);
                 // });
                 if ($request->has('district_id')) {
-                    $data_output->where('district_labour.location_id', $request->input('district_id'));
+                    $basic_query_object->where('district_labour.location_id', $request->input('district_id'));
                 }
                 if ($request->has('taluka_id')) {
-                    $data_output->where('taluka_labour.location_id', $request->input('taluka_id'));
+                    $basic_query_object->where('taluka_labour.location_id', $request->input('taluka_id'));
                 }
                 if ($request->has('village_id')) {
-                    $data_output->where('village_labour.location_id', $request->input('village_id'));
+                    $basic_query_object->where('village_labour.location_id', $request->input('village_id'));
                 }
-                $data_output = $data_output->select(
+
+                $totalRecords = $basic_query_object->select('labour.id')->get()->count();
+
+                $data_output = $basic_query_object->select(
                     'labour.id',
                     'labour.full_name',
                     'labour.date_of_birth',
@@ -237,13 +245,20 @@ class OfficerController extends Controller
                     'labour.longitude',
                     'labour.profile_image',
                     'registrationstatus.status_name',
-                )->get();
+                )->skip($start)
+                ->take($rowperpage)
+                ->orderBy('id', 'desc')
+                ->get();
 
                 foreach ($data_output as &$labour) { 
                     $labour['profile_image'] = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour['profile_image'];
                 }
-               
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                if(sizeof($data_output)>=1) {
+                    $totalPages = ceil($totalRecords/$rowperpage);
+                } else {
+                    $totalPages = 1;
+                }
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', "totalRecords" => $totalRecords, "totalPages"=>$totalPages, 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
         }
@@ -458,7 +473,5 @@ class OfficerController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
-
-    
 
 }

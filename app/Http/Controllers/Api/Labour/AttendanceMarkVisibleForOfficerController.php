@@ -20,58 +20,58 @@ use Carbon\Carbon;
 
 class AttendanceMarkVisibleForOfficerController extends Controller
 {
-    public function getAllProjectListForOfficer(Request $request) {
-        try {
-            $user = Auth::user()->id;            
-            $date = date('Y-m-d'); 
-            $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
-            ->where('users.id', $user)
-            ->first();
+    // public function getAllProjectListForOfficer(Request $request) {
+    //     try {
+    //         $user = Auth::user()->id;            
+    //         $date = date('Y-m-d'); 
+    //         $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+    //         ->where('users.id', $user)
+    //         ->first();
 
-        $utype=$data_output->user_type;
-        $user_working_dist=$data_output->user_district;
-        $user_working_tal=$data_output->user_taluka;
-        $user_working_vil=$data_output->user_village;
+    //     $utype=$data_output->user_type;
+    //     $user_working_dist=$data_output->user_district;
+    //     $user_working_tal=$data_output->user_taluka;
+    //     $user_working_vil=$data_output->user_village;
 
         
-        $data_user_output = User::select('id');
-            if($utype=='1')
-            {
-                $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
-            } else if($utype=='2')
-            {
-                $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
-            } else if($utype=='3')
-            {
-                $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
-            }
+    //     $data_user_output = User::select('id');
+    //         if($utype=='1')
+    //         {
+    //             $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
+    //         } else if($utype=='2')
+    //         {
+    //             $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
+    //         } else if($utype=='3')
+    //         {
+    //             $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
+    //         }
 
-            $data_user_output = $data_user_output->get()->toArray();  
+    //         $data_user_output = $data_user_output->get()->toArray();  
         
-            $data_output = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
-            ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
-            ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
-            ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')  
-            ->where('projects.District', $user_working_dist)
-                ->select(
-                    'projects.id',
-                    'projects.project_name',
-                    'projects.description',
-                    'state_projects.name as state',
-                    'district_projects.name as district',
-                    'taluka_projects.name as taluka',
-                    'village_projects.name as village',
-                    'projects.start_date',
-                    'projects.end_date',
-                    'projects.latitude',
-                    'projects.longitude'
-                )->distinct('project.id')->get();
-                // dd($data_output);
-                    return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
-        }
-    }   
+    //         $data_output = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+    //         ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
+    //         ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
+    //         ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')  
+    //         ->where('projects.District', $user_working_dist)
+    //             ->select(
+    //                 'projects.id',
+    //                 'projects.project_name',
+    //                 'projects.description',
+    //                 'state_projects.name as state',
+    //                 'district_projects.name as district',
+    //                 'taluka_projects.name as taluka',
+    //                 'village_projects.name as village',
+    //                 'projects.start_date',
+    //                 'projects.end_date',
+    //                 'projects.latitude',
+    //                 'projects.longitude'
+    //             )->distinct('project.id')->get();
+    //             // dd($data_output);
+    //                 return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
+    //     }
+    // }   
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;            
@@ -81,6 +81,12 @@ class AttendanceMarkVisibleForOfficerController extends Controller
             $fromDate =  $fromDate.' 00:00:01';
             $toDate = date('Y-m-d', strtotime($request->input('to_date')));
             $toDate =  $toDate.' 23:59:59';
+
+            $page = isset($request["start"]) ? $request["start"] : 1;
+            $rowperpage = isset($request["length"])? $request["length"] : 10; // Rows display per pa]e
+
+            $start = ($page - 1) * $rowperpage;
+
             $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
             ->where('users.id', $user)
             ->first();
@@ -102,7 +108,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
         $data_user_output = $data_user_output->get()->toArray();  
 
         // dd($data_user_output);
-            $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+            $basic_query_object = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
             ->leftJoin('users', 'tbl_mark_attendance.user_id', '=', 'users.id')
             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
             ->leftJoin('tbl_area as taluka_labour', 'users.user_taluka', '=', 'taluka_labour.location_id')
@@ -123,8 +129,11 @@ class AttendanceMarkVisibleForOfficerController extends Controller
 
                 ->when($request->get('from_date'), function($query) use ($fromDate, $toDate) {
                     $query->whereBetween('tbl_mark_attendance.updated_at', [$fromDate, $toDate]);
-                })
+                });
                 
+                $totalRecords = $basic_query_object->select('tbl_mark_attendance.id')->get()->count();
+                
+                $data_output = $basic_query_object
                 ->select(
                     'tbl_mark_attendance.id',
                     'users.f_name',
@@ -144,14 +153,21 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'labour.profile_image',
                     'tbl_mark_attendance.attendance_day',
                     'tbl_mark_attendance.updated_at'
-
-                )->distinct('tbl_mark_attendance.id')->get();
+                )->distinct('tbl_mark_attendance.id')
+                ->skip($start)
+                ->take($rowperpage)
+                ->orderBy('id', 'desc')
+                ->get();
     
                 foreach ($data_output as $labour) {
                     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-                                    
                 }
-                return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                if(sizeof($data_output)>=1) {
+                    $totalPages = ceil($totalRecords/$rowperpage);
+                } else {
+                    $totalPages = 1;
+                }
+                return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', "totalRecords" => $totalRecords, "totalPages"=>$totalPages, 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
         }

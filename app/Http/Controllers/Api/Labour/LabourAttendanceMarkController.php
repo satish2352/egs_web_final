@@ -165,20 +165,22 @@ class LabourAttendanceMarkController extends Controller
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;
-
         
-            // $pageNo = $request->has('pageNo');
-            // $pageSize = $request->has('pageSize');
+            $page = isset($request["start"]) ? $request["start"] : 1;
+            $rowperpage = isset($request["length"])? $request["length"] : 10; // Rows display per pa]e
 
-        //  dd( $pageSize);
+            $start = ($page - 1) * $rowperpage;
+
             $date = date('Y-m-d');     
-            $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
+            $basic_query_object = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
                 ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
                 ->where('tbl_mark_attendance.user_id', $user)
                 ->whereDate('tbl_mark_attendance.updated_at', $date)
                   ->when($request->get('project_id'), function($query) use ($request) {
                     $query->where('tbl_mark_attendance.project_id',$request->project_id);
-                })  
+                });  
+                $totalRecords = $basic_query_object->select('tbl_mark_attendance.id')->get()->count();
+                $data_output  = $basic_query_object
                 ->select(
                     'tbl_mark_attendance.id',
                     'tbl_mark_attendance.project_id',
@@ -193,18 +195,22 @@ class LabourAttendanceMarkController extends Controller
                     'labour.profile_image',
                     'tbl_mark_attendance.attendance_day',
                     'tbl_mark_attendance.updated_at'
-
-                )
+                )->skip($start)
+                ->take($rowperpage)
+                ->orderBy('id', 'desc')
                 ->get();
     
-                // ->paginate($pageSize, ['*'], 'pageNo', $pageNo);
-                
                 foreach ($data_output as $labour) {
-                   
                     $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
                 }
+
+                if(sizeof($data_output)>=1) {
+                    $totalPages = ceil($totalRecords/$rowperpage);
+                } else {
+                    $totalPages = 1;
+                }
     
-            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+            return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', "totalRecords" => $totalRecords, "totalPages"=>$totalPages, 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
         }

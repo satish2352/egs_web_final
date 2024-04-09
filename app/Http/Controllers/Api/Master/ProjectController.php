@@ -13,7 +13,6 @@ use App\Models\ {
 use Illuminate\Support\Facades\Config;
 class ProjectController extends Controller
 {
-
     public function getAllProjectForOfficer(Request $request){
         try {
             $user = Auth::user()->id;
@@ -67,15 +66,15 @@ class ProjectController extends Controller
 				  'projects.longitude',
                   'projects.start_date',
                   'projects.end_date',
-                
-              )->get();
+              )
+              ->orderBy('id', 'desc')
+              ->get();
             //   dd($project);
             return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
         }
     }
-
     public function filterDataProjectsLaboursMap(Request $request){
         try {
             $user = Auth::user()->id;
@@ -118,7 +117,8 @@ class ProjectController extends Controller
                     'labour.aadhar_image',
                     'labour.mgnrega_image',
                     'labour.profile_image',
-                )->distinct('labour.id');
+                )->distinct('labour.id')
+                ->orderBy('id', 'desc');
     
             $projectQuery = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
                 ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
@@ -150,7 +150,8 @@ class ProjectController extends Controller
                     'projects.end_date',
                     'projects.latitude',
                     'projects.longitude'
-                )->distinct('projects.id');
+                )->distinct('projects.id')
+                ->orderBy('id', 'desc');
 
                 $gramsevakdocumentQuery = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
                 ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
@@ -172,7 +173,8 @@ class ProjectController extends Controller
                     'users.user_village',
                     'village_u.name as village_name',
                     'tbl_gram_panchayat_documents.document_pdf',
-                );
+                )
+                ->orderBy('id', 'desc');
     // dd($gramsevakdocumentQuery);
             // if ($request->has('mgnrega_card_id')) {
             //     $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');

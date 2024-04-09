@@ -28,15 +28,14 @@ class OfficerGramDocAppNotAppController extends Controller
                 $toDate = date('Y-m-d', strtotime($request->input('to_date')));
                 $toDate =  $toDate.' 23:59:59';
 
-
-
+                $page = isset($request["start"]) ? $request["start"] : 1;
+                $rowperpage = isset($request["length"])? $request["length"] : 10; // Rows display per pa]e
+    
+                $start = ($page - 1) * $rowperpage;
 
                 $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
                     ->where('users.id', $user)
                     ->first();
-
-                    
-
 
                 $utype=$data_output->user_type;
                 $user_working_dist=$data_output->user_district;
@@ -69,7 +68,7 @@ class OfficerGramDocAppNotAppController extends Controller
                     $is_resubmitted = 1 ;
                     $is_approved = 1 ;
                 } 
-                    $data_output = GramPanchayatDocuments::leftJoin('registrationstatus', 'tbl_gram_panchayat_documents.is_approved', '=', 'registrationstatus.id')
+                    $basic_query_object = GramPanchayatDocuments::leftJoin('registrationstatus', 'tbl_gram_panchayat_documents.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
                 ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
                 ->leftJoin('tbl_area as district_u', 'users.user_district', '=', 'district_u.location_id')
@@ -92,15 +91,18 @@ class OfficerGramDocAppNotAppController extends Controller
                         $query->whereBetween('tbl_gram_panchayat_documents.updated_at', [$fromDate, $toDate]);
                     });
                     if ($request->has('district_id')) {
-                        $data_output->where('district_u.location_id', $request->input('district_id'));
+                        $basic_query_object->where('district_u.location_id', $request->input('district_id'));
                     }
                     if ($request->has('taluka_id')) {
-                        $data_output->where('taluka_u.location_id', $request->input('taluka_id'));
+                        $basic_query_object->where('taluka_u.location_id', $request->input('taluka_id'));
                     }
                     if ($request->has('village_id')) {
-                        $data_output->where('village_u.location_id', $request->input('village_id'));
+                        $basic_query_object->where('village_u.location_id', $request->input('village_id'));
                     }
-                    $data_output = $data_output->select(
+
+                    $totalRecords = $basic_query_object->select('tbl_gram_panchayat_documents.id')->get()->count();
+
+                    $data_output = $basic_query_object->select(
                         'tbl_gram_panchayat_documents.id',
                         'tbl_gram_panchayat_documents.document_name',
                         'tbl_documenttype.document_type_name',
@@ -114,7 +116,10 @@ class OfficerGramDocAppNotAppController extends Controller
                         'village_u.name as village_name',
                         'registrationstatus.status_name',
                         'tbl_gram_panchayat_documents.updated_at',
-                    )->get();
+                    )->skip($start)
+                    ->take($rowperpage)
+                    ->orderBy('id', 'desc')
+                    ->get();
 
                     foreach ($data_output as $document_data) {
                         $document_data->document_pdf = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $document_data->document_pdf;
@@ -135,8 +140,12 @@ class OfficerGramDocAppNotAppController extends Controller
                             ->where('tbl_doc_history.gram_document_id', $documenthistory['id'])
                             ->get();
                     }
-                 
-                return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
+                    if(sizeof($data_output)>=1) {
+                        $totalPages = ceil($totalRecords/$rowperpage);
+                    } else {
+                        $totalPages = 1;
+                    }
+                return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', "totalRecords" => $totalRecords, "totalPages"=>$totalPages, 'data' => $data_output], 200);
             } catch (\Exception $e) {
                 return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
             }
@@ -225,7 +234,6 @@ class OfficerGramDocAppNotAppController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Update failed', 'error' => $e->getMessage()], 500);
             }
         }
-
         public function countOfficerDocument(Request $request) {
             try {
                 $user = Auth::user()->id;
@@ -287,6 +295,4 @@ class OfficerGramDocAppNotAppController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
             }
         }
-     
-
 }
