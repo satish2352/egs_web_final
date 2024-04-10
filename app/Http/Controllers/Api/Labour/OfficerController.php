@@ -53,6 +53,7 @@ class OfficerController extends Controller
                 ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
                 ->leftJoin('tbl_reason as reason_labour', 'labour.reason_id', '=', 'reason_labour.id')
+                ->leftJoin('users', 'labour.user_id', '=', 'users.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
@@ -64,6 +65,7 @@ class OfficerController extends Controller
                 ->select(
                     'labour.id',
                     'labour.full_name',
+                    User::raw("CONCAT(users.f_name, IFNULL(CONCAT(' ', users.m_name), ''),' ', users.l_name) AS gramsevak_full_name"),
                     'labour.date_of_birth',
                     'gender_labour.gender_name as gender_name',
                     'skills_labour.skills as skills',
@@ -128,7 +130,8 @@ class OfficerController extends Controller
                             'users_labour.f_name as f_name',
                             'tbl_reason.reason_name as reason_name',
                             'tbl_history.other_remark',
-                            'tbl_history.updated_at',
+                            HistoryModel::raw("CONVERT_TZ(tbl_history.updated_at, '+00:00', '+05:30') as updated_at"), 
+                           
                         )
                         ->where('tbl_history.labour_id', $labourhistory['id'])
                         ->get();
