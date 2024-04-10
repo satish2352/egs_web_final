@@ -130,7 +130,7 @@ class GramPanchayatDocumentController extends Controller
                     'users.user_village',
                     'village_u.name as village_name',
                     'registrationstatus.status_name',
-                    'tbl_gram_panchayat_documents.updated_at',
+                    GramPanchayatDocuments::raw("CONVERT_TZ(tbl_gram_panchayat_documents.updated_at, '+00:00', '+05:30') as updated_at"), 
                 )->skip($start)
                 ->take($rowperpage)
                 ->orderBy('id', 'desc')
@@ -150,7 +150,8 @@ class GramPanchayatDocumentController extends Controller
                             'users.f_name as f_name',
                             'tbl_doc_reason.reason_name as reason_name',
                             'tbl_doc_history.other_remark',
-                            'tbl_doc_history.updated_at',
+                            HistoryDocumentModel::raw("CONVERT_TZ(tbl_doc_history.updated_at, '+00:00', '+05:30') as updated_at"), 
+                            
                         )
                         ->where('tbl_doc_history.gram_document_id', $documenthistory['id'])
                         ->get();

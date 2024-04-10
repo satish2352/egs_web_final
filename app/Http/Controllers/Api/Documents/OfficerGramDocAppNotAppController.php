@@ -115,7 +115,7 @@ class OfficerGramDocAppNotAppController extends Controller
                         'users.user_village',
                         'village_u.name as village_name',
                         'registrationstatus.status_name',
-                        'tbl_gram_panchayat_documents.updated_at',
+                        GramPanchayatDocuments::raw("CONVERT_TZ(tbl_gram_panchayat_documents.updated_at, '+00:00', '+05:30') as updated_at"), 
                     )->skip($start)
                     ->take($rowperpage)
                     ->orderBy('id', 'desc')

@@ -152,7 +152,7 @@ class AttendanceMarkVisibleForOfficerController extends Controller
                     'labour.longitude',
                     'labour.profile_image',
                     'tbl_mark_attendance.attendance_day',
-                    'tbl_mark_attendance.updated_at'
+                    LabourAttendanceMark::raw("CONVERT_TZ(tbl_mark_attendance.updated_at, '+00:00', '+05:30') as updated_at"), 
                 )->distinct('tbl_mark_attendance.id')
                 ->skip($start)
                 ->take($rowperpage)

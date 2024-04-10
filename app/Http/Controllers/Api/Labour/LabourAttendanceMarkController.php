@@ -194,7 +194,7 @@ class LabourAttendanceMarkController extends Controller
                     'labour.longitude',
                     'labour.profile_image',
                     'tbl_mark_attendance.attendance_day',
-                    'tbl_mark_attendance.updated_at'
+                    LabourAttendanceMark::raw("CONVERT_TZ(tbl_mark_attendance.updated_at, '+00:00', '+05:30') as updated_at"), 
                 )->skip($start)
                 ->take($rowperpage)
                 ->orderBy('id', 'desc')
