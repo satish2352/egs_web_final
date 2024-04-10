@@ -320,6 +320,7 @@ class GramPanchayatDocumentController extends Controller
                 $data_output  = $basic_query_object
                 ->select(
                     'tbl_gram_panchayat_documents.id',
+                    User::raw("CONCAT(users.f_name, IFNULL(CONCAT(' ', users.m_name), ''),' ', users.l_name) AS gramsevak_full_name"),
                     'tbl_gram_panchayat_documents.document_name',
                     'tbl_documenttype.document_type_name',
                     'tbl_gram_panchayat_documents.document_pdf',
@@ -329,7 +330,7 @@ class GramPanchayatDocumentController extends Controller
                     'taluka_labour.name as taluka_name',
                     'users.user_village',
                     'village_labour.name as village_name',
-                    'tbl_gram_panchayat_documents.updated_at',
+                    GramPanchayatDocuments::raw("CONVERT_TZ(tbl_gram_panchayat_documents.updated_at, '+00:00', '+05:30') as updated_at"),
                 )->skip($start)
                 ->take($rowperpage)
                 ->orderBy('id', 'desc')
