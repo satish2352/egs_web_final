@@ -52,6 +52,8 @@ Route::group([
         Route::post('/list-project-for-officer', [ProjectController::class, 'getAllProjectForOfficer']);
         Route::post('/project-list-lat-log', [ProjectController::class, 'getAllProjectLatLong']);
 
+        Route::post('/distance-list', [ProjectController::class, 'fetchDistances']);
+        
         // ============Start LabourAttendanceMarkController============
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);
         Route::post('/list-attendance-marked', [LabourAttendanceMarkController::class, 'getAllAttendanceMarkedLabour']);
@@ -71,23 +73,16 @@ Route::group([
         Route::post('/update-officer-document-status-not-approved', [OfficerGramDocAppNotAppController::class, 'updateDocumentStatusNotApproved']);
         Route::post('/count-officer-document', [OfficerGramDocAppNotAppController::class, 'countOfficerDocument']);
 
-        
-        
         //    =================Start OfficerController===============
         Route::post('/list-labour-received-to-officer-for-approval', [OfficerController::class, 'getLabourStatusListReceived']);
-       
         Route::post('/update-officer-labour-status-approved', [OfficerController::class, 'updateLabourStatusApproved']);
         Route::post('/update-officer-labour-status-not-approved', [OfficerController::class, 'updateLabourStatusNotApproved']);
         Route::post('/update-officer-labour-status-rejected', [OfficerController::class, 'updateLabourStatusRejected']);
-
         Route::post('/officer-reports-count', [OfficerController::class, 'officerReportsCount']);
         Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
-
         Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
         // Route::post('/project-list-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllProjectListForOfficer']);
-        
         Route::post('/new-list-area', [AllMasterController::class, 'getTblAreaNewData']);
-        
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
