@@ -30,20 +30,20 @@ class LabourAttendanceMarkController extends Controller
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
+            return response()->json(['status' => 'false', 'message' => $validator->errors()->all()], 200);
         }
     
         try {
             // Check if the user exists
             $user = Auth::user();
             if (!$user) {
-                return response()->json(['status' => 'error', 'message' => 'User not found'], 200);
+                return response()->json(['status' => 'false', 'message' => 'User not found'], 200);
             }
 
             // Check if labour status is approved
             $labour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
             if (!$labour || $labour->is_approved != 2) {
-                return response()->json(['status' => 'error', 'message' => 'Labour status not approved'], 200);
+                return response()->json(['status' => 'false', 'message' => 'Labour status not approved'], 200);
             }
             
 
@@ -55,7 +55,7 @@ class LabourAttendanceMarkController extends Controller
                                             ->first();
 
             if ($existingEntry  && $existingEntry->attendance_day =='full_day') {
-                return response()->json(['status' => 'error', 'message' => 'Attendance for this card ID already marked for today'], 200);
+                return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID already marked for today'], 200);
             } else {
             
                 $fromDate = date('Y-m-d').' 05:00:01';
@@ -94,7 +94,7 @@ class LabourAttendanceMarkController extends Controller
                            
                     
                         }  else {
-                            return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
+                            return response()->json(['status' => 'false', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                         }
                     }
                     // elseif($request->attendance_day =='half_day' || $request->attendance_day =='full_day'  && $firstHalfWorkAttendance->project_id == $request->project_id) {
@@ -103,7 +103,7 @@ class LabourAttendanceMarkController extends Controller
                     // }
                    
                 } elseif((count($secondHalfWorkAttendance)>=1) && ($secondHalfWorkAttendance[0]['project_id'] == $request->project_id) ) {
-                    return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
+                    return response()->json(['status' => 'false', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                 
                 }else {
                     $labour_data = new LabourAttendanceMark();
