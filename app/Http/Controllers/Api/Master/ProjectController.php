@@ -81,17 +81,9 @@ class ProjectController extends Controller
             $user = Auth::user()->id;
             $userLatitude = $request->latitude; 
             $userLongitude = $request->longitude; 
-            $distanceInKm = 5; 
-            // $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
-            // ->first('tbl_distancekm.distance_km');
-            //  if ($distanceInKm) {
-            //      $distanceInKm = $distanceInKm->distance_km;
-            //  }
-             $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
-            ->first('tbl_distancekm.distance_km');
-             if ($distanceInKm) {
-                 $distanceInKm = $distanceInKm->distance_km;
-             }
+            $distanceInKm = DistanceKM::first()->distance_km;
+            // $distanceInKm = 5; 
+           
 
             $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
             $latN = $latLongArr['latN'];
@@ -306,19 +298,7 @@ class ProjectController extends Controller
             $userLatitude = $request->latitude; // Latitude of the user
             $userLongitude = $request->longitude; // Longitude of the user
             // $distanceInKm = 5; // Distance in kilometers
-            
-            // $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
-            
-            // ->where('tbl_distancekm.id')->value('distance_km');
-            $distanceInKm = DistanceKM::first('tbl_distancekm.distance_km');
-        //    ->first('tbl_distancekm.distance_km');
-        dd($distanceInKm);
-            if ($distanceInKm) {
-                $distanceInKm = $distanceInKm->distance_km;
-            }
-
-            
-        //   dd( $distanceInKm);
+            $distanceInKm = DistanceKM::first()->distance_km;            
             $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
             $latN = $latLongArr['latN'];
             $latS = $latLongArr['latS'];
