@@ -52,7 +52,6 @@ Route::group([
         Route::post('/list-project-for-officer', [ProjectController::class, 'getAllProjectForOfficer']);
         Route::post('/project-list-lat-log', [ProjectController::class, 'getAllProjectLatLong']);
 
-        Route::post('/distance-list', [ProjectController::class, 'fetchDistances']);
         
         // ============Start LabourAttendanceMarkController============
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);
