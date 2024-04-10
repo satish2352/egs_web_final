@@ -81,8 +81,13 @@ class ProjectController extends Controller
             $user = Auth::user()->id;
             $userLatitude = $request->latitude; 
             $userLongitude = $request->longitude; 
-            // $distanceInKm = 5; 
-            $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
+            $distanceInKm = 5; 
+            // $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
+            // ->first('tbl_distancekm.distance_km');
+            //  if ($distanceInKm) {
+            //      $distanceInKm = $distanceInKm->distance_km;
+            //  }
+             $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
             ->first('tbl_distancekm.distance_km');
              if ($distanceInKm) {
                  $distanceInKm = $distanceInKm->distance_km;
@@ -305,8 +310,9 @@ class ProjectController extends Controller
             // $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
             
             // ->where('tbl_distancekm.id')->value('distance_km');
-            $distanceInKm = DistanceKM::leftJoin('projects', 'tbl_distancekm.id', '=', 'projects.distancekm_id')
-           ->first('tbl_distancekm.distance_km');
+            $distanceInKm = DistanceKM::first('tbl_distancekm.distance_km');
+        //    ->first('tbl_distancekm.distance_km');
+        dd($distanceInKm);
             if ($distanceInKm) {
                 $distanceInKm = $distanceInKm->distance_km;
             }
