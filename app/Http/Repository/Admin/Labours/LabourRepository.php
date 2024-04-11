@@ -52,9 +52,10 @@ class LabourRepository
 			'labour.voter_image', 
 			'labour.is_active',
 			'labour.is_approved',
+			'labour.is_resubmitted',
 			'users.f_name',
 			'users.m_name',
-			'users.l_name',
+			'users.l_name'
           )->get();
 		  }else if($sess_user_role=='2')
 		  {
@@ -120,9 +121,10 @@ class LabourRepository
                     'labour.profile_image',
                     'registrationstatus.status_name',
 					'labour.is_approved',
+					'labour.is_resubmitted',
 					'users.f_name',
 					'users.m_name',
-					'users.l_name',
+					'users.l_name'
                 )
                     ->get();
 			}else if($sess_user_role=='3')
@@ -156,9 +158,10 @@ class LabourRepository
 					  'labour.profile_image',
 					  'registrationstatus.status_name',
 					  'labour.is_approved',
+					  'labour.is_resubmitted',
 					  'users.f_name',
 					  'users.m_name',
-					  'users.l_name',
+					  'users.l_name'
 				  )
 					  ->get();
 			  }		
@@ -197,7 +200,7 @@ class LabourRepository
 			'labour.is_approved',
 			'users.f_name',
 			'users.m_name',
-			'users.l_name',
+			'users.l_name'
           )->get();
 		  }else if($sess_user_role=='2')
 		  {
@@ -263,9 +266,10 @@ class LabourRepository
                     'labour.profile_image',
                     'registrationstatus.status_name',
 					'labour.is_approved',
+					'labour.is_resubmitted',
 					'users.f_name',
 					'users.m_name',
-					'users.l_name',
+					'users.l_name'
                 )
                     ->get();
 			}else if($sess_user_role=='3')
@@ -303,9 +307,10 @@ class LabourRepository
 					  'labour.profile_image',
 					  'registrationstatus.status_name',
 					  'labour.is_approved',
+					  'labour.is_resubmitted',
 					  'users.f_name',
 					  'users.m_name',
-					  'users.l_name',
+					  'users.l_name'
 				  )
 					  ->get();
 			  }		
@@ -342,9 +347,10 @@ class LabourRepository
 			'labour.voter_image', 
 			'labour.is_active',
 			'labour.is_approved',
+			'labour.is_resubmitted',
 			'users.f_name',
 			'users.m_name',
-			'users.l_name',
+			'users.l_name'
           )->get();
 		  }else if($sess_user_role=='2')
 		  {
@@ -410,9 +416,10 @@ class LabourRepository
                     'labour.profile_image',
                     'registrationstatus.status_name',
 					'labour.is_approved',
+					'labour.is_resubmitted',
 					'users.f_name',
 					'users.m_name',
-					'users.l_name',
+					'users.l_name'
                 )
                     ->get();
 			}else if($sess_user_role=='3')
@@ -450,9 +457,10 @@ class LabourRepository
 					  'labour.profile_image',
 					  'registrationstatus.status_name',
 					  'labour.is_approved',
+					  'labour.is_resubmitted',
 					  'users.f_name',
 					  'users.m_name',
-					  'users.l_name',
+					  'users.l_name'
 				  )
 					  ->get();
 			  }		
