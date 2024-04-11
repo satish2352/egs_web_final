@@ -52,9 +52,10 @@ class LabourRepository
 			'labour.voter_image', 
 			'labour.is_active',
 			'labour.is_approved',
+			'labour.is_resubmitted',
 			'users.f_name',
 			'users.m_name',
-			'users.l_name',
+			'users.l_name'
           )->get();
 		  }else if($sess_user_role=='2')
 		  {
@@ -120,9 +121,10 @@ class LabourRepository
                     'labour.profile_image',
                     'registrationstatus.status_name',
 					'labour.is_approved',
+					'labour.is_resubmitted',
 					'users.f_name',
 					'users.m_name',
-					'users.l_name',
+					'users.l_name'
                 )
                     ->get();
 			}else if($sess_user_role=='3')
@@ -156,9 +158,10 @@ class LabourRepository
 					  'labour.profile_image',
 					  'registrationstatus.status_name',
 					  'labour.is_approved',
+					  'labour.is_resubmitted',
 					  'users.f_name',
 					  'users.m_name',
-					  'users.l_name',
+					  'users.l_name'
 				  )
 					  ->get();
 			  }		
@@ -197,7 +200,7 @@ class LabourRepository
 			'labour.is_approved',
 			'users.f_name',
 			'users.m_name',
-			'users.l_name',
+			'users.l_name'
           )->get();
 		  }else if($sess_user_role=='2')
 		  {
@@ -263,9 +266,10 @@ class LabourRepository
                     'labour.profile_image',
                     'registrationstatus.status_name',
 					'labour.is_approved',
+					'labour.is_resubmitted',
 					'users.f_name',
 					'users.m_name',
-					'users.l_name',
+					'users.l_name'
                 )
                     ->get();
 			}else if($sess_user_role=='3')
@@ -303,9 +307,10 @@ class LabourRepository
 					  'labour.profile_image',
 					  'registrationstatus.status_name',
 					  'labour.is_approved',
+					  'labour.is_resubmitted',
 					  'users.f_name',
 					  'users.m_name',
-					  'users.l_name',
+					  'users.l_name'
 				  )
 					  ->get();
 			  }		
@@ -342,9 +347,10 @@ class LabourRepository
 			'labour.voter_image', 
 			'labour.is_active',
 			'labour.is_approved',
+			'labour.is_resubmitted',
 			'users.f_name',
 			'users.m_name',
-			'users.l_name',
+			'users.l_name'
           )->get();
 		  }else if($sess_user_role=='2')
 		  {
@@ -410,9 +416,10 @@ class LabourRepository
                     'labour.profile_image',
                     'registrationstatus.status_name',
 					'labour.is_approved',
+					'labour.is_resubmitted',
 					'users.f_name',
 					'users.m_name',
-					'users.l_name',
+					'users.l_name'
                 )
                     ->get();
 			}else if($sess_user_role=='3')
@@ -450,9 +457,10 @@ class LabourRepository
 					  'labour.profile_image',
 					  'registrationstatus.status_name',
 					  'labour.is_approved',
+					  'labour.is_resubmitted',
 					  'users.f_name',
 					  'users.m_name',
-					  'users.l_name',
+					  'users.l_name'
 				  )
 					  ->get();
 			  }		
@@ -1237,23 +1245,57 @@ class LabourRepository
 		{
 			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
-							'is_approved' => '1',
+							'is_approved' => $request['is_approved'],
 							'reason_id' => $request['reason_id'],
-							'other_remark' => $request['other_remark']
+							'other_remark' => $request['other_remark'],
+							'is_resubmitted' => '0',
 						]);
 		}
 		else if($request['is_approved']=='3' && $request['other_remark']=='')		
 		{
 			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
-							'is_approved' => '1',
-							'reason_id' => $request['reason_id']
+							'is_approved' => $request['is_approved'],
+							'reason_id' => $request['reason_id'],
+							'is_resubmitted' => '0',
 						]);
 		}			
 		
 		// $this->updateRolesPermissions($request, $request->edit_id);
 		return $request->edit_id;
 	}
+
+	// public function updateLabourStatus($request)
+	// {
+	// 	// dd($request);
+	// 	if($request['is_approved']=='2')
+	// 	{
+	// 		$user_data = Labour::where('id',$request['edit_id']) 
+	// 					->update([
+	// 						'is_approved' => $request['is_approved'],
+	// 						'is_resubmitted' => '0',
+	// 					]);
+	// 	}else if($request['is_approved']=='3' && $request['other_remark']!='')		
+	// 	{
+	// 		$user_data = Labour::where('id',$request['edit_id']) 
+	// 					->update([
+	// 						'is_approved' => $request['is_approved'],
+	// 						'reason_id' => $request['reason_id'],
+	// 						'other_remark' => $request['other_remark']
+	// 					]);
+	// 	}
+	// 	else if($request['is_approved']=='3' && $request['other_remark']=='')		
+	// 	{
+	// 		$user_data = Labour::where('id',$request['edit_id']) 
+	// 					->update([
+	// 						'is_approved' => $request['is_approved'],
+	// 						'reason_id' => $request['reason_id']
+	// 					]);
+	// 	}			
+		
+	// 	// $this->updateRolesPermissions($request, $request->edit_id);
+	// 	return $request->edit_id;
+	// }
 
 	public function getGramsevakList() {
 
