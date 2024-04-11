@@ -421,21 +421,21 @@ class LabourController extends Controller
             $validator = Validator::make($request->all(), [
                 'latitude' => ['required', 'between:-90,90'], // Latitude range
                 'longitude' => ['required', 'between:-180,180'], // Longitude range
-                'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-                'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+                // 'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+                // 'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+                // 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+                // 'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+                return response()->json(['status' => 'false', 'message' => $validator->errors()], 200);
             }
 
             // Find the labour data to update
             $labour_data = Labour::where('id', $request->id)->first();
 
             if (!$labour_data) {
-                return response()->json(['status' => 'error', 'message' => 'Labour data not found'], 200);
+                return response()->json(['status' => 'false', 'message' => 'Labour data not found'], 200);
             }
 
             // Delete existing family details for the labor
