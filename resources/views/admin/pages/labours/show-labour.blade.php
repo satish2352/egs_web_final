@@ -88,6 +88,14 @@
                                     </div>
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <label>Gender:</label>
+                                        </div>
+                                        <div class="col-lg-8 col-md-8 col-sm-8">
+                                            <label>{{ $labour_detail['data_users_data']['gender_name'] }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
                                             <label>Mobile Number :</label>
                                         </div>
                                         <div class="col-lg-8 col-md-8 col-sm-8">
@@ -170,7 +178,7 @@
                                     </br>
                                     <div class="row ">
                                         <div class="col-lg-4 col-md-4 col-sm-4">
-                                            <label>Addhar Card :</label>
+                                            <label>Aadhaar Card :</label>
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3">
                                             <img class="preview-image" src="{{ Config::get('DocumentConstant.USER_LABOUR_VIEW') }}{{ $labour_detail['data_users_data']['aadhar_image'] }}"
@@ -264,7 +272,7 @@
                                 </div>
                             </div>
 
-                            @if($labour_detail['data_users_data']['is_approved']=='3' && $labour_detail['data_users_data']['is_resubmitted']=='1')    
+                            @if($labour_detail['data_users_data']['is_approved']=='1' && $labour_detail['data_users_data']['is_resubmitted']=='1')    
                             <div class="row mt-4">
                                 <div class="col-12 grid-margin">
                                     <div class="card">
@@ -290,7 +298,13 @@
                                                                     <td>{{ $loop->iteration }}</td>
                                                                     <td>{{ $history_item['status_name'] }}</td>
                                                                     <td>{{ $history_item['reason_name'] }}</td>
-                                                                    <td>{{ $history_item['other_remark'] }}</td>
+                                                                    <td>
+                                                                        @if($history_item['other_remark']!='null')
+                                                                            {{ $history_item['other_remark'] }}
+                                                                        @else
+                                                                            NA
+                                                                        @endif    
+                                                                    </td>
                                                                 </tr>
                                                             @endforeach
  
@@ -470,7 +484,7 @@
                                                 </div>
                                             </div>
 
-                                        @if($labour_detail['data_users_data']['is_approved']='3')
+                                        @if($labour_detail['data_users_data']['is_approved']=='3')
                                             <div class="col-lg-3 col-md-3 col-sm-3" id="reason_div">
                                                 <div class="form-group">
                                                     <label for="reason_id">Not Aprove Reasons</label>&nbsp<span class="red-text">*</span>
@@ -487,8 +501,6 @@
                                                             {{ $dynamic_reasons_data['reason_name'] }}</option>
                                                            
                                                             @endforeach  
-                                                             
-
                                                     </select>
                                                     @if ($errors->has('reason_id'))
                                                         <span class="red-text"><?php echo $errors->first('reason_id', ':message'); ?></span>

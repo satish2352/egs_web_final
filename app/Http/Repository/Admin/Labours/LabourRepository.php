@@ -471,6 +471,7 @@ class LabourRepository
 		->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
 		->leftJoin('users', 'labour.user_id', '=', 'users.id')
 		->where('labour.is_resubmitted', '1')
+		->where('labour.is_approved', '1')
           ->select(
 			'labour.id',
 			'labour.full_name',
@@ -488,6 +489,7 @@ class LabourRepository
 			'labour.voter_image', 
 			'labour.is_active',
 			'labour.is_approved',
+			'labour.is_resubmitted',
 			'users.f_name',
 			'users.m_name',
 			'users.l_name',
@@ -536,6 +538,7 @@ class LabourRepository
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 				->leftJoin('users', 'labour.user_id', '=', 'users.id')
 				->where('labour.is_resubmitted', '1')
+				->where('labour.is_approved', '1')
                 ->whereIn('labour.user_id',$data_user_output)
                 ->where('registrationstatus.is_active', true)
                 ->select(
@@ -555,6 +558,7 @@ class LabourRepository
                     'labour.profile_image',
                     'registrationstatus.status_name',
 					'labour.is_approved',
+					'labour.is_resubmitted',
 					'users.f_name',
 					'users.m_name',
 					'users.l_name',
@@ -571,6 +575,7 @@ class LabourRepository
 				  ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
 				  ->leftJoin('users', 'labour.user_id', '=', 'users.id')
 				  ->where('labour.is_resubmitted', '1')
+				  ->where('labour.is_approved', '1')
 				  ->where('labour.user_id',$sess_user_id)
 				  ->where('registrationstatus.is_active', true)
 				  ->select(
@@ -590,6 +595,7 @@ class LabourRepository
 					  'labour.profile_image',
 					  'registrationstatus.status_name',
 					  'labour.is_approved',
+					  'labour.is_resubmitted',
 					  'users.f_name',
 					  'users.m_name',
 					  'users.l_name',
@@ -1231,7 +1237,7 @@ class LabourRepository
 		{
 			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
-							'is_approved' => $request['is_approved'],
+							'is_approved' => '1',
 							'reason_id' => $request['reason_id'],
 							'other_remark' => $request['other_remark']
 						]);
@@ -1240,7 +1246,7 @@ class LabourRepository
 		{
 			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
-							'is_approved' => $request['is_approved'],
+							'is_approved' => '1',
 							'reason_id' => $request['reason_id']
 						]);
 		}			

@@ -60,6 +60,88 @@
                                     @endif
                                 </div>
                             </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
+                                        <option value="">Select Skill</option>
+                                        <option value="skill">Skill</option>
+                                        <option value="unskill">Unskill</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skill_id" id="skill_id" disabled>
+
+                                        <option value="">Select Skill</option>
+                                       @foreach ($skills_data as $skills_for_data)    
+                                        <option value="{{ $skills_for_data['id'] }}">{{ $skills_for_data['skill_name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="registration_status_id" id="registration_status_id">
+
+                                        <option value="">Select Registration Status</option>
+                                       @foreach ($registration_status_data as $registration_status_for_data)    
+                                        <option value="{{ $registration_status_for_data['id'] }}">{{ $registration_status_for_data['status_name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('registration_status_id'))
+                                        <span class="red-text"><?php echo $errors->first('registration_status_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                <select class="form-control" name="month_id" id="month_id">
+                                        <option value="">Select Month</option>
+                                        <option value="January">January</option>
+                                        <option value="February">February</option>
+                                        <option value="March">March</option>
+                                        <option value="April">April</option>
+                                        <option value="May">May</option>
+                                        <option value="June">June</option>
+                                        <option value="July">July</option>
+                                        <option value="August">August</option>
+                                        <option value="September">September</option>
+                                        <option value="October">October</option>
+                                        <option value="November">November</option>
+                                        <option value="December">December</option>
+                                    </select>
+                                    @if ($errors->has('month_id'))
+                                        <span class="red-text"><?php echo $errors->first('month_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="year_id" id="year_id">
+                                        <option value="">Select Year</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php //echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                             <button type="submit" class="btn btn-sm btn-success" id="submitButton">
@@ -95,6 +177,49 @@
                                     @endif
                                 </div>
                             </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skillorunskill_id" id="skillorunskill_id">
+                                        <option value="">Select Skill</option>
+                                        <option value="skill">Skill</option>
+                                        <option value="unskill">Unskill</option>
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="skill_id" id="skill_id" disabled>
+
+                                        <option value="">Select Skill</option>
+                                       @foreach ($skills_data as $skills_for_data)    
+                                        <option value="{{ $skills_for_data['id'] }}">{{ $skills_for_data['skill_name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('skill_id'))
+                                        <span class="red-text"><?php echo $errors->first('skill_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="registration_status_id" id="registration_status_id">
+
+                                        <option value="">Select Registration Status</option>
+                                       @foreach ($registration_status_data as $registration_status_for_data)    
+                                        <option value="{{ $registration_status_for_data['id'] }}">{{ $registration_status_for_data['status_name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('registration_status_id'))
+                                        <span class="red-text"><?php echo $errors->first('registration_status_id', ':message'); ?></span>
+                                    @endif
+                                </div>
+                            </div>
                             <div class="col-lg-3 col-md-3 col-sm-3">
                                 <div class="form-group">
                             <button type="submit" class="btn btn-sm btn-success" id="submitButton">
@@ -112,10 +237,9 @@
                                     <div class="table-responsive">
                                         <table id="order-listing" class="table table-bordered">
                                             <thead>
-                                            <input type="hidden" class="form-control" name="is_approved_val" id="is_approved_val"
-                                                placeholder="" value="{{ $labour_type }}">
                                                 <tr>
-                                                
+                                                <input type="hidden" class="form-control" name="is_approved_val" id="is_approved_val"
+                                                placeholder="" value="">
                                                     <th>Sr. No.</th>
                                                     <th>User Name</th>
                                                     <th>Labour Name</th>
@@ -128,43 +252,22 @@
                                             <tbody>
                                                 
                                                 @foreach ($labours as $item)
+                                                
                                                     <tr>
+                                                    
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item->f_name }} {{ $item->m_name }} {{ $item->l_name }}</td>
                                                         <td>{{ $item->full_name }}</td>
                                                         <td>{{ $item->mobile_number }}</td>
                                                         <td>{{ $item->mgnrega_card_id }}</td>
                                                         <td>
-                                                            @if (session()->get('role_id')=='1')
-                                                                @if ($item->is_approved=='1' && $item->is_resubmitted=='0')
-                                                                    Sent For approval To The Officer
-                                                                @elseif ($item->is_approved=='2')
-                                                                    Approved By Officer
-                                                                @elseif ($item->is_approved=='3' && $item->is_resubmitted=='0')
-                                                                    Disapproved By Officer    
-                                                                @elseif ($item->is_approved=='1' && $item->is_resubmitted=='1')
-                                                                    Resend To Officer For Verification    
-                                                                @endif
-                                                            @elseif (session()->get('role_id')=='2')
-                                                                @if ($item->is_approved=='1' && $item->is_resubmitted=='0')
-                                                                    Received For approval
-                                                                @elseif ($item->is_approved=='2')
-                                                                    Approved
-                                                                @elseif ($item->is_approved=='3' && $item->is_resubmitted=='0')
-                                                                    Disapproved
-                                                                @elseif ($item->is_approved=='1' && $item->is_resubmitted=='1')
-                                                                    Received For Reverification       
-                                                                @endif
-                                                            @elseif (session()->get('role_id')=='3')
-                                                                @if ($item->is_approved=='1' && $item->is_resubmitted=='0')
-                                                                    Sent For approval
-                                                                @elseif ($item->is_approved=='2')
-                                                                    Approved
-                                                                @elseif ($item->is_approved=='3' && $item->is_resubmitted=='0')
-                                                                    Received For Correction
-                                                                @elseif ($item->is_approved=='1' && $item->is_resubmitted=='1')
-                                                                    Sent For Reverification               
-                                                                @endif
+                                                        
+                                                            @if ($item->is_approved=='1')
+                                                                Received For Approval
+                                                            @elseif($item->is_approved=='2')
+                                                                Approved
+                                                            @elseif($item->is_approved=='3')
+                                                                Send For Correction
                                                             @endif
                                                         </td>
                                                         <td class="d-flex">
@@ -267,19 +370,30 @@
                     }
                     var talukaId = $('#taluka_id').val();
                     var villageId = $('#village_id').val();
+                    var RegistrationStatusId = $('#registration_status_id').val();
+
+                    if($('#skillorunskill_id').val()=='skill')
+                    {
+                    var SkillId = $('#skill_id').val();
+                    }else if($('#skillorunskill_id').val()=='unskill')
+                    {
+                    var SkillId = '1';
+                    }
                     var IsApprovedId = $('#is_approved_val').val();
                     // console.log(talukaId);
                     // $('#village_id').html('<option value="">Select Village</option>');
 
-                    if (districtId !== '' || talukaId !== '' || villageId !== '') {
+                    if (districtId !== '' || talukaId !== '' || villageId !== '' || SkillId !== '' || RegistrationStatusId !== '') {
                         $.ajax({
-                            url: '{{ route('list-labours-filter') }}',
+                            url: '{{ route('list-labours-filter-reports') }}',
                             type: 'GET',
                             data: {
                                 districtId: districtId,
                                 talukaId: talukaId,
                                 villageId: villageId,
+                                SkillId: SkillId,
                                 IsApprovedId: IsApprovedId,
+                                RegistrationStatusId: RegistrationStatusId,
                             },
                             // headers: {
                             //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -287,10 +401,12 @@
                             success: function(response) {
                                 console.log(response.labour_ajax_data);
                                 if (response.labour_ajax_data.length > 0) {
-                                    $('#order-listing tbody').empty();
+                                    // $('#order-listing tbody').empty();
+                                    var table = $('#order-listing').DataTable();
+                                    table.clear().draw();
                                     
                                     $.each(response.labour_ajax_data, function(index, labour_data) {
-
+                                        index++;
                                         var statusText = "";
                                         if (labour_data.is_approved == '1') {
                                             statusText = "Received For Approval";
@@ -299,7 +415,14 @@
                                         } else if (labour_data.is_approved == '3') {
                                             statusText = "Send For Correction";
                                         }
-                                        $('#order-listing tbody').append('<tr><td>' + index +'</td><td>' + labour_data.f_name +' '+ labour_data.m_name +' '+ labour_data.l_name + '</td><td>' + labour_data.full_name + '</td><td>' + labour_data.mobile_number + '</td><td>' + labour_data.mgnrega_card_id + '</td><td>' + statusText+ '</td><td class="d-flex"><a onClick="getData('+ labour_data.id +')" class="show-btn btn btn-sm btn-outline-primary m-1"><i class="fas fa-eye"></i></a></td></tr>');
+
+                                        table.row.add([ index,
+                                            labour_data.f_name + ' ' + labour_data.m_name + ' ' + labour_data.l_name,
+                                            labour_data.full_name,
+                                            labour_data.mobile_number,
+                                            labour_data.mgnrega_card_id,
+                                            statusText,
+                                            '<a onClick="getData(' + labour_data.id + ')" class="show-btn btn btn-sm btn-outline-primary m-1"><i class="fas fa-eye"></i></a>']).draw(false);
                                     });
                                 }else{
                                     $('#order-listing tbody').empty();
@@ -323,6 +446,22 @@
     }
 // });
 </script>
+
+<script>
+            $(document).ready(function(){
+                $('#skillorunskill_id').on('change', function() {
+                    var selectedOption = $(this).val();
+                    if(selectedOption === 'unskill') {
+                        $('#skill_id').prop('disabled', true);
+                        $('#skill_id').val('');
+                    } else {
+                        $('#skill_id').prop('disabled', false);
+                        // $('#skill_id').val('');
+
+                    }
+                });
+            });
+        </script>
 <form method="POST" action="{{ url('/show-labours') }}" id="showform">
             @csrf
             <input type="hidden" name="show_id" id="show_id" value="">
