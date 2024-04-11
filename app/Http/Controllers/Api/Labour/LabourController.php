@@ -418,34 +418,30 @@ class LabourController extends Controller
     public function updateLabourSecondForm(Request $request){
         try {
             $user = Auth::user();
-            $validator = Validator::make($request->all(), [
-                'latitude' => ['required', 'between:-90,90'], // Latitude range
-                'longitude' => ['required', 'between:-180,180'], // Longitude range
-            ]);
 
+            $validatorRules = [
+                'latitude' => ['required', 'between:-90,90'], 
+                'longitude' => ['required', 'between:-180,180'], 
+            ];
+    
             if ($request->hasFile('aadhar_image')) {
-                $validator->merge([
-                    'aadhar_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
-                ]);
+                $validatorRules['aadhar_image'] = 'required|image|mimes:jpeg,png,jpg|min:10|max:2048';
             }
     
             if ($request->hasFile('mgnrega_image')) {
-                $validator->merge([
-                    'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
-                ]);
+                $validatorRules['mgnrega_image'] = 'required|image|mimes:jpeg,png,jpg|min:10|max:2048';
             }
     
             if ($request->hasFile('profile_image')) {
-                $validator->merge([
-                    'profile_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
-                ]);
+                $validatorRules['profile_image'] = 'required|image|mimes:jpeg,png,jpg|min:10|max:2048';
             }
     
             if ($request->hasFile('voter_image')) {
-                $validator->merge([
-                    'voter_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
-                ]);
+                $validatorRules['voter_image'] = 'required|image|mimes:jpeg,png,jpg|min:10|max:2048';
             }
+    
+            $validator = Validator::make($request->all(), $validatorRules);
+    
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => $validator->errors()], 200);
             }
