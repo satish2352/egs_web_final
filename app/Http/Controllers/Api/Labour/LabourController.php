@@ -460,8 +460,8 @@ class LabourController extends Controller
 
             // Upload and update images
 
-            if ($request->file('profile_image') !== null && $request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
-                // if ($request->hasFile('profile_image')) {
+            // if ($request->file('profile_image') !== null && $request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
+                if ($request->hasFile('profile_image')) {
                 if ($labour_data->profile_image) {
                 removeImage($pathdelete . $labour_data->profile_image);
             }
@@ -470,8 +470,8 @@ class LabourController extends Controller
             $labour_data->profile_image = $profileImageName;
             }
 
-            // if ($request->hasFile('aadhar_image')) {
-            if ($request->file('aadhar_image') !== null && $request->hasFile('aadhar_image') && $request->file('aadhar_image')->isValid()) {
+            if ($request->hasFile('aadhar_image')) {
+            // if ($request->file('aadhar_image') !== null && $request->hasFile('aadhar_image') && $request->file('aadhar_image')->isValid()) {
             if ($labour_data->aadhar_image) {
                 removeImage($pathdelete . $labour_data->aadhar_image);
             }
@@ -480,8 +480,8 @@ class LabourController extends Controller
             $labour_data->aadhar_image = $aadharImageName;
             }
 
-            // if ($request->hasFile('mgnrega_image')) {
-            if ($request->file('mgnrega_image') !== null && $request->hasFile('mgnrega_image') && $request->file('mgnrega_image')->isValid()) {
+            if ($request->hasFile('mgnrega_image')) {
+            // if ($request->file('mgnrega_image') !== null && $request->hasFile('mgnrega_image') && $request->file('mgnrega_image')->isValid()) {
             if ($labour_data->mgnrega_image) {
                 removeImage($pathdelete . $labour_data->mgnrega_image);
             }
@@ -490,8 +490,8 @@ class LabourController extends Controller
             $labour_data->mgnrega_image = $mgnregaImageName;
             }
 
-            // if ($request->hasFile('voter_image')) {
-                if ($request->file('voter_image') !== null && $request->hasFile('voter_image') && $request->file('voter_image')->isValid()) {    
+            if ($request->hasFile('voter_image')) {
+                // if ($request->file('voter_image') !== null && $request->hasFile('voter_image') && $request->file('voter_image')->isValid()) {    
             if ($labour_data->voter_image) {
                 removeImage($pathdelete . $labour_data->voter_image);
             }
