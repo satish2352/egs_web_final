@@ -98,6 +98,38 @@
                   </li>
              @endif
 
+             <li class="{{request()->is('list-role*')
+                    ? 'nav-item active' : 'nav-item' }}">
+                      <a class="{{request()->is('list-role*')
+                                    ? 'nav-link active' : 'nav-link' }}" data-toggle="collapse" href="#master" aria-expanded="false"
+                          aria-controls="master">
+                          <i class="fa fa-th-large menu-icon"></i>
+                          <span class="menu-title">Area</span>
+                          <i class="menu-arrow"></i>
+                      </a>
+                      <div class="collapse" id="master">
+                          <ul class="nav flex-column sub-menu">
+                              <!-- @if (in_array('list-role', $data_for_url)) -->
+                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-district*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-district') }}">District</a></li>
+                              <!-- @endif -->
+                              <!-- @if (in_array('list-gender', $data_for_url)) -->
+                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-taluka*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-taluka') }}">Taluka</a></li>
+                              <!-- @endif -->
+                              <!-- @if (in_array('list-maritalstatus', $data_for_url)) -->
+                                  <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-village*')
+                                    ? 'nav-link active' : 'nav-link' }}"
+                                          href="{{ route('list-village') }}">Village</a></li>
+                              <!-- @endif -->
+                              
+
+                          </ul>
+                      </div>
+                  </li>
+
             <li class="nav-item">
                 <a class="{{request()->is('list-role*')
                             ? 'nav-link active' : 'nav-link' }}" data-toggle="collapse" href="#master" aria-expanded="false"
