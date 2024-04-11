@@ -58,9 +58,9 @@ class LabourAttendanceMarkController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID full day already marked for today'], 200);
             } 
             
-            elseif ($existingEntry  && $existingEntry->attendance_day =='half_day') {
-                return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID half day already marked for today'], 200);
-            } 
+            // elseif ($existingEntry  && $existingEntry->attendance_day =='half_day') {
+            //     return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID half day already marked for today'], 200);
+            // } 
             else {
             
                 $fromDate = date('Y-m-d').' 05:00:01';
@@ -78,6 +78,7 @@ class LabourAttendanceMarkController extends Controller
                 if($firstHalfWorkAttendance) {
                     
                     if(date('Y-m-d H:i:s') >  date('Y-m-d').' 13:00:00') {
+
                         
                         if($request->attendance_day =='half_day' && (count($secondHalfWorkAttendance)<=0) ) {
 
@@ -102,15 +103,20 @@ class LabourAttendanceMarkController extends Controller
                             return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                         }
                     }
-                    // elseif($request->attendance_day =='half_day' || $request->attendance_day =='full_day'  && $firstHalfWorkAttendance->project_id == $request->project_id) {
-                    //     return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because half/full day alreay present for today'], 200);
+                    elseif ($existingEntry  && $existingEntry->attendance_day =='half_day') {
+                            return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID half day already marked for today'], 200);
+                        } 
                     
-                    // }
                    
                 } elseif((count($secondHalfWorkAttendance)>=1) && ($secondHalfWorkAttendance[0]['project_id'] == $request->project_id) ) {
                     return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                 
-                }else {
+                }
+                elseif ($existingEntry  && $existingEntry->attendance_day =='half_day') {
+                        return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID half day already marked for today'], 200);
+                    } 
+                
+                else {
                     $labour_data = new LabourAttendanceMark();
                     $labour_data->user_id = $user->id; // Assign the user ID
                     $labour_data->project_id = $request->project_id;
@@ -264,8 +270,8 @@ class LabourAttendanceMarkController extends Controller
                         $existingEntry->attendance_day = $request->attendance_day;
                         $existingEntry->save();
                     }
-                    elseif($existingEntry && $existingEntry->attendance_day == 'full_day' ){
-                        // if(count($existingEntry)>=1) {
+                    elseif($existingEntry && $existingEntry->attendance_day == 'full_day' && (count($existingEntry)>=1)){
+                        // if(count($existingEntry)>=2) {
                         $existingEntry->attendance_day = 'half_day';
                         $existingEntry->save();
 

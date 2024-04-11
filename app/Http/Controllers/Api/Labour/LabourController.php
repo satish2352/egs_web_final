@@ -694,59 +694,18 @@ class LabourController extends Controller
         $mgnrega_card_id = $request->input('mgnrega_card_id');
 
         if (!$mgnrega_card_id) {
-            return response()->json(['error' => 'MGNREGA card ID is required'], 400);
+            return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID is required'], 400);
         }
+            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
+            ->where('labour.user_id', $user)
+            ->where('labour.is_approved', 2)
+            ->when($request->has('mgnrega_card_id'), function ($query) use ($request) {
+                $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
+            })
+            ->pluck('mgnrega_card_id'); 
+       
+        $mgnrega_card_ids = $data_output->toArray();
 
-        // $suggestions = Labour::where('mgnrega_card_id', 'like', "%$mgnrega_card_id%")->get();
-
-                $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
-                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
-                ->leftJoin('tbl_reason as reason_labour', 'labour.reason_id', '=', 'reason_labour.id')
-                ->where('labour.user_id', $user)
-                ->where('labour.is_approved', 2)
-                ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
-                    $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
-                });
-              
-            $data_output = $data_output->select(
-                'labour.id',
-                'labour.full_name',
-                'labour.date_of_birth',
-                'labour.gender_id',
-                'gender_labour.gender_name as gender_name',
-                'labour.skill_id',
-                'skills_labour.skills as skills',
-                'labour.reason_id',
-                'reason_labour.reason_name as reason_name',
-                'labour.district_id',
-                'district_labour.name as district_name',
-                'labour.taluka_id',
-                'taluka_labour.name as taluka_name',
-                'labour.village_id',
-                'village_labour.name as village_name',
-                'labour.mobile_number',
-                'labour.landline_number',
-                'labour.mgnrega_card_id',
-                'labour.latitude',
-                'labour.longitude',
-                'labour.profile_image',
-                'labour.aadhar_image',
-                'labour.mgnrega_image',
-                'labour.voter_image',
-                'labour.other_remark',
-                'registrationstatus.status_name'
-
-                )->distinct('labour.id')->get();
-
-                foreach ($data_output as $labour) {
-                    $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-                }
-          
-            //   dd($project);
             return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Data not found', 'error' => $e->getMessage()], 500);
