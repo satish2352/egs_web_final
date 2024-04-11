@@ -234,7 +234,7 @@ class LabourAttendanceMarkController extends Controller
 
             // Check if validation fails
             if ($validator->fails()) {
-                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
+                return response()->json(['status' => 'false', 'message' => $validator->errors()], 200);
             }
             $fromDate = date('Y-m-d').' 00:00:01';
             $toDate =  date('Y-m-d').' 23:59:59';
@@ -280,13 +280,13 @@ class LabourAttendanceMarkController extends Controller
                 }
             }
             else {
-                return response()->json(['status' => 'success', 'message' => 'Attendance not found', 'data' => $existingEntry], 200);
+                return response()->json(['status' => 'true', 'message' => 'Attendance not found', 'data' => $existingEntry], 200);
             }
 
-            return response()->json(['status' => 'success', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
+            return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
 
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
         }
     }
     // public function updateAttendanceMark(Request $request)
