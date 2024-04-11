@@ -42,6 +42,9 @@
                                             <label for="email">Email ID</label>&nbsp<span class="red-text">*</span>
                                             <input type="text" class="form-control" name="email" id="email"
                                                 placeholder="" value="{{ old('email') }}">
+                                                @error('email')
+                                                    <div class="alert alert-danger">{{ $message }}</div>
+                                                @enderror
                                             @if ($errors->has('email'))
                                                 <span class="red-text"><?php echo $errors->first('email', ':message'); ?></span>
                                             @endif
@@ -154,8 +157,8 @@
                                         <div class="form-group">
                                             <label for="aadhar_no">Aadhar No.</label>&nbsp<span
                                                 class="red-text">*</span>
-                                            <input type="text" class="form-control" name="aadhar_no"
-                                                id="aadhar_no" placeholder="" value="{{ old('aadhar_no') }}">
+                                            <input type="text" class="form-control" name="aadhar_no" maxlength="14"
+                                                id="aadhar_no" placeholder="" value="{{ old('aadhar_no') }}" onkeyup="formatAadharNumber(this)">
                                             @if ($errors->has('number'))
                                                 <span class="red-text"><?php echo $errors->first('aadhar_no', ':message'); ?></span>
                                             @endif
@@ -260,8 +263,8 @@
                                                             @endif
                                                         @endforeach
                                                     </select>
-                                                    @if ($errors->has('usertype_name'))
-                                                        <span class="red-text"><?php echo $errors->first('usertype_name', ':message'); ?></span>
+                                                    @if ($errors->has('user_type'))
+                                                        <span class="red-text"><?php echo $errors->first('user_type', ':message'); ?></span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -576,6 +579,20 @@
 
 
         <!--  -->
+        <script>
+function formatAadharNumber(input) {
+    let value = input.value.replace(/\s/g, ''); // Remove existing spaces
+    value = value.replace(/\D/g, ''); // Remove non-numeric characters
+    let formattedInput = '';
+    for (let i = 0; i < value.length; i++) {
+        formattedInput += value[i];
+        if ((i + 1) % 4 === 0 && i !== value.length - 1) {
+            formattedInput += ' ';
+        }
+    }
+    input.value = formattedInput;
+}
+</script>
 
         <script>
             $(document).ready(function() {
@@ -598,7 +615,8 @@
                     const pincode = $('#pincode').val();
 
                     // Enable the submit button if all fields are valid
-                    if (email) {
+                    if (email && role_id && password && password_confirmation && f_name && m_name && l_name && number && aadhar_no && address
+                    && district && taluka && village && user_profile && pincode) {
                         $('#submitButton').prop('disabled', false);
                     } else {
                         $('#submitButton').prop('disabled', true);
@@ -619,32 +637,11 @@
                     return this.optional(element) || emailRegex.test(value);
                 }, "Please enter a valid email address.");
 
-
-                $(document).ready(function() {
-            $.validator.addMethod("aadharValidation", function(value, element) {
-                console.log('ffffffffffffffffff',value);
-    // Regular expression pattern for Aadhaar number validation
-    var aadhaarPattern = /^\d{12}$/;
-
-    console.log(aadhaarPattern.test(value));
-    // Check if the input matches the pattern
-    if (!aadhaarPattern.test(value)) {
-        return false;
-    }
-    // Aadhaar checksum validation algorithm
-    var sum = 0;
-    for (var i = 0; i < 11; i++) {
-        sum += parseInt(value.charAt(i)) * (12 - i);
-    }
-    var remainder = sum % 11;
-    if (remainder != 0) {
-        return false;
-    }
-
-    // Aadhaar number is valid
-    return true;
-}, "Invalid Aadhaar number");
-            });
+        //Aadhar Card NUmber Validation
+            $.validator.addMethod("aadharNumber", function(value, element) {
+                var aadharPattern = /^\d{4}\s\d{4}\s\d{4}$/;
+                    return this.optional(element) || aadharPattern.test(value);
+                }, "Please enter a valid Aadhar number");
 
                 // Initialize the form validation
                 $("#frm_register").validate({
@@ -658,9 +655,27 @@
                                 email: function() {
                                     return $('#email').val();
                                 }
+                            },
+
+                            complete: function(xhr) {
+                                // After AJAX request completes, you can handle the response
+                                console.log(xhr.responseJSON);
+                                if (xhr.responseJSON.success == false) {
+                                    // Email is available, no error message needed
+                                    console.log('ifffff');
+                                    // $("#email").removeClass("error").addClass("valid");
+                                    $('#email').removeClass();
+		                            $('#email').addClass('form-control');
+                                    $("#email-error").html("This email already exists.").hide();
+                                } else {
+                                    // Email already exists, show error message
+                                    console.log('eeellllseeseee');
+                                    $("#email").removeClass("valid").addClass("error");
+                                    $("#email-error").html("This email already exists.").show();
+                                }
                             }
                         },
-                            email:true,
+                            // email:true,
                         },
                         role_id: {
                             required: true,
@@ -686,7 +701,7 @@
                         },
                         aadhar_no: {
                             required: true,
-                            pattern: /^\d{4}\s\d{4}\s\d{4}$/,
+                            aadharNumber: true
                         },
                         address: {
                             required: true,
@@ -736,7 +751,7 @@
                         },
                         aadhar_no: {
                             required: "Please Enter the Aadhar No",
-                          pattern: "Please enter a valid Aadhar number (e.g., 1234 5678 9101)", // Custom error message for Aadhar card number validation
+                            pattern: "Please enter a valid Aadhar number (e.g., 1234 5678 9101)", // Custom error message for Aadhar card number validation
                         },
                         address: {
                             required: "Please Enter the Address",
@@ -762,6 +777,12 @@
                 });
             });
 
-          
+            $.validator.setDefaults({
+            onfocusout: function (element, event) {
+                if (!this.checkable(element) && (event.type !== 'focusout' || !this.hasInput(element))) {
+                    this.element(element);
+                }
+            }
+        });
         </script>
     @endsection
