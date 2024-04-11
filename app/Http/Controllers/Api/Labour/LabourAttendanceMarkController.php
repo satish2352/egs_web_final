@@ -55,8 +55,13 @@ class LabourAttendanceMarkController extends Controller
                                             ->first();
 
             if ($existingEntry  && $existingEntry->attendance_day =='full_day') {
-                return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID already marked for today'], 200);
-            } else {
+                return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID full day already marked for today'], 200);
+            } 
+            
+            elseif ($existingEntry  && $existingEntry->attendance_day =='half_day') {
+                return response()->json(['status' => 'false', 'message' => 'Attendance for this card ID half day already marked for today'], 200);
+            } 
+            else {
             
                 $fromDate = date('Y-m-d').' 05:00:01';
                 $toDate =  date('Y-m-d').' 13:00:00';
@@ -94,7 +99,7 @@ class LabourAttendanceMarkController extends Controller
                            
                     
                         }  else {
-                            return response()->json(['status' => 'false', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
+                            return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                         }
                     }
                     // elseif($request->attendance_day =='half_day' || $request->attendance_day =='full_day'  && $firstHalfWorkAttendance->project_id == $request->project_id) {
@@ -103,7 +108,7 @@ class LabourAttendanceMarkController extends Controller
                     // }
                    
                 } elseif((count($secondHalfWorkAttendance)>=1) && ($secondHalfWorkAttendance[0]['project_id'] == $request->project_id) ) {
-                    return response()->json(['status' => 'false', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
+                    return response()->json(['status' => 'error', 'message' => 'Attendance cant be mark as half/full day because halday alreay present for today'], 200);
                 
                 }else {
                     $labour_data = new LabourAttendanceMark();
@@ -116,7 +121,8 @@ class LabourAttendanceMarkController extends Controller
                 }
 
             }
-            return response()->json(['status' => 'true', 'message' => 'Attendance Mark successfully added'], 200);
+
+            return response()->json(['status' => 'true', 'message' => 'Attendance Mark successfully added', 'data' => $labour_data], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Attendance Mark Fail','error' => $e->getMessage()], 500);
         }
@@ -228,7 +234,7 @@ class LabourAttendanceMarkController extends Controller
 
             // Check if validation fails
             if ($validator->fails()) {
-                return response()->json(['status' => 'false', 'message' => $validator->errors()], 200);
+                return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
             }
             $fromDate = date('Y-m-d').' 00:00:01';
             $toDate =  date('Y-m-d').' 23:59:59';
@@ -274,13 +280,13 @@ class LabourAttendanceMarkController extends Controller
                 }
             }
             else {
-                return response()->json(['status' => 'true', 'message' => 'Attendance not found', 'data' => $existingEntry], 200);
+                return response()->json(['status' => 'success', 'message' => 'Attendance not found', 'data' => $existingEntry], 200);
             }
 
-            return response()->json(['status' => 'true', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
+            return response()->json(['status' => 'success', 'message' => 'Attendance mark updated successfully', 'data' => $existingEntry], 200);
 
         } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
+            return response()->json(['status' => 'error', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
         }
     }
     // public function updateAttendanceMark(Request $request)
