@@ -414,7 +414,7 @@
                     var selectedOption = $(this).val();
                     if(selectedOption === 'unskill') {
                         $('#skill_id').prop('disabled', true);
-                        // $('#skill_id').val('1');
+                        $('#skill_id').val('');
                     } else {
                         $('#skill_id').prop('disabled', false);
                         // $('#skill_id').val('');

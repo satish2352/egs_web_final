@@ -126,8 +126,7 @@ class ReportsController extends Controller
                         ->orderBy('status_name', 'asc')
                         ->get(['id', 'status_name']);
 
-            // $getOutput = $this->service->getAllLabourLocation();
-            // dd($getOutput);
+           
             return view('admin.pages.reports.list-project-report', compact('projects_data','skills_data','registration_status_data'));
         } catch (\Exception $e) {
             return $e;
