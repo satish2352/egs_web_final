@@ -421,12 +421,31 @@ class LabourController extends Controller
             $validator = Validator::make($request->all(), [
                 'latitude' => ['required', 'between:-90,90'], // Latitude range
                 'longitude' => ['required', 'between:-180,180'], // Longitude range
-                // 'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                // 'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                // 'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-                // 'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
             ]);
 
+            if ($request->hasFile('aadhar_image')) {
+                $validator->merge([
+                    'aadhar_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                ]);
+            }
+    
+            if ($request->hasFile('mgnrega_image')) {
+                $validator->merge([
+                    'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                ]);
+            }
+    
+            if ($request->hasFile('profile_image')) {
+                $validator->merge([
+                    'profile_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                ]);
+            }
+    
+            if ($request->hasFile('voter_image')) {
+                $validator->merge([
+                    'voter_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                ]);
+            }
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => $validator->errors()], 200);
             }
