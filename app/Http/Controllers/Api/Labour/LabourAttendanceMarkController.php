@@ -264,7 +264,8 @@ class LabourAttendanceMarkController extends Controller
                         $existingEntry->attendance_day = $request->attendance_day;
                         $existingEntry->save();
                     }
-                    elseif($existingEntry && $existingEntry->attendance_day == 'full_day'){
+                    elseif($existingEntry && $existingEntry->attendance_day == 'full_day' ){
+                        // if(count($existingEntry)>=1) {
                         $existingEntry->attendance_day = 'half_day';
                         $existingEntry->save();
 
@@ -275,6 +276,10 @@ class LabourAttendanceMarkController extends Controller
                         $newEntry->mgnrega_card_id = $request->mgnrega_card_id;
                         $newEntry->attendance_day = 'half_day'; 
                         $newEntry->save();
+                        // }
+                        // else{
+                        //     return response()->json(['status' => 'false', 'message' => 'Attendance  already updated for today'], 200);  
+                        // }
                     }
 
                 }

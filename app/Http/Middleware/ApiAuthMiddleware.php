@@ -9,7 +9,7 @@ class ApiAuthMiddleware
     public function handle(Request $request, Closure $next)
     {
         // Check if the request is for login or register endpoints
-        if ($request->is('api/login') || $request->is('api/register') || $request->is('api/list-masters')) {
+        if ($request->is('api/login') || $request->is('api/register') || $request->is('api/list-masters') || $request->is('api/list-updated-master')) {
             return $next($request);
         }
 

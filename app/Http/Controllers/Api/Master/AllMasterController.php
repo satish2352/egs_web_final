@@ -37,7 +37,7 @@ public function getAllMasters(){
     }
 }
 
-public function getTblAreaNewData(Request $request)
+public function getAllMastersUpdated(Request $request)
 {
     try {
         // $user = Auth::user()->id;

@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\Labour\AttendanceMarkVisibleForOfficerController;
 // Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/list-masters', [AllMasterController::class, 'getAllMasters']);
+Route::post('/list-updated-master', [AllMasterController::class, 'getAllMastersUpdated']);
 
 Route::group([
     'middleware' => 'api',
@@ -81,7 +82,7 @@ Route::group([
         Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
         Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
         // Route::post('/project-list-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllProjectListForOfficer']);
-        Route::post('/new-list-area', [AllMasterController::class, 'getTblAreaNewData']);
+       
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
