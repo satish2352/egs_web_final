@@ -648,34 +648,7 @@ function formatAadharNumber(input) {
                     rules: {
                         email: {
                             required: true,
-                            remote: {
-                            url: '{{ route('check-email-exists') }}',
-                            type: 'get',
-                            data: {
-                                email: function() {
-                                    return $('#email').val();
-                                }
-                            },
-
-                            complete: function(xhr) {
-                                // After AJAX request completes, you can handle the response
-                                console.log(xhr.responseJSON);
-                                if (xhr.responseJSON.success == false) {
-                                    // Email is available, no error message needed
-                                    console.log('ifffff');
-                                    // $("#email").removeClass("error").addClass("valid");
-                                    $('#email').removeClass();
-		                            $('#email').addClass('form-control');
-                                    $("#email-error").html("This email already exists.").hide();
-                                } else {
-                                    // Email already exists, show error message
-                                    console.log('eeellllseeseee');
-                                    $("#email").removeClass("valid").addClass("error");
-                                    $("#email-error").html("This email already exists.").show();
-                                }
-                            }
-                        },
-                            // email:true,
+                            email:true,
                         },
                         role_id: {
                             required: true,
@@ -726,7 +699,6 @@ function formatAadharNumber(input) {
                     messages: {
                         email: {
                             required: "Please Enter the Eamil",
-                            remote: "This Email already exists.",
                         },
                         role_id: {
                             required: "Please Select Role Name",
