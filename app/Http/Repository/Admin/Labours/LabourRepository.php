@@ -1247,7 +1247,8 @@ class LabourRepository
 						->update([
 							'is_approved' => $request['is_approved'],
 							'reason_id' => $request['reason_id'],
-							'other_remark' => $request['other_remark']
+							'other_remark' => $request['other_remark'],
+							'is_resubmitted' => '0',
 						]);
 		}
 		else if($request['is_approved']=='3' && $request['other_remark']=='')		
@@ -1255,13 +1256,46 @@ class LabourRepository
 			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
 							'is_approved' => $request['is_approved'],
-							'reason_id' => $request['reason_id']
+							'reason_id' => $request['reason_id'],
+							'is_resubmitted' => '0',
 						]);
 		}			
 		
 		// $this->updateRolesPermissions($request, $request->edit_id);
 		return $request->edit_id;
 	}
+
+	// public function updateLabourStatus($request)
+	// {
+	// 	// dd($request);
+	// 	if($request['is_approved']=='2')
+	// 	{
+	// 		$user_data = Labour::where('id',$request['edit_id']) 
+	// 					->update([
+	// 						'is_approved' => $request['is_approved'],
+	// 						'is_resubmitted' => '0',
+	// 					]);
+	// 	}else if($request['is_approved']=='3' && $request['other_remark']!='')		
+	// 	{
+	// 		$user_data = Labour::where('id',$request['edit_id']) 
+	// 					->update([
+	// 						'is_approved' => $request['is_approved'],
+	// 						'reason_id' => $request['reason_id'],
+	// 						'other_remark' => $request['other_remark']
+	// 					]);
+	// 	}
+	// 	else if($request['is_approved']=='3' && $request['other_remark']=='')		
+	// 	{
+	// 		$user_data = Labour::where('id',$request['edit_id']) 
+	// 					->update([
+	// 						'is_approved' => $request['is_approved'],
+	// 						'reason_id' => $request['reason_id']
+	// 					]);
+	// 	}			
+		
+	// 	// $this->updateRolesPermissions($request, $request->edit_id);
+	// 	return $request->edit_id;
+	// }
 
 	public function getGramsevakList() {
 
