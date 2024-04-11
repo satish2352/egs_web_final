@@ -1245,7 +1245,7 @@ class LabourRepository
 		{
 			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
-							'is_approved' => '1',
+							'is_approved' => $request['is_approved'],
 							'reason_id' => $request['reason_id'],
 							'other_remark' => $request['other_remark']
 						]);
@@ -1254,7 +1254,7 @@ class LabourRepository
 		{
 			$user_data = Labour::where('id',$request['edit_id']) 
 						->update([
-							'is_approved' => '1',
+							'is_approved' => $request['is_approved'],
 							'reason_id' => $request['reason_id']
 						]);
 		}			
