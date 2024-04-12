@@ -681,9 +681,15 @@ class LabourController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
-                  
+               // $labour = Labour::where('id', $request->labour_id)->first();
+    
+            // if (!$labour) {
+            //     return response()->json(['status' => 'error', 'message' => 'Labour not found'], 200);
+            // }
+    
+    
             $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
-                                    ->where('id', '!=', $request->labour_id)
+                                    ->where('is_approved', 2)
                                     ->first();
     
             if ($existingLabour) {
