@@ -52,4 +52,102 @@ class GramsevakServices
     }
 
 
+    public function ListGrampanchayatDocumentsNew(){
+        try {
+            return $this->repo->ListGrampanchayatDocumentsNew();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+    
+
+    public function showGramsevakDocumentsNew($id){
+        try {
+            return $this->repo->showGramsevakDocumentsNew($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListSendedForApproval(){
+        try {
+            return $this->repo->ListSendedForApproval();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListGrampanchayatDocumentsApproved(){
+        try {
+            return $this->repo->ListGrampanchayatDocumentsApproved();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function showGramsevakDocumentsApproved($id){
+        try {
+            return $this->repo->showGramsevakDocumentsApproved($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListApprovedDocuments(){
+        try {
+            return $this->repo->ListApprovedDocuments();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListGrampanchayatDocumentsNotApproved(){
+        try {
+            return $this->repo->ListGrampanchayatDocumentsNotApproved();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function showGramsevakDocumentsNotApproved($id){
+        try {
+            return $this->repo->showGramsevakDocumentsNotApproved($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListNotApprovedDocuments(){
+        try {
+            return $this->repo->ListNotApprovedDocuments();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListGrampanchayatDocumentsResubmitted(){
+        try {
+            return $this->repo->ListGrampanchayatDocumentsResubmitted();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function showGramsevakDocumentsResubmitted($id){
+        try {
+            return $this->repo->showGramsevakDocumentsResubmitted($id);
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListResubmittedDocuments(){
+        try {
+            return $this->repo->ListResubmittedDocuments();
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+
 }
