@@ -252,9 +252,7 @@ class LabourAttendanceMarkController extends Controller
             ->first();
 
         if ($existingEntry) {
-            // Check if the current time is before 1:00 PM
             if ($currentTime < '13:00:00') {
-                // Update the entry if project ID matches, otherwise update both project ID and attendance day
                 if ($existingEntry->project_id == $request->project_id) {
                     $existingEntry->attendance_day = $request->attendance_day;
                     $existingEntry->save();
@@ -263,19 +261,25 @@ class LabourAttendanceMarkController extends Controller
                     $existingEntry->attendance_day = $request->attendance_day;
                     $existingEntry->save();
                 }
-            } else { // Current time is after 1:00 PM
+            } elseif($currentTime > '13:00:00') { 
                 $mgnregaCardCount = LabourAttendanceMark::where('user_id', $user)
                     ->where('mgnrega_card_id', $request->mgnrega_card_id)
                     ->count();
 
-                    if ($existingEntry->project_id == $request->project_id && $mgnregaCardCount <= 1) {
-                        $existingEntry->attendance_day = 'half_day';
-                        $existingEntry->save();
-                        return response()->json(['status' => 'true', 'message' => 'Attendance updated successfully'], 200);
+                    if ($existingEntry->project_id == $request->project_id) {
+                        if($mgnregaCardCount <= 1){
+                            $existingEntry->project_id = $request->project_id;
+                            $existingEntry->attendance_day = 'half_day';
+                            $existingEntry->save();
+                            return response()->json(['status' => 'true', 'message' => 'Attendance updated successfully'], 200);
+                        }
+                        else{
+                            return response()->json(['status' => 'true', 'message' => 'Attendance already updated successfully'], 200);
+                        }
+                       
                     }
-                // Check if attendance is marked as full day
                 elseif ($existingEntry->attendance_day == 'full_day') {
-                    // If less than or equal to 1 entry for the same card ID, update to half-day and create a new entry
+                  
                     if ($mgnregaCardCount <= 1) {
                         $existingEntry->attendance_day = 'half_day';
                         $existingEntry->save();
@@ -292,12 +296,12 @@ class LabourAttendanceMarkController extends Controller
                         return response()->json(['status' => 'false', 'message' => 'Attendance already updated for this MGNREGA card ID'], 400);
                     }
                 } elseif ($existingEntry->attendance_day == 'half_day' && $existingEntry->project_id == $request->project_id) {
-                    // If less than or equal to 2 entries for the same card ID, update to full-day and delete other entries
+                
                     if ($mgnregaCardCount <= 2) {
                         $existingEntry->attendance_day = 'full_day';
                         $existingEntry->save();
 
-                        // Delete other entries with the same mgnrega_card_id
+                        
                         LabourAttendanceMark::where('mgnrega_card_id', $existingEntry->mgnrega_card_id)
                             ->where('id', '!=', $existingEntry->id)
                             ->delete();
