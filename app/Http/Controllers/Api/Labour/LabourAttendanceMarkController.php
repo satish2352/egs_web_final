@@ -266,13 +266,13 @@ class LabourAttendanceMarkController extends Controller
                     ->where('mgnrega_card_id', $request->mgnrega_card_id)
                     ->count();
 
-                    // if ($existingEntry->project_id == $request->project_id && $mgnregaCardCount <= 1) {
-                    //     $existingEntry->project_id = $request->project_id;
-                    //     $existingEntry->attendance_day = 'half_day';
-                    //     $existingEntry->save();
-                    //     return response()->json(['status' => 'true', 'message' => 'Attendance updated successfully'], 200);
-                    // }
-                if ($existingEntry->attendance_day == 'full_day') {
+                    if ($existingEntry->project_id == $request->project_id && $mgnregaCardCount <= 1) {
+                        $existingEntry->project_id = $request->project_id;
+                        $existingEntry->attendance_day = 'half_day';
+                        $existingEntry->save();
+                        return response()->json(['status' => 'true', 'message' => 'Attendance updated successfully'], 200);
+                    }
+                elseif ($existingEntry->attendance_day == 'full_day') {
                   
                     if ($mgnregaCardCount <= 1) {
                         $existingEntry->attendance_day = 'half_day';
