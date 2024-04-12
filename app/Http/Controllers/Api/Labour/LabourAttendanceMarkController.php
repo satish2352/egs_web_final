@@ -268,8 +268,13 @@ class LabourAttendanceMarkController extends Controller
                     ->where('mgnrega_card_id', $request->mgnrega_card_id)
                     ->count();
 
+                    if ($existingEntry->project_id == $request->project_id && $mgnregaCardCount <= 1) {
+                        $existingEntry->attendance_day = 'half_day';
+                        $existingEntry->save();
+                        return response()->json(['status' => 'true', 'message' => 'Attendance updated successfully'], 200);
+                    }
                 // Check if attendance is marked as full day
-                if ($existingEntry->attendance_day == 'full_day') {
+                elseif ($existingEntry->attendance_day == 'full_day') {
                     // If less than or equal to 1 entry for the same card ID, update to half-day and create a new entry
                     if ($mgnregaCardCount <= 1) {
                         $existingEntry->attendance_day = 'half_day';
