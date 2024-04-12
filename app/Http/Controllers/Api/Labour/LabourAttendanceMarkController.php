@@ -246,31 +246,38 @@ class LabourAttendanceMarkController extends Controller
                 return response()->json(['status' => 'false', 'message' => $validator->errors()], 400);
             }
     
-            // Check if an entry already exists for the given card ID and current date
+           
             $existingEntry = LabourAttendanceMark::where('mgnrega_card_id', $request->mgnrega_card_id)
                 ->whereDate('updated_at', $currentDate)
                 ->first();
     
             if ($existingEntry) {
-                // Check if the current time is before 1:00 PM
+                
                 if ($currentTime < '13:00:00') {
-                    // Update the entry if project ID matches, otherwise update both project ID and attendance day
+                    
                     if ($existingEntry->project_id == $request->project_id) {
-                        $existingEntry->attendance_day = $request->attendance_day;
+                        $existingEntry->attendance_day = 'half_day';
                         $existingEntry->save();
                     } else {
                         $existingEntry->project_id = $request->project_id;
                         $existingEntry->attendance_day = $request->attendance_day;
                         $existingEntry->save();
                     }
-                } else { // Current time is after 1:00 PM
+                } else { 
                     $mgnregaCardCount = LabourAttendanceMark::where('user_id', $user)
                         ->where('mgnrega_card_id', $request->mgnrega_card_id)
                         ->count();
     
-                    // Check if attendance is marked as full day
-                    if ($existingEntry->attendance_day == 'full_day') {
-                        // If less than or equal to 1 entry for the same card ID, update to half-day and create a new entry
+                    
+                    if($existingEntry->project_id == $request->project_id && $mgnregaCardCount <= 1){
+                        $existingEntry->attendance_day = 'half_day';
+                        $existingEntry->save();
+
+                        return response()->json(['status' => 'true', 'message' => 'Attendance updated successfully'], 200);
+                    }
+
+                   elseif ($existingEntry->attendance_day == 'full_day') {
+                      
                         if ($mgnregaCardCount <= 1) {
                             $existingEntry->attendance_day = 'half_day';
                             $existingEntry->save();
@@ -287,12 +294,12 @@ class LabourAttendanceMarkController extends Controller
                             return response()->json(['status' => 'false', 'message' => 'Attendance already updated for this MGNREGA card ID'], 400);
                         }
                     } elseif ($existingEntry->attendance_day == 'half_day' && $existingEntry->project_id == $request->project_id) {
-                        // If less than or equal to 2 entries for the same card ID, update to full-day and delete other entries
+                       
                         if ($mgnregaCardCount <= 2) {
                             $existingEntry->attendance_day = 'full_day';
                             $existingEntry->save();
     
-                            // Delete other entries with the same mgnrega_card_id
+                          
                             LabourAttendanceMark::where('mgnrega_card_id', $existingEntry->mgnrega_card_id)
                                 ->where('id', '!=', $existingEntry->id)
                                 ->delete();
@@ -311,11 +318,9 @@ class LabourAttendanceMarkController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Attendance not found'], 404);
             }
     
-            // If everything goes well, return success
             return response()->json(['status' => 'true', 'message' => 'Attendance updated successfully'], 200);
     
         } catch (\Exception $e) {
-            // Exception handling
             return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
         }
     }
