@@ -216,8 +216,393 @@ class GramsevakController extends Controller {
         }
     }
 
+    public function ListGrampanchayatDocumentsNew()
+    {
 
-  
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+        
+        $district_data = TblArea::where('parent_id', '2')
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+                    $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                    ->where('users.id', $sess_user_id)
+                    ->first();
+    
+                $utype=$data_output->user_type;
+                $user_working_dist=$data_output->user_district;
+                $user_working_tal=$data_output->user_taluka;
+                $user_working_vil=$data_output->user_village;
+    
+    
+                    if($utype=='1')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.district',$user_working_dist)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='2')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.taluka',$user_working_tal)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='3')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.village',$user_working_vil)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                } 
+                
+        $gramsevaks = $this->service->ListGrampanchayatDocumentsNew();
+        // dd($gramsevaks);
+        return view('admin.pages.gramsevak.list-grampanchayat-doc-new',compact('gramsevaks','district_data','taluka_data','dynamic_projects'));
+    }
+
+    public function showGramsevakDocumentsNew(Request $request)
+    {
+        try {
+
+            $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+            ->where('id', '!=', 1)
+            ->select('id','status_name')
+            ->get()
+            ->toArray();
+
+            $dynamic_reasons = Reasons::where('is_active', 1)
+            ->select('id','reason_name')
+            ->get()
+            ->toArray();
+
+            $data_gram_doc_details = $this->service->showGramsevakDocumentsNew($request->show_id);
+            return view('admin.pages.gramsevak.show-gramsevak-doc-new', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListSendedForApproval()
+    {
+
+        $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+        ->where('id', '!=', 1)
+        ->select('id','status_name')
+        ->get()
+        ->toArray();
+
+        $dynamic_reasons = Reasons::where('is_active', 1)
+        ->select('id','reason_name')
+        ->get()
+        ->toArray();
+
+        $data_gram_doc_details = $this->service->ListSendedForApproval();
+        // dd($data_gram_doc_details);
+        return view('admin.pages.gramsevak.list-sended-for-approval', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+    }
+
+    public function ListGrampanchayatDocumentsApproved()
+    {
+
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+        
+        $district_data = TblArea::where('parent_id', '2')
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+                    $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                    ->where('users.id', $sess_user_id)
+                    ->first();
+    
+                $utype=$data_output->user_type;
+                $user_working_dist=$data_output->user_district;
+                $user_working_tal=$data_output->user_taluka;
+                $user_working_vil=$data_output->user_village;
+    
+    
+                    if($utype=='1')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.district',$user_working_dist)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='2')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.taluka',$user_working_tal)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='3')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.village',$user_working_vil)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                } 
+                
+        $gramsevaks = $this->service->ListGrampanchayatDocumentsApproved();
+        // dd($gramsevaks);
+        return view('admin.pages.gramsevak.list-grampanchayat-doc-approved',compact('gramsevaks','district_data','taluka_data','dynamic_projects'));
+    }
+
+    public function showGramsevakDocumentsApproved(Request $request)
+    {
+        try {
+
+            $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+            ->where('id', '!=', 1)
+            ->select('id','status_name')
+            ->get()
+            ->toArray();
+
+            $dynamic_reasons = Reasons::where('is_active', 1)
+            ->select('id','reason_name')
+            ->get()
+            ->toArray();
+
+            $data_gram_doc_details = $this->service->showGramsevakDocumentsApproved($request->show_id);
+            return view('admin.pages.gramsevak.show-gramsevak-doc-approved', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListApprovedDocuments()
+    {
+
+        $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+        ->where('id', '!=', 1)
+        ->select('id','status_name')
+        ->get()
+        ->toArray();
+
+        $dynamic_reasons = Reasons::where('is_active', 1)
+        ->select('id','reason_name')
+        ->get()
+        ->toArray();
+
+        $data_gram_doc_details = $this->service->ListApprovedDocuments();
+        // dd($data_gram_doc_details);
+        return view('admin.pages.gramsevak.list-approved-documents', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+    }
+
+    public function ListGrampanchayatDocumentsNotApproved()
+    {
+
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+        
+        $district_data = TblArea::where('parent_id', '2')
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+                    $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                    ->where('users.id', $sess_user_id)
+                    ->first();
+    
+                $utype=$data_output->user_type;
+                $user_working_dist=$data_output->user_district;
+                $user_working_tal=$data_output->user_taluka;
+                $user_working_vil=$data_output->user_village;
+    
+    
+                    if($utype=='1')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.district',$user_working_dist)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='2')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.taluka',$user_working_tal)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='3')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.village',$user_working_vil)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                } 
+                
+        $gramsevaks = $this->service->ListGrampanchayatDocumentsNotApproved();
+        // dd($gramsevaks);
+        return view('admin.pages.gramsevak.list-grampanchayat-doc-not-approved',compact('gramsevaks','district_data','taluka_data','dynamic_projects'));
+    }
+
+    public function showGramsevakDocumentsNotApproved(Request $request)
+    {
+        try {
+
+            $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+            ->where('id', '!=', 1)
+            ->select('id','status_name')
+            ->get()
+            ->toArray();
+
+            $dynamic_reasons = Reasons::where('is_active', 1)
+            ->select('id','reason_name')
+            ->get()
+            ->toArray();
+
+            $data_gram_doc_details = $this->service->showGramsevakDocumentsNotApproved($request->show_id);
+            return view('admin.pages.gramsevak.show-gramsevak-doc-not-approved', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListNotApprovedDocuments()
+    {
+
+        $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+        ->where('id', '!=', 1)
+        ->select('id','status_name')
+        ->get()
+        ->toArray();
+
+        $dynamic_reasons = Reasons::where('is_active', 1)
+        ->select('id','reason_name')
+        ->get()
+        ->toArray();
+
+        $data_gram_doc_details = $this->service->ListNotApprovedDocuments();
+        // dd($data_gram_doc_details);
+        return view('admin.pages.gramsevak.list-not-approved-documents', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+    }
+
+    public function ListGrampanchayatDocumentsResubmitted()
+    {
+
+        $sess_user_id=session()->get('user_id');
+		$sess_user_type=session()->get('user_type');
+		$sess_user_role=session()->get('role_id');
+		$sess_user_working_dist=session()->get('working_dist');
+        
+        $district_data = TblArea::where('parent_id', '2')
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+        $taluka_data=TblArea::where('parent_id', $sess_user_working_dist)
+                    ->orderBy('name', 'asc')
+                    ->get(['location_id', 'name']);
+
+                    $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
+                    ->where('users.id', $sess_user_id)
+                    ->first();
+    
+                $utype=$data_output->user_type;
+                $user_working_dist=$data_output->user_district;
+                $user_working_tal=$data_output->user_taluka;
+                $user_working_vil=$data_output->user_village;
+    
+    
+                    if($utype=='1')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.district',$user_working_dist)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='2')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.taluka',$user_working_tal)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else if($utype=='3')
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->where('projects.village',$user_working_vil)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                }else
+                {
+                    $dynamic_projects = Project::where('is_active', 1)
+                            ->orderBy('project_name', 'asc')
+                            ->get(['id', 'project_name']);
+                } 
+                
+        $gramsevaks = $this->service->ListGrampanchayatDocumentsResubmitted();
+        // dd($gramsevaks);
+        return view('admin.pages.gramsevak.list-grampanchayat-doc-resubmitted',compact('gramsevaks','district_data','taluka_data','dynamic_projects'));
+    }
+
+    public function showGramsevakDocumentsResubmitted(Request $request)
+    {
+        try {
+
+            $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+            ->where('id', '!=', 1)
+            ->select('id','status_name')
+            ->get()
+            ->toArray();
+
+            $dynamic_reasons = Reasons::where('is_active', 1)
+            ->select('id','reason_name')
+            ->get()
+            ->toArray();
+
+            $data_gram_doc_details = $this->service->showGramsevakDocumentsResubmitted($request->show_id);
+            return view('admin.pages.gramsevak.show-gramsevak-doc-resubmitted', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+        } catch (\Exception $e) {
+            return $e;
+        }
+    }
+
+    public function ListResubmittedDocuments()
+    {
+
+        $dynamic_registrationstatus = Registrationstatus::where('is_active', 1)
+        ->where('id', '!=', 1)
+        ->select('id','status_name')
+        ->get()
+        ->toArray();
+
+        $dynamic_reasons = Reasons::where('is_active', 1)
+        ->select('id','reason_name')
+        ->get()
+        ->toArray();
+
+        $data_gram_doc_details = $this->service->ListResubmittedDocuments();
+        // dd($data_gram_doc_details);
+        return view('admin.pages.gramsevak.list-resubmitted-documents', compact('data_gram_doc_details','dynamic_registrationstatus','dynamic_reasons'));
+    }
    
 
    
