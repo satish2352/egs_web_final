@@ -220,14 +220,109 @@
             </li>
             @endif
 
+            @if(session()->get('role_id')=='2')
+            <li class="nav-item">
+                <a class="{{request()->is('list-role*')
+                            ? 'nav-link active' : 'nav-link' }}" data-toggle="collapse" href="#master" aria-expanded="false"
+                    aria-controls="master">
+                    <i class="fa fa-th-large menu-icon"></i>
+                    <span class="menu-title">Grampanchayt Documents</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="master">
+                    <ul class="nav flex-column sub-menu">
+                    <!-- @if (in_array('list-labours', $data_for_url)) -->
+                        <!-- @if(session()->get('role_id')=='1' || session()->get('role_id')=='2') -->
+                            <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-grampanchayt-doc-new*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-grampanchayt-doc-new') }}">Received For Approval</a></li>
+                        <!-- @elseif(session()->get('role_id')=='3')
+                            <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-grampanchayt-doc-new*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-grampanchayt-doc-new') }}">Sended For Approval</a></li>
+                        @endif -->
+
+                    <!-- @endif -->
+                    @if (in_array('list-labours', $data_for_url))
+                        <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-grampanchayt-doc-approved*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-grampanchayt-doc-approved') }}">Approved Documents</a></li>
+                    @endif
+                    @if (in_array('list-labours', $data_for_url))
+                        <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-grampanchayt-doc-not-approved*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-grampanchayt-doc-not-approved') }}">Not Approved Documents</a></li>
+                    @endif
+                    @if (in_array('list-labours', $data_for_url))
+                        <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-grampanchayt-doc-resubmitted*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-grampanchayt-doc-resubmitted') }}">Resubmitted Labours</a></li>
+                    @endif
+
+                    </ul>
+                </div>
+            </li> 
+        @endif                    
+
+        @if(session()->get('role_id')=='1' || session()->get('role_id')=='3')
+        <li class="nav-item">
+                <a class="{{request()->is('list-role*')
+                            ? 'nav-link active' : 'nav-link' }}" data-toggle="collapse" href="#master" aria-expanded="false"
+                    aria-controls="master">
+                    <i class="fa fa-th-large menu-icon"></i>
+                    <span class="menu-title">Grampanchayt Documents</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="master">
+                    <ul class="nav flex-column sub-menu">
+                    <!-- @if (in_array('list-labours', $data_for_url)) -->
+                        <!-- @if(session()->get('role_id')=='1' || session()->get('role_id')=='2')
+                            <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-grampanchayt-doc-new*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-grampanchayt-doc-new') }}">Received For Approval</a></li>
+                        @elseif(session()->get('role_id')=='3') -->
+                            <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-sended-for-approval*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-sended-for-approval') }}">Sended For Approval</a>
+                                </li>
+                        <!-- @endif -->
+
+                    <!-- @endif -->
+                    @if (in_array('list-labours', $data_for_url))
+                        <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-approved-documents*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-approved-documents') }}">Approved Documents</a></li>
+                    @endif
+                    @if (in_array('list-labours', $data_for_url))
+                        <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-not-approved-documents*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-not-approved-documents') }}">Not Approved Documents</a></li>
+                    @endif
+                    @if (in_array('list-labours', $data_for_url))
+                        <li class="nav-item d-none d-lg-block"><a class="{{request()->is('list-resubmitted-labours*')
+                            ? 'nav-link active' : 'nav-link' }}"
+                                    href="{{ route('list-resubmitted-labours') }}">Resubmitted Labours</a></li>
+                    @endif
+
+                    </ul>
+                </div>
+            </li> 
+
+
+
+
+
+
+<!-- 
             <li class="{{request()->is('list-grampanchayat-doc*')
                 ? 'nav-item active' : 'nav-item' }}">
-                <?php $currenturl = Request::url(); ?>
+                <?php //$currenturl = Request::url(); ?>
                 <a class="nav-link" href="{{ route('list-grampanchayat-doc') }}">
                     <i class="fas fa-file-alt fa-lg menu-icon"></i>
                     <span class="menu-title">Document Management</span>
                 </a>
-            </li>
+            </li> -->
+        @endif    
 
             <li class="{{request()->is('list-role*') 
                 ? 'nav-item active' : 'nav-item' }}">
