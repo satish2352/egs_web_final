@@ -4,7 +4,7 @@ namespace App\Constants;
 
 return [
     define('LABOUR_DEFAULT_START', 1),
-    define('LABOUR_DEFAULT_LENGTH', 50),
+    define('LABOUR_DEFAULT_LENGTH', 2),
 
     define('GRAM_DOCUMENT_DEFAULT_START', 1),
     define('GRAM_DOCUMENT_DEFAULT_LENGTH', 10),
