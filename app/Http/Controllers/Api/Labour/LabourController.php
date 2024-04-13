@@ -103,7 +103,7 @@ class LabourController extends Controller
                 $labour_data->voter_image =  $imageVoter;
                 $labour_data->save();
 
-                // $familyDetails = [];
+                $familyDetails = [];
                 $familyDetailNew = json_decode($request->family,true);
                         
                 foreach ($familyDetailNew as $key => $familyMember) {
