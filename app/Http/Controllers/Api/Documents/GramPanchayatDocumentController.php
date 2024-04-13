@@ -23,8 +23,8 @@ class GramPanchayatDocumentController extends Controller
             'document_type_id' => 'required',  
             'document_name' => 'required', 
             'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
-            'latitude' => ['required', 'between:-90,90'], // Latitude range
-            'longitude' => ['required', 'between:-180,180'], // Longitude range
+            'latitude' => ['required', 'between:-90,90'], 
+            'longitude' => ['required', 'between:-180,180'], 
         ];       
         $validator = Validator::make($request->all(), $all_data_validation);
     
@@ -33,10 +33,6 @@ class GramPanchayatDocumentController extends Controller
         }
         try {
             $user = Auth::user();
-            // date_default_timezone_set('Asia/Kolkata'); 
-            $currentDateTime = date('YmdHis');
-            // $currentDateTime = date('Ymd_His');
-            
             $document_data = new GramPanchayatDocuments();
             $document_data->user_id = $user->id; 
             $document_data->document_name = $request->document_name;
@@ -45,7 +41,6 @@ class GramPanchayatDocumentController extends Controller
             $document_data->longitude = $request->longitude;
             $document_data->save();
             $last_insert_id = $document_data->document_name;
-            // $documentPdf = $last_insert_id . '_' . rand(100000, 999999) . '_document.pdf';
             $documentPdf = $last_insert_id;
             $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
     

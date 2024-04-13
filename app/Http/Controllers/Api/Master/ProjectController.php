@@ -43,9 +43,6 @@ class ProjectController extends Controller
         $data_user_output = $data_user_output->get()->toArray(); 
             // dd($data_user_output);
             $project = Project::leftJoin('users', 'projects.District', '=', 'users.user_district')  
-               ->leftJoin('tbl_area as district_projects', 'projects.District', '=', 'district_projects.location_id')  
-               ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
-              ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
               ->where('projects.end_date', '>=',date('Y-m-d'))
               ->where('projects.District', $data_user_output)
             //   ->where('projects.is_active', true)
@@ -55,14 +52,6 @@ class ProjectController extends Controller
               ->select(
                   'projects.id',
                   'projects.project_name',
-                  'projects.description',
-                  'projects.District',
-                  'district_projects.name as district_name',
-                  'projects.taluka',
-                  'taluka_projects.name as taluka_name',
-                  'projects.village',
-                  'village_projects.name as village_name',
-				  'projects.start_date',
 				  'projects.latitude',
 				  'projects.longitude',
                   'projects.start_date',
@@ -90,11 +79,7 @@ class ProjectController extends Controller
             $lonE = $latLongArr['lonE'];
             $lonW = $latLongArr['lonW'];
 
-            $labourQuery = Labour::leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
-                ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
-                ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
-                ->where('labour.user_id', $user)
+            $labourQuery = Labour::where('labour.user_id', $user)
                 ->where('labour.is_approved', 2)
                 ->when($request->has('mgnrega_card_id'), function($query) use ($request) {
                     $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
@@ -102,32 +87,14 @@ class ProjectController extends Controller
                 ->select(
                     'labour.id',
                     'labour.full_name',
-                    'labour.date_of_birth',
-                    'gender_labour.gender_name as gender_name',
-                    'labour.district_id',
-                    'district_labour.name as district_name',
-                    'labour.taluka_id',
-                    'taluka_labour.name as taluka_name',
-                    'labour.village_id',
-                    'village_labour.name as village_name',
-                    'labour.mobile_number',
-                    'labour.landline_number',
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
-                    'labour.profile_image',
-                    'labour.aadhar_image',
-                    'labour.mgnrega_image',
-                    'labour.profile_image',
                 )->distinct('labour.id')
                 ->orderBy('id', 'desc');
     
-                $projectQuery = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
-                ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
-                ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
-                ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-                // ->where('project_users.user_id', $user)
-                ->where('projects.is_active', true)
+                $projectQuery = Project::where('projects.is_active', true)
+                ->where('projects.end_date', '>=', now())
                 ->when($request->has('latitude'), function($query) use ($latN, $latS, $lonE, $lonW) {
                     $query->where('projects.latitude', '<=', $latN)
                         ->where('projects.latitude', '>=', $latS)
@@ -141,13 +108,6 @@ class ProjectController extends Controller
                 ->select(
                     'projects.id',
                     'projects.project_name',
-                    'projects.description',
-                    'projects.District',
-                    'district_projects.name as district_name',
-                    'projects.taluka',
-                    'taluka_projects.name as taluka_name',
-                    'projects.village',
-                    'village_projects.name as village_name',
                     'projects.start_date',
                     'projects.end_date',
                     'projects.latitude',
@@ -155,25 +115,13 @@ class ProjectController extends Controller
                 )->distinct('projects.id')
                 ->orderBy('id', 'desc');
 
-                $gramsevakdocumentQuery = GramPanchayatDocuments::leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
-                ->leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
-                ->leftJoin('tbl_area as district_u', 'users.user_district', '=', 'district_u.location_id')
-                ->leftJoin('tbl_area as taluka_u', 'users.user_taluka', '=', 'taluka_u.location_id')
-                ->leftJoin('tbl_area as village_u', 'users.user_village', '=', 'village_u.location_id')
-                ->where('tbl_gram_panchayat_documents.user_id', $user)
+                $gramsevakdocumentQuery = GramPanchayatDocuments::where('tbl_gram_panchayat_documents.user_id', $user)
                 ->where('tbl_gram_panchayat_documents.is_approved', 2)
                 ->select(
                     'tbl_gram_panchayat_documents.id',
                     'tbl_gram_panchayat_documents.document_name',
-                    'tbl_documenttype.document_type_name',
                     'tbl_gram_panchayat_documents.latitude',
                     'tbl_gram_panchayat_documents.longitude',
-                    'users.user_district',
-                    'district_u.name as district_name',
-                    'users.user_taluka',
-                    'taluka_u.name as taluka_name',
-                    'users.user_village',
-                    'village_u.name as village_name',
                     'tbl_gram_panchayat_documents.document_pdf',
                 )
                 ->orderBy('id', 'desc');
@@ -188,14 +136,7 @@ class ProjectController extends Controller
                 $labourData_array = [];
                 $labourData_array['id'] = $value->mgnrega_card_id;
                 $labourData_array['name'] = $value->full_name;
-                $labourData_array['gender_name'] = $value->gender_name;
-                $labourData_array['district_id'] = $value->district_id;
-                $labourData_array['district_name'] = $value->district_name;
-                $labourData_array['taluka_id'] = $value->taluka_id;
-                $labourData_array['taluka_name'] = $value->taluka_name;
-                $labourData_array['village_id'] = $value->village_id;
-                $labourData_array['village_name'] = $value->village_name;
-                $labourData_array['mobile_number'] = $value->mobile_number;                
+                $labourData_array['mgnrega_card_id'] = $value->mgnrega_card_id;
                 $labourData_array['latitude'] = $value->latitude;
                 $labourData_array['longitude'] = $value->longitude;              
                 $labourData_array['type'] = 'labour';
@@ -207,14 +148,6 @@ class ProjectController extends Controller
                 $projectData_array = [];
                 $projectData_array['id'] = $value->id;
                 $projectData_array['name'] = $value->project_name;
-                $projectData_array['start_date'] = $value->start_date;
-                $projectData_array['end_date'] = $value->end_date;
-                $projectData_array['District'] = $value->District;
-                $projectData_array['district_name'] = $value->district_name;
-                $projectData_array['taluka'] = $value->taluka;
-                $projectData_array['taluka_name'] = $value->taluka_name;
-                $projectData_array['village'] = $value->village;
-                $projectData_array['village_name'] = $value->village_name;
                 $projectData_array['latitude'] = $value->latitude;
                 $projectData_array['longitude'] = $value->longitude;
 
@@ -229,12 +162,6 @@ class ProjectController extends Controller
                 $documentData_array['document_name'] = $value->document_name;
                 $documentData_array['latitude'] = $value->latitude;
                 $documentData_array['longitude'] = $value->longitude;
-                $documentData_array['user_district'] = $value->user_district;
-                $documentData_array['district_name'] = $value->district_name;
-                $documentData_array['user_taluka'] = $value->user_taluka;
-                $documentData_array['taluka_name'] = $value->taluka_name;
-                $documentData_array['user_village'] = $value->user_village;
-                $documentData_array['taluka_name'] = $value->taluka_name;
                 $documentData_array['document_pdf'] = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_VIEW') . $value->document_pdf;
                 $documentData_array['type'] = 'document';
                 array_push($labourData_array_final, $documentData_array);

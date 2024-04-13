@@ -189,8 +189,6 @@ class OfficerController extends Controller
             } 
                 $basic_query_object = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
                 ->leftJoin('users', 'labour.user_id', '=', 'users.id')
-                ->leftJoin('gender as gender_labour', 'labour.gender_id', '=', 'gender_labour.id')
-                ->leftJoin('skills as skills_labour', 'labour.skill_id', '=', 'skills_labour.id')
                 ->leftJoin('tbl_area as district_labour', 'labour.district_id', '=', 'district_labour.location_id')
                 ->leftJoin('tbl_area as taluka_labour', 'labour.taluka_id', '=', 'taluka_labour.location_id')
                 ->leftJoin('tbl_area as village_labour', 'labour.village_id', '=', 'village_labour.location_id')
@@ -227,10 +225,6 @@ class OfficerController extends Controller
                     'labour.full_name',
                     User::raw("CONCAT(users.f_name, IFNULL(CONCAT(' ', users.m_name), ''),' ', users.l_name) AS gramsevak_full_name"),
                     'labour.date_of_birth',
-                    'labour.gender_id',
-                    'gender_labour.gender_name as gender_name',
-                    'labour.skill_id',
-                    'skills_labour.skills as skills',
                     'labour.district_id',
                     'district_labour.name as district_name',
                     'labour.taluka_id',
@@ -238,7 +232,6 @@ class OfficerController extends Controller
                     'labour.village_id',
                     'village_labour.name as village_name',
                     'labour.mobile_number',
-                    'labour.landline_number',
                     'labour.mgnrega_card_id',
                     'labour.latitude',
                     'labour.longitude',
@@ -274,7 +267,14 @@ class OfficerController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
             
-           
+            $existingRecord = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
+            ->where('is_approved', 2)
+            ->first();
+
+            if ($existingRecord) {
+                return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID already exists with approved. Please change the MGNREGA card ID.'], 200);
+            }
+
             $updated = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
                 ->where('is_approved', 1)
                 ->update(['is_approved' => 2,'is_resubmitted'=> 0]); 
