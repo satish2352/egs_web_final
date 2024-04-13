@@ -17,175 +17,118 @@ use Illuminate\Support\Facades\Config;
 use Storage;
 use Carbon\Carbon;
 
-
-
 class LabourController extends Controller
 {
-    public function add(Request $request ){
-        $all_data_validation = [
-            'full_name' => 'required',
-            'gender_id' => 'required',
-            // 'date_of_birth' => [
-            //     'required',
-            //     'date_format:d/m/Y',
-            //     function ($attribute, $value, $fail) {
-            //         $dob = Carbon::createFromFormat('d/m/Y', $value);
-            //         if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
-            //             $fail('The date of birth must be a date before today.');
-            //         }
-            //     },
-            // ],
-            // 'date_of_birth' => ['required', 'date_format:d/m/Y', function ($attribute, $value, $fail) {
-            //     $dob = DateTime::createFromFormat('d/m/Y', $value);
-            //     $eighteenYearsAgo = (new DateTime())->modify('-18 years');
-            
-            //     if ($dob > $eighteenYearsAgo) {
-            //         $fail('The date of birth must be at least 18 years ago.');
-            //     }
-            // }],
-            
-            'district_id' => 'required',
-            'taluka_id' => 'required',
-            'village_id' => 'required',
-            'skill_id' => 'required',
-            'mobile_number' => ['required', 'digits:10'],
-            'mgnrega_card_id' => ['required'],//'unique:labour'],
-            'latitude' => ['required', 'between:-90,90'], // Latitude range
-            'longitude' => ['required', 'between:-180,180'], // Longitude range
-            'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-            'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-
-         
-            // 'family' => 'required|
-            // ',
-            // 'family.*.full_name' => 'required',
-            // 'family.*.gender_id' => 'required',
-            // 'family.*.relationship_id' => 'required',
-            // 'family.*.married_status_id' => 'required',
-            // 'family.*.date_of_birth' => ['required', function ($attribute, $value, $fail) {
-            //     $dob = DateTime::createFromFormat('d/m/Y', $value);
-            //     $currentDate = new DateTime();
-            
-            //     if ($dob > $currentDate) {
-            //         $fail('The date of birth must be a date before today.');
-            //     }
-            // }],
-            
-            // 'family.*.date_of_birth' => [
-            //     'required',
-            //     'date_format:d/m/Y',
-            //     function ($attribute, $value, $fail) {
-            //         $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
-            //         if ($dob->isAfter(\Carbon\Carbon::now())) {
-            //             $fail('The date of birth must be a date before today.');
-            //         }
-            //     },
-            // ],
-            
-
-        ];
-        // if(isset($request->landline_number)) {
-        //     $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
-        // }
-        $validator = Validator::make($request->all(), $all_data_validation);
-
-
-        if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
-        }
-
-
+    public function add(Request $request){
         try {
-            // Check if the user exists
-            $user = Auth::user();
-        //  dd($user);
-
-            $labour_data = new Labour();
-            $labour_data->user_id = $user->id; // Assign the user ID
-            // $labour_data->user_type = $user->user_type; // Assign the user ID
-            $labour_data->full_name = $request->full_name;
-            $labour_data->gender_id = $request->gender_id;
-            $labour_data->date_of_birth = $request->date_of_birth;//Carbon::createFromFormat('d/m/Y', )->format('Y-m-d');
-            $labour_data->district_id = $request->district_id;
-            $labour_data->taluka_id = $request->taluka_id;
-            $labour_data->village_id = $request->village_id;
-            $labour_data->mobile_number = $request->mobile_number;
-            // $labour_data->landline_number = $request->landline_number;
-            $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-            $labour_data->skill_id = $request->skill_id;
-            $labour_data->latitude = $request->latitude;
-            $labour_data->longitude = $request->longitude;
-            // $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : 'null';
-            $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : '';
-
-            $labour_data->save();
-
-            $last_insert_id = $labour_data->id;
-            $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-            $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
-            $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
-            $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
-
-            $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
-
-            uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-            uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
-            uploadImage($request, 'profile_image', $path, $imageProfile);
-            uploadImage($request, 'voter_image', $path, $imageVoter);
-
-            // Update the image paths in the database
-            $labour_data->aadhar_image =  $imageAadhar;
-            $labour_data->mgnrega_image = $imageMgnrega;
-            $labour_data->profile_image = $imageProfile;
-            $labour_data->voter_image =  $imageVoter;
-            $labour_data->save();
-
-            // Include image paths in the response
-            $labour_data->aadhar_image = $labour_data->aadhar_image;
-            $labour_data->mgnrega_image = $labour_data->mgnrega_image;
-            $labour_data->profile_image = $labour_data->profile_image;
-            $labour_data->voter_image = $labour_data->voter_image;
-            // info($request->family);
-
-            // for ($i=0; $i< sizeof($request->input('family')); $i++) {
-            //     $familyDetail = new LabourFamilyDetails();
-            //     $familyDetail->labour_id = $labour_data->id;
-            //     $familyDetail->full_name = $request->input("family.$i.full_name");
-            //     $familyDetail->gender_id = $request->input("family.$i.gender_id");
-            //     $familyDetail->relationship_id = $request->input("family.$i.relationship_id");
-            //     $familyDetail->married_status_id = $request->input("family.$i.married_status_id");
-            //     $familyDetail->date_of_birth =  $request->input("family.$i.date_of_birth");
-            //     $familyDetail->save();
-            // }
-            // $familyDetails = [];
-            $familyDetailNew = json_decode($request->family,true);
-            
-            foreach ($familyDetailNew as $key => $familyMember) {
-                $familyDetail = new LabourFamilyDetails();
-                $familyDetail->labour_id = $labour_data->id;
-                $familyDetail->full_name = $familyMember['fullName'];
-                $familyDetail->gender_id = $familyMember['genderId'];
-                $familyDetail->relationship_id = $familyMember['relationId'];
-                $familyDetail->married_status_id = $familyMember['maritalStatusId'];
-                $familyDetail->date_of_birth = $familyMember['dob'];
-                $familyDetail->save();
-                $familyDetails[] = $familyDetail; // Collect family details
-            }
-            // return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
-
-            return response()->json([
-                'status' => 'True',
-                'message' => 'Labor added successfully',
+            $request->validate([
+                'mgnrega_card_id' => 'required',
             ]);
 
+            $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
+                                    ->where('is_approved', 2)
+                                    ->first();
+
+            if ($existingLabour) {
+                $existingLabour->update(['sync_reason' => 'Mgnrega Card ID already exists']);
+                return response()->json(['status' => 'false', 'message' => 'Mgnrega Card ID already exists'], 400);
+            } else {
+                $all_data_validation = [
+                    'full_name' => 'required',
+                    'gender_id' => 'required',
+                    'date_of_birth' => 'required|date_format:d/m/Y|before_or_equal:today|before:-18 years',
+                    'district_id' => 'required',
+                    'taluka_id' => 'required',
+                    'village_id' => 'required',
+                    'skill_id' => 'required',
+                    'mobile_number' => ['required', 'digits:10'],
+                    'mgnrega_card_id' => 'required|unique:labours',
+                    'latitude' => ['required', 'between:-90,90'],
+                    'longitude' => ['required', 'between:-180,180'],
+                    'aadhar_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                    'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                    'profile_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                    'voter_image' => 'required|image|mimes:jpeg,png,jpg|min:10|max:2048',
+                    'family' => 'required|array',
+                    'family.*.fullName' => 'required',
+                    'family.*.genderId' => 'required',
+                    'family.*.relationId' => 'required',
+                    'family.*.maritalStatusId' => 'required',
+                    'family.*.dob' => 'required|date_format:d/m/Y|before_or_equal:today',
+                ];
+
+                // if(isset($request->landline_number)) {
+                    //     $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
+                    // }
+                $validator = Validator::make($request->all(), $all_data_validation);
+
+                if ($validator->fails()) {
+                    return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
+                }
+
+                $user = Auth::user();
+
+                $labour_data = new Labour();
+                $labour_data->user_id = $user->id;
+                $labour_data->full_name = $request->full_name;
+                $labour_data->gender_id = $request->gender_id;
+                $labour_data->date_of_birth = $request->date_of_birth;// Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
+                $labour_data->district_id = $request->district_id;
+                $labour_data->taluka_id = $request->taluka_id;
+                $labour_data->village_id = $request->village_id;
+                $labour_data->mobile_number = $request->mobile_number;
+                $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+                $labour_data->skill_id = $request->skill_id;
+                $labour_data->latitude = $request->latitude;
+                $labour_data->longitude = $request->longitude;
+                $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : '';
+                $labour_data->save();
+
+                $last_insert_id = $labour_data->id;
+                $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+                $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
+                $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+                $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
+
+                $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
+
+                uploadImage($request, 'aadhar_image', $path, $imageAadhar);
+                uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
+                uploadImage($request, 'profile_image', $path, $imageProfile);
+                uploadImage($request, 'voter_image', $path, $imageVoter);
+
+                $labour_data->aadhar_image =  $imageAadhar;
+                $labour_data->mgnrega_image = $imageMgnrega;
+                $labour_data->profile_image = $imageProfile;
+                $labour_data->voter_image =  $imageVoter;
+                $labour_data->save();
+
+                // $familyDetails = [];
+                $familyDetailNew = json_decode($request->family,true);
+                        
+                foreach ($familyDetailNew as $key => $familyMember) {
+                    $familyDetail = new LabourFamilyDetails();
+                    $familyDetail->labour_id = $labour_data->id;
+                    $familyDetail->full_name = $familyMember['fullName'];
+                    $familyDetail->gender_id = $familyMember['genderId'];
+                    $familyDetail->relationship_id = $familyMember['relationId'];
+                    $familyDetail->married_status_id = $familyMember['maritalStatusId'];
+                    $familyDetail->date_of_birth = $familyMember['dob'];
+                    $familyDetail->save();
+                    $familyDetails[] = $familyDetail; // Collect family details
+                }
+
+                return response()->json([
+                    'status' => 'true',
+                    'message' => 'Labor added successfully',
+                ]);
+            }
         } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['status' => 'false', 'message' => 'An error occurred', 'error' => $e->getMessage()], 500);
         }
     }
     public function getAllLabourList(Request $request){
-    
+
         try {
             $data_output = [];
             $user = Auth::user()->id;
@@ -286,8 +229,8 @@ class LabourController extends Controller
                     $labour->voter_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->voter_image;
 
                 }
-          
-               foreach ($data_output as $labour) {
+            
+                foreach ($data_output as $labour) {
                 $labour->family_details = LabourFamilyDetails::leftJoin('gender as gender_labour', 'labour_family_details.gender_id', '=', 'gender_labour.id')
                 ->leftJoin('relation as relation_labour', 'labour_family_details.relationship_id', '=', 'relation_labour.id')
                 ->leftJoin('maritalstatus as maritalstatus_labour', 'labour_family_details.married_status_id', '=', 'maritalstatus_labour.id')
@@ -335,11 +278,6 @@ class LabourController extends Controller
                 } catch (\Exception $e) {
                     return response()->json(['status' => 'false', 'message' => 'Data get failed', 'error' => $e->getMessage()], 500);
                 }
-
-        //     return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-        // } catch (\Exception $e) {
-        //     return response()->json(['status' => 'false', 'message' => 'Labour List get failed', 'message' => $e->getMessage()], 500);
-        // }
     }
     public function updateLabourFirstForm(Request $request){
         try {
@@ -414,7 +352,7 @@ class LabourController extends Controller
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Labour update failed', 'error' => $e->getMessage()], 500);
         }
-   }
+    }
     public function updateLabourSecondForm(Request $request){
         try {
             $user = Auth::user();
@@ -453,9 +391,6 @@ class LabourController extends Controller
                 return response()->json(['status' => 'false', 'message' => 'Labour data not found'], 200);
             }
 
-            // Delete existing family details for the labor
-            // LabourFamilyDetails::where('labour_id', $labour_data->id)->delete();
-
             // Check if labour_id is greater than zero before deleting family details
             if ($labour_data->id > 0) {
                 LabourFamilyDetails::where('labour_id', $request->id)->delete();
@@ -472,13 +407,10 @@ class LabourController extends Controller
 
             $pathdelete = Config::get('DocumentConstant.USER_LABOUR_DELETE');
             $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
-
-            // Upload and update images
-
-            // if ($request->file('profile_image') !== null && $request->hasFile('profile_image') && $request->file('profile_image')->isValid()) {
-                if ($request->hasFile('profile_image')) {
-                if ($labour_data->profile_image) {
-                removeImage($pathdelete . $labour_data->profile_image);
+           
+            if ($request->hasFile('profile_image')) {
+            if ($labour_data->profile_image) {
+            removeImage($pathdelete . $labour_data->profile_image);
             }
             $profileImageName = $labour_data->id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
             uploadImage($request, 'profile_image', $path, $profileImageName);
@@ -486,7 +418,6 @@ class LabourController extends Controller
             }
 
             if ($request->hasFile('aadhar_image')) {
-            // if ($request->file('aadhar_image') !== null && $request->hasFile('aadhar_image') && $request->file('aadhar_image')->isValid()) {
             if ($labour_data->aadhar_image) {
                 removeImage($pathdelete . $labour_data->aadhar_image);
             }
@@ -496,7 +427,6 @@ class LabourController extends Controller
             }
 
             if ($request->hasFile('mgnrega_image')) {
-            // if ($request->file('mgnrega_image') !== null && $request->hasFile('mgnrega_image') && $request->file('mgnrega_image')->isValid()) {
             if ($labour_data->mgnrega_image) {
                 removeImage($pathdelete . $labour_data->mgnrega_image);
             }
@@ -506,7 +436,6 @@ class LabourController extends Controller
             }
 
             if ($request->hasFile('voter_image')) {
-                // if ($request->file('voter_image') !== null && $request->hasFile('voter_image') && $request->file('voter_image')->isValid()) {    
             if ($labour_data->voter_image) {
                 removeImage($pathdelete . $labour_data->voter_image);
             }
@@ -519,8 +448,6 @@ class LabourController extends Controller
             $labour_data->save();
 
             // $familyDetails = [];
-
-
             $familyDetailNew = json_decode($request->family,true);
                 
             if ($labour_data->id > 0) {
@@ -529,11 +456,8 @@ class LabourController extends Controller
                 $familyDetail->labour_id = $labour_data->id;
                 $familyDetail->full_name = $familyMember['full_name'];
                 $familyDetail->gender_id = $familyMember['gender_id'];
-                // $familyDetail->gender_id = $familyMember['gender'];
                 $familyDetail->relationship_id = $familyMember['relationship_id'];
-                // $familyDetail->relationship_id = $familyMember['relation'];
                 $familyDetail->married_status_id = $familyMember['married_status_id'];
-                // $familyDetail->married_status_id = $familyMember['maritalStatus'];
                 $familyDetail->date_of_birth = $familyMember['date_of_birth'];           
                 $familyDetail->save();
                 $familyDetails[] = $familyDetail; // Collect family details
@@ -641,37 +565,6 @@ class LabourController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
         }
     }
-    // public function mgnregaCardIdAlreadyExist(Request $request) {
-    //     try {
-    //         $validator = Validator::make($request->all(), [
-    //             'labour_id' => 'required',
-    //             'mgnrega_card_id' => 'required'
-    //         ]);
-    
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
-    //         }
-    
-    //         $labour = Labour::where('id', $request->labour_id)->first();
-
-    //         if (!$labour) {
-    //             return response()->json(['status' => 'error', 'message' => 'Labour not found'], 200);
-    //         }
-
-    //         if ($labour->is_approved !== 2) {
-    //             return response()->json(['status' => 'error', 'message' => 'Labour not approved'], 200);
-    //         }
-    
-    //         if ($labour->mgnrega_card_id == $request->mgnrega_card_id) {
-    //             return response()->json(['status' => 'true', 'message' => 'MGNREGA card ID already exists for this labour'], 200);
-    //         } else {
-    //             return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID does not exist for this labour'], 200);
-    //         }
-    
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
-    //     }
-    // }
     public function mgnregaCardIdAlreadyExist(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -681,12 +574,6 @@ class LabourController extends Controller
             if ($validator->fails()) {
                 return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
             }
-               // $labour = Labour::where('id', $request->labour_id)->first();
-    
-            // if (!$labour) {
-            //     return response()->json(['status' => 'error', 'message' => 'Labour not found'], 200);
-            // }
-    
     
             $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)
                                     ->where('is_approved', 2)
@@ -711,202 +598,19 @@ class LabourController extends Controller
         if (!$mgnrega_card_id) {
             return response()->json(['status' => 'false', 'message' => 'MGNREGA card ID is required'], 400);
         }
-            $data_output = Labour::leftJoin('registrationstatus', 'labour.is_approved', '=', 'registrationstatus.id')
-            ->where('labour.user_id', $user)
+            $data_output = Labour::where('labour.user_id', $user)
             ->where('labour.is_approved', 2)
             ->when($request->has('mgnrega_card_id'), function ($query) use ($request) {
                 $query->where('labour.mgnrega_card_id', 'like', '%' . $request->mgnrega_card_id . '%');
             })
             ->pluck('mgnrega_card_id'); 
        
-        $mgnrega_card_ids = $data_output->toArray();
+           $mgnrega_card_ids = $data_output->toArray();
 
             return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => 'false', 'message' => 'Data not found', 'error' => $e->getMessage()], 500);
         }
     }
-    public function labourSyncReason(Request $request)
-    {
-        try {
-            $request->validate([
-                'mgnrega_card_id' => 'required',
-            ]);
-
-            $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
-
-            if ($existingLabour) {
-                $existingLabour->update(['sync_reason' => 'Mgnrega ID already exists']);
-                return response()->json(['status' => 'false', 'message' => 'Mgnrega ID already exists'], 400);
-            } else {
-             
-                
-                $all_data_validation = [
-                    'full_name' => 'required',
-                    'gender_id' => 'required',
-                    // 'date_of_birth' => [
-                    //     'required',
-                    //     'date_format:d/m/Y',
-                    //     function ($attribute, $value, $fail) {
-                    //         $dob = Carbon::createFromFormat('d/m/Y', $value);
-                    //         if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
-                    //             $fail('The date of birth must be a date before today.');
-                    //         }
-                    //     },
-                    // ],
-                    // 'date_of_birth' => ['required', 'date_format:d/m/Y', function ($attribute, $value, $fail) {
-                    //     $dob = DateTime::createFromFormat('d/m/Y', $value);
-                    //     $eighteenYearsAgo = (new DateTime())->modify('-18 years');
-                    
-                    //     if ($dob > $eighteenYearsAgo) {
-                    //         $fail('The date of birth must be at least 18 years ago.');
-                    //     }
-                    // }],
-                    
-                    'district_id' => 'required',
-                    'taluka_id' => 'required',
-                    'village_id' => 'required',
-                    'skill_id' => 'required',
-                    'mobile_number' => ['required', 'digits:10'],
-                    'mgnrega_card_id' => ['required'],//'unique:labour'],
-                    'latitude' => ['required', 'between:-90,90'], // Latitude range
-                    'longitude' => ['required', 'between:-180,180'], // Longitude range
-                    'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                    'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
-                    'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-                    'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
-        
-                 
-                    // 'family' => 'required|
-                    // ',
-                    // 'family.*.full_name' => 'required',
-                    // 'family.*.gender_id' => 'required',
-                    // 'family.*.relationship_id' => 'required',
-                    // 'family.*.married_status_id' => 'required',
-                    // 'family.*.date_of_birth' => ['required', function ($attribute, $value, $fail) {
-                    //     $dob = DateTime::createFromFormat('d/m/Y', $value);
-                    //     $currentDate = new DateTime();
-                    
-                    //     if ($dob > $currentDate) {
-                    //         $fail('The date of birth must be a date before today.');
-                    //     }
-                    // }],
-                    
-                    // 'family.*.date_of_birth' => [
-                    //     'required',
-                    //     'date_format:d/m/Y',
-                    //     function ($attribute, $value, $fail) {
-                    //         $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
-                    //         if ($dob->isAfter(\Carbon\Carbon::now())) {
-                    //             $fail('The date of birth must be a date before today.');
-                    //         }
-                    //     },
-                    // ],
-                    
-        
-                ];
-                // if(isset($request->landline_number)) {
-                //     $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
-                // }
-                $validator = Validator::make($request->all(), $all_data_validation);
-        
-        
-                if ($validator->fails()) {
-                    return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
-                }
-        
-        
-                try {
-                    // Check if the user exists
-                    $user = Auth::user();
-                //  dd($user);
-        
-                    $labour_data = new Labour();
-                    $labour_data->user_id = $user->id; // Assign the user ID
-                    // $labour_data->user_type = $user->user_type; // Assign the user ID
-                    $labour_data->full_name = $request->full_name;
-                    $labour_data->gender_id = $request->gender_id;
-                    $labour_data->date_of_birth = $request->date_of_birth;//Carbon::createFromFormat('d/m/Y', )->format('Y-m-d');
-                    $labour_data->district_id = $request->district_id;
-                    $labour_data->taluka_id = $request->taluka_id;
-                    $labour_data->village_id = $request->village_id;
-                    $labour_data->mobile_number = $request->mobile_number;
-                    // $labour_data->landline_number = $request->landline_number;
-                    $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
-                    $labour_data->skill_id = $request->skill_id;
-                    $labour_data->latitude = $request->latitude;
-                    $labour_data->longitude = $request->longitude;
-                    // $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : 'null';
-                    $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : '';
-        
-                    $labour_data->save();
-        
-                    $last_insert_id = $labour_data->id;
-                    $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
-                    $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
-                    $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
-                    $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
-        
-                    $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
-        
-                    uploadImage($request, 'aadhar_image', $path, $imageAadhar);
-                    uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
-                    uploadImage($request, 'profile_image', $path, $imageProfile);
-                    uploadImage($request, 'voter_image', $path, $imageVoter);
-        
-                    // Update the image paths in the database
-                    $labour_data->aadhar_image =  $imageAadhar;
-                    $labour_data->mgnrega_image = $imageMgnrega;
-                    $labour_data->profile_image = $imageProfile;
-                    $labour_data->voter_image =  $imageVoter;
-                    $labour_data->save();
-        
-                    // Include image paths in the response
-                    $labour_data->aadhar_image = $labour_data->aadhar_image;
-                    $labour_data->mgnrega_image = $labour_data->mgnrega_image;
-                    $labour_data->profile_image = $labour_data->profile_image;
-                    $labour_data->voter_image = $labour_data->voter_image;
-                    // info($request->family);
-        
-                    // for ($i=0; $i< sizeof($request->input('family')); $i++) {
-                    //     $familyDetail = new LabourFamilyDetails();
-                    //     $familyDetail->labour_id = $labour_data->id;
-                    //     $familyDetail->full_name = $request->input("family.$i.full_name");
-                    //     $familyDetail->gender_id = $request->input("family.$i.gender_id");
-                    //     $familyDetail->relationship_id = $request->input("family.$i.relationship_id");
-                    //     $familyDetail->married_status_id = $request->input("family.$i.married_status_id");
-                    //     $familyDetail->date_of_birth =  $request->input("family.$i.date_of_birth");
-                    //     $familyDetail->save();
-                    // }
-                    // $familyDetails = [];
-                    $familyDetailNew = json_decode($request->family,true);
-                    
-                    foreach ($familyDetailNew as $key => $familyMember) {
-                        $familyDetail = new LabourFamilyDetails();
-                        $familyDetail->labour_id = $labour_data->id;
-                        $familyDetail->full_name = $familyMember['fullName'];
-                        $familyDetail->gender_id = $familyMember['genderId'];
-                        $familyDetail->relationship_id = $familyMember['relationId'];
-                        $familyDetail->married_status_id = $familyMember['maritalStatusId'];
-                        $familyDetail->date_of_birth = $familyMember['dob'];
-                        $familyDetail->save();
-                        $familyDetails[] = $familyDetail; // Collect family details
-                    }
-                    // return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
-        
-                    return response()->json([
-                        'status' => 'True',
-                        'message' => 'Labor added successfully',
-                    ]);
-        
-                } catch (\Exception $e) {
-                    return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-                }
-                return response()->json(['status' => 'true', 'message' => 'Data synced successfully', 'data' => $data_output], 200);
-            }
-        } catch (\Exception $e) {
-          
-            return response()->json(['status' => 'false', 'message' => 'Data not found', 'error' => $e->getMessage()], 500);
-        }
-    }
+   
 }

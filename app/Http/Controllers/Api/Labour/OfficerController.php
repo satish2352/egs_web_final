@@ -147,10 +147,6 @@ class OfficerController extends Controller
             $user = Auth::user()->id;
             $is_approved = '' ;
             $is_resubmitted = ''; 
-            // $fromDate = date('Y-m-d', strtotime($request->input('from_date')));
-            // $fromDate =  $fromDate.' 00:00:01';
-            // $toDate = date('Y-m-d', strtotime($request->input('to_date')));
-            // $toDate =  $toDate.' 23:59:59';
 
             $page = isset($request["start"]) ? $request["start"] : Config::get('DocumentConstant.LABOUR_DEFAULT_START') ;
             // $rowperpage = isset($request["length"])? $request["length"] : Config::get('DocumentConstant.LABOUR_DEFAULT_LENGTH') ; // Rows display per page
@@ -328,7 +324,6 @@ class OfficerController extends Controller
             $user = Auth::user();
             
             $labour_id = $request->input('labour_id'); 
-        
            
             $validator = Validator::make($request->all(), [
                 'labour_id' => 'required',

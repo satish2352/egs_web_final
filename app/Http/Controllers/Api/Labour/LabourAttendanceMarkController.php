@@ -19,8 +19,7 @@ use Carbon\Carbon;
 
 class LabourAttendanceMarkController extends Controller
 {
-    public function addAttendanceMark(Request $request)
-    {
+    public function addAttendanceMark(Request $request){
         // $labour_data = null; 
 
         $validator = Validator::make($request->all(), [
@@ -133,47 +132,6 @@ class LabourAttendanceMarkController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Attendance Mark Fail','error' => $e->getMessage()], 500);
         }
     }
-    
-    // public function getAllAttendanceMarkedLabour(Request $request) {
-    //     try {
-    //         $user = Auth::user()->id;
-          
-    //         $date = date('Y-m-d');     
-    //         $data_output = LabourAttendanceMark::leftJoin('labour', 'tbl_mark_attendance.mgnrega_card_id', '=', 'labour.mgnrega_card_id')
-    //             ->leftJoin('projects', 'tbl_mark_attendance.project_id', '=', 'projects.id')
-    //             ->where('tbl_mark_attendance.user_id', $user)
-    //             ->whereDate('tbl_mark_attendance.updated_at', $date)
-    //               ->when($request->get('project_id'), function($query) use ($request) {
-    //                 $query->where('tbl_mark_attendance.project_id',$request->project_id);
-    //             })  
-    //             ->select(
-    //                 'tbl_mark_attendance.id',
-    //                 'tbl_mark_attendance.project_id',
-    //                 'projects.project_name',
-    //                 'labour.full_name as full_name',
-    //                 'labour.date_of_birth',
-    //                 'labour.mobile_number',
-    //                 'labour.landline_number',
-    //                 'labour.mgnrega_card_id',
-    //                 'labour.latitude',
-    //                 'labour.longitude',
-    //                 'labour.profile_image',
-    //                 'tbl_mark_attendance.attendance_day',
-    //                 'tbl_mark_attendance.updated_at'
-
-    //             )->get();
-    
-    //             foreach ($data_output as $labour) {
-                   
-    //                 $labour->profile_image = Config::get('DocumentConstant.USER_LABOUR_VIEW') . $labour->profile_image;
-    //             }
-    
-    //         return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
-    //     }
-    // }
-
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;
@@ -227,8 +185,7 @@ class LabourAttendanceMarkController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
         }
     }
-
-   public function updateAttendanceMark(Request $request) {
+    public function updateAttendanceMark(Request $request) {
     try {
         $user = Auth::user()->id;
         $currentTime = date('H:i:s');
@@ -321,7 +278,6 @@ class LabourAttendanceMarkController extends Controller
         // Exception handling
         return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
     }
-}
-
+    }
 
 }
