@@ -31,7 +31,7 @@ class LabourController extends Controller
 
             if ($existingLabour) {
                 $existingLabour->update(['sync_reason' => 'Mgnrega Card ID already exists']);
-                return response()->json(['status' => 'false', 'message' => 'Mgnrega Card ID already exists'], 400);
+                return response()->json(['status' => 'false', 'message' => 'Mgnrega Card ID already exists'], 200);
             } else {
                 $all_data_validation = [
                     'full_name' => 'required',
