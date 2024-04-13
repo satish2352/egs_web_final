@@ -83,7 +83,6 @@ class ProjectController extends Controller
             $userLongitude = $request->longitude; 
             $distanceInKm = DistanceKM::first()->distance_km;
             // $distanceInKm = 5; 
-           
 
             $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
             $latN = $latLongArr['latN'];
@@ -178,14 +177,6 @@ class ProjectController extends Controller
                     'tbl_gram_panchayat_documents.document_pdf',
                 )
                 ->orderBy('id', 'desc');
-            // dd($gramsevakdocumentQuery);
-                    // if ($request->has('mgnrega_card_id')) {
-                    //     $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
-                    // }
-            
-                    // if ($request->has('project_name')) {
-                    //     $projectQuery->where('projects.project_name', 'LIKE', '%'.$request->input('project_name').'%');
-                    // }
             
             // Fetch data
             $labourData = $labourQuery->get();
