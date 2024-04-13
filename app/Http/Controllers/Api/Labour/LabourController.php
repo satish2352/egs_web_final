@@ -194,8 +194,8 @@ class LabourController extends Controller
             $is_resubmitted = ''; 
 
             $page = isset($request["start"]) ? $request["start"] : Config::get('DocumentConstant.LABOUR_DEFAULT_START') ;
-            $rowperpage = isset($request["length"])? $request["length"] : Config::get('DocumentConstant.LABOUR_DEFAULT_LENGTH') ; // Rows display per page
-
+            // $rowperpage = isset($request["length"])? $request["length"] : Config::get('DocumentConstant.LABOUR_DEFAULT_LENGTH') ; // Rows display per page
+            $rowperpage = LABOUR_DEFAULT_LENGTH;
             $start = ($page - 1) * $rowperpage;
             
             if($request->has('is_approved') && $request->is_approved == 'added' && $request->has('is_resubmitted') && $request->is_resubmitted == 'resubmitted') {  //1
