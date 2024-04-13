@@ -10,4 +10,5 @@ class Labour extends Model
     use HasFactory;
     protected $table = 'labour';
     protected $primaryKey = 'id';
+    protected $fillable = ['sync_reason'];
 }

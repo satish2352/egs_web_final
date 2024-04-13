@@ -29,8 +29,8 @@ class OfficerGramDocAppNotAppController extends Controller
                 $toDate =  $toDate.' 23:59:59';
 
                 $page = isset($request["start"]) ? $request["start"] : Config::get('DocumentConstant.GRAM_DOCUMENT_DEFAULT_START') ;
-            $rowperpage = isset($request["length"])? $request["length"] : Config::get('DocumentConstant.GRAM_DOCUMENT_DEFAULT_LENGTH') ; // Rows display per page
-    
+            // $rowperpage = isset($request["length"])? $request["length"] : Config::get('DocumentConstant.GRAM_DOCUMENT_DEFAULT_LENGTH') ; // Rows display per page
+            $rowperpage = GRAM_DOCUMENT_DEFAULT_LENGTH;
                 $start = ($page - 1) * $rowperpage;
 
                 $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')

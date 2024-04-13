@@ -730,23 +730,182 @@ class LabourController extends Controller
     {
         try {
             $request->validate([
-                'mng_id' => 'required|unique:labours|mng_id',
+                'mgnrega_card_id' => 'required',
             ]);
 
-            $existingLabour = Labour::where('mng_id', $request->mng_id)->first();
+            $existingLabour = Labour::where('mgnrega_card_id', $request->mgnrega_card_id)->first();
 
             if ($existingLabour) {
-                $existingLabour->update(['sync_reason' => 'Management ID already exists']);
-                return response()->json(['status' => 'error', 'message' => 'Management ID already exists'], 400);
+                $existingLabour->update(['sync_reason' => 'Mgnrega ID already exists']);
+                return response()->json(['status' => 'false', 'message' => 'Mgnrega ID already exists'], 400);
             } else {
-                // logic to sync data goes here
-
+             
                 
-                $data_output = []; // Example data array
+                $all_data_validation = [
+                    'full_name' => 'required',
+                    'gender_id' => 'required',
+                    // 'date_of_birth' => [
+                    //     'required',
+                    //     'date_format:d/m/Y',
+                    //     function ($attribute, $value, $fail) {
+                    //         $dob = Carbon::createFromFormat('d/m/Y', $value);
+                    //         if ($dob->isSameDay(now()) || $dob->isAfter(now())) {
+                    //             $fail('The date of birth must be a date before today.');
+                    //         }
+                    //     },
+                    // ],
+                    // 'date_of_birth' => ['required', 'date_format:d/m/Y', function ($attribute, $value, $fail) {
+                    //     $dob = DateTime::createFromFormat('d/m/Y', $value);
+                    //     $eighteenYearsAgo = (new DateTime())->modify('-18 years');
+                    
+                    //     if ($dob > $eighteenYearsAgo) {
+                    //         $fail('The date of birth must be at least 18 years ago.');
+                    //     }
+                    // }],
+                    
+                    'district_id' => 'required',
+                    'taluka_id' => 'required',
+                    'village_id' => 'required',
+                    'skill_id' => 'required',
+                    'mobile_number' => ['required', 'digits:10'],
+                    'mgnrega_card_id' => ['required'],//'unique:labour'],
+                    'latitude' => ['required', 'between:-90,90'], // Latitude range
+                    'longitude' => ['required', 'between:-180,180'], // Longitude range
+                    'aadhar_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+                    'mgnrega_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048', 
+                    'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+                    'voter_image' => 'required|image|mimes:jpeg,png,jpg,gif|min:10|max:2048',
+        
+                 
+                    // 'family' => 'required|
+                    // ',
+                    // 'family.*.full_name' => 'required',
+                    // 'family.*.gender_id' => 'required',
+                    // 'family.*.relationship_id' => 'required',
+                    // 'family.*.married_status_id' => 'required',
+                    // 'family.*.date_of_birth' => ['required', function ($attribute, $value, $fail) {
+                    //     $dob = DateTime::createFromFormat('d/m/Y', $value);
+                    //     $currentDate = new DateTime();
+                    
+                    //     if ($dob > $currentDate) {
+                    //         $fail('The date of birth must be a date before today.');
+                    //     }
+                    // }],
+                    
+                    // 'family.*.date_of_birth' => [
+                    //     'required',
+                    //     'date_format:d/m/Y',
+                    //     function ($attribute, $value, $fail) {
+                    //         $dob = \Carbon\Carbon::createFromFormat('d/m/Y', $value);
+                    //         if ($dob->isAfter(\Carbon\Carbon::now())) {
+                    //             $fail('The date of birth must be a date before today.');
+                    //         }
+                    //     },
+                    // ],
+                    
+        
+                ];
+                // if(isset($request->landline_number)) {
+                //     $all_data_validation['landline_number'] =  ['required', 'regex:/^[0-9]{8,}$/'];
+                // }
+                $validator = Validator::make($request->all(), $all_data_validation);
+        
+        
+                if ($validator->fails()) {
+                    return response()->json(['status' => 'error', 'message' => $validator->errors()->all()], 200);
+                }
+        
+        
+                try {
+                    // Check if the user exists
+                    $user = Auth::user();
+                //  dd($user);
+        
+                    $labour_data = new Labour();
+                    $labour_data->user_id = $user->id; // Assign the user ID
+                    // $labour_data->user_type = $user->user_type; // Assign the user ID
+                    $labour_data->full_name = $request->full_name;
+                    $labour_data->gender_id = $request->gender_id;
+                    $labour_data->date_of_birth = $request->date_of_birth;//Carbon::createFromFormat('d/m/Y', )->format('Y-m-d');
+                    $labour_data->district_id = $request->district_id;
+                    $labour_data->taluka_id = $request->taluka_id;
+                    $labour_data->village_id = $request->village_id;
+                    $labour_data->mobile_number = $request->mobile_number;
+                    // $labour_data->landline_number = $request->landline_number;
+                    $labour_data->mgnrega_card_id = $request->mgnrega_card_id;
+                    $labour_data->skill_id = $request->skill_id;
+                    $labour_data->latitude = $request->latitude;
+                    $labour_data->longitude = $request->longitude;
+                    // $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : 'null';
+                    $labour_data->landline_number = $request->has('landline_number') ? $request->landline_number : '';
+        
+                    $labour_data->save();
+        
+                    $last_insert_id = $labour_data->id;
+                    $imageAadhar = $last_insert_id . '_' . rand(100000, 999999) . '_aadhar.' . $request->aadhar_image->extension();
+                    $imageMgnrega = $last_insert_id . '_' . rand(100000, 999999) . '_mgnrega.' . $request->mgnrega_image->extension();
+                    $imageProfile = $last_insert_id . '_' . rand(100000, 999999) . '_profile.' . $request->profile_image->extension();
+                    $imageVoter = $last_insert_id . '_' . rand(100000, 999999) . '_voter.' . $request->voter_image->extension();
+        
+                    $path = Config::get('DocumentConstant.USER_LABOUR_ADD');
+        
+                    uploadImage($request, 'aadhar_image', $path, $imageAadhar);
+                    uploadImage($request, 'mgnrega_image', $path, $imageMgnrega);
+                    uploadImage($request, 'profile_image', $path, $imageProfile);
+                    uploadImage($request, 'voter_image', $path, $imageVoter);
+        
+                    // Update the image paths in the database
+                    $labour_data->aadhar_image =  $imageAadhar;
+                    $labour_data->mgnrega_image = $imageMgnrega;
+                    $labour_data->profile_image = $imageProfile;
+                    $labour_data->voter_image =  $imageVoter;
+                    $labour_data->save();
+        
+                    // Include image paths in the response
+                    $labour_data->aadhar_image = $labour_data->aadhar_image;
+                    $labour_data->mgnrega_image = $labour_data->mgnrega_image;
+                    $labour_data->profile_image = $labour_data->profile_image;
+                    $labour_data->voter_image = $labour_data->voter_image;
+                    // info($request->family);
+        
+                    // for ($i=0; $i< sizeof($request->input('family')); $i++) {
+                    //     $familyDetail = new LabourFamilyDetails();
+                    //     $familyDetail->labour_id = $labour_data->id;
+                    //     $familyDetail->full_name = $request->input("family.$i.full_name");
+                    //     $familyDetail->gender_id = $request->input("family.$i.gender_id");
+                    //     $familyDetail->relationship_id = $request->input("family.$i.relationship_id");
+                    //     $familyDetail->married_status_id = $request->input("family.$i.married_status_id");
+                    //     $familyDetail->date_of_birth =  $request->input("family.$i.date_of_birth");
+                    //     $familyDetail->save();
+                    // }
+                    // $familyDetails = [];
+                    $familyDetailNew = json_decode($request->family,true);
+                    
+                    foreach ($familyDetailNew as $key => $familyMember) {
+                        $familyDetail = new LabourFamilyDetails();
+                        $familyDetail->labour_id = $labour_data->id;
+                        $familyDetail->full_name = $familyMember['fullName'];
+                        $familyDetail->gender_id = $familyMember['genderId'];
+                        $familyDetail->relationship_id = $familyMember['relationId'];
+                        $familyDetail->married_status_id = $familyMember['maritalStatusId'];
+                        $familyDetail->date_of_birth = $familyMember['dob'];
+                        $familyDetail->save();
+                        $familyDetails[] = $familyDetail; // Collect family details
+                    }
+                    // return response()->json(['status' => 'success', 'message' => 'Labor added successfully',  'data' => $labour_data], 200);
+        
+                    return response()->json([
+                        'status' => 'True',
+                        'message' => 'Labor added successfully',
+                    ]);
+        
+                } catch (\Exception $e) {
+                    return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+                }
                 return response()->json(['status' => 'true', 'message' => 'Data synced successfully', 'data' => $data_output], 200);
             }
         } catch (\Exception $e) {
-            // If an exception occurs, return error response
+          
             return response()->json(['status' => 'false', 'message' => 'Data not found', 'error' => $e->getMessage()], 500);
         }
     }
