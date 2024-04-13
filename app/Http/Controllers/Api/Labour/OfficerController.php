@@ -152,8 +152,8 @@ class OfficerController extends Controller
             // $toDate = date('Y-m-d', strtotime($request->input('to_date')));
             // $toDate =  $toDate.' 23:59:59';
 
-            $page = isset($request["start"]) ? $request["start"] : 1;
-            $rowperpage = isset($request["length"])? $request["length"] : 10; // Rows display per pa]e
+            $page = isset($request["start"]) ? $request["start"] : Config::get('DocumentConstant.LABOUR_DEFAULT_START') ;
+            $rowperpage = isset($request["length"])? $request["length"] : Config::get('DocumentConstant.LABOUR_DEFAULT_LENGTH') ; // Rows display per page
 
             $start = ($page - 1) * $rowperpage;
 

@@ -3,6 +3,12 @@
 namespace App\Constants;
 
 return [
+    define('LABOUR_DEFAULT_START', 1),
+    define('LABOUR_DEFAULT_LENGTH', 50),
+
+    define('GRAM_DOCUMENT_DEFAULT_START', 1),
+    define('GRAM_DOCUMENT_DEFAULT_LENGTH', 10),
+
     'USER_PROFILE_ADD'	         => "/all_web_data/images/userProfile/",
     'USER_PROFILE_DELETE'	         => '/all_web_data/images/userProfile/',
     'USER_PROFILE_VIEW'	         => env("FILE_VIEW").'/all_web_data/images/userProfile/',

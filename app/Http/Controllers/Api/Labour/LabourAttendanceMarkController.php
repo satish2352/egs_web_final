@@ -178,8 +178,8 @@ class LabourAttendanceMarkController extends Controller
         try {
             $user = Auth::user()->id;
         
-            $page = isset($request["start"]) ? $request["start"] : 1;
-            $rowperpage = isset($request["length"])? $request["length"] : 10; // Rows display per pa]e
+            $page = isset($request["start"]) ? $request["start"] : Config::get('DocumentConstant.LABOUR_DEFAULT_START') ;
+            $rowperpage = isset($request["length"])? $request["length"] : Config::get('DocumentConstant.LABOUR_DEFAULT_LENGTH') ; // Rows display per page
 
             $start = ($page - 1) * $rowperpage;
 
