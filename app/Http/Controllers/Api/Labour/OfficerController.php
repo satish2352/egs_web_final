@@ -21,7 +21,6 @@ use Carbon\Carbon;
 
 class OfficerController extends Controller
 {
-   
     public function getParticularLabourOfficer(Request $request){
         try {
             $user = Auth::user()->id;
@@ -285,34 +284,6 @@ class OfficerController extends Controller
                 return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
             } else {
                 return response()->json(['status' => 'false', 'message' => 'No labour found with the provided MGNREGA card Id'], 200);
-            }
-    
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'false', 'message' => 'Update failed','error' => $e->getMessage()], 500);
-        }
-    }
-    public function updateLabourStatusRejected(Request $request){
-        try {
-            $user = Auth::user()->id;
-                // Validate the incoming request
-            $validator = Validator::make($request->all(), [
-                'labour_id' => 'required',
-            ]);
-    
-            if ($validator->fails()) {
-                return response()->json(['status' => 'false', 'message' => 'Validation failed', 'errors' => $validator->errors()], 200);
-            }
-            
-           
-            $updated = Labour::where('id', $request->labour_id)
-                ->where('is_approved', 1)
-                ->update(['is_approved' => 4]); 
-                
-    
-            if ($updated) {
-                return response()->json(['status' => 'true', 'message' => 'Labour status updated successfully'], 200);
-            } else {
-                return response()->json(['status' => 'false', 'message' => 'No labour found with the provided Labour Id'], 200);
             }
     
         } catch (\Exception $e) {

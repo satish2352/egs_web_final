@@ -167,48 +167,7 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Document List Get Fail', 'error' => $e->getMessage()], 500);
         }
     }
-    // public function updateDocuments(Request $request)
-    // {
-    //     try {
-    //         $validator = Validator::make($request->all(), [
-    //             'document_type_id' => 'required',
-    //             'document_name' => 'required',             
-    //             'document_pdf' => 'required|mimes:pdf|min:1|max:10240', 
-    //         ]);
-    
-    //         if ($validator->fails()) {
-    //             return response()->json(['status' => 'error', 'message' => $validator->errors()], 200);
-    //         }          
-    //         $document_data = GramPanchayatDocuments::where('id', $request->id)
-    //         ->first();
-    
-    //         // $last_insert_id = $document_data->document_name;
-    //         // $documentPdf = $last_insert_id;
-           
-    //         if (!empty($document_data->document_pdf)) {
-    //             $old_pdf_path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_DELETE') . $document_data->document_pdf;
-    //             if (file_exists_view($old_pdf_path)) {
-    //                 removeImage($old_pdf_path);
-    //             }
-    //         }
-           
-
-    //         $path = Config::get('DocumentConstant.GRAM_PANCHAYAT_DOC_ADD');
-    //         uploadImage($request, 'document_pdf', $path, $documentPdf);
-    
-    //         // Update document information in the database
-    //         $document_data->document_type_id = $request->document_type_id;
-    //         $document_data->document_name = $request->document_name;
-    //         $document_data->document_pdf =  $documentPdf;
-    //         $document_data->save();
-    
-    //         return response()->json(['status' => 'true', 'message' => 'Document updated successfully', 'data' => $document_data], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Document updated fail', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
-    public function updateDocuments(Request $request)
-    {
+    public function updateDocuments(Request $request){
         try {
             $validator = Validator::make($request->all(), [
                 'id' => 'required', 
@@ -253,7 +212,7 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Document updated fail', 'error' => $e->getMessage()], 500);
         }
     }
-        public function getAllDocumentsOfficer(Request $request){
+    public function getAllDocumentsOfficer(Request $request){
         try {
             $user = Auth::user()->id;
 
@@ -271,30 +230,30 @@ class GramPanchayatDocumentController extends Controller
             ->where('users.id', $user)
             ->first();
 
-        $utype=$data_output->user_type;
-        $user_working_dist=$data_output->user_district;
-        $user_working_tal=$data_output->user_taluka;
-        $user_working_vil=$data_output->user_village;
+            $utype=$data_output->user_type;
+            $user_working_dist=$data_output->user_district;
+            $user_working_tal=$data_output->user_taluka;
+            $user_working_vil=$data_output->user_village;
 
-        if($utype=='1')
-        {
-        $data_user_output = User::where('users.user_district', $user_working_dist)
-        ->select('id')
-            ->get()
-            ->toArray();
-        }else if($utype=='2')
-        {
-            $data_user_output = User::where('users.user_taluka', $user_working_tal)
+            if($utype=='1')
+            {
+            $data_user_output = User::where('users.user_district', $user_working_dist)
             ->select('id')
-            ->get()
-            ->toArray();
-        }else if($utype=='3')
-        {
-            $data_user_output = User::where('users.user_village', $user_working_vil)
-            ->select('id')
-            ->get()
-            ->toArray();
-        }         
+                ->get()
+                ->toArray();
+            }else if($utype=='2')
+            {
+                $data_user_output = User::where('users.user_taluka', $user_working_tal)
+                ->select('id')
+                ->get()
+                ->toArray();
+            }else if($utype=='3')
+            {
+                $data_user_output = User::where('users.user_village', $user_working_vil)
+                ->select('id')
+                ->get()
+                ->toArray();
+            }         
 
             $basic_query_object = GramPanchayatDocuments::leftJoin('documenttype as tbl_documenttype', 'tbl_gram_panchayat_documents.document_type_id', '=', 'tbl_documenttype.id')
             ->leftJoin('users', 'tbl_gram_panchayat_documents.user_id', '=', 'users.id')
@@ -400,43 +359,6 @@ class GramPanchayatDocumentController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Document retrieval failed', 'error' => $e->getMessage()], 500);
         }
     }
-    // public function countGramsevakDocument(Request $request) {
-    //     try {
-    //         $user = Auth::user();
-          
-    //         $counts = GramPanchayatDocuments::where('user_id', $user->id)
-    //             ->selectRaw('is_approved, COUNT(*) as count')
-    //             ->groupBy('is_approved')
-    //             ->get();
-
-    //         $sentForApprovalCount = 0;
-    //         $approvedCount = 0;
-    //         $notApprovedCount = 0;
-    
-            
-    //         foreach ($counts as $count) {
-    //             if ($count->is_approved == 1) {
-    //                 $sentForApprovalCount = $count->count;
-    //             } elseif ($count->is_approved == 2) {
-    //                 $approvedCount = $count->count;
-    //             } elseif ($count->is_approved == 3) {
-    //                 $notApprovedCount = $count->count;
-    //             }
-    //         }
-    
-    //         // Return the counts in the response
-    //         return response()->json([
-    //             'status' => 'true',
-    //             'message' => 'Counts retrieved successfully',
-    //             'sent_for_approval_count' => $sentForApprovalCount,
-    //             'approved_count' => $approvedCount,
-    //             'not_approved_count' => $notApprovedCount
-    //         ], 200);
-    
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Error occurred', 'error' => $e->getMessage()], 500);
-    //     }
-    // }  
     public function countGramsevakDocument(Request $request) {
         try {
             $user = Auth::user();

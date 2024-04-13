@@ -123,7 +123,7 @@ class ProjectController extends Controller
                 )->distinct('labour.id')
                 ->orderBy('id', 'desc');
     
-            $projectQuery = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
+                $projectQuery = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
                 ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
                 ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
                 ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
@@ -178,14 +178,14 @@ class ProjectController extends Controller
                     'tbl_gram_panchayat_documents.document_pdf',
                 )
                 ->orderBy('id', 'desc');
-    // dd($gramsevakdocumentQuery);
-            // if ($request->has('mgnrega_card_id')) {
-            //     $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
-            // }
-    
-            // if ($request->has('project_name')) {
-            //     $projectQuery->where('projects.project_name', 'LIKE', '%'.$request->input('project_name').'%');
-            // }
+            // dd($gramsevakdocumentQuery);
+                    // if ($request->has('mgnrega_card_id')) {
+                    //     $labourQuery->where('labour.mgnrega_card_id', 'like', '%' . $request->input('mgnrega_card_id') . '%');
+                    // }
+            
+                    // if ($request->has('project_name')) {
+                    //     $projectQuery->where('projects.project_name', 'LIKE', '%'.$request->input('project_name').'%');
+                    // }
             
             // Fetch data
             $labourData = $labourQuery->get();
@@ -287,70 +287,11 @@ class ProjectController extends Controller
             return response()->json(['status' => 'false', 'message' => 'Data get failed '.$e->getMessage()], 500);
         }
     }
-   
-    public function distancekm() {
-        return $this->belongsTo(DistanceKm::class, 'distancekm_id');
-    }
-    
-    public function getAllProjectLatLong(Request $request){
-        try {
-            $user = Auth::user()->id;
-            $userLatitude = $request->latitude; // Latitude of the user
-            $userLongitude = $request->longitude; // Longitude of the user
-            // $distanceInKm = 5; // Distance in kilometers
-            $distanceInKm = DistanceKM::first()->distance_km;            
-            $latLongArr= $this->getLatitudeLongitude($userLatitude,$userLongitude, $distanceInKm);
-            $latN = $latLongArr['latN'];
-            $latS = $latLongArr['latS'];
-            $lonE = $latLongArr['lonE'];
-            $lonW = $latLongArr['lonW'];
-			
-            // Haversine formula to calculate distance
-            $project = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
-                ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
-                ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
-                ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')
-                // ->where('projects.user_id', $user)
-                ->where('projects.is_active', true)
-               
-                ->when($request->has('latitude'), function($query) use ($latN, $latS, $lonE, $lonW) {
-                    $query->where('projects.latitude', '<=', $latN)
-                        ->where('projects.latitude', '>=', $latS)
-                        ->where('projects.longitude', '<=', $lonE)
-                        ->where('projects.longitude', '>=', $lonW);
-                })
-                ->where('projects.end_date', '>=',date('Y-m-d'))
-                ->when($request->has('project_name'), function($query) use ($request) {
-                    $query->where('projects.project_name', 'like', '%' . $request->project_name . '%');
-                })             
-                ->select(
-                    'projects.id',
-                    'projects.project_name',
-                    'projects.description',
-                    'state_projects.name as state',
-                    'district_projects.name as district',
-                    'taluka_projects.name as taluka',
-                    'village_projects.name as village',
-                    'projects.start_date',
-                    'projects.end_date',
-                    'projects.latitude',
-                    'projects.longitude'
-                )
-                ->get();
-                
-            return response()->json(['status' => 'success', 'message' => 'All data retrieved successfully', 'data' => $project], 200);
-        } catch (\Exception $e) {
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
-        }
-    }
     public function getLatitudeLongitude($latitude,$longitude, $distanceInKm){
         $d = 0.621371*$distanceInKm; // 15 km in miles
         $r = 3959; //earth's radius in miles
-
         $latLongArr = array();
         
-       
-
         $latN = rad2deg(asin(sin(deg2rad($latitude)) * cos($d / $r)
                 + cos(deg2rad($latitude)) * sin($d / $r) * cos(deg2rad(0))));
 
@@ -375,10 +316,8 @@ class ProjectController extends Controller
             'lonW' => $lonW
         ];
         return $latLongArr;
-        }
-        
-    
-    
+    }
+            
 }
 
 

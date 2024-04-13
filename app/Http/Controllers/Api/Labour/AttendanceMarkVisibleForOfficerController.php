@@ -16,62 +16,8 @@ use Illuminate\Support\Facades\Config;
 use Storage;
 use Carbon\Carbon;
 
-
-
 class AttendanceMarkVisibleForOfficerController extends Controller
 {
-    // public function getAllProjectListForOfficer(Request $request) {
-    //     try {
-    //         $user = Auth::user()->id;            
-    //         $date = date('Y-m-d'); 
-    //         $data_output = User::leftJoin('usertype', 'users.user_type', '=', 'usertype.id')
-    //         ->where('users.id', $user)
-    //         ->first();
-
-    //     $utype=$data_output->user_type;
-    //     $user_working_dist=$data_output->user_district;
-    //     $user_working_tal=$data_output->user_taluka;
-    //     $user_working_vil=$data_output->user_village;
-
-        
-    //     $data_user_output = User::select('id');
-    //         if($utype=='1')
-    //         {
-    //             $data_user_output = $data_user_output->where('users.user_district', $user_working_dist);
-    //         } else if($utype=='2')
-    //         {
-    //             $data_user_output = $data_user_output->where('users.user_taluka', $user_working_tal);
-    //         } else if($utype=='3')
-    //         {
-    //             $data_user_output = $data_user_output->where('users.user_village', $user_working_vil);
-    //         }
-
-    //         $data_user_output = $data_user_output->get()->toArray();  
-        
-    //         $data_output = Project::leftJoin('tbl_area as state_projects', 'projects.state', '=', 'state_projects.location_id')
-    //         ->leftJoin('tbl_area as district_projects', 'projects.district', '=', 'district_projects.location_id')  
-    //         ->leftJoin('tbl_area as taluka_projects', 'projects.taluka', '=', 'taluka_projects.location_id')
-    //         ->leftJoin('tbl_area as village_projects', 'projects.village', '=', 'village_projects.location_id')  
-    //         ->where('projects.District', $user_working_dist)
-    //             ->select(
-    //                 'projects.id',
-    //                 'projects.project_name',
-    //                 'projects.description',
-    //                 'state_projects.name as state',
-    //                 'district_projects.name as district',
-    //                 'taluka_projects.name as taluka',
-    //                 'village_projects.name as village',
-    //                 'projects.start_date',
-    //                 'projects.end_date',
-    //                 'projects.latitude',
-    //                 'projects.longitude'
-    //             )->distinct('project.id')->get();
-    //             // dd($data_output);
-    //                 return response()->json(['status' => 'true', 'message' => 'All data retrieved successfully', 'data' => $data_output], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['status' => 'false', 'message' => 'Attendance List Fail','error' => $e->getMessage()], 500);
-    //     }
-    // }   
     public function getAllAttendanceMarkedLabour(Request $request) {
         try {
             $user = Auth::user()->id;            

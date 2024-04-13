@@ -16,7 +16,6 @@ use Storage;
 use Carbon\Carbon;
 
 
-
 class LabourAttendanceMarkController extends Controller
 {
     public function addAttendanceMark(Request $request){
@@ -279,5 +278,4 @@ class LabourAttendanceMarkController extends Controller
         return response()->json(['status' => 'false', 'message' => 'Attendance mark update failed', 'error' => $e->getMessage()], 500);
     }
     }
-
 }

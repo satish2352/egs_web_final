@@ -51,8 +51,6 @@ Route::group([
         //=============Start ProjectController=================
         Route::post('/filter-project-labour-list', [ProjectController::class, 'filterDataProjectsLaboursMap']);
         Route::post('/list-project-for-officer', [ProjectController::class, 'getAllProjectForOfficer']);
-        Route::post('/project-list-lat-log', [ProjectController::class, 'getAllProjectLatLong']);
-
         
         // ============Start LabourAttendanceMarkController============
         Route::post('/add-attendance-mark', [LabourAttendanceMarkController::class, 'addAttendanceMark']);
@@ -77,11 +75,9 @@ Route::group([
         Route::post('/list-labour-received-to-officer-for-approval', [OfficerController::class, 'getLabourStatusListReceived']);
         Route::post('/update-officer-labour-status-approved', [OfficerController::class, 'updateLabourStatusApproved']);
         Route::post('/update-officer-labour-status-not-approved', [OfficerController::class, 'updateLabourStatusNotApproved']);
-        Route::post('/update-officer-labour-status-rejected', [OfficerController::class, 'updateLabourStatusRejected']);
         Route::post('/officer-reports-count', [OfficerController::class, 'officerReportsCount']);
         Route::post('/list-particular-officer-labour-details', [OfficerController::class, 'getParticularLabourOfficer']);
         Route::post('/list-attendance-marked-visible-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllAttendanceMarkedLabour']);
-        // Route::post('/project-list-for-officer', [AttendanceMarkVisibleForOfficerController::class, 'getAllProjectListForOfficer']);
        
         Route::post('logout', [AuthController::class, 'logout']);
     });
