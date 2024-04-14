@@ -33,17 +33,15 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="form-group">
-                                            <label for="marathi_title">लिंग</label>&nbsp<span class="red-text">*</span>
-                                            <input type="text" class="form-control mb-2" name="marathi_title"
-                                                id="marathi_title" value="{{ old('marathi_title') }}"
-                                                placeholder="शीर्षक प्रविष्ट करा">
-                                            @if ($errors->has('marathi_title'))
-                                                <span class="red-text"><?php //echo $errors->first('marathi_title', ':message'); ?></span>
+                                            <label for="doc_color">Colour</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" id="colorPicker" name="doc_color">
+                                            @if ($errors->has('doc_color'))
+                                                <span class="red-text"><?php echo $errors->first('doc_color', ':message'); ?></span>
                                             @endif
                                         </div>
-                                    </div> -->
+                                    </div>
                                     <div class="col-md-12 col-sm-12 text-center">
                                         <button type="submit" class="btn btn-sm btn-success" id="submitButton" disabled>
                                             Save &amp; Submit
@@ -99,4 +97,14 @@
                 });
             });
         </script>
+
+<script>
+$("#colorPicker").spectrum({
+    color: "#f00", // Default color (optional)
+    showInput: true, // Show text input for hex color (optional)
+    showAlpha: true, // Show alpha slider (optional)
+    preferredFormat: "hex", // Format of the color value (optional)
+});
+</script>
+
     @endsection
