@@ -34,6 +34,18 @@
                                             @endif
                                         </div>
                                     </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label for="document_type_name">Document Color</label>&nbsp<span class="red-text">*</span>
+                                            <input type="text" class="form-control mb-2" id="colorPicker" name="doc_color"
+                                            value="{{ old('doc_color', $documenttype_data->doc_color) }}">
+                                            
+                                            @if ($errors->has('doc_color'))
+                                                <span class="red-text"><?php echo $errors->first('doc_color', ':message'); ?></span>
+                                            @endif
+                                        </div>
+                                    </div>
                                     <div class="col-md-12 col-sm-12 text-center">
                                         <button type="submit" class="btn btn-sm btn-success" id="submitButton">Save &amp;
                                             Update</button>
@@ -93,4 +105,12 @@
                 });
             });
         </script>
+        <script>
+$("#colorPicker").spectrum({
+    // color: "#f00", // Default color (optional)
+    showInput: true, // Show text input for hex color (optional)
+    showAlpha: true, // Show alpha slider (optional)
+    preferredFormat: "hex", // Format of the color value (optional)
+});
+</script>
     @endsection

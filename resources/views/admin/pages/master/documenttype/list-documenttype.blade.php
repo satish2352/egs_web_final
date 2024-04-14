@@ -34,6 +34,7 @@
                                                 <tr>
                                                     <th>Sr. No.</th>
                                                     <th>Title</th>
+                                                    <th>Document Color</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -43,7 +44,7 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ strip_tags($item->document_type_name) }}</td>
-                                                        <!-- <td>{{ strip_tags($item->marathi_title) }}</td> -->
+                                                        <td><div class="color-box" style="background-color: {{ $item->doc_color }};width: 50px; height: 50px;"></div></td>
                                                         <td>
                                                             <label class="switch">
                                                                 <input data-id="{{ $item->id }}" type="checkbox"

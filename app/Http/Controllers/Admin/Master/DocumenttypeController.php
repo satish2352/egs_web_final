@@ -78,6 +78,7 @@ class DocumenttypeController extends Controller
     {
         $edit_data_id = base64_decode($request->edit_id);
         $documenttype_data = $this->service->getById($edit_data_id);
+        // dd($documenttype_data);
         return view('admin.pages.master.documenttype.edit-documenttype', compact('documenttype_data'));
    
     }
